@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <agents>
+
+        <agent type="org.distributedea.agents.computingagents.Agent_TSP_1" name="Agent_TSP1">
+        </agent>
+
+    </agents>
+</configuration>

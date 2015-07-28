@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <agents>
+        <agent type="org.distributedea.agents.systemagents.Agent_ManagerAgent" name="ManagerAgent">
+        </agent>
+
+        <!--
+        <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
+            <arguments>
+               <argument key="sniffed-1" value="Manager" sendOnlyValue="true" />
+                <argument key="sniffed" value="Duration" sendOnlyValue="true" />
+            </arguments>
+        </agent>
+         -->
+
+    </agents>
+</configuration>

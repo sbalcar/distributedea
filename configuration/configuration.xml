@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <agents>
+        <agent type="org.distributedea.agents.systemagents.Agent_ManagerAgent" name="ManagerAgent">
+        </agent>
+
+
+        <agent type="org.distributedea.agents.systemagents.Agent_CentralManager" name="CentralManager">
+        </agent>
+
+        <agent type="org.distributedea.agents.systemagents.Agent_CentralLoger" name="CentralLoger">
+        </agent>
+
+        <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
+            <arguments>
+               <argument key="sniffed-1" value="CentralManager" sendOnlyValue="true" />
+               <argument key="sniffed-1" value="ManagerAgent" sendOnlyValue="true" />
+            </arguments>
+        </agent>
+
+    </agents>
+</configuration>
