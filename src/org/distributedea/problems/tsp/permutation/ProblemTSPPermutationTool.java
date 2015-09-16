@@ -1,17 +1,53 @@
-package org.distributedea.agents.computingagents;
+package org.distributedea.problems.tsp.permutation;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
+import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
+import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
+import org.distributedea.problems.tsp.ProblemTSPTool;
 
-public abstract class Agent_TSP extends Agent_ComputingAgent {
+public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
+	
+	@Override
+	public Individual generateIndividual(Problem problem,
+			AgentLogger logger) {
+		
+		ProblemTSP problemTSP = (ProblemTSP) problem;
+		return generateIndividual(problemTSP);
+	}
 
-	private static final long serialVersionUID = 1L;
+	@Override
+	public double fitness(Individual individual, Problem problem,
+			AgentLogger logger) {
+		
+		IndividualPermutation individualPerm = (IndividualPermutation) individual;
+		ProblemTSP problemTSP = (ProblemTSP) problem;
+		
+		return fitness(individualPerm, problemTSP, logger);
+	}
+	
+	@Override
+	public Individual createNewIndividual(Individual individual1,
+			Individual individual2, AgentLogger logger) {
+		// TODO Auto-generated method stub
+		return individual1;
+	}
 
+	@Override
+	public Individual createNewIndividual(Individual individual1,
+			Individual individual2, Individual individual3,
+			Individual individual4, AgentLogger logger) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 	/**
 	 * Generates the new Permutation based Individual from TSP-Problem
@@ -41,36 +77,7 @@ public abstract class Agent_TSP extends Agent_ComputingAgent {
 		return individual;
 	}
 
-	/**
-	 * Mutation - swaps two genes
-	 * @param individual
-	 * @return
-	 */
-	protected IndividualPermutation mutation(IndividualPermutation individual) {
-		
-		List<Integer> permutation = individual.getPermutation();
-		
-		// copy
-		List<Integer> permutationNew = new ArrayList<Integer>();
-		for (int numberI : permutation) {
-			permutationNew.add(numberI);
-		}
-		
-		Random rn = new Random();
-		int rndFirstIndex = rn.nextInt(permutationNew.size());
-		int rndSecondIndex = rn.nextInt(permutationNew.size());
-		
-		int firstVaLue = permutationNew.get(rndFirstIndex);
-		int secondVaLue = permutationNew.get(rndSecondIndex);
-		
-		permutationNew.set(rndFirstIndex, secondVaLue);
-		permutationNew.set(rndSecondIndex, firstVaLue);
-		
-		IndividualPermutation individualNew = new IndividualPermutation();
-		individualNew.setPermutation(permutationNew);
-		
-		return individualNew;
-	}
+
 	
 	/**
 	 * Counts fitness of the Permutation-Individual represents TSP-Problem
@@ -79,7 +86,8 @@ public abstract class Agent_TSP extends Agent_ComputingAgent {
 	 * @param problem
 	 * @return
 	 */
-	public double fitness(IndividualPermutation individual, ProblemTSP problem) {
+	public double fitness(IndividualPermutation individual, ProblemTSP problem,
+			AgentLogger logger) {
 		
 		List<Integer> permutation = individual.getPermutation();
 		
@@ -101,7 +109,7 @@ public abstract class Agent_TSP extends Agent_ComputingAgent {
 			PositionGPS possitionIend =
 					problem.exportPositionGPS(itemNumberIend);
 
-			distance += distanceBetween(possitionIstart, possitionIend);
+			distance += distanceBetween(possitionIstart, possitionIend, logger);
 		}
 		
 	    return distance;
@@ -127,7 +135,7 @@ public abstract class Agent_TSP extends Agent_ComputingAgent {
 	 * @return
 	 */
 	private double distanceBetween(double latitude1, double longitude1,
-	                         double latitude2, double longitude2)  {
+			double latitude2, double longitude2, AgentLogger logger)  {
 		
 		if (latitude1 == latitude2 &&
 				longitude1 == longitude2) {
@@ -145,7 +153,7 @@ public abstract class Agent_TSP extends Agent_ComputingAgent {
 	        * Math.cos(longitudeInRad2 - longitudeInRad1));
 	    
 	    if (Double.isNaN(value)) {
-	    	logInfo("Error - Distance\n" +
+		    logger.log(Level.SEVERE, "Error - Distance\n" +
 	    			" latitudeInRad1" + latitudeInRad1 + "\n" +
 	    			" latitudeInRad2" + latitudeInRad2 + "\n" +
 	    			" longitudeInRad1" + longitudeInRad1 + "\n" +
@@ -164,13 +172,15 @@ public abstract class Agent_TSP extends Agent_ComputingAgent {
 	 * @return
 	 */
 	public double distanceBetween(PositionGPS position1,
-			PositionGPS position2)  {
+			PositionGPS position2, AgentLogger logger)  {
 		
 		return distanceBetween(
 				position1.getLatitude(),
 				position1.getLongitude(),
 				position2.getLatitude(),
-				position2.getLongitude()
+				position2.getLongitude(),
+				logger
 				);
 	}
+	
 }

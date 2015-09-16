@@ -5,13 +5,15 @@ import java.util.List;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfiguration;
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.management.agent.Argument;
 
 import jade.core.AID;
 
 public class Scheduler {
 
-	public void run(Agent_CentralManager centramManager, AID [] aidManagerAgents, AgentConfiguration [] configurations) {
+	public void run(Agent_CentralManager centramManager, AID [] aidManagerAgents,
+			AgentConfiguration [] configurations, AgentLogger logger) {
 	
 		for (AID aidI : aidManagerAgents) {
 			
@@ -20,7 +22,7 @@ public class Scheduler {
 			String agentName = agentConfiguration.getAgentName();
 			List<Argument> arguments = agentConfiguration.getArguments();
 			
-			ManagerAgentService.sendCreateAgent(centramManager, aidI, agentType, agentName, arguments);
+			ManagerAgentService.sendCreateAgent(centramManager, aidI, agentType, agentName, arguments, logger);
 		}
 		
 	}

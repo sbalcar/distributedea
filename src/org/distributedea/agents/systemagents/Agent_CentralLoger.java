@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.logger.LogMessage;
 
@@ -63,9 +62,9 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 
 
 				} catch (OntologyException e) {
-					logException("Problem extracting content", e);
+					logger.logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logException("Codec problem", e);
+					logger.logThrowable("Codec problem", e);
 				}
 
 				ACLMessage failure = request.createReply();
@@ -87,7 +86,7 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 	 */
 	private ACLMessage respondToLogMessage(ACLMessage request, Action a) {
 
-		logInfo("respondToLogMessage");
+		logger.log(Level.INFO, "respondToLogMessage");
 
 		@SuppressWarnings("unused")
 		LogMessage logMessage = (LogMessage) a.getAction();
@@ -100,28 +99,12 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 		try {
 			getContentManager().fillContent(reply, result);
 		} catch (CodecException e) {
-			logException("CodecException by sending the answer for LogMessage", e);
+			logger.logThrowable("CodecException by sending the answer for LogMessage", e);
 		} catch (OntologyException e) {
-			logException("OntologyException by sending the answer for LogMessage", e);
+			logger.logThrowable("OntologyException by sending the answer for LogMessage", e);
 		}
 
 		return reply;
 	}
-	
-	
-	@Override
-	public void logException(String string, Exception e) {
-		ConsoleLogger.logThrowable(string + e.getMessage(), e);
-	}
-
-	@Override
-	public void logSevere(String message) {
-		ConsoleLogger.log(Level.SEVERE, message);
-	}
-	
-	@Override
-	public void logInfo(String text) {
-		ConsoleLogger.log(Level.INFO, text);
-	}
-	
+		
 }

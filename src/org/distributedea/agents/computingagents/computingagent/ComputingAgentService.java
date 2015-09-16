@@ -10,13 +10,15 @@ import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.problem.Problem;
 
 public class ComputingAgentService {
 
-	public static boolean sendStartComputing(Agent_DistributedEA agent, AID computingAgent, Problem problem) {
+	public static boolean sendStartComputing(Agent_DistributedEA agent, AID computingAgent,
+			Problem problem, AgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -40,9 +42,9 @@ public class ComputingAgentService {
 			agent.getContentManager().fillContent(msgStartComputing, action);
 			
 		} catch (Codec.CodecException e) {
-			agent.logException("CodecException by sending LogMessage", e);
+			logger.logThrowable("CodecException by sending LogMessage", e);
 		} catch (OntologyException e) {
-			agent.logException("OntologyException by sending LogMessage", e);
+			logger.logThrowable("OntologyException by sending LogMessage", e);
 		}
 		
 		ACLMessage msgRetursName = null;
@@ -50,7 +52,7 @@ public class ComputingAgentService {
 			msgRetursName = FIPAService
 					.doFipaRequestClient(agent, msgStartComputing);
 		} catch (FIPAException e) {
-			agent.logException("FIPAException by sending LogMessage", e);
+			logger.logThrowable("FIPAException by sending LogMessage", e);
 			return false;
 		}
 		

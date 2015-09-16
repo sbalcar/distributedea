@@ -11,6 +11,7 @@ import jade.proto.AchieveREResponder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.ontology.ComputingOntology;
@@ -19,6 +20,7 @@ import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.management.KillHimself;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.problems.ProblemTool;
 
 public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
@@ -69,9 +71,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 
 				} catch (OntologyException e) {
-					logException("Problem extracting content", e);
+					logger.logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logException("Codec problem", e);
+					logger.logThrowable("Codec problem", e);
 				}
 
 				ACLMessage failure = request.createReply();
@@ -119,7 +121,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		Runnable myRunnable = new Runnable(){
 
 		     public void run(){
-		    	logInfo("Killing himself");
+		    	 logger.log(Level.INFO, "Killing himself");
 		        
 		        try {
 					Thread.sleep(1000);
@@ -147,5 +149,30 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	public abstract void startComputing(Problem problem);
 	public abstract void prepareToDie();
+	
+	protected ProblemTool instanceProblemTool(String className) {
+		
+		@SuppressWarnings("rawtypes")
+		Class toolClass = null;
+		try {
+			toolClass = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			logger.logThrowable(
+					"Class of problemTool was not found", e);
+		}
+		
+		ProblemTool problemTool = null;
+		try {
+			problemTool = (ProblemTool) toolClass.newInstance();
+		} catch (InstantiationException e) {
+			logger.logThrowable(
+					"Class of problemTool can't be instanced", e);
+		} catch (IllegalAccessException e) {
+			logger.logThrowable(
+					"Class of problemTool can't be instanced", e);
+		}
+
+		return problemTool;
+	}
 	
 }

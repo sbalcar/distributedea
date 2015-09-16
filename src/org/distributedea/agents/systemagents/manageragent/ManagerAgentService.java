@@ -12,6 +12,7 @@ import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.KillContainer;
@@ -31,7 +32,8 @@ public class ManagerAgentService {
 	 * @return
 	 */
 	public static boolean sendCreateAgent(Agent_DistributedEA agentSender,
-			AID agentReciever, String agentType, String agentName, List<Argument> arguments) {
+			AID agentReciever, String agentType, String agentName, List<Argument> arguments,
+			AgentLogger logger) {
 		
 		if (agentSender == null) {
 			throw new IllegalArgumentException(
@@ -62,9 +64,9 @@ public class ManagerAgentService {
 			agentSender.getContentManager().fillContent(msgCreateA, action);
 			
 		} catch (Codec.CodecException e) {
-			agentSender.logException("CodecException by sending CreateAgent", e);
+			logger.logThrowable("CodecException by sending CreateAgent", e);
 		} catch (OntologyException e) {
-			agentSender.logException("OntologyException by sending CreateAgent", e);
+			logger.logThrowable("OntologyException by sending CreateAgent", e);
 		}
 
 		ACLMessage msgRetursName = null;
@@ -72,7 +74,7 @@ public class ManagerAgentService {
 			msgRetursName = FIPAService
 					.doFipaRequestClient(agentSender, msgCreateA);
 		} catch (FIPAException e) {
-			agentSender.logException("FIPAException by receiving the answer to CreateAgent", e);
+			logger.logThrowable("FIPAException by receiving the answer to CreateAgent", e);
 			return false;
 		}
 
@@ -95,7 +97,7 @@ public class ManagerAgentService {
 	 * @return
 	 */
 	public static boolean sendKillContainer(Agent_DistributedEA agentSender,
-			AID agentReciever) {
+			AID agentReciever, AgentLogger logger) {
 		
 		if (agentSender == null) {
 			throw new IllegalArgumentException(
@@ -123,9 +125,9 @@ public class ManagerAgentService {
 			agentSender.getContentManager().fillContent(msgKillContainer, action);
 			
 		} catch (Codec.CodecException e) {
-			agentSender.logException("CodecException by sending KillContainer", e);
+			logger.logThrowable("CodecException by sending KillContainer", e);
 		} catch (OntologyException e) {
-			agentSender.logException("OntologyException by sending KillContainer", e);
+			logger.logThrowable("OntologyException by sending KillContainer", e);
 		}
 
 		ACLMessage msgRetursName = null;
@@ -133,7 +135,7 @@ public class ManagerAgentService {
 			msgRetursName = FIPAService
 					.doFipaRequestClient(agentSender, msgKillContainer);
 		} catch (FIPAException e) {
-			agentSender.logException("FIPAException by receiving the answer to KillContainer", e);
+			logger.logThrowable("FIPAException by receiving the answer to KillContainer", e);
 			return false;
 		}
 

@@ -48,9 +48,11 @@ public class CentralLogerService {
 			agent.getContentManager().fillContent(msgLog, action);
 			
 		} catch (Codec.CodecException e) {
-			agent.logException("CodecException by sending LogMessage", e);
+			//:TODO
+			//agent.logException("CodecException by sending LogMessage", e);
 		} catch (OntologyException e) {
-			agent.logException("OntologyException by sending LogMessage", e);
+			//:TODO
+			//agent.logException("OntologyException by sending LogMessage", e);
 		}
 		
 		ACLMessage msgRetursName = null;
@@ -58,7 +60,8 @@ public class CentralLogerService {
 			msgRetursName = FIPAService
 					.doFipaRequestClient(agent, msgLog);
 		} catch (FIPAException e) {
-			agent.logException("FIPAException by sending LogMessage", e);
+			//:TODO
+			//agent.logException("FIPAException by sending LogMessage", e);
 			return false;
 		}
 		

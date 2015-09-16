@@ -6,9 +6,9 @@ import java.util.logging.Level;
 
 public class ConsoleLogger {
 
-	public static void logThrowable(String message, Throwable t) {
+	public static void logThrowable(String message, Throwable throwable) {
 		System.out.println("Log: " + message);
-		System.out.println(throwableToStackTrace(t));
+		System.out.println(throwableToStackTrace(throwable));
 	}
 
 	public static void log(Level logLevel, String message) {

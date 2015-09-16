@@ -16,8 +16,10 @@ import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.KillContainer;
@@ -68,9 +70,9 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 					}
 
 				} catch (OntologyException e) {
-					logException("Problem extracting content", e);
+					logger.logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logException("Codec problem", e);
+					logger.logThrowable("Codec problem", e);
 				}
 
 				ACLMessage failure = request.createReply();
@@ -103,18 +105,18 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		Arguments arguments = createAgent.getArguments();
 		List<Argument> argumentList = arguments.getArguments();
 		
-		AgentController createdAgent = createAgent(this, agentType, agentName, argumentList);
+		AgentController createdAgent = createAgent(this, agentType, agentName, argumentList, logger);
 
 		ACLMessage reply = request.createReply();
 		
 		if (createdAgent != null) {
 			reply.setPerformative(ACLMessage.INFORM);
 			reply.setContent("OK");
-			logInfo("Agent " + agentName + " created.");
+			logger.log(Level.INFO, "Agent " + agentName + " created.");
 		} else {
 			reply.setPerformative(ACLMessage.INFORM);
 			reply.setContent("KO");
-			logInfo("Fail by creating agent " + agentName + ".");
+			logger.log(Level.INFO, "Fail by creating agent " + agentName + ".");
 
 		}
 		
@@ -132,11 +134,11 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	protected ACLMessage respondToKillContainer(ACLMessage request,
 			Action action) {
 
-		logInfo("Killing container");
+		logger.log(Level.INFO, "Killing container");
 		
 		// TODO - kill agents
 	
-		final boolean isAgentOnMainControler =  isAgentOnMainControler(this);
+		final boolean isAgentOnMainControler =  isAgentOnMainControler(this, logger);
 		
 		Runnable myRunnable = new Runnable(){
 			
@@ -152,13 +154,13 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		        try {
 					Thread.sleep(seconds);
 				} catch (InterruptedException e1) {
-					logException("Error by Thread sleep", e1);
+					logger.logThrowable("Error by Thread sleep", e1);
 				}
 		        
 				try {
 					getContainerController().kill();
 				} catch (StaleProxyException e) {
-					logException("StaleProxyException by killing container", e);
+					logger.logThrowable("StaleProxyException by killing container", e);
 				}
 
 		     }
@@ -185,15 +187,15 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return - confirms creation
 	 */
 	public static AgentController createAgent(Agent_DistributedEA agent,
-			String type, String name, List<Argument> argumentList) {
+			String type, String name, List<Argument> argumentList, AgentLogger logger) {
 		
 		if (type.isEmpty()) {
-			agent.logSevere("Can't create agent with type = null");
+			logger.log(Level.SEVERE, "Can't create agent with type = null");
 			return null;
 		}
 
 		if (name.isEmpty()) {
-			agent.logSevere("Can't create agent with name = null");
+			logger.log(Level.SEVERE, "Can't create agent with name = null");
 			return null;
 		}
 
@@ -206,7 +208,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		}
 
 		if (numberOfContainer == null) {
-			agent.logSevere("Number of container can't be null");
+			logger.log(Level.SEVERE, "Number of container can't be null");
 			return null;
 		}
 		
@@ -267,18 +269,18 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @param agent
 	 * @return
 	 */
-	public static boolean isAgentOnMainControler(Agent_DistributedEA agent) {
+	public static boolean isAgentOnMainControler(Agent_DistributedEA agent, AgentLogger logger) {
 		
 		String containerName = null;
 		try {
 			containerName = agent.getContainerController().getContainerName();
 		} catch (ControllerException e2) {
 
-			agent.logException("Error by getting name of container", e2);
+			logger.logThrowable("Error by getting name of container", e2);
 			try {
 				agent.getContainerController().kill();
 			} catch (StaleProxyException e) {
-				agent.logException("Exception by killing container", e);
+				logger.logThrowable("Exception by killing container", e);
 			}
 
 		}

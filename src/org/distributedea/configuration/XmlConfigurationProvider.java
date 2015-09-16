@@ -1,6 +1,6 @@
 package org.distributedea.configuration;
 
-import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.management.agent.Argument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,7 +33,7 @@ public class XmlConfigurationProvider {
 	 * @param filePath
 	 * @return
 	 */
-	public AgentConfigurations getConfiguration(Agent_DistributedEA agent, String filePath) {
+	public AgentConfigurations getConfiguration(String filePath, AgentLogger logger) {
 		
 		List<AgentConfiguration> agentConfigurations =
 				new ArrayList<AgentConfiguration>();
@@ -59,7 +59,7 @@ public class XmlConfigurationProvider {
 			}
 			return new AgentConfigurations(agentConfigurations);
 		} catch (Exception e) {
-			agent.logException("Unexpected error occured:", e);
+			logger.logThrowable("Unexpected error occured:", e);
 			return null;
 		}
 	}

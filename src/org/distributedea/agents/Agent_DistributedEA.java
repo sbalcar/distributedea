@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.logging.ConsoleLogger;
 
 import jade.content.lang.Codec;
@@ -22,6 +23,7 @@ public abstract class Agent_DistributedEA extends Agent {
 	private static final long serialVersionUID = 1L;
 	
 	protected Codec codec = new SLCodec();
+	protected AgentLogger logger = new AgentLogger(this);
 	
 	public Codec getCodec() {
 		return codec;
@@ -127,26 +129,26 @@ public abstract class Agent_DistributedEA extends Agent {
 	 * @param string
 	 * @param exception
 	 */
-	public void logException(String string, Exception exception) {
-		ConsoleLogger.logThrowable(string + exception.getMessage(), exception);
-	}
+//	public void logException(String string, Exception exception) {
+//		ConsoleLogger.logThrowable(string + exception.getMessage(), exception);
+//	}
 
 	/**
 	 * Log Serve message
 	 * @param message
 	 */
-	public void logSevere(String message) {
-		ConsoleLogger.log(Level.SEVERE, message);
-	}
+//	public void logSevere(String message) {
+//		ConsoleLogger.log(Level.SEVERE, message);
+//	}
 	
 	/**
 	 * Log Info
 	 * 
 	 * @param text
 	 */
-	public void logInfo(String text) {
-		ConsoleLogger.log(Level.INFO, text);
-	}
+//	public void logInfo(String text) {
+//		ConsoleLogger.log(Level.INFO, text);
+//	}
 	
 	
 	/**
@@ -155,7 +157,8 @@ public abstract class Agent_DistributedEA extends Agent {
 	protected void initAgent() {
 		
 		String name = getAID().getName();
-		logInfo("Agent " + name + " is alive...");
+		logger.log(Level.INFO, "Agent " + name + " is alive...");
+		
 		getContentManager().registerLanguage(getCodec());
 
 		for (Ontology ontologyI : getOntologies()) {
@@ -180,7 +183,7 @@ public abstract class Agent_DistributedEA extends Agent {
             DFService.register(this, dfd );  
         
         } catch (FIPAException fe) {
-        	logException("Registration faild", fe);
+        	logger.logThrowable("Registration faild", fe);
         }
 	}
 	
@@ -192,7 +195,7 @@ public abstract class Agent_DistributedEA extends Agent {
         try {
 			DFService.deregister(this);
 		} catch (FIPAException e) {
-			logException("Error by deregistration", e);
+			logger.logThrowable("Error by deregistration", e);
 		}  
         
 	}
