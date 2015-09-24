@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.logging.ConsoleLogger;
 
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -122,34 +121,6 @@ public abstract class Agent_DistributedEA extends Agent {
         
         return null;
     }
-	
-	/**
-	 * Log Exception
-	 * 
-	 * @param string
-	 * @param exception
-	 */
-//	public void logException(String string, Exception exception) {
-//		ConsoleLogger.logThrowable(string + exception.getMessage(), exception);
-//	}
-
-	/**
-	 * Log Serve message
-	 * @param message
-	 */
-//	public void logSevere(String message) {
-//		ConsoleLogger.log(Level.SEVERE, message);
-//	}
-	
-	/**
-	 * Log Info
-	 * 
-	 * @param text
-	 */
-//	public void logInfo(String text) {
-//		ConsoleLogger.log(Level.INFO, text);
-//	}
-	
 	
 	/**
 	 * Agent initialization

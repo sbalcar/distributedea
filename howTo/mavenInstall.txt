@@ -1,0 +1,25 @@
+Maven Eclipse plugin installation step by step:
+
+Open Eclipse IDE
+Click Help -> Install New Software...
+Click Add button at top right corner
+At pop up: fill up Name as "M2Eclipse" and Location as
+"http://download.eclipse.org/technology/m2e/releases"
+Now click OK
+After that installation would be started.
+
+Another way to install Maven plug-in for Eclipse:
+
+Open Eclipse
+Go to Help -> Eclipse Marketplace
+Search by Maven
+Click "Install" button at "Maven Integration for Eclipse" section
+Follow the instruction step by step
+After successful installation do the followings in Eclipse:
+
+Go to Window --> Preferences
+Observe, Maven is enlisted at left panel
+Finally,
+
+Click on an existing project
+Select Configure -> Convert to Maven Project

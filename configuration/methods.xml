@@ -2,8 +2,12 @@
 <configuration>
     <agents>
 
-        <agent type="org.distributedea.agents.computingagents.permutation.Agent_HillClimbing" name="Agent_HillClimbing">
+        <agent type="org.distributedea.agents.computingagents.Agent_HillClimbing" name="Agent_HillClimbing">
         </agent>
-
+        <agent type="org.distributedea.agents.computingagents.Agent_RandomSearch" name="Agent_RandomSearch">
+        </agent>
+        <agent type="org.distributedea.agents.computingagents.Agent_Evolution" name="Agent_Evolution">
+        </agent>
+        
     </agents>
 </configuration>

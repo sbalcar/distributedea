@@ -2,9 +2,9 @@ package org.distributedea.ontology.computing;
 
 import org.distributedea.ontology.problem.Problem;
 
-import jade.content.Concept;
+import jade.content.AgentAction;
 
-public class StartComputing implements Concept {
+public class StartComputing implements AgentAction {
 
 	private static final long serialVersionUID = 1L;
 

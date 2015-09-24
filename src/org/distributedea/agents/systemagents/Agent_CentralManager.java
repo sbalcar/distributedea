@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.computingagent.ComputingAgentService;
 import org.distributedea.agents.systemagents.centralmanager.Scheduler;
+import org.distributedea.agents.systemagents.centralmanager.Scheduler1;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfiguration;
 import org.distributedea.configuration.AgentConfigurations;
@@ -20,16 +20,12 @@ import org.distributedea.configuration.XmlConfigurationProvider;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.permutation.ProblemToolSimpleSwap;
 
 public class Agent_CentralManager extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
-
-	private ProblemTool problemTool = new ProblemToolSimpleSwap();
 	
 	/**
      * Returns list of all ontologies that are used by CentralManager agent.
@@ -57,27 +53,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		AID [] aidManagerAgents = searchDF(Agent_ManagerAgent.class.getName());
-		
-		String fileName = org.distributedea.Configuration.getMethodsFile();
-		
-		XmlConfigurationProvider configProvider =
-				new XmlConfigurationProvider();
-		AgentConfigurations configuration =
-				configProvider.getConfiguration(fileName, logger);
-
-		List<AgentConfiguration> agentConfigurations = configuration
-				.getAgentConfigurations();
-		
-		AgentConfiguration[] configurations = 
-				agentConfigurations.toArray(
-				new AgentConfiguration[agentConfigurations.size()]);
-		
-		
-		Scheduler scheduler = new Scheduler();
-		scheduler.run(this, aidManagerAgents, configurations, logger);
-		
+	
 
 		BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -94,22 +70,12 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 			if (line.equals("kill")) {
 				logger.log(Level.INFO, "Killing everything");
 				
-				for (AID aManagerI : aidManagerAgents) {
-					ManagerAgentService.sendKillContainer(this, aManagerI, logger);
-				}
+				killCommand();
 				
 			} else if (line.equals("start")) {
 				logger.log(Level.INFO, "Starting everything");
 				
-				AID computingAgent = new AID("Agent_HillClimbing-17", false);
-
-				String tspFileName = org.distributedea.Configuration.getInputFile("it16862.tsp");
-
-				Problem problemM = problemTool.readProblem(tspFileName, logger);
-				ProblemTSP problem = (ProblemTSP) problemM;
-				problem.setProblemToolClass(ProblemToolSimpleSwap.class.getName());
-				
-				ComputingAgentService.sendStartComputing(this, computingAgent, problem, logger);
+				startCommand();
 				
 			} else {
 				logger.log(Level.INFO, "I don't understand you \n" + 
@@ -120,5 +86,43 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		}	
 	}
 
+	protected void killCommand() {
+		
+		AID [] aidManagerAgents = searchDF(
+				Agent_ManagerAgent.class.getName());
+		
+		for (AID aManagerI : aidManagerAgents) {
+			ManagerAgentService.sendKillContainer(this, aManagerI, logger);
+		}
+	}
+	
+	protected void startCommand() {
+		
+		String fileName = org.distributedea.Configuration.getMethodsFile();
+		
+		XmlConfigurationProvider configProvider =
+				new XmlConfigurationProvider();
+		AgentConfigurations configuration =
+				configProvider.getConfiguration(fileName, logger);
+
+		List<AgentConfiguration> agentConfigurations = configuration
+				.getAgentConfigurations();
+		
+		AgentConfiguration[] configurations = 
+				agentConfigurations.toArray(
+				new AgentConfiguration[agentConfigurations.size()]);
+		
+
+		ProblemTool problemTool = new ProblemToolSimpleSwap();
+		
+		
+		Scheduler scheduler = new Scheduler1();
+		scheduler.agentInitialization(this, configurations, logger);
+		
+		while (true) {
+			scheduler.replan(this, problemTool, logger);
+			break;
+		}
+	}
 	
 }

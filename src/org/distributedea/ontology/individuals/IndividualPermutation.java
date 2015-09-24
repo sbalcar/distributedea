@@ -16,4 +16,8 @@ public class IndividualPermutation extends Individual {
 		this.permutation = permutation;
 	}
 	
+	public int sizeOfPermutation() {
+		return permutation.size();
+	}
+	
 }

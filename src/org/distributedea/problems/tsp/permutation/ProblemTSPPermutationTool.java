@@ -12,8 +12,15 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
 import org.distributedea.problems.tsp.ProblemTSPTool;
+import org.jgap.impl.StockRandomGenerator;
 
 public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
+	
+	@Override
+	public Class<?> reprezentationWhichUses() {
+	
+		return IndividualPermutation.class;
+	}
 	
 	@Override
 	public Individual generateIndividual(Problem problem,
@@ -35,7 +42,7 @@ public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
 	
 	@Override
 	public Individual createNewIndividual(Individual individual1,
-			Individual individual2, AgentLogger logger) {
+			Individual individual2, Problem problem, AgentLogger logger) {
 		// TODO Auto-generated method stub
 		return individual1;
 	}
@@ -43,7 +50,7 @@ public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
 	@Override
 	public Individual createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			Individual individual4, AgentLogger logger) {
+			Individual individual4, Problem problem, AgentLogger logger) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -61,7 +68,7 @@ public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
 			numbers.add(positionI.getNumber());
 		}
 		
-		Random rn = new Random();
+		Random rn = new StockRandomGenerator();
 		List<Integer> permutation = new ArrayList<>();
 		
 		while (! numbers.isEmpty()) {

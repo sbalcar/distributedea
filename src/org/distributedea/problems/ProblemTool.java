@@ -6,6 +6,9 @@ import org.distributedea.ontology.problem.Problem;
 
 public interface ProblemTool {
 
+	public Class<?> problemWhichSolves();
+	public Class<?> reprezentationWhichUses();
+	
 	public Problem readProblem(String inputFileName, AgentLogger logger);
 	
 	public Individual generateIndividual(Problem problem, AgentLogger logger);
@@ -16,9 +19,9 @@ public interface ProblemTool {
 			AgentLogger logger);
     	
 	public Individual createNewIndividual(Individual individual1,
-			Individual individual2, AgentLogger logger);
-	public Individual createNewIndividual(Individual individual1,
+			Individual individual2, Problem problem, AgentLogger logger);
+	public Individual createNewIndividual(Individual individual1, 
 			Individual individual2, Individual individual3,
-			Individual individual4, AgentLogger logger);
+			Individual individual4, Problem problem, AgentLogger logger);
 	
 }

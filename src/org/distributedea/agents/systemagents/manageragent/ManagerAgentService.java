@@ -3,9 +3,12 @@ package org.distributedea.agents.systemagents.manageragent;
 import java.util.List;
 
 import jade.content.lang.Codec;
+import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
+import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
+import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.domain.FIPAException;
 import jade.domain.FIPAService;
@@ -18,9 +21,75 @@ import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.agent.Argument;
 import org.distributedea.ontology.management.agent.Arguments;
+import org.distributedea.ontology.management.computingnode.DescribeNode;
+import org.distributedea.ontology.management.computingnode.NodeInfo;
 
 public class ManagerAgentService {
 
+	
+	public static NodeInfo sendNodeInfo(Agent_DistributedEA agentSender,
+			AID agentReciever, AgentLogger logger) {
+		
+		if (agentSender == null) {
+			throw new IllegalArgumentException(
+					"Argument agentSender can't be null");
+		}
+
+		if (agentReciever == null) {
+			throw new IllegalArgumentException(
+					"Argument agentReciever can't be null");
+		}
+		
+		Ontology ontology = ManagementOntology.getInstance();
+
+		ACLMessage msgDescribeNode = new ACLMessage(ACLMessage.REQUEST);
+		msgDescribeNode.addReceiver(agentReciever);
+		msgDescribeNode.setSender(agentSender.getAID());
+		msgDescribeNode.setLanguage(agentSender.getCodec().getName());
+		msgDescribeNode.setOntology(ontology.getName());
+
+		DescribeNode describeNode = new DescribeNode();
+		
+		Action action = new Action(agentSender.getAID(), describeNode);
+		
+		try {
+			agentSender.getContentManager().fillContent(msgDescribeNode, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending DescribeNode", e);
+			return null;
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending DescribeNode", e);
+			return null;
+		}
+
+		ACLMessage nodeInfoDescription = null;
+		try {
+			nodeInfoDescription = FIPAService
+					.doFipaRequestClient(agentSender, msgDescribeNode);
+		} catch (FIPAException e) {
+			logger.logThrowable("FIPAException by receiving the answer to DescribeNode", e);
+			return null;
+		}
+		
+		NodeInfo nodeInfo = null;
+		try {
+			Result result = (Result) agentSender.getContentManager().extractContent(nodeInfoDescription);
+
+			nodeInfo = (NodeInfo) result.getValue();
+
+		} catch (UngroundedException e) {
+			logger.logThrowable("UngroundedException by receiving NodeInfo", e);
+		} catch (CodecException e) {
+			logger.logThrowable("CodecException by receiving NodeInfo", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by receiving NodeInfo", e);
+		}
+
+		return nodeInfo;
+	}
+	
+	
 	/**
 	 * Sends request to create Agent
 	 * 

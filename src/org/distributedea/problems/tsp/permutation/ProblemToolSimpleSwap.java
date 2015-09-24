@@ -49,16 +49,28 @@ public class ProblemToolSimpleSwap extends ProblemTSPPermutationTool {
 		int rndFirstIndex = random.nextInt(permutationNew.size());
 		int rndSecondIndex = random.nextInt(permutationNew.size());
 		
-		int firstVaLue = permutationNew.get(rndFirstIndex);
-		int secondVaLue = permutationNew.get(rndSecondIndex);
+		if (rndSecondIndex < rndFirstIndex) {
+			int help = rndFirstIndex;
+			rndFirstIndex = rndSecondIndex;
+			rndSecondIndex = help;
+		}
 		
-		permutationNew.set(rndFirstIndex, secondVaLue);
-		permutationNew.set(rndSecondIndex, firstVaLue);
+		convertingChunkOfPermutation(rndFirstIndex, rndSecondIndex, permutationNew);
 		
 		IndividualPermutation individualNew = new IndividualPermutation();
 		individualNew.setPermutation(permutationNew);
 		
 		return individualNew;
+	}
+
+	protected void convertingChunkOfPermutation(int startIndex, int endIndex,
+			List<Integer> permutationNew) {
+
+		int firstVaLue = permutationNew.get(startIndex);
+		int secondVaLue = permutationNew.get(endIndex);
+		
+		permutationNew.set(startIndex, secondVaLue);
+		permutationNew.set(endIndex, firstVaLue);
 	}
 	
 }

@@ -8,18 +8,19 @@ import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.agent.Argument;
 import org.distributedea.ontology.management.agent.Arguments;
+import org.distributedea.ontology.management.computingnode.DescribeNode;
+import org.distributedea.ontology.management.computingnode.NodeInfo;
 
 public class ManagementOntology extends BeanOntology {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5355736320938592917L;
 
 	private ManagementOntology() {
         super("ManagementOntology");
 
         try {
+        	add(DescribeNode.class);
+        	add(NodeInfo.class);
             add(CreateAgent.class);
             add(KillContainer.class);
             add(Arguments.class);

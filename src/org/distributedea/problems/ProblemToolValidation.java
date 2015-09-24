@@ -31,4 +31,42 @@ public class ProblemToolValidation {
 		
 		return true;
 	}
+
+	public static boolean isProblemToolTypeOf(ProblemTool problemTool,
+			Class<?> problemToolClass, AgentLogger logger) {
+		
+		boolean isProblemToolOK = problemTool.getClass().isAssignableFrom(problemToolClass);
+		
+		if (! isProblemToolOK) {
+			logger.log(Level.SEVERE, "ProblemTool doesn't contain right type.");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public static ProblemTool instanceProblemTool(String className, AgentLogger logger) {
+		
+		Class<?> toolClass = null;
+		try {
+			toolClass = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			logger.logThrowable(
+					"Class of problemTool was not found", e);
+		}
+		
+		ProblemTool problemTool = null;
+		try {
+			problemTool = (ProblemTool) toolClass.newInstance();
+		} catch (InstantiationException e) {
+			logger.logThrowable(
+					"Class of problemTool can't be instanced", e);
+		} catch (IllegalAccessException e) {
+			logger.logThrowable(
+					"Class of problemTool can't be instanced", e);
+		}
+
+		return problemTool;
+	}
+	
 }

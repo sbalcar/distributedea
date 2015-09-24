@@ -33,4 +33,9 @@ public class ProblemTSP extends Problem {
 		
 		return null;
 	}
+	
+	public int numberOfPositions() {
+		return positions.size();
+	}
+	
 }

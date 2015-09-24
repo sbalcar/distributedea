@@ -5,6 +5,7 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
+import jade.content.onto.basic.Result;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
@@ -25,6 +26,8 @@ import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.agent.Argument;
 import org.distributedea.ontology.management.agent.Arguments;
+import org.distributedea.ontology.management.computingnode.DescribeNode;
+import org.distributedea.ontology.management.computingnode.NodeInfo;
 
 public class Agent_ManagerAgent extends Agent_DistributedEA {
 
@@ -59,13 +62,16 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(request);
 
-					/*
-					 * CreateAgent action
-					 */
-					if (action.getAction() instanceof CreateAgent) {
+					if (action.getAction() instanceof DescribeNode) {
+						// DescribeNode action
+						return respondToDescribeNode(request, action);
+						
+					} else if (action.getAction() instanceof CreateAgent) {
+						// CreateAgent action
 						return respondToCreateAgent(request, action);
-					}
-					if (action.getAction() instanceof KillContainer) {
+					
+					} else if (action.getAction() instanceof KillContainer) {
+						
 						return respondToKillContainer(request, action);
 					}
 
@@ -84,6 +90,45 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		});
 		
 	}
+	
+	/**
+	 * Respond to DescribeNode message
+	 * 
+	 * @param request
+	 * @param action
+	 * @return
+	 * @throws UngroundedException
+	 * @throws CodecException
+	 * @throws OntologyException
+	 */
+	protected ACLMessage respondToDescribeNode(ACLMessage request, Action action) {
+
+		@SuppressWarnings("unused")
+		DescribeNode describeNode = (DescribeNode) action.getAction();
+		
+		ACLMessage reply = request.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+		reply.setLanguage(codec.getName());
+		reply.setOntology(ManagementOntology.getInstance().getName());
+		
+		int cores = Runtime.getRuntime().availableProcessors();
+		
+		NodeInfo nodeInfo = new NodeInfo();
+		nodeInfo.setNumberCPU(cores);
+		
+		Result result = new Result(action.getAction(), nodeInfo);
+
+		try {
+			getContentManager().fillContent(reply, result);
+		} catch (CodecException e) {
+			logger.logThrowable("CodecException by sending NodeInfo", e);
+		} catch (OntologyException e) {
+			logger.logThrowable(e.getMessage(), e);
+		}
+
+		return reply;
+	}
+	
 	
 	/**
 	 * Respond to CreateAgent message
@@ -212,56 +257,83 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			return null;
 		}
 		
-		String agentName = name + "-" + numberOfContainer;
-		
-		// get a container controller
-		PlatformController container = agent.getContainerController();
+		String agentNamePlusContName = name + "-" + numberOfContainer;
 
 		int numberOfAgent = 0;
 		while (true) {
 			try {
+				String  agentChar = "";
+				if (numberOfAgent > 0) {
+					char aChar = (char) ('a' + numberOfAgent);
+					agentChar = "_" + aChar;
+				}
+				String agentName = agentNamePlusContName + agentChar;
 				
-				AgentController createdAgent = null;
-								
-				if (type.equals(Sniffer.class.getName())) {
-
-					Arguments arguments = new Arguments(argumentList);
-					
-					String argumet1 = "";					
-					for (Argument argumentI : arguments.getArguments()) {
-						String agentNameI = argumentI.getValue() + "-" + numberOfContainer;
-						argumet1 += agentNameI + "; ";
-					}
-					argumet1.trim();
-					
-					Object[] args = null;
-					
-					//removes the last semicolon
-					if (! argumet1.isEmpty()) {
-						args = new Object[1];
-						args[0] = argumet1.substring(0, argumet1.length() -2);
-					}
-										
-					createdAgent = container.createNewAgent(
-							agentName, type, args);
-				} else {
-					createdAgent = container.createNewAgent(
-							agentName, type, null);
-					
+				AgentController agentController = createAndStartAgent(
+						agent, agentName, numberOfContainer, type, argumentList);
+				if (agentController != null) {
+					return agentController;
 				}
 				
-				createdAgent.start();
-				
-				// provide agent time to register with DF etc.
-				agent.doWait(300);
-				return createdAgent;
-				
 			} catch (ControllerException e) {
-				char agentChar = (char) ('b' + numberOfAgent);
-				agentName += agentChar; 
+				numberOfAgent++; 
 			}
 		}
+		
 	}
+	
+	/**
+	 * Creates and starts Agent
+	 * 
+	 * @param agent
+	 * @param agentName
+	 * @param numberOfContainer
+	 * @param type
+	 * @param argumentList
+	 * @return
+	 * @throws ControllerException
+	 */
+	private static AgentController createAndStartAgent(Agent_DistributedEA agent, String agentName, String numberOfContainer, String type, List<Argument> argumentList) throws ControllerException {
+		
+		// get a container controller
+		PlatformController container = agent.getContainerController();
+		
+		AgentController createdAgent = null;
+		
+		if (type.equals(Sniffer.class.getName())) {
+
+			Arguments arguments = new Arguments(argumentList);
+			
+			String argumet1 = "";					
+			for (Argument argumentI : arguments.getArguments()) {
+				String agentNameI = argumentI.getValue() + "-" + numberOfContainer;
+				argumet1 += agentNameI + "; ";
+			}
+			argumet1.trim();
+			
+			Object[] args = null;
+			
+			//removes the last semicolon
+			if (! argumet1.isEmpty()) {
+				args = new Object[1];
+				args[0] = argumet1.substring(0, argumet1.length() -2);
+			}
+								
+			createdAgent = container.createNewAgent(
+					agentName, type, args);
+		} else {
+			createdAgent = container.createNewAgent(
+					agentName, type, null);
+			
+		}
+		
+		createdAgent.start();
+		
+		// provide agent time to register with DF etc.
+		agent.doWait(300);
+		return createdAgent;
+	}
+	
 	
 	/**
 	 * Is Agent in the Main Container

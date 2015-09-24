@@ -16,6 +16,11 @@ import org.distributedea.problems.ProblemTool;
 public abstract class ProblemTSPTool implements ProblemTool {
 
 	@Override
+	public Class<?> problemWhichSolves() {
+		return ProblemTSP.class;
+	}
+	
+	@Override
 	public Problem readProblem(String inputFileName, AgentLogger logger) {
 		
 		return readProblemTSP(inputFileName, logger);		

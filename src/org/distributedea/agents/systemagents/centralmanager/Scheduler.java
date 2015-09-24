@@ -1,29 +1,15 @@
 package org.distributedea.agents.systemagents.centralmanager;
 
-import java.util.List;
-
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfiguration;
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.management.agent.Argument;
+import org.distributedea.problems.ProblemTool;
 
-import jade.core.AID;
+public interface Scheduler {
 
-public class Scheduler {
-
-	public void run(Agent_CentralManager centramManager, AID [] aidManagerAgents,
-			AgentConfiguration [] configurations, AgentLogger logger) {
+	public void agentInitialization(Agent_CentralManager centramManager,
+			AgentConfiguration [] configurations, AgentLogger logger);
 	
-		for (AID aidI : aidManagerAgents) {
-			
-			AgentConfiguration agentConfiguration = configurations[0];
-			String agentType = agentConfiguration.getAgentType();
-			String agentName = agentConfiguration.getAgentName();
-			List<Argument> arguments = agentConfiguration.getArguments();
-			
-			ManagerAgentService.sendCreateAgent(centramManager, aidI, agentType, agentName, arguments, logger);
-		}
-		
-	}
+	public void replan(Agent_CentralManager centramManager,
+			ProblemTool problemTool, AgentLogger logger);
 }
