@@ -12,10 +12,22 @@ import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.impl.IntegerGene;
 
+/**
+ * Converter of jgap representation to ontological representation
+ * @author stepan
+ *
+ */
 public class Convertor {
 
-
-	public static IChromosome convertToIChromosome(Individual individual, Configuration conf) throws InvalidConfigurationException {
+	/**
+	 * Converts general individual to jgap IChromosome
+	 * @param individual
+	 * @param conf
+	 * @return
+	 * @throws InvalidConfigurationException
+	 */
+	public static IChromosome convertToIChromosome(Individual individual,
+			Configuration conf) throws InvalidConfigurationException {
 	
 		if (individual instanceof IndividualPermutation) {
 			
@@ -27,7 +39,16 @@ public class Convertor {
 		return null;
 	}
 	
-	private static Chromosome convertToIChromosome(IndividualPermutation individual, Configuration conf) throws InvalidConfigurationException {
+	/**
+	 * Converts permutation based individual to jgap Chromosome
+	 * @param individual
+	 * @param conf
+	 * @return
+	 * @throws InvalidConfigurationException
+	 */
+	private static Chromosome convertToIChromosome(
+			IndividualPermutation individual, Configuration conf)
+			throws InvalidConfigurationException {
 		
 		Gene[] sampleGenes = new Gene[individual.sizeOfPermutation()];
 		for (int i = 0; i < sampleGenes.length; i++) {
@@ -39,13 +60,21 @@ public class Convertor {
 			
 			Gene geneI = sampleGenes[numberIndex];
 			geneI.setAllele(
-					individual.getPermutation().get(numberIndex));
+					individual.getPermutation().get(numberIndex) -1);
 		}
 		
 		return new Chromosome(conf, sampleGenes);
 	}
 
-	public static Individual convertToIndividual(IChromosome chromosome, Configuration conf) throws InvalidConfigurationException {
+	/**
+	 * Converts jgap IChromosome to general individual
+	 * @param chromosome
+	 * @param conf
+	 * @return
+	 * @throws InvalidConfigurationException
+	 */
+	public static Individual convertToIndividual(IChromosome chromosome,
+			Configuration conf) throws InvalidConfigurationException {
 	
 		if (chromosome instanceof Chromosome) {
 			
@@ -57,7 +86,16 @@ public class Convertor {
 		return null;
 	}
 	
-	private static IndividualPermutation convertToIndividualPermutation(Chromosome chromosome, Configuration conf) throws InvalidConfigurationException {
+	/**
+	 * Converts jgap Chromosome to permutation based individual
+	 * @param chromosome
+	 * @param conf
+	 * @return
+	 * @throws InvalidConfigurationException
+	 */
+	private static IndividualPermutation convertToIndividualPermutation(
+			Chromosome chromosome, Configuration conf)
+			throws InvalidConfigurationException {
 		
 		Gene[] genes = chromosome.getGenes();
 		
@@ -66,7 +104,7 @@ public class Convertor {
 			Gene genI = genes[i];
 			
 			int genValueI = (int) genI.getAllele();
-			permutation.add(genValueI);
+			permutation.add(genValueI +1);
 		}
 		
 		IndividualPermutation individual = new IndividualPermutation();

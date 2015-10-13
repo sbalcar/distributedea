@@ -9,6 +9,11 @@ import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
 
+/**
+ * Wrapper for jgap Fitness operator
+ * @author stepan
+ *
+ */
 public class EAFitnessWrapper extends FitnessFunction {
 
 	private static final long serialVersionUID = 1L;

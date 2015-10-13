@@ -21,6 +21,11 @@ import org.jgap.impl.DefaultConfiguration;
 import org.jgap.impl.StandardPostSelector;
 import org.jgap.impl.WeightedRouletteSelector;
 
+/**
+ * Agent represents Evolution Algorithm Method
+ * @author stepan
+ *
+ */
 public class Agent_Evolution extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
@@ -67,8 +72,8 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		setProblemTool(problemTool);
 		
 		int popSize = 5;
-		int maxGen = 50;
-		double mutationRate = 0.8;
+		int maxGen = 50000;
+		double mutationRate = 0.9;
 		
 		// generates Individuals
 		Vector<IndividualPermutation> individuals = new Vector<IndividualPermutation>();
@@ -130,8 +135,16 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			//System.out.println("Generation -1: " + pop.getFittestChromosome().toString());
 			System.out.println("Generation -1: " + fitnessValue);
 			
-			for (int i = 0; i < maxGen; i++) {
-				pop.evolve();
+			long i = 0;
+			while (true) {
+				
+				// try - for situation when some operator doesn't work correctly
+				try {
+					pop.evolve();
+				} catch (NullPointerException e) {
+					//:TODO KILL AGENT
+					return;
+				}
 				
 				IChromosome bestChromosomeI = pop.getFittestChromosome();
 				Individual individualI =
@@ -148,11 +161,14 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				
 				//System.out.println("Generation " + i + ": " + pop.getFittestChromosome().toString());
 				System.out.println("Generation " + i + ": " + fitnessValueI);
+				
+				i++;
 			}
 		}
 		catch (InvalidConfigurationException e) {
 			logger.logThrowable("Invalid Configuration", e);
 		}
+		
 
 	}
 	

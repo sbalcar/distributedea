@@ -21,6 +21,11 @@ import jade.core.AID;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+/**
+ * Agent which is responsible for initialization of agents on node
+ * @author balcs7am
+ *
+ */
 public class Agent_Initiator extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;

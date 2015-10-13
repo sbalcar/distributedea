@@ -17,6 +17,11 @@ import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.logger.LogMessage;
 
+/**
+ * Agent represents central Logger
+ * @author stepan
+ *
+ */
 public class Agent_CentralLoger extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;

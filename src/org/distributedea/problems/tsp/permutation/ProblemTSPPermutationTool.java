@@ -1,19 +1,29 @@
 package org.distributedea.problems.tsp.permutation;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
+import org.distributedea.Configuration;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
+import org.distributedea.problems.exceptions.ProblemToolException;
 import org.distributedea.problems.tsp.ProblemTSPTool;
 import org.jgap.impl.StockRandomGenerator;
 
+/**
+ * Abstract Problem Tool for TSP Problem for Permutation based representation
+ * @author stepan
+ *
+ */
 public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
 	
 	@Override
@@ -29,7 +39,15 @@ public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
 		ProblemTSP problemTSP = (ProblemTSP) problem;
 		return generateIndividual(problemTSP);
 	}
+	
+	@Override
+	public Individual readSolution(String fileName, Problem problem,
+			AgentLogger logger) {
 
+		String tspFileName = Configuration.getSolutionFile(fileName);
+		return readSolutionTSP(tspFileName, logger);
+	}
+	
 	@Override
 	public double fitness(Individual individual, Problem problem,
 			AgentLogger logger) {
@@ -41,18 +59,20 @@ public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
 	}
 	
 	@Override
-	public Individual createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, AgentLogger logger) {
-		// TODO Auto-generated method stub
-		return individual1;
-	}
+	public Individual[] createNewIndividual(Individual individual1,
+			Individual individual2, Problem problem, AgentLogger logger)
+			throws ProblemToolException {
 
+		throw new ProblemToolException("Not possible to implement in this context");
+	}
+	
 	@Override
-	public Individual createNewIndividual(Individual individual1,
+	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			Individual individual4, Problem problem, AgentLogger logger) {
-		// TODO Auto-generated method stub
-		return null;
+			Individual individual4, Problem problem, AgentLogger logger)
+			throws ProblemToolException {
+
+		throw new ProblemToolException("Not possible to implement in this context");
 	}
 	
 	
@@ -85,6 +105,69 @@ public abstract class ProblemTSPPermutationTool extends ProblemTSPTool {
 	}
 
 
+	/**
+	 * Reads TSP Permutation Solution
+	 * @param tspFileName
+	 * @param logger
+	 * @return
+	 */
+	private IndividualPermutation readSolutionTSP(String tspFileName, AgentLogger logger) {
+		
+		List<Integer> permutation = new ArrayList<Integer>();
+		
+		BufferedReader br = null;
+		 
+		try {
+ 
+			String sCurrentLine;
+ 
+			br = new BufferedReader(new FileReader(tspFileName));
+ 
+			while ((sCurrentLine = br.readLine()) != null) {
+				
+				if (sCurrentLine.startsWith("NAME") ||
+					sCurrentLine.startsWith("COMMENT") ||
+					sCurrentLine.startsWith("TYPE") ||
+					sCurrentLine.startsWith("DIMENSION") ||
+					sCurrentLine.startsWith("TOUR_SECTION") ||
+					sCurrentLine.startsWith("EOF") ) {
+					
+					logger.log(Level.INFO, sCurrentLine);
+
+				} else {
+					String delims = "[ ]+";
+					String[] tokens = sCurrentLine.split(delims);
+					
+					int number = Integer.parseInt(tokens[0]);
+					
+					permutation.add(number);
+				}
+				
+			}
+ 
+		} catch (IOException exception) {
+			logger.logThrowable("Problem with reading " + tspFileName + " file", exception);
+			return null;
+			
+		} finally {
+			try {
+				if (br != null){
+					br.close();
+				}
+			} catch (IOException ex) {
+				logger.logThrowable("Problem with closing the file: " + tspFileName, ex);
+			}
+		}
+		
+		//remove -1
+		permutation.remove(permutation.size() -1);
+		
+		IndividualPermutation individual = new IndividualPermutation();
+		individual.setPermutation(permutation);
+		
+		return individual;
+	}
+	
 	
 	/**
 	 * Counts fitness of the Permutation-Individual represents TSP-Problem

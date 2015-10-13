@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.centralmanager.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.Scheduler1;
+import org.distributedea.agents.systemagents.centralmanager.SchedulerSimple;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfiguration;
 import org.distributedea.configuration.AgentConfigurations;
@@ -20,7 +20,7 @@ import org.distributedea.configuration.XmlConfigurationProvider;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.tsp.permutation.ProblemTool2opt;
 import org.distributedea.problems.tsp.permutation.ProblemToolSimpleSwap;
 
 public class Agent_CentralManager extends Agent_DistributedEA {
@@ -48,12 +48,13 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		registrDF();
 		
 		try {
-			Thread.sleep(15 * 1000);
+			//Thread.sleep(15 * 1000);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	
+		startCommand();
 
 		BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -111,18 +112,24 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		AgentConfiguration[] configurations = 
 				agentConfigurations.toArray(
 				new AgentConfiguration[agentConfigurations.size()]);
+				
 		
+		String inputFileName = "wi29.tsp";
+		Class<?> [] availableProblemTools =
+			{ProblemToolSimpleSwap.class, ProblemTool2opt.class};
 
-		ProblemTool problemTool = new ProblemToolSimpleSwap();
+		String problemFileName =
+				org.distributedea.Configuration.getInputFile(inputFileName);
 		
-		
-		Scheduler scheduler = new Scheduler1();
-		scheduler.agentInitialization(this, configurations, logger);
-		
+		Scheduler scheduler = new SchedulerSimple();
+		scheduler.agentInitialization(this, configurations, problemFileName,
+				availableProblemTools, logger);
+
 		while (true) {
-			scheduler.replan(this, problemTool, logger);
+			scheduler.replan(this, logger);
 			break;
 		}
+
 	}
 	
 }

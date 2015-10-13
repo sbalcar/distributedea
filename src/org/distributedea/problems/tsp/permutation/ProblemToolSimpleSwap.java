@@ -10,18 +10,25 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.problems.ProblemToolValidation;
+import org.distributedea.problems.exceptions.ProblemToolException;
 
-
+/**
+ * Problem tool for TSP Problem Represent by Permutation implements Simple gene swap operator
+ * @author stepan
+ *
+ */
 public class ProblemToolSimpleSwap extends ProblemTSPPermutationTool {
 
 	/**
 	 * Improvement - swaps two genes
 	 * @param individual
 	 * @return
+	 * @throws ProblemToolException 
+	 * @throws Exception 
 	 */
 	@Override
 	public Individual improveIndividual(Individual individual, Problem problem,
-			AgentLogger logger) {
+			AgentLogger logger) throws ProblemToolException {
 		
 		Class<?> individualClass = IndividualPermutation.class;
 		Class<?> problemClass = ProblemTSP.class;
@@ -33,7 +40,7 @@ public class ProblemToolSimpleSwap extends ProblemTSPPermutationTool {
 						problem, problemClass, logger);
 			
 		if (! areParametersValid) {
-			//:TODO - ukonci agenta
+			throw new ProblemToolException("Invalid parameters in Problem Tool");
 		}
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;

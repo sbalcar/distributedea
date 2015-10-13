@@ -6,6 +6,10 @@ import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.behaviours.SimpleBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
@@ -29,6 +33,11 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
 
+/**
+ * Abstract class of Agent which is inherited by all Computing Agents
+ * @author stepan
+ *
+ */
 public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
@@ -48,6 +57,28 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return ontologies;
 	}
 
+	/**
+	 * Agent DF registration as Computing Agent
+	 */
+	@Override
+	protected void registrDF() {
+		        
+        ServiceDescription sd  = new ServiceDescription();
+        sd.setType( Agent_ComputingAgent.class.getName() );
+        sd.setName( getLocalName() );
+        
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName( getAID() );
+        dfd.addServices(sd);
+        
+        try {  
+            DFService.register(this, dfd );  
+        
+        } catch (FIPAException fe) {
+        	logger.logThrowable("Registration faild", fe);
+        }
+	}
+	
 	@Override
 	protected void setup() {
 		

@@ -13,6 +13,11 @@ import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
 import org.distributedea.problems.ProblemTool;
 
+/**
+ * Abstract Problem Tool for TSP Problem for general Individual representation
+ * @author stepan
+ *
+ */
 public abstract class ProblemTSPTool implements ProblemTool {
 
 	@Override
@@ -26,6 +31,7 @@ public abstract class ProblemTSPTool implements ProblemTool {
 		return readProblemTSP(inputFileName, logger);		
 	}
 	
+	
 	/**
 	 * Reads TSP Problem from the file
 	 * 
@@ -35,7 +41,6 @@ public abstract class ProblemTSPTool implements ProblemTool {
 	private ProblemTSP readProblemTSP(String tspFileName, AgentLogger logger) {
 	
 		List<PositionGPS> positions = new ArrayList<PositionGPS>();
-		positions.add(new PositionGPS());
 		
 		BufferedReader br = null;
 		 

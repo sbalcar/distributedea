@@ -24,9 +24,21 @@ import org.distributedea.ontology.management.agent.Arguments;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
 
+/**
+ * Wrapper for all services which provides agent Manager
+ * @author stepan
+ *
+ */
 public class ManagerAgentService {
 
-	
+	/**
+	 * Sends request to information about node
+	 * 
+	 * @param agentSender
+	 * @param agentReciever
+	 * @param logger
+	 * @return
+	 */
 	public static NodeInfo sendNodeInfo(Agent_DistributedEA agentSender,
 			AID agentReciever, AgentLogger logger) {
 		

@@ -8,8 +8,13 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
+import org.distributedea.problems.exceptions.ProblemToolException;
 
-
+/**
+ * Agent represents Hill Climbing Algorithm Method
+ * @author stepan
+ *
+ */
 public class Agent_HillClimbing extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
@@ -67,11 +72,16 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 					problemTool.fitness(individual, problem, logger);
 			logger.log(Level.INFO, "Finess: " + fitness);
 			
-			Individual individualNew =
-					getNewIndividual(individual, problem, problemTool);
+			Individual individualNew = null;
+			try {
+				individualNew = getNewIndividual(individual, problem, problemTool);
+			} catch (ProblemToolException e) {
+				// TODO KILL AGENT
+			}
 			
 			double fitnessNew =
 					problemTool.fitness(individualNew, problem, logger);
+			logger.log(Level.INFO, "        " + fitnessNew);
 			
 			if (fitnessNew < fitness) {
 				logger.log(Level.INFO, "JUMP");
@@ -84,7 +94,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	protected Individual getNewIndividual(Individual individual,
-			Problem problem, ProblemTool problemTool) {
+			Problem problem, ProblemTool problemTool) throws ProblemToolException {
 		
 		return problemTool.improveIndividual(individual, problem, logger);
 	}

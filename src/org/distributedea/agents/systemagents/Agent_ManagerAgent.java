@@ -29,6 +29,11 @@ import org.distributedea.ontology.management.agent.Arguments;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
 
+/**
+ * Agent represents ruler of node
+ * @author stepan
+ *
+ */
 public class Agent_ManagerAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;

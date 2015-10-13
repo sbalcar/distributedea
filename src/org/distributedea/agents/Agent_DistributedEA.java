@@ -17,6 +17,11 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+/**
+ * Abstract class of Agent which is inherited by all Agents in system
+ * @author stepan
+ *
+ */
 public abstract class Agent_DistributedEA extends Agent {
 
 	private static final long serialVersionUID = 1L;

@@ -1,5 +1,10 @@
 package org.distributedea;
 
+/**
+ * Names of Agents definition
+ * @author stepan
+ *
+ */
 public enum AgentNames {
 
 	INITIATOR("Initiator"), CENTRAL_LOGER("CentralLoger"), MANAGER_AGENT("ManagerAgent");

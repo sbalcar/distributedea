@@ -2,6 +2,11 @@ package org.distributedea.problems.tsp.permutation;
 
 import java.util.List;
 
+/**
+ * Problem tool for TSP Problem Represent by Permutation implements 2Opt permutation operator
+ * @author stepan
+ *
+ */
 public class ProblemTool2opt extends ProblemToolSimpleSwap {
 
 	@Override

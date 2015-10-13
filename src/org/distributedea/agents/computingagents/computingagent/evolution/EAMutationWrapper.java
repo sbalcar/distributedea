@@ -8,6 +8,7 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.exceptions.ProblemToolException;
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.GeneticOperator;
@@ -15,6 +16,11 @@ import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.Population;
 
+/**
+ * Wrapper for jgap Mutation operator
+ * @author stepan
+ *
+ */
 public class EAMutationWrapper implements GeneticOperator {
 
 	private static final long serialVersionUID = 1L;
@@ -55,6 +61,11 @@ public class EAMutationWrapper implements GeneticOperator {
 		
 			IChromosome newChromosumeI = mutation(chromosomeCloneI);
 		
+			if (newChromosumeI == null) {
+				candidates.add(null);
+				continue;
+			}
+			
 			// insert new Gene array to the cloned Chromosome
 			Gene[] a_genes = newChromosumeI.getGenes();
 			
@@ -97,8 +108,12 @@ public class EAMutationWrapper implements GeneticOperator {
 		}
 		
 		// call the mutation
-		Individual individualNew =
-				problemTool.improveIndividual(individual, problem, logger);
+		Individual individualNew;
+		try {
+			individualNew = problemTool.improveIndividual(individual, problem, logger);
+		} catch (ProblemToolException e1) {
+			return null;
+		}
 		
 		// converting the new Individual to Chromosome
 		IChromosome newChromosumeI = null;
