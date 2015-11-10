@@ -6,6 +6,8 @@ import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
+import jade.core.AID;
+import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
@@ -20,9 +22,11 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.computingagents.computingagent.ComputingAgentService;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.management.CreateAgent;
+import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.agent.Argument;
 import org.distributedea.ontology.management.agent.Arguments;
@@ -75,6 +79,10 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 						// CreateAgent action
 						return respondToCreateAgent(request, action);
 					
+					} else if (action.getAction() instanceof KillAgent) {
+						// KillAgent action
+						return respondToKillAgent(request, action);
+					
 					} else if (action.getAction() instanceof KillContainer) {
 						
 						return respondToKillContainer(request, action);
@@ -91,11 +99,17 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 
 				return failure;
 			}
-
+			
+			@Override
+			protected ACLMessage prepareResultNotification(ACLMessage request,
+					ACLMessage response) throws FailureException {
+				return null;
+			}
 		});
 		
 	}
 	
+
 	/**
 	 * Respond to DescribeNode message
 	 * 
@@ -145,17 +159,17 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @throws CodecException
 	 * @throws OntologyException
 	 */
-	protected ACLMessage respondToCreateAgent(ACLMessage request, Action action) throws UngroundedException, CodecException, OntologyException {
-		
-		Action a = (Action) getContentManager().extractContent(request);
-		CreateAgent createAgent = (CreateAgent) a.getAction();
+	protected ACLMessage respondToCreateAgent(ACLMessage request, Action action) {
+
+		CreateAgent createAgent = (CreateAgent) action.getAction();
 
 		String agentType = createAgent.getType();
 		String agentName = createAgent.getName();
 		Arguments arguments = createAgent.getArguments();
 		List<Argument> argumentList = arguments.getArguments();
 		
-		AgentController createdAgent = createAgent(this, agentType, agentName, argumentList, logger);
+		AgentController createdAgent = createAgent(this, agentType, agentName,
+				argumentList, logger);
 
 		ACLMessage reply = request.createReply();
 		
@@ -172,6 +186,59 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		
 		return reply;
 		
+	}
+	
+	protected ACLMessage respondToKillAgent(ACLMessage request, Action action) {
+		
+		KillAgent killAgent = (KillAgent) action.getAction();
+		String agentNameToKill = killAgent.getAgentName();
+
+		AgentController agentController = null;
+		try {
+			agentController =
+					getContainerController().getAgent(agentNameToKill);
+		} catch (ControllerException e1) {
+			logger.logThrowable("Error by accessing agent controller", e1);
+			return null;
+		}
+		
+		AID aid = new AID(agentNameToKill, false);
+		ComputingAgentService.sendPrepareYourselfToKill(this, aid, logger);
+		
+		
+		final String agentNameToKillFinal = agentNameToKill;
+		final AgentController agentControllerFinal = agentController;
+		
+		Runnable myRunnable = new Runnable(){
+
+		     public void run(){
+		    	 logger.log(Level.INFO, "Waiting for killing " + agentNameToKillFinal);
+		     
+		    	 try {
+		    		 Thread.sleep(1000);
+		    	 } catch (InterruptedException e1) {
+					 logger.log(Level.SEVERE, "Can't wait for killing himself");
+				 }
+		        
+		 		try {
+		 			agentControllerFinal.kill();
+				} catch (StaleProxyException e) {
+					logger.log(Level.INFO, "Agent had already killed himself");
+				}
+				
+				logger.log(Level.INFO, "Agent " + agentNameToKillFinal + " was killed");
+
+				
+		     }
+		   };
+
+		Thread thread = new Thread(myRunnable);
+		thread.start();
+		
+		ACLMessage reply = request.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+		reply.setContent("OK");
+		return reply;
 	}
 	
 	/**
@@ -239,6 +306,41 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	public static AgentController createAgent(Agent_DistributedEA agent,
 			String type, String name, List<Argument> argumentList, AgentLogger logger) {
 		
+		String containerID = "";
+		if (agent instanceof Agent_Initiator) {
+			Agent_Initiator aIntitiator = (Agent_Initiator) agent;
+			containerID = aIntitiator.cutFromHosntameContainerID();
+		} else {
+			containerID = agent.getNumberOfContainer();
+		}
+
+		int numberOfAgentI = 0;
+		int numberOfContainerI = 0;
+		
+		AgentController controller = null;
+		while (true) {
+			
+			controller = tryCreateAgent(agent, type, name, numberOfAgentI,
+					numberOfContainerI, containerID, argumentList, logger);
+			if (controller != null) {
+				return controller;
+			}
+			
+			if (agent instanceof Agent_Initiator) {
+				numberOfContainerI++;
+			} else if (agent instanceof Agent_ManagerAgent){
+				numberOfAgentI++;
+			} else {
+				logger.logThrowable("", null);
+			}
+		}
+		
+	}
+	
+	private static AgentController tryCreateAgent(Agent_DistributedEA agent,
+			String type, String name, int numberOfAgent, int numberOfContainer,
+			String containerID, List<Argument> argumentList, AgentLogger logger) {
+		
 		if (type.isEmpty()) {
 			logger.log(Level.SEVERE, "Can't create agent with type = null");
 			return null;
@@ -249,40 +351,36 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			return null;
 		}
 
-		String numberOfContainer = "";
-		if (agent instanceof Agent_Initiator) {
-			Agent_Initiator aIntitiator = (Agent_Initiator) agent;
-			numberOfContainer = aIntitiator.cutFromHosntameContainerID();
-		} else {
-			numberOfContainer = agent.getNumberOfContainer();
-		}
-
-		if (numberOfContainer == null) {
+		if (containerID == null) {
 			logger.log(Level.SEVERE, "Number of container can't be null");
 			return null;
 		}
 		
-		String agentNamePlusContName = name + "-" + numberOfContainer;
-
-		int numberOfAgent = 0;
-		while (true) {
-			try {
-				String  agentChar = "";
-				if (numberOfAgent > 0) {
-					char aChar = (char) ('a' + numberOfAgent);
-					agentChar = "_" + aChar;
-				}
-				String agentName = agentNamePlusContName + agentChar;
-				
-				AgentController agentController = createAndStartAgent(
-						agent, agentName, numberOfContainer, type, argumentList);
-				if (agentController != null) {
-					return agentController;
-				}
-				
-			} catch (ControllerException e) {
-				numberOfAgent++; 
+		try {
+			String  agentChar = "";
+			if (numberOfAgent > 0) {
+				char aChar = (char) ('a' + numberOfAgent);
+				agentChar = "" + AGENT_NUMBER_PREFIX + aChar;
 			}
+			
+			String  containerChar = "";
+			if (numberOfContainer > 0) {
+				char cChar = (char) ('a' + numberOfContainer);
+				containerChar = "" + cChar;
+			}
+			
+			String agentNameWitID = name + agentChar;
+			String containerNameWitID = containerID + containerChar;
+			
+			String agentFullName = agentNameWitID + CONTAINER_NUMBER_PREFIX
+					+ containerNameWitID;
+			
+			AgentController agentController = createAndStartAgent(
+					agent, agentFullName, containerNameWitID, type, argumentList);
+			return agentController;
+			
+		} catch (ControllerException e) {
+			return null;
 		}
 		
 	}
@@ -298,7 +396,9 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return
 	 * @throws ControllerException
 	 */
-	private static AgentController createAndStartAgent(Agent_DistributedEA agent, String agentName, String numberOfContainer, String type, List<Argument> argumentList) throws ControllerException {
+	private static AgentController createAndStartAgent(Agent_DistributedEA agent,
+			String agentName, String numberOfContainer, String type,
+			List<Argument> argumentList) throws ControllerException {
 		
 		// get a container controller
 		PlatformController container = agent.getContainerController();
@@ -311,7 +411,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			
 			String argumet1 = "";					
 			for (Argument argumentI : arguments.getArguments()) {
-				String agentNameI = argumentI.getValue() + "-" + numberOfContainer;
+				String agentNameI = argumentI.getValue() +
+						CONTAINER_NUMBER_PREFIX + numberOfContainer;
 				argumet1 += agentNameI + "; ";
 			}
 			argumet1.trim();
@@ -346,7 +447,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @param agent
 	 * @return
 	 */
-	public static boolean isAgentOnMainControler(Agent_DistributedEA agent, AgentLogger logger) {
+	public static boolean isAgentOnMainControler(Agent_DistributedEA agent,
+			AgentLogger logger) {
 		
 		String containerName = null;
 		try {

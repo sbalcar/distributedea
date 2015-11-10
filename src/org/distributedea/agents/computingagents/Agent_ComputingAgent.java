@@ -9,6 +9,7 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -20,16 +21,20 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.datamanager.DataManagerService;
+import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
+import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.UseIndividual;
-import org.distributedea.ontology.management.KillHimself;
+import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
 
@@ -54,6 +59,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		ontologies.add(LogOntology.getInstance());
 		ontologies.add(ManagementOntology.getInstance());
 		ontologies.add(ComputingOntology.getInstance());
+		ontologies.add(ResultOntology.getInstance());
 		return ontologies;
 	}
 
@@ -109,9 +115,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 						
 						return respondToStartComputing(request, action);
 						
-					} else if (action.getAction() instanceof KillHimself) {
+					} else if (action.getAction() instanceof PrepareYourselfToKill) {
 						
-						return respondToKillHimself(request, action);
+						return respondToPrepareYourselfToKill(request, action);
 					
 					} else if (action.getAction() instanceof UseIndividual) {
 					
@@ -129,6 +135,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 				return failure;
 			}
+			
+			@Override
+			protected ACLMessage prepareResultNotification(ACLMessage request,
+					ACLMessage response) throws FailureException {
+				return null;
+			}
 
 		});
 
@@ -143,7 +155,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 		reply.setLanguage(codec.getName());
-		reply.setOntology(ManagementOntology.getInstance().getName());
+		reply.setOntology(ResultOntology.getInstance().getName());
 		
 		ResultOfComputing resultOfComputing = getBestresultOfComputing();
 		
@@ -218,36 +230,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return true;
 	}
 	
-	private ACLMessage respondToKillHimself(ACLMessage request, Action action) {
+	private ACLMessage respondToPrepareYourselfToKill(ACLMessage request, Action action) {
 		
 		prepareToDie();
 		
-		Runnable myRunnable = new Runnable(){
-
-		     public void run(){
-		    	 logger.log(Level.INFO, "Killing himself");
-		        
-		        try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        
-				doDelete();
-				
-		     }
-		   };
-
-		Thread thread = new Thread(myRunnable);
-		thread.start();
-		   
-		
-		ACLMessage reply = request.createReply();
-		reply.setPerformative(ACLMessage.INFORM);
-		reply.setContent("OK");
-		
-		return reply;
+		return null;
 		
 	}
 
@@ -281,9 +268,35 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		this.bestResultOfComputing = resultOfComputing;
 	}
 	
+	protected void commitSuicide() {
+		
+		logger.log(Level.INFO, "Waiting for killing himself");				
+		ManagerAgentService.sendKillAgent(this, getAID(), logger);
+	}
+	
+	private long timeOfLastLogMs = System.currentTimeMillis();
+	protected void logResultByUsingDatamanager(PartResult result) {
+		
+		String resultLog = "Generation " +
+				result.getGenerationNumber() + ": " +
+				result.getFitnessResult();
+		//logger.log(Level.INFO, resultLog);
+		
+		long LOG_PERIOD_MS = 1000;
+		
+		long nowMs = System.currentTimeMillis();
+		if (timeOfLastLogMs + LOG_PERIOD_MS < nowMs) {
+			
+			DataManagerService service = new DataManagerService();
+			service.sendPartResultMessage(this, result, logger);
+			
+			timeOfLastLogMs = nowMs;
+		}
+		
+	}
+
 	protected abstract boolean isAbleToSolve(Class<?> problem, Class<?> representation);
 	public abstract void startComputing(Problem problem);
 	public abstract void prepareToDie();
-	
 	
 }

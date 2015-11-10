@@ -11,6 +11,9 @@
         <agent type="org.distributedea.agents.systemagents.Agent_CentralLoger" name="CentralLoger">
         </agent>
 
+        <agent type="org.distributedea.agents.systemagents.Agent_DataManager" name="DataManager">
+        </agent>
+	
         <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
             <arguments>
                <argument key="sniffed-1" value="CentralManager" sendOnlyValue="true" />

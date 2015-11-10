@@ -11,6 +11,7 @@ import jade.lang.acl.ACLMessage;
 
 import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.logger.LogMessage;
 
@@ -23,7 +24,7 @@ public class CentralLogerService {
 	 * @param message
 	 * @return
 	 */
-	public boolean sendLogMessage(Agent_DistributedEA agent, String message) {
+	public boolean sendLogMessage(Agent_DistributedEA agent, String message, AgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -48,11 +49,9 @@ public class CentralLogerService {
 			agent.getContentManager().fillContent(msgLog, action);
 			
 		} catch (Codec.CodecException e) {
-			//:TODO
-			//agent.logException("CodecException by sending LogMessage", e);
+			logger.logThrowable("CodecException by sending LogMessage", e);
 		} catch (OntologyException e) {
-			//:TODO
-			//agent.logException("OntologyException by sending LogMessage", e);
+			logger.logThrowable("OntologyException by sending LogMessage", e);
 		}
 		
 		ACLMessage msgRetursName = null;
@@ -60,8 +59,7 @@ public class CentralLogerService {
 			msgRetursName = FIPAService
 					.doFipaRequestClient(agent, msgLog);
 		} catch (FIPAException e) {
-			//:TODO
-			//agent.logException("FIPAException by sending LogMessage", e);
+			logger.logThrowable("FIPAException by sending LogMessage", e);
 			return false;
 		}
 		

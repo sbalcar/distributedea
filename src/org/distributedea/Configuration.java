@@ -59,5 +59,14 @@ public class Configuration {
 				+ "solutions" + System.getProperty("file.separator")
 				+ fileName;
 	}
-	
+
+	/**
+	 * Provides way to the solution instance by name
+	 * @param fileName
+	 * @return
+	 */
+	public static String getResultFile() {
+
+		return "results.txt";
+	}
 }

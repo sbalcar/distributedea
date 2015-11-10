@@ -29,6 +29,9 @@ public abstract class Agent_DistributedEA extends Agent {
 	protected Codec codec = new SLCodec();
 	protected AgentLogger logger = new AgentLogger(this);
 	
+	protected static char AGENT_NUMBER_PREFIX = '-';
+	protected static char CONTAINER_NUMBER_PREFIX = '_';
+	
 	public Codec getCodec() {
 		return codec;
 	}
@@ -56,7 +59,7 @@ public abstract class Agent_DistributedEA extends Agent {
 		int charIndex;
 		for (charIndex = localName.length() -1; charIndex >= 0; charIndex--) {
 			char charI = localName.charAt(charIndex);
-			if (charI == '-') {
+			if (charI == CONTAINER_NUMBER_PREFIX) {
 				break;
 			}
 		}
@@ -76,7 +79,7 @@ public abstract class Agent_DistributedEA extends Agent {
 	 */
 	public AID [] searchLocalContainerDF( String service ) {
 	
-		int index = getAID().getLocalName().indexOf('-');
+		int index = getAID().getLocalName().lastIndexOf(CONTAINER_NUMBER_PREFIX);
 		String containerNumber = getAID().getName().substring(index +1);
 		
 		List<AID> aidList = new ArrayList<>();
@@ -84,7 +87,7 @@ public abstract class Agent_DistributedEA extends Agent {
 		AID [] aids = searchDF(service);
 		for (int i = 0; i < aids.length; i++) {
 			AID aidI = aids[i];
-			int indexI = aidI.getLocalName().indexOf('-');
+			int indexI = aidI.getLocalName().indexOf(CONTAINER_NUMBER_PREFIX);
 			String containerNumberI = aidI.getName().substring(indexI +1);
 			
 			if (containerNumber.equals(containerNumberI)) {
@@ -121,7 +124,7 @@ public abstract class Agent_DistributedEA extends Agent {
             return agents;
 
         } catch (FIPAException fe) {
-        	fe.printStackTrace();
+        	logger.logThrowable("Error by searching in DF", fe);
         }
         
         return null;

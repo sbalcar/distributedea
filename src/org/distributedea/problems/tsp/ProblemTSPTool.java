@@ -9,7 +9,8 @@ import java.util.logging.Level;
 
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSP;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
 import org.distributedea.problems.ProblemTool;
 
@@ -19,18 +20,20 @@ import org.distributedea.problems.ProblemTool;
  *
  */
 public abstract class ProblemTSPTool implements ProblemTool {
-
-	@Override
-	public Class<?> problemWhichSolves() {
-		return ProblemTSP.class;
-	}
 	
 	@Override
 	public Problem readProblem(String inputFileName, AgentLogger logger) {
+
+		List<PositionGPS> positions = new ArrayList<PositionGPS>();
+		for (Position positionI : readProblemTSP(inputFileName, logger)) {
+			positions.add((PositionGPS) positionI);
+		}
 		
-		return readProblemTSP(inputFileName, logger);		
+		ProblemTSPGPS problem = new ProblemTSPGPS();
+		problem.setPositions(positions);
+		
+		return problem;
 	}
-	
 	
 	/**
 	 * Reads TSP Problem from the file
@@ -38,12 +41,13 @@ public abstract class ProblemTSPTool implements ProblemTool {
 	 * @param tspFileName
 	 * @return
 	 */
-	private ProblemTSP readProblemTSP(String tspFileName, AgentLogger logger) {
-	
-		List<PositionGPS> positions = new ArrayList<PositionGPS>();
+	protected List<Position> readProblemTSP(String tspFileName,
+			AgentLogger logger) {
+		
+		List<Position> positions = new ArrayList<Position>();
 		
 		BufferedReader br = null;
-		 
+		
 		try {
  
 			String sCurrentLine;
@@ -67,13 +71,11 @@ public abstract class ProblemTSPTool implements ProblemTool {
 					String[] tokens = sCurrentLine.split(delims);
 					
 					int number = Integer.parseInt(tokens[0]);
-					double latitude = Double.parseDouble(tokens[1]);
-					double longitude = Double.parseDouble(tokens[2]);
-							
-					PositionGPS positionI = new PositionGPS();
-					positionI.setNumber(number);
-					positionI.setLatitude(latitude /1000);
-					positionI.setLongitude(longitude /1000);
+					double firstValue = Double.parseDouble(tokens[1]);
+					double secondValue = Double.parseDouble(tokens[2]);
+					
+					Position positionI =
+							convertToPosition(number, firstValue, secondValue);
 					
 					positions.add(positionI);
 				}
@@ -94,10 +96,26 @@ public abstract class ProblemTSPTool implements ProblemTool {
 			}
 		}
 		
-		ProblemTSP problem = new ProblemTSP();
-		problem.setPositions(positions);
+		return positions;
+	}
+	
+	/**
+	 * Converts to Position
+	 * 
+	 * @param number
+	 * @param firstValue
+	 * @param secondValue
+	 * @return
+	 */
+	public Position convertToPosition(int number, double firstValue,
+			double secondValue) {
 		
-		return problem;
+		PositionGPS positionI = new PositionGPS();
+		positionI.setNumber(number);
+		positionI.setLatitude(firstValue);
+		positionI.setLongitude(secondValue);
+		
+		return positionI;
 	}
 	
 }

@@ -15,9 +15,12 @@ import jade.lang.acl.ACLMessage;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ComputingOntology;
+import org.distributedea.ontology.ManagementOntology;
+import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
 
 public class ComputingAgentService {
@@ -27,7 +30,7 @@ public class ComputingAgentService {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
-					"Argument agentKiller can't be null");
+					"Argument agent can't be null");
 		}
 
 		Ontology ontology = ComputingOntology.getInstance();
@@ -68,6 +71,42 @@ public class ComputingAgentService {
 		return false;
 	}
 	
+	
+	public static boolean sendPrepareYourselfToKill(Agent_DistributedEA agent, AID computingAgent,
+			AgentLogger logger) {
+		
+		if (agent == null) {
+			throw new IllegalArgumentException(
+					"Argument agent can't be null");
+		}
+
+		Ontology ontology = ManagementOntology.getInstance();
+
+		ACLMessage msgStartComputing = new ACLMessage(ACLMessage.REQUEST);
+		msgStartComputing.addReceiver(computingAgent);
+		msgStartComputing.setSender(agent.getAID());
+		msgStartComputing.setLanguage(agent.getCodec().getName());
+		msgStartComputing.setOntology(ontology.getName());
+
+		PrepareYourselfToKill prepareToKill = new PrepareYourselfToKill();
+		
+		Action action = new Action(agent.getAID(), prepareToKill);
+		
+		try {
+			agent.getContentManager().fillContent(msgStartComputing, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending PrepareYourselfToKill", e);
+			return false;
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending PrepareYourselfToKill", e);
+			return false;
+		}
+	
+		agent.send(msgStartComputing);
+		return true;
+	}
+	
 	public static ResultOfComputing sendAccessesResult(Agent_DistributedEA agent,
 			AID computingAgent, AgentLogger logger) {
 		
@@ -76,7 +115,7 @@ public class ComputingAgentService {
 					"Argument agentKiller can't be null");
 		}
 
-		Ontology ontology = ComputingOntology.getInstance();
+		Ontology ontology = ResultOntology.getInstance();
 
 		ACLMessage msgAccessesResult = new ACLMessage(ACLMessage.REQUEST);
 		msgAccessesResult.addReceiver(computingAgent);

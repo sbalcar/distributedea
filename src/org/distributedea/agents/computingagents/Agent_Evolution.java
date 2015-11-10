@@ -1,15 +1,18 @@
 package org.distributedea.agents.computingagents;
 
+import java.util.Random;
 import java.util.Vector;
 
 import org.distributedea.agents.computingagents.computingagent.evolution.Convertor;
+import org.distributedea.agents.computingagents.computingagent.evolution.EACrossoverWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolution.EAFitnessWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolution.EAMutationWrapper;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSP;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
 import org.jgap.Configuration;
@@ -33,8 +36,10 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	
 	@Override
 	public void prepareToDie() {
-		// TODO Auto-generated method stub
 		
+		// deregistre agent from DF
+		deregistrDF();
+		//doDelete();
 	}
 
 	@Override
@@ -42,7 +47,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		
 		boolean isAble = false;
 		
-		if (problem == ProblemTSP.class) {
+		if (problem == ProblemTSPGPS.class) {
 			
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
@@ -64,6 +69,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	public void startComputing(Problem problem) {
 
 		if (! isAbleToSolve(problem)) {
+			commitSuicide();
 			return;
 		}
 	
@@ -72,8 +78,8 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		setProblemTool(problemTool);
 		
 		int popSize = 5;
-		int maxGen = 50000;
 		double mutationRate = 0.9;
+		double crossRate = 0.5;
 		
 		// generates Individuals
 		Vector<IndividualPermutation> individuals = new Vector<IndividualPermutation>();
@@ -94,7 +100,8 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			
 		} catch (InvalidConfigurationException e1) {
 			logger.logThrowable("Invalid Configuration", e1);
-			//TODO: konec agenta
+			commitSuicide();
+			return;
 		}
 		
 		try {
@@ -105,11 +112,12 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			}
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Invalid Configuration", e);
-			//TODO: konec agenta
+			commitSuicide();
+			return;
 		}
 		
 		try {
-
+			
 			conf.setSampleChromosome(population.getChromosome(0));
 			conf.setFitnessFunction(
 					new EAFitnessWrapper(conf, false,  problem, problemTool, logger));
@@ -122,6 +130,8 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			conf.getGeneticOperators().clear();
 			conf.addGeneticOperator(
 					new EAMutationWrapper(mutationRate, problem, problemTool, conf, logger));
+			conf.addGeneticOperator(
+					new EACrossoverWrapper(crossRate, problem, problemTool, conf, logger));
 			conf.addNaturalSelector(new StandardPostSelector(conf), false);
 			
 			Genotype pop = new Genotype(conf, population);
@@ -132,8 +142,14 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			double fitnessValue =
 					problemTool.fitness(individual, problem, logger);
 			
-			//System.out.println("Generation -1: " + pop.getFittestChromosome().toString());
-			System.out.println("Generation -1: " + fitnessValue);
+			PartResult result = new PartResult();
+			result.setGenerationNumber(-1);
+			result.setFitnessResult(fitnessValue);
+			
+			logResultByUsingDatamanager(result);
+			
+			Random ran = new Random();
+			int x = ran.nextInt(3);
 			
 			long i = 0;
 			while (true) {
@@ -141,8 +157,8 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				// try - for situation when some operator doesn't work correctly
 				try {
 					pop.evolve();
-				} catch (NullPointerException e) {
-					//:TODO KILL AGENT
+				} catch (Exception e) {
+					commitSuicide();
 					return;
 				}
 				
@@ -159,14 +175,25 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	
 				setBestresultOfComputing(resultOfComputing);
 				
-				//System.out.println("Generation " + i + ": " + pop.getFittestChromosome().toString());
-				System.out.println("Generation " + i + ": " + fitnessValueI);
+				PartResult resultI = new PartResult();
+				resultI.setGenerationNumber(i);
+				resultI.setFitnessResult(fitnessValueI);
 				
+				logResultByUsingDatamanager(resultI);
+				
+				if (i == 10000 + 50000*x) {
+					//commitSuicide();
+					return;
+				}
 				i++;
 			}
+			
+			
 		}
 		catch (InvalidConfigurationException e) {
 			logger.logThrowable("Invalid Configuration", e);
+			commitSuicide();
+			return;
 		}
 		
 

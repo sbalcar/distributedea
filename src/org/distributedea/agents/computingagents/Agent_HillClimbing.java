@@ -5,7 +5,8 @@ import java.util.logging.Level;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSP;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
@@ -22,8 +23,9 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	
 	@Override
 	public void prepareToDie() {
-		// TODO Auto-generated method stub
 		
+		// deregistre agent from DF
+		deregistrDF();
 	}
 	
 	@Override
@@ -31,7 +33,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		
 		boolean isAble = false;
 		
-		if (problem == ProblemTSP.class) {
+		if (problem == ProblemTSPGPS.class) {
 			
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
@@ -53,6 +55,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	public void startComputing(Problem problem) {
 		
 		if (! isAbleToSolve(problem)) {
+			commitSuicide();
 			return;
 		}
 		
@@ -63,25 +66,30 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		Individual individual =
 				problemTool.generateIndividual(problem, logger);
 		
-		long generation = 0;
+		long generation = -1;
 		
 		while (true) {
-			logger.log(Level.INFO, "Generation: " + generation);
 			
 			double fitness =
 					problemTool.fitness(individual, problem, logger);
-			logger.log(Level.INFO, "Finess: " + fitness);
+			
+			PartResult resultI = new PartResult();
+			resultI.setGenerationNumber(generation);
+			resultI.setFitnessResult(fitness);
+			
+			logResultByUsingDatamanager(resultI);
 			
 			Individual individualNew = null;
 			try {
 				individualNew = getNewIndividual(individual, problem, problemTool);
 			} catch (ProblemToolException e) {
-				// TODO KILL AGENT
+				commitSuicide();
+				return;
 			}
 			
 			double fitnessNew =
 					problemTool.fitness(individualNew, problem, logger);
-			logger.log(Level.INFO, "        " + fitnessNew);
+
 			
 			if (fitnessNew < fitness) {
 				logger.log(Level.INFO, "JUMP");

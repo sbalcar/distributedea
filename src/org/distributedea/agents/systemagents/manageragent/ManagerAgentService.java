@@ -15,9 +15,11 @@ import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.management.CreateAgent;
+import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.agent.Argument;
 import org.distributedea.ontology.management.agent.Arguments;
@@ -86,7 +88,8 @@ public class ManagerAgentService {
 		
 		NodeInfo nodeInfo = null;
 		try {
-			Result result = (Result) agentSender.getContentManager().extractContent(nodeInfoDescription);
+			Result result = (Result) agentSender.getContentManager()
+					.extractContent(nodeInfoDescription);
 
 			nodeInfo = (NodeInfo) result.getValue();
 
@@ -170,6 +173,81 @@ public class ManagerAgentService {
 		return false;
 	}
 	
+	
+	/**
+	 * Sends request to kill agent
+	 * 
+	 * @param agentSender
+	 * @param logger
+	 * @return
+	 */
+	public static boolean sendKillAgent(Agent_DistributedEA agentSender, AID agentAID,
+			AgentLogger logger) {
+		
+		if (agentSender == null) {
+			throw new IllegalArgumentException(
+					"Argument agentSender can't be null");
+		}
+		
+		if (logger == null) {
+			throw new IllegalArgumentException(
+					"Argument logger can't be null");
+		}
+		
+		//search local Agent ManagerAgent
+		AID [] aidManagerAgents = agentSender.searchLocalContainerDF(
+				Agent_ManagerAgent.class.getName());
+		if (aidManagerAgents.length == 0) {
+			throw new IllegalStateException(
+					"Agent ManagerAgents doesn't exist");
+		} else if (aidManagerAgents.length > 1) {
+			throw new IllegalStateException(
+					"More that one Agent ManagerAgents");
+		}
+		
+		Ontology ontology = ManagementOntology.getInstance();
+		
+		ACLMessage msgKillAgent = new ACLMessage(ACLMessage.REQUEST);
+		msgKillAgent.addReceiver(aidManagerAgents[0]);
+		msgKillAgent.setSender(agentSender.getAID());
+		msgKillAgent.setLanguage(agentSender.getCodec().getName());
+		msgKillAgent.setOntology(ontology.getName());
+		
+		KillAgent killAgent = new KillAgent();
+		// local names are unique
+		killAgent.setAgentName(agentAID.getLocalName());
+
+		Action action = new Action(agentSender.getAID(), killAgent);
+		
+		try {
+			agentSender.getContentManager().fillContent(msgKillAgent, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending KillAgent", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending KillAgent", e);
+		}
+
+		ACLMessage msgReturned = null;
+		try {
+			msgReturned = FIPAService
+					.doFipaRequestClient(agentSender, msgKillAgent);
+		} catch (FIPAException e) {
+			logger.logThrowable("FIPAException by receiving the answer to KillAgent", e);
+			return false;
+		}
+
+		String msgText = msgReturned.getContent();
+
+		if (msgReturned.getPerformative() == ACLMessage.INFORM) {
+			if (msgText.equals("OK")) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Send request to kill container
 	 * 
@@ -211,18 +289,18 @@ public class ManagerAgentService {
 			logger.logThrowable("OntologyException by sending KillContainer", e);
 		}
 
-		ACLMessage msgRetursName = null;
+		ACLMessage msgReturned = null;
 		try {
-			msgRetursName = FIPAService
+			msgReturned = FIPAService
 					.doFipaRequestClient(agentSender, msgKillContainer);
 		} catch (FIPAException e) {
 			logger.logThrowable("FIPAException by receiving the answer to KillContainer", e);
 			return false;
 		}
 
-		String msgText = msgRetursName.getContent();
+		String msgText = msgReturned.getContent();
 
-		if (msgRetursName.getPerformative() == ACLMessage.INFORM) {
+		if (msgReturned.getPerformative() == ACLMessage.INFORM) {
 			if (msgText.equals("OK")) {
 				return true;
 			}

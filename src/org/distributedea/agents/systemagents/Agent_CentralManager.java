@@ -1,27 +1,16 @@
 package org.distributedea.agents.systemagents;
 
 import jade.content.onto.Ontology;
-import jade.core.AID;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.systemagents.centralmanager.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.SchedulerSimple;
-import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
-import org.distributedea.configuration.AgentConfiguration;
-import org.distributedea.configuration.AgentConfigurations;
-import org.distributedea.configuration.XmlConfigurationProvider;
+import org.distributedea.agents.systemagents.centralmanager.StartComputingBehaviour;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
-import org.distributedea.problems.tsp.permutation.ProblemTool2opt;
-import org.distributedea.problems.tsp.permutation.ProblemToolSimpleSwap;
+import org.distributedea.ontology.ResultOntology;
 
 public class Agent_CentralManager extends Agent_DistributedEA {
 
@@ -37,6 +26,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		ontologies.add(LogOntology.getInstance());
 		ontologies.add(ManagementOntology.getInstance());
 		ontologies.add(ComputingOntology.getInstance());
+		ontologies.add(ResultOntology.getInstance());
 		
 		return ontologies;
 	}
@@ -47,89 +37,18 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		initAgent();
 		registrDF();
 		
+		// waiting for initialization of all System Agents
 		try {
-			//Thread.sleep(15 * 1000);
+			Thread.sleep(15 * 1000);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.logThrowable("Unable to wait for initialization", e);
+			return;
 		}
 	
-		startCommand();
-
-		BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
+		addBehaviour(new StartComputingBehaviour(logger));
 		
-		logger.log(Level.INFO, "Welcome in DistribudetEA");
-		while (true) {
-			
-			String line = null;
-			try {
-				line = buffer.readLine();
-			} catch (IOException e) {
-				logger.logThrowable("Problem with reading from command line", e);
-			}
-			
-			if (line.equals("kill")) {
-				logger.log(Level.INFO, "Killing everything");
-				
-				killCommand();
-				
-			} else if (line.equals("start")) {
-				logger.log(Level.INFO, "Starting everything");
-				
-				startCommand();
-				
-			} else {
-				logger.log(Level.INFO, "I don't understand you \n" + 
-						"   start - Starting computing \n" +
-						"   kill  - Killing everything");
-			}
-			
-		}	
-	}
-
-	protected void killCommand() {
-		
-		AID [] aidManagerAgents = searchDF(
-				Agent_ManagerAgent.class.getName());
-		
-		for (AID aManagerI : aidManagerAgents) {
-			ManagerAgentService.sendKillContainer(this, aManagerI, logger);
-		}
 	}
 	
-	protected void startCommand() {
-		
-		String fileName = org.distributedea.Configuration.getMethodsFile();
-		
-		XmlConfigurationProvider configProvider =
-				new XmlConfigurationProvider();
-		AgentConfigurations configuration =
-				configProvider.getConfiguration(fileName, logger);
 
-		List<AgentConfiguration> agentConfigurations = configuration
-				.getAgentConfigurations();
-		
-		AgentConfiguration[] configurations = 
-				agentConfigurations.toArray(
-				new AgentConfiguration[agentConfigurations.size()]);
-				
-		
-		String inputFileName = "wi29.tsp";
-		Class<?> [] availableProblemTools =
-			{ProblemToolSimpleSwap.class, ProblemTool2opt.class};
-
-		String problemFileName =
-				org.distributedea.Configuration.getInputFile(inputFileName);
-		
-		Scheduler scheduler = new SchedulerSimple();
-		scheduler.agentInitialization(this, configurations, problemFileName,
-				availableProblemTools, logger);
-
-		while (true) {
-			scheduler.replan(this, logger);
-			break;
-		}
-
-	}
 	
 }
