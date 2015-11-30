@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
@@ -60,7 +61,8 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 	protected void startCommand() {
 		
 		// check if contains Behaviour
-		myAgent.addBehaviour(new StartComputingBehaviour(logger));
+		Agent_CentralManager centralManager = (Agent_CentralManager) myAgent;
+		myAgent.addBehaviour(centralManager.instanceStartComputingBehaviour());
 	}
 	
 	protected void killCommand() {

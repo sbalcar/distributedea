@@ -138,10 +138,10 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			String agentNameI = configurationI.getAgentName();
 			List<Argument> argumentsI = configurationI.getArguments();
 
-			Boolean result = ManagerAgentService.sendCreateAgent(this,
+			AID result = ManagerAgentService.sendCreateAgent(this,
 					aManagerAgentAID, agentTypeI, agentNameI, argumentsI, logger);
 
-			if (!result) {
+			if (result == null) {
 				logger.log(Level.SEVERE, "Error by creating agent");
 				try {
 					getContainerController().kill();

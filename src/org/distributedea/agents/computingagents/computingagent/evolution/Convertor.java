@@ -57,7 +57,6 @@ public class Convertor {
 		
 		for (int numberIndex = 0;
 				numberIndex < individual.sizeOfPermutation(); numberIndex++) {
-			
 			Gene geneI = sampleGenes[numberIndex];
 			geneI.setAllele(
 					individual.getPermutation().get(numberIndex) -1);
@@ -76,14 +75,21 @@ public class Convertor {
 	public static Individual convertToIndividual(IChromosome chromosome,
 			Configuration conf) throws InvalidConfigurationException {
 	
+		Individual convertedIndividual = null;
+		
 		if (chromosome instanceof Chromosome) {
 			
 			Chromosome chromosomeCh =
 					(Chromosome) chromosome;
-			return convertToIndividualPermutation(chromosomeCh, conf);
+			convertedIndividual = convertToIndividualPermutation(chromosomeCh, conf);
 		}
 		
-		return null;
+		if (convertedIndividual == null ||
+				! convertedIndividual.validation()) {
+			throw new IllegalStateException("Conversion is not valid");
+		}
+		
+		return convertedIndividual;
 	}
 	
 	/**

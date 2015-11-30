@@ -134,6 +134,7 @@ public class EACrossoverWrapper implements GeneticOperator {
 			newIndividuals = problemTool.createNewIndividual(
 						individualPerm1, individualPerm2, problem, logger);
 		} catch (ProblemToolException e1) {
+			logger.logThrowable("", e1);
 			return null;
 		}
 		

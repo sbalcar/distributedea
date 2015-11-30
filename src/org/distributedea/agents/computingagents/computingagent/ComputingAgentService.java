@@ -1,5 +1,9 @@
 package org.distributedea.agents.computingagents.computingagent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
@@ -13,6 +17,7 @@ import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.computingagents.Agent_ComputingAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.ManagementOntology;
@@ -20,6 +25,7 @@ import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
 
@@ -60,7 +66,7 @@ public class ComputingAgentService {
 			msgRetursName = FIPAService
 					.doFipaRequestClient(agent, msgStartComputing);
 		} catch (FIPAException e) {
-			logger.logThrowable("FIPAException by receiving StartComputing answaer", e);
+			logger.logThrowable("FIPAException by receiving StartComputing answer", e);
 			return false;
 		}
 		
@@ -162,5 +168,48 @@ public class ComputingAgentService {
 		
 		return resultOfComputing;
 	}
+	
+	
+	public static void sendIndividualToNeighbours(Agent_DistributedEA agent,
+			Individual individual, AgentLogger logger) {
+		
+		if (agent == null) {
+			throw new IllegalArgumentException(
+					"Argument agent sender can't be null");
+		}
+		
+		AID [] aidOfComputingAgents = agent.searchDF(
+				Agent_ComputingAgent.class.getName());
+		if (aidOfComputingAgents == null) {
+			throw new IllegalStateException("Computing agent can't find any neighbour");
+		}
+		List<AID> aidOfComputingAgentsWithoutSender = new ArrayList<AID>(Arrays.asList(aidOfComputingAgents));
+		aidOfComputingAgentsWithoutSender.remove(agent.getAID());
+		
+		Ontology ontology = ResultOntology.getInstance();
+
+		ACLMessage msgIndividual = new ACLMessage(ACLMessage.INFORM);
+		for (AID computingAgentI : aidOfComputingAgentsWithoutSender) {
+			msgIndividual.addReceiver(computingAgentI);	
+		}
+		msgIndividual.setSender(agent.getAID());
+		msgIndividual.setLanguage(agent.getCodec().getName());
+		msgIndividual.setOntology(ontology.getName());
+
+		
+		Action action = new Action(agent.getAID(), individual);
+		
+		try {
+			agent.getContentManager().fillContent(msgIndividual, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending Individual", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending Individual", e);
+		}
+		
+		agent.send(msgIndividual);
+	}
+	
 	
 }

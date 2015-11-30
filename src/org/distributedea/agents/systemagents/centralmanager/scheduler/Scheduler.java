@@ -3,6 +3,7 @@ package org.distributedea.agents.systemagents.centralmanager.scheduler;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.configuration.AgentConfiguration;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.problem.Problem;
 
 /**
  * Represents central planner of distributed evolution compute
@@ -18,9 +19,8 @@ public interface Scheduler {
 	 * @param logger
 	 */
 	public void agentInitialization(Agent_CentralManager centramManager,
-			AgentConfiguration [] configurations, String problemFileName,
-			Class<?> problemToSolve, Class<?> [] availablProblemTools,
-			AgentLogger logger);
+			Problem problem, AgentConfiguration [] configurations,
+			Class<?> [] availablProblemTools, AgentLogger logger);
 	
 	/**
 	 * Replan computing agents on distributed nodes
@@ -29,5 +29,6 @@ public interface Scheduler {
 	 * @param logger
 	 */
 	public void replan(Agent_CentralManager centramManager,
-			Class<?> problemToSolve, AgentLogger logger);
+			Problem problem, AgentConfiguration [] configurations,
+			Class<?> []  availableProblemTools, AgentLogger logger);
 }

@@ -1,5 +1,8 @@
 package org.distributedea.problems.tsp.point.permutation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
@@ -24,8 +27,15 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	@Override
 	public Individual generateIndividual(Problem problem, AgentLogger logger) {
 		
+		ProblemTSPPoint problemTSP = (ProblemTSPPoint) problem;
+		
+		List<Position> positions = new ArrayList<Position>();
+		for (PositionPoint positionI : problemTSP.getPositions()) {
+			positions.add(positionI);
+		}
+		
 		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.generateIndividual(problem, logger);
+		return tool.generateIndividual(positions);
 	}
 	
 	@Override
@@ -73,7 +83,11 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 			Individual individual2, Problem problem, AgentLogger logger)
 			throws ProblemToolException {
 		
-		throw new ProblemToolException("Not possible to implement in this context");
+		IndividualPermutation ind1 = (IndividualPermutation) individual1;
+		IndividualPermutation ind2 = (IndividualPermutation) individual2;
+		
+		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
+		return tool.singlePointCrossover(ind1, ind2);
 	}
 	
 	@Override

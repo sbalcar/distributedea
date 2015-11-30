@@ -21,11 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.computingagents.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.ComputingAgentService;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.management.CreateAgent;
+import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.agent.Argument;
@@ -57,10 +60,10 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		initAgent();
 		registrDF();
 
-		MessageTemplate mesTemplate =
+		MessageTemplate mesTemplateRequest =
 				MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 
-		addBehaviour(new AchieveREResponder(this, mesTemplate) {
+		addBehaviour(new AchieveREResponder(this, mesTemplateRequest) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -72,19 +75,19 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 							getContentManager().extractContent(request);
 
 					if (action.getAction() instanceof DescribeNode) {
-						// DescribeNode action
+						// DescribeNode request action
 						return respondToDescribeNode(request, action);
 						
 					} else if (action.getAction() instanceof CreateAgent) {
-						// CreateAgent action
+						// CreateAgent request action
 						return respondToCreateAgent(request, action);
 					
 					} else if (action.getAction() instanceof KillAgent) {
-						// KillAgent action
+						// KillAgent request action
 						return respondToKillAgent(request, action);
 					
 					} else if (action.getAction() instanceof KillContainer) {
-						
+						// KillContainer request action
 						return respondToKillContainer(request, action);
 					}
 
@@ -121,7 +124,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @throws OntologyException
 	 */
 	protected ACLMessage respondToDescribeNode(ACLMessage request, Action action) {
-
+		
 		@SuppressWarnings("unused")
 		DescribeNode describeNode = (DescribeNode) action.getAction();
 		
@@ -132,8 +135,14 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		
 		int cores = Runtime.getRuntime().availableProcessors();
 		
+		AID [] localComputingAgentAIDs =
+				searchLocalContainerDF(Agent_ComputingAgent.class.getName());
+		int freeCPUnumber = cores -localComputingAgentAIDs.length;
+		
 		NodeInfo nodeInfo = new NodeInfo();
-		nodeInfo.setNumberCPU(cores);
+		nodeInfo.setManagerAgentAID(getAID());
+		nodeInfo.setTotalCPUNumber(cores);
+		nodeInfo.setFreeCPUnumber(freeCPUnumber);
 		
 		Result result = new Result(action.getAction(), nodeInfo);
 
@@ -168,26 +177,49 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		Arguments arguments = createAgent.getArguments();
 		List<Argument> argumentList = arguments.getArguments();
 		
-		AgentController createdAgent = createAgent(this, agentType, agentName,
+		logger.log(Level.INFO, "Creating agent " + agentName);
+		AgentController createdAgentController = createAgent(this, agentType, agentName,
 				argumentList, logger);
-
-		ACLMessage reply = request.createReply();
 		
-		if (createdAgent != null) {
-			reply.setPerformative(ACLMessage.INFORM);
-			reply.setContent("OK");
-			logger.log(Level.INFO, "Agent " + agentName + " created.");
-		} else {
-			reply.setPerformative(ACLMessage.INFORM);
-			reply.setContent("KO");
-			logger.log(Level.INFO, "Fail by creating agent " + agentName + ".");
-
+		AID createdAgentAID = null;
+		try {
+			createdAgentAID = new AID(createdAgentController.getName(), false);
+			String name =  createdAgentAID.getLocalName().substring(0,
+					createdAgentAID.getLocalName().indexOf('@'));
+			logger.log(Level.INFO, "Agent " + name + " was created");
+		} catch (StaleProxyException e1) {
+			logger.logThrowable("Error by finding new Agent AID", e1);
+			throw new IllegalStateException("Error by finding new Agent AID");
 		}
 		
-		return reply;
+		ACLMessage reply = request.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+		reply.setLanguage(codec.getName());
+		reply.setOntology(ManagementOntology.getInstance().getName());
+
+		CreatedAgent createdAgent = new CreatedAgent();
+		createdAgent.importCreatedAgentName(createdAgentAID);
 		
+		Result result = new Result(action.getAction(), createdAgent);
+
+		try {
+			getContentManager().fillContent(reply, result);
+		} catch (CodecException e) {
+			logger.logThrowable("CodecException by sending NodeInfo", e);
+		} catch (OntologyException e) {
+			logger.logThrowable(e.getMessage(), e);
+		}
+
+		return reply;
 	}
 	
+	/**
+	 * Respond to KillAgent message
+	 * 
+	 * @param request
+	 * @param action
+	 * @return
+	 */
 	protected ACLMessage respondToKillAgent(ACLMessage request, Action action) {
 		
 		KillAgent killAgent = (KillAgent) action.getAction();
@@ -337,6 +369,18 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		
 	}
 	
+	/**
+	 * Tries to create Agent with specific numberOfAgent ID and numberOfContainer ID
+	 * @param agent
+	 * @param type
+	 * @param name
+	 * @param numberOfAgent
+	 * @param numberOfContainer
+	 * @param containerID
+	 * @param argumentList
+	 * @param logger
+	 * @return
+	 */
 	private static AgentController tryCreateAgent(Agent_DistributedEA agent,
 			String type, String name, int numberOfAgent, int numberOfContainer,
 			String containerID, List<Argument> argumentList, AgentLogger logger) {
@@ -360,7 +404,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			String  agentChar = "";
 			if (numberOfAgent > 0) {
 				char aChar = (char) ('a' + numberOfAgent);
-				agentChar = "" + AGENT_NUMBER_PREFIX + aChar;
+				agentChar = "" + Configuration.AGENT_NUMBER_PREFIX + aChar;
 			}
 			
 			String  containerChar = "";
@@ -372,7 +416,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			String agentNameWitID = name + agentChar;
 			String containerNameWitID = containerID + containerChar;
 			
-			String agentFullName = agentNameWitID + CONTAINER_NUMBER_PREFIX
+			String agentFullName = agentNameWitID + Configuration.CONTAINER_NUMBER_PREFIX
 					+ containerNameWitID;
 			
 			AgentController agentController = createAndStartAgent(
@@ -412,7 +456,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			String argumet1 = "";					
 			for (Argument argumentI : arguments.getArguments()) {
 				String agentNameI = argumentI.getValue() +
-						CONTAINER_NUMBER_PREFIX + numberOfContainer;
+						Configuration.CONTAINER_NUMBER_PREFIX + numberOfContainer;
 				argumet1 += agentNameI + "; ";
 			}
 			argumet1.trim();
@@ -467,4 +511,5 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		return containerName.equals("Main-Container");
 
 	}
+	
 }

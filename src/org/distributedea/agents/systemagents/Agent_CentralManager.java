@@ -1,11 +1,15 @@
 package org.distributedea.agents.systemagents;
 
 import jade.content.onto.Ontology;
+import jade.core.behaviours.Behaviour;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.Configuration;
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.centralmanager.ConsoleAutomatBehaviour;
 import org.distributedea.agents.systemagents.centralmanager.StartComputingBehaviour;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
@@ -39,16 +43,40 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		
 		// waiting for initialization of all System Agents
 		try {
-			Thread.sleep(15 * 1000);
+			Thread.sleep(4 * 1000);
 		} catch (Exception e) {
 			logger.logThrowable("Unable to wait for initialization", e);
 			return;
 		}
-	
-		addBehaviour(new StartComputingBehaviour(logger));
 		
+		// adding Behaviour for computing
+		if (InputConfiguration.automaticStart) {
+			addBehaviour(instanceStartComputingBehaviour());
+		} else {
+			addBehaviour(new ConsoleAutomatBehaviour(logger));
+		}
 	}
 	
+	/**
+	 * Prepares Behaviour which start Distributed computing
+	 * @return Instance of Behaviour, which contains all parameters 
+	 */
+	public Behaviour instanceStartComputingBehaviour() {
+		
+		String problemFileName = Configuration.getInputProblemFile();
+		
+		String methodsFileName = Configuration.getMethodsFile();
+
+		
+		Behaviour behaviour = new StartComputingBehaviour(
+				InputConfiguration.problemToSolve,
+				problemFileName,
+				methodsFileName,
+				InputConfiguration.availableProblemTools,
+				logger);
+		
+		return behaviour;
+	}
 
 	
 }

@@ -39,7 +39,12 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 			AgentLogger logger) {
 		
 		ProblemTSPGPS problemTSP = (ProblemTSPGPS) problem;
-		return generateIndividual(problemTSP);
+		
+		List<Position> positions = new ArrayList<Position>();
+		for (PositionGPS positionI : problemTSP.getPositions()) {
+			positions.add(positionI);
+		}
+		return generateIndividual(positions);
 	}
 	
 	@Override
@@ -82,11 +87,11 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	 * Generates the new Permutation based Individual from TSP-Problem
 	 * @param problem
 	 * @return
-	 */
-	protected IndividualPermutation generateIndividual(ProblemTSPGPS problem) {
+	 */	
+	public IndividualPermutation generateIndividual(List<Position> positions) {
 		
 		List<Integer> numbers = new ArrayList<>();
-		for (PositionGPS positionI : problem.getPositions()) {
+		for (Position positionI : positions) {
 			numbers.add(positionI.getNumber());
 		}
 		

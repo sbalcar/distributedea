@@ -8,7 +8,6 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
@@ -31,7 +30,14 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 			AgentLogger logger) throws ProblemToolException {
 				
 		Class<?> individualClass = IndividualPermutation.class;
-		Class<?> problemClass = ProblemTSPGPS.class;
+		Class<?> problemClass = problemWhichSolves();
+	
+		return improveIndividual(individual, problem, individualClass, problemClass, logger);
+	}
+	
+	public Individual improveIndividual(Individual individual, Problem problem,
+			Class<?> individualClass, Class<?> problemClass, AgentLogger logger
+			) throws ProblemToolException {
 		
 		boolean areParametersValid = 
 				ProblemToolValidation.isIndividualTypeOf(
@@ -92,7 +98,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 		return singlePointCrossover(ind1, ind2);
 	}
 	
-	private Individual[] singlePointCrossover(IndividualPermutation individual1,
+	public Individual[] singlePointCrossover(IndividualPermutation individual1,
 			IndividualPermutation individual2) {
 		
 		List<Integer> perm1 = individual1.getPermutation();

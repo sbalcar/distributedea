@@ -1,8 +1,11 @@
 package org.distributedea.agents.computingagents;
 
+import jade.core.behaviours.Behaviour;
+
 import java.util.Random;
 import java.util.Vector;
 
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.evolution.Convertor;
 import org.distributedea.agents.computingagents.computingagent.evolution.EACrossoverWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolution.EAFitnessWrapper;
@@ -12,6 +15,7 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
@@ -32,13 +36,25 @@ import org.jgap.impl.WeightedRouletteSelector;
 public class Agent_Evolution extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	@Override
 	public void prepareToDie() {
 		
-		// deregistre agent from DF
+		// stops computing in separated thread
+		thread.stop();
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			logger.logThrowable("Can't wait to stop thread", e);
+		}
+		
+		// deregistres agent from DF
+		//  before derestration have to be stop computing(after deregistration
+		//  agent can no communicate wit another agents)
 		deregistrDF();
+		
+		// removes all Behaviors in agent (kill himself)
 		//doDelete();
 	}
 
@@ -48,25 +64,27 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		boolean isAble = false;
 		
 		if (problem == ProblemTSPGPS.class) {
-			
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-			
+		} else if (problem == ProblemTSPPoint.class) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
 		}
 		
 		if (! isAble) {
 			logger.logThrowable(
 					"Agent is not able to solve this type of Problem by using "
 					+ "this reperesentation",
-					new IllegalStateException());
+					new IllegalStateException("Can't solve problem"));
 		}
 		
 		return isAble;
 	}
 	
 	@Override
-	public void startComputing(Problem problem) {
+	public void startComputing(Problem problem, Behaviour behaviour) {
 
 		if (! isAbleToSolve(problem)) {
 			commitSuicide();
@@ -148,8 +166,8 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			
 			logResultByUsingDatamanager(result);
 			
-			Random ran = new Random();
-			int x = ran.nextInt(3);
+//			Random ran = new Random();
+//			int x = ran.nextInt(3);
 			
 			long i = 0;
 			while (true) {
@@ -158,6 +176,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				try {
 					pop.evolve();
 				} catch (Exception e) {
+					logger.logThrowable("Error by evolving", e);
 					commitSuicide();
 					return;
 				}
@@ -165,6 +184,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				IChromosome bestChromosomeI = pop.getFittestChromosome();
 				Individual individualI =
 						Convertor.convertToIndividual(bestChromosomeI, conf);
+
 				double fitnessValueI =
 						problemTool.fitness(individualI, problem, logger);
 				
@@ -179,15 +199,28 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				resultI.setGenerationNumber(i);
 				resultI.setFitnessResult(fitnessValueI);
 				
+				//saves data in Agent DataManager
 				logResultByUsingDatamanager(resultI);
 				
+				// best individual distribution to neighbours
+				if (InputConfiguration.individualDistribution) {
+					distributeIndividualToNeighours(individualI);
+				}
+				
+				//take received individual to new generation
+				Individual recievedIndividual = getRecievedIndividual();
+				if (recievedIndividual != null) {
+					IChromosome recievedChrom = Convertor.convertToIChromosome(recievedIndividual, conf);
+					pop.getPopulation().addChromosome(recievedChrom);
+				}
+/*				
 				if (i == 10000 + 50000*x) {
-					//commitSuicide();
+					commitSuicide();
 					return;
 				}
+*/				
 				i++;
 			}
-			
 			
 		}
 		catch (InvalidConfigurationException e) {

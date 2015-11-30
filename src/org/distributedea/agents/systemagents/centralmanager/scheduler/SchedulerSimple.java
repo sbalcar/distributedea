@@ -16,15 +16,15 @@ import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.management.agent.Argument;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.ProblemTool;
 
 public class SchedulerSimple implements Scheduler {
 
+	int index = 2;
+	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			AgentConfiguration [] configurations, String problemFileName,
-			Class<?> problemToSolve, Class<?> [] availableProblemTools,
-			AgentLogger logger) {
+			Problem problem, AgentConfiguration [] configurations,
+			Class<?> [] availableProblemTools, AgentLogger logger) {
 		
 		if (centralManager == null) {
 			throw new IllegalArgumentException("centralManager is null");
@@ -37,8 +37,8 @@ public class SchedulerSimple implements Scheduler {
 			throw new IllegalArgumentException("configurations is empty");
 		}
 		
-		if (problemToSolve == null) {
-			throw new IllegalArgumentException("problemToSolve is null");
+		if (problem == null) {
+			throw new IllegalStateException("Problem wasn't loaded");
 		}
 		
 		if (availableProblemTools == null) {
@@ -52,9 +52,11 @@ public class SchedulerSimple implements Scheduler {
 			throw new IllegalArgumentException("logger is null");
 		}
 		
-		initializeComputingAgents(centralManager, configurations, logger);
+		List<NodeInfo> availableNodes = getAvailableNodes(centralManager, logger);
+		
+		initializeComputingAgents(centralManager, availableNodes, configurations, logger);
 			
-		runComputation(centralManager, problemFileName, availableProblemTools, logger);
+		runComputation(centralManager, availableNodes, problem, availableProblemTools, logger);
 	}
 	
 	/**
@@ -64,21 +66,16 @@ public class SchedulerSimple implements Scheduler {
 	 * @param logger
 	 */
 	private void initializeComputingAgents(Agent_CentralManager centralManager,
-			AgentConfiguration [] configurations, AgentLogger logger) {
+			List<NodeInfo> availableNodes, AgentConfiguration [] configurations, AgentLogger logger) {
 		
-		AID [] aidManagerAgents = centralManager.searchDF(
-				Agent_ManagerAgent.class.getName());
-		
-		for (AID managerAidI : aidManagerAgents) {	
+		for (NodeInfo nodeInfoI : availableNodes) {	
 			
-			NodeInfo nodeInfoI = ManagerAgentService.sendNodeInfo(
-					centralManager, managerAidI, logger);
-			
-			int numberOfCPUI = nodeInfoI.getNumberCPU();
+			AID managerAidI = nodeInfoI.getManagerAgentAID();
+			int numberOfCPUI = nodeInfoI.getFreeCPUnumber();
 			
 			for (int cpuI = 0; cpuI < numberOfCPUI; cpuI++) {
 				
-				AgentConfiguration agentConfiguration = configurations[2];
+				AgentConfiguration agentConfiguration = configurations[index];
 				String agentType = agentConfiguration.getAgentType();
 				String agentName = agentConfiguration.getAgentName();
 				List<Argument> arguments = agentConfiguration.getArguments();
@@ -87,6 +84,24 @@ public class SchedulerSimple implements Scheduler {
 						managerAidI, agentType, agentName, arguments, logger);
 			}
 		}
+		
+	}
+
+	private List<NodeInfo> getAvailableNodes(Agent_CentralManager centralManager, AgentLogger logger) {
+		
+		AID [] aidManagerAgents = centralManager.searchDF(
+				Agent_ManagerAgent.class.getName());
+		
+		List<NodeInfo> nodeInfos = new ArrayList<NodeInfo>();
+		
+		for (AID managerAidI : aidManagerAgents) {	
+			
+			NodeInfo nodeInfoI = ManagerAgentService.requestForNodeInfo(
+					centralManager, managerAidI, logger);
+			nodeInfos.add(nodeInfoI);
+		}
+		
+		return nodeInfos;
 	}
 	
 	/**
@@ -96,24 +111,10 @@ public class SchedulerSimple implements Scheduler {
 	 * @param availableProblemTools
 	 * @param logger
 	 */
-	private void runComputation(Agent_CentralManager centralManager, String problemFileName,
+	private void runComputation(Agent_CentralManager centralManager,
+			List<NodeInfo> availableNodes, Problem problem,
 			Class<?> [] availableProblemTools, AgentLogger logger) {
 		
-		Class<?> problemToolClass1 = availableProblemTools[0];
-		ProblemTool problemTool = null;
-		try {
-			problemTool = (ProblemTool) problemToolClass1.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			logger.logThrowable("ProblemTool wasn't initialized", e);
-			throw new IllegalStateException("ProblemTool wasn't initialized");
-		}
-		
-		Problem problem = problemTool.readProblem(problemFileName, logger);
-		
-		if (problem == null) {
-			throw new IllegalStateException("Problem wasn't loaded");
-		}
-
 		AID [] aidComputingAgents = centralManager.searchDF(
 				Agent_ComputingAgent.class.getName());
 		
@@ -139,8 +140,15 @@ public class SchedulerSimple implements Scheduler {
 	 */
 	@Override
 	public void replan(Agent_CentralManager centralManager,
-			Class<?> problemToSolve, AgentLogger logger) {
+			Problem problem, AgentConfiguration [] configurations,
+			Class<?> []  availableProblemTools, AgentLogger logger) {
 
+		List<NodeInfo> availableNodes = getAvailableNodes(centralManager, logger);
+		initializeComputingAgents(centralManager, availableNodes, configurations, logger);
+		
+		runComputation(centralManager, availableNodes, problem, availableProblemTools, logger);
+		
+		
 		AID [] aidOfComputingAgents = centralManager.searchDF(
 				Agent_ComputingAgent.class.getName());
 		
@@ -150,15 +158,6 @@ public class SchedulerSimple implements Scheduler {
 			ResultOfComputing resultOfComputingI =
 					ComputingAgentService.sendAccessesResult(centralManager, computingAgentI, logger);
 			resultOfComputingAgents.add(resultOfComputingI);
-		}
-		
-		Problem problem = null;
-		try {
-			problem = (Problem) problemToSolve.newInstance();
-		} catch (InstantiationException e) {
-			logger.logThrowable("Can't instance Problem", e);
-		} catch (IllegalAccessException e) {
-			logger.logThrowable("Can't instance Problem", e);
 		}
 		
 		if (resultOfComputingAgents.isEmpty()) {
@@ -200,26 +199,38 @@ public class SchedulerSimple implements Scheduler {
 		// kill worst agent
 		ManagerAgentService.sendKillAgent(centralManager, worstAID, logger);
 	
-		
-	}
+		// wait for kill and unregister agent
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			logger.logThrowable("Error by waiting for killing agent " + worstAID.getLocalName(), e);
+			throw new IllegalStateException("Error by waiting for killing agent " + worstAID.getLocalName());
+		}
 
-	public int numberOfAvailableCPU(Agent_CentralManager centramManager,
-			AgentLogger logger) {
+		AID manager = ManagerAgentService.getManagerAgentOfAID(centralManager, worstAID);
 		
-		AID [] aidManagerAgents = centramManager.searchDF(
-				Agent_ManagerAgent.class.getName());
+		AgentConfiguration agentConfiguration = configurations[index];
+		String agentType = agentConfiguration.getAgentType();
+		String agentName = agentConfiguration.getAgentName();
+		List<Argument> arguments = agentConfiguration.getArguments();
+	
+		// create new agent
+		AID newAgent = ManagerAgentService.sendCreateAgent(centralManager,
+				manager, agentType, agentName, arguments, logger);
 		
-		int numberOfCPU = 0;
-		for (AID managerAidI : aidManagerAgents) {	
-			
-			NodeInfo nodeInfoI = ManagerAgentService.sendNodeInfo(
-					centramManager, managerAidI, logger);
-			
-			numberOfCPU += nodeInfoI.getNumberCPU();
+		// wait for initialization agent
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			logger.logThrowable("Error by waiting for new agent initialization " + newAgent.getLocalName(), e);
+			throw new IllegalStateException("Error by waiting for new agent initialization " + newAgent.getLocalName());
 		}
 		
-		return numberOfCPU;
+		// start computing
+		ComputingAgentService.sendStartComputing(
+				centralManager, newAgent, problem, logger);
+//*/
 	}
-
+	
 
 }

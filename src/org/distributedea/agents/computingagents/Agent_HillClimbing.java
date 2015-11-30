@@ -1,11 +1,14 @@
 package org.distributedea.agents.computingagents;
 
+import jade.core.behaviours.Behaviour;
+
 import java.util.logging.Level;
 
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
@@ -34,12 +37,16 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		boolean isAble = false;
 		
 		if (problem == ProblemTSPGPS.class) {
-			
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}	
+		} else if (problem == ProblemTSPPoint.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
 			
 		}
+		
 		
 		if (! isAble) {
 			logger.logThrowable(
@@ -52,7 +59,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	@Override
-	public void startComputing(Problem problem) {
+	public void startComputing(Problem problem, Behaviour behaviour) {
 		
 		if (! isAbleToSolve(problem)) {
 			commitSuicide();

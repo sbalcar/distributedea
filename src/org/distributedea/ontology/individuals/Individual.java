@@ -6,4 +6,5 @@ public abstract class Individual implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
+	public abstract boolean validation();
 }

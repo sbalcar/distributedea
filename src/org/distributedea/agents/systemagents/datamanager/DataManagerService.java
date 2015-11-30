@@ -1,5 +1,6 @@
 package org.distributedea.agents.systemagents.datamanager;
 
+import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.Agent_DataManager;
 import org.distributedea.logging.AgentLogger;
@@ -22,14 +23,17 @@ public class DataManagerService {
 	 * @param result
 	 * @param logger
 	 */
-	public void sendPartResultMessage(Agent_DistributedEA agent,
+	public static void sendPartResultMessage(Agent_DistributedEA agent,
 			PartResult result, AgentLogger logger) {
 		
-		AID [] aidDataManagers = agent.searchDF(
-				Agent_DataManager.class.getName());
+//		AID [] aidDataManagers = agent.searchDF(
+//				Agent_DataManager.class.getName());
+		AID aidDataManager = new AID(AgentNames.DATA_MANAGER.getName(), true);
+		AID [] aidDataManagers = new AID [1];
+		aidDataManagers[0] = aidDataManager;
 		
-		if (aidDataManagers.length == 0) {
-			throw new IllegalStateException("Agent DataManager doesn't exist");
+		if (aidDataManagers == null || aidDataManagers.length == 0) {
+			throw new IllegalStateException("Agent DataManager doesn't exist for agent " + agent.getAID().getLocalName());
 			
 		} else if (aidDataManagers.length > 1) {
 			throw new IllegalStateException("More than one Agent DataManager");

@@ -5,12 +5,17 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.core.AID;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.FailureException;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -19,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.distributedea.AgentNames;
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.Agent_ComputingAgent;
@@ -45,16 +51,12 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		initAgent();
 		registrDF();
 		
-		// clears  old results - rewrites old file
-		String fileName = Configuration.getResultFile();
-		Writer writer;
-		try {
-			writer = new BufferedWriter(new FileWriter(fileName));
-			writer.close();
-		} catch (IOException e1) {
-			logger.logThrowable("Error by rewiting file", e1);
-		}
+		// clears  old results of computing - rewrites old file
+		cleanResult();
 
+		// clear old logs of Computing Agents - removes old files
+		cleanLogDirectory();
+		
 		
 		MessageTemplate mesTemplate =
 				MessageTemplate.MatchPerformative(ACLMessage.INFORM);
@@ -92,6 +94,24 @@ public class Agent_DataManager extends Agent_DistributedEA {
 
 	}
 
+	protected void registrDF() {
+        
+        ServiceDescription sd  = new ServiceDescription();
+        sd.setType(getType());
+        sd.setName(AgentNames.DATA_MANAGER.getName());
+        
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(getAID());
+        dfd.addServices(sd);
+        
+        try {  
+            DFService.register(this, dfd );  
+        
+        } catch (FIPAException fe) {
+        	logger.logThrowable("Registration faild", fe);
+        }
+	}
+	
 	private Map<String, PartResult> partResultOfCA = new HashMap<String, PartResult>();
 	
 	protected ACLMessage respondToPartResult(ACLMessage request, Action action) {
@@ -117,7 +137,6 @@ public class Agent_DataManager extends Agent_DistributedEA {
 			String fileName = Configuration.getResultFile();
 			try {
 				Writer writer = new BufferedWriter(new FileWriter(fileName, true));
-				//writer.append(result.getGenerationNumber() + " " + result.getFitnessResult() + "\n");
 				writer.append(row + "\n");
 				writer.close();
 			} catch (IOException e) {
@@ -126,6 +145,33 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		}
 		
 		return null;
+	}
+
+	private void cleanLogDirectory() {
+		
+		String logDirectoryName = Configuration.getComputingAgentLogDirectory();
+		File logDirectory = new File(logDirectoryName);
+		
+		File[] files = logDirectory.listFiles();
+	    if (files != null) { //some JVMs return null for empty dirs
+	        for(File fileI: files) {
+	            if(! fileI.isDirectory()) {
+	            	fileI.delete();
+	            }
+	        }
+	    }
+	}
+	
+	private void cleanResult() {
+		
+		String fileName = Configuration.getResultFile();
+		Writer writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(fileName));
+			writer.close();
+		} catch (IOException e) {
+			logger.logThrowable("Error by rewiting file", e);
+		}
 	}
 	
 }

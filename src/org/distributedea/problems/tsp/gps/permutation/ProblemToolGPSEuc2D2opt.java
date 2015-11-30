@@ -13,7 +13,7 @@ public class ProblemToolGPSEuc2D2opt extends ProblemToolGPSEuc2DSimpleSwap {
 	protected void convertingChunkOfPermutation(int startIndex, int endIndex,
 			List<Integer> permutationNew) {
 
-		int betweenSize = Math.abs(startIndex -endIndex);
+		long betweenSize = Math.abs(startIndex -endIndex);
 		for (int i = 0; i < betweenSize /2; i++) {
 			
 			int firstIndex = startIndex + i;

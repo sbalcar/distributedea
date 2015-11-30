@@ -14,11 +14,14 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 
+import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.management.CreateAgent;
+import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.agent.Argument;
@@ -41,7 +44,7 @@ public class ManagerAgentService {
 	 * @param logger
 	 * @return
 	 */
-	public static NodeInfo sendNodeInfo(Agent_DistributedEA agentSender,
+	public static NodeInfo requestForNodeInfo(Agent_DistributedEA agentSender,
 			AID agentReciever, AgentLogger logger) {
 		
 		if (agentSender == null) {
@@ -115,7 +118,7 @@ public class ManagerAgentService {
 	 * @param arguments
 	 * @return
 	 */
-	public static boolean sendCreateAgent(Agent_DistributedEA agentSender,
+	public static AID sendCreateAgent(Agent_DistributedEA agentSender,
 			AID agentReciever, String agentType, String agentName, List<Argument> arguments,
 			AgentLogger logger) {
 		
@@ -159,18 +162,26 @@ public class ManagerAgentService {
 					.doFipaRequestClient(agentSender, msgCreateA);
 		} catch (FIPAException e) {
 			logger.logThrowable("FIPAException by receiving the answer to CreateAgent", e);
-			return false;
+			return null;
 		}
 
-		String msgText = msgRetursName.getContent();
+		CreatedAgent createdAgent = null;
+		try {
+			Result result = (Result) agentSender.getContentManager()
+					.extractContent(msgRetursName);
 
-		if (msgRetursName.getPerformative() == ACLMessage.INFORM) {
-			if (msgText.equals("OK")) {
-				return true;
-			}
+			createdAgent = (CreatedAgent) result.getValue();
+
+		} catch (UngroundedException e) {
+			logger.logThrowable("UngroundedException by receiving CreatedAgent", e);
+		} catch (CodecException e) {
+			logger.logThrowable("CodecException by receiving CreatedAgent", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by receiving CreatedAgent", e);
 		}
 		
-		return false;
+		return createdAgent.exportCreatedAgentName();
+		
 	}
 	
 	
@@ -193,22 +204,17 @@ public class ManagerAgentService {
 			throw new IllegalArgumentException(
 					"Argument logger can't be null");
 		}
-		
-		//search local Agent ManagerAgent
-		AID [] aidManagerAgents = agentSender.searchLocalContainerDF(
-				Agent_ManagerAgent.class.getName());
-		if (aidManagerAgents.length == 0) {
+
+		AID aidManagerAgent = getManagerAgentOfAID(agentSender, agentAID);
+		if (aidManagerAgent == null) {
 			throw new IllegalStateException(
 					"Agent ManagerAgents doesn't exist");
-		} else if (aidManagerAgents.length > 1) {
-			throw new IllegalStateException(
-					"More that one Agent ManagerAgents");
 		}
 		
 		Ontology ontology = ManagementOntology.getInstance();
 		
 		ACLMessage msgKillAgent = new ACLMessage(ACLMessage.REQUEST);
-		msgKillAgent.addReceiver(aidManagerAgents[0]);
+		msgKillAgent.addReceiver(aidManagerAgent);
 		msgKillAgent.setSender(agentSender.getAID());
 		msgKillAgent.setLanguage(agentSender.getCodec().getName());
 		msgKillAgent.setOntology(ontology.getName());
@@ -246,6 +252,34 @@ public class ManagerAgentService {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Get AID of Agent ManagerAgent for Agent slave AID
+	 * @param agent
+	 * @param agentSlaveAID
+	 * @return
+	 */
+	public static AID getManagerAgentOfAID(Agent_DistributedEA agent, AID agentSlaveAID) {
+
+		AID [] aidManagerAgents = agent.searchDF(
+				Agent_ManagerAgent.class.getName());
+		
+		String agentToSearchName = agentSlaveAID.getName();
+		int index = agentToSearchName.lastIndexOf(
+				Configuration.CONTAINER_NUMBER_PREFIX);
+		String containerID = agentToSearchName.substring(
+				index, agentToSearchName.length());
+		
+		for (AID managerI: aidManagerAgents) {
+			
+			String managerNameI = managerI.getName();
+			if (managerNameI.endsWith(containerID)) {
+				return managerI;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -308,4 +342,29 @@ public class ManagerAgentService {
 		
 		return false;
 	}
+	
+	/**
+	 * Returns number of CPU available in all containers
+	 * @param centramManager
+	 * @param logger
+	 * @return
+	 */
+	public int getNumberOfAvailableCPU(Agent_CentralManager centramManager,
+			AgentLogger logger) {
+		
+		AID [] aidManagerAgents = centramManager.searchDF(
+				Agent_ManagerAgent.class.getName());
+		
+		int numberOfCPU = 0;
+		for (AID managerAidI : aidManagerAgents) {	
+			
+			NodeInfo nodeInfoI = ManagerAgentService.requestForNodeInfo(
+					centramManager, managerAidI, logger);
+			
+			numberOfCPU += nodeInfoI.getTotalCPUNumber();
+		}
+		
+		return numberOfCPU;
+	}
+	
 }

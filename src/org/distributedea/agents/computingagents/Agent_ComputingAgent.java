@@ -5,7 +5,7 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.behaviours.SimpleBehaviour;
+import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -16,11 +16,14 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 
+import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.computingagents.computingagent.ComputingAgentService;
+import org.distributedea.agents.computingagents.computingagent.logging.AgentComputingLogger;
 import org.distributedea.agents.systemagents.datamanager.DataManagerService;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.ontology.ComputingOntology;
@@ -31,7 +34,6 @@ import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individuals.UseIndividual;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.results.PartResult;
@@ -47,10 +49,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
 	
-	protected volatile Vector<Individual> receivedIndividuals = new Vector<>();
 	private ProblemTool problemTool = null;
 	private ResultOfComputing bestResultOfComputing = null;
+	
+	protected List<Individual> receivedIndividuals =
+			Collections.synchronizedList(new ArrayList<Individual>());
 
+	protected Thread thread = null;
 
 	@Override
 	public List<Ontology> getOntologies() {
@@ -88,40 +93,38 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	@Override
 	protected void setup() {
 		
+		// rewriting by another type of logge
+		this.logger = new AgentComputingLogger(this);
+		
 		initAgent();
 		registrDF();
-
-
-		MessageTemplate mesTemplate =
-				MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
-
-		addBehaviour(new AchieveREResponder(this, mesTemplate) {
+		
+		
+		final MessageTemplate mesTemplateRequest =
+						MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		
+		addBehaviour(new AchieveREResponder(this, mesTemplateRequest) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected ACLMessage handleRequest(ACLMessage request) {
+			protected ACLMessage handleRequest(ACLMessage msgRequest) {
 				
 				try {
 					Action action = (Action)
-							getContentManager().extractContent(request);
-
+							getContentManager().extractContent(msgRequest);
 					
 					if (action.getAction() instanceof AccessesResult) {
-						
-						return respondToAccessesResult(request, action);
+						logger.log(Level.INFO, "Request for AccessesResult");
+						return respondToAccessesResult(msgRequest, action);
 						
 					} else if (action.getAction() instanceof StartComputing) {
-						
-						return respondToStartComputing(request, action);
+						logger.log(Level.INFO, "Request for StartComputing");
+						return respondToStartComputing(msgRequest, action);
 						
 					} else if (action.getAction() instanceof PrepareYourselfToKill) {
-						
-						return respondToPrepareYourselfToKill(request, action);
-					
-					} else if (action.getAction() instanceof UseIndividual) {
-					
-						return respondToUseIndividual(request, action);
+						logger.log(Level.INFO, "Request for PrepareYourselfToKill");
+						return respondToPrepareYourselfToKill(msgRequest, action);
 					}
 
 				} catch (OntologyException e) {
@@ -130,7 +133,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 					logger.logThrowable("Codec problem", e);
 				}
 
-				ACLMessage failure = request.createReply();
+				ACLMessage failure = msgRequest.createReply();
 				failure.setPerformative(ACLMessage.FAILURE);
 
 				return failure;
@@ -143,9 +146,71 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			}
 
 		});
+		
+		
+		final MessageTemplate mesTemplateInform =
+				MessageTemplate.and(
+						MessageTemplate.MatchOntology(ResultOntology.getInstance().getName()),
+						MessageTemplate.MatchPerformative(ACLMessage.INFORM) );
+		
+		addBehaviour(new AchieveREResponder(this, mesTemplateInform) {
 
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected ACLMessage handleRequest(ACLMessage msgInform) {
+				
+				try {
+					Action action = (Action)
+							getContentManager().extractContent(msgInform);
+					
+					if (action.getAction() instanceof Individual) {
+						logger.log(Level.INFO, "Inform with Individual");
+						processIndividual(msgInform, action);
+					}
+
+				} catch (OntologyException e) {
+					logger.logThrowable("Problem extracting content", e);
+				} catch (CodecException e) {
+					logger.logThrowable("Codec problem", e);
+				}
+
+				return null;
+			}
+			
+			@Override
+			protected ACLMessage prepareResultNotification(ACLMessage request,
+					ACLMessage response) throws FailureException {
+				return null;
+			}
+
+		});
+		
 	}
 
+	protected void processIndividual(ACLMessage request, Action action) {
+		
+		Individual individual = (Individual)action.getAction();
+		if(! individual.validation()) {
+			individual.validation();
+			throw new IllegalStateException("Recieved Individual is not valid");
+		}
+		
+		synchronized(receivedIndividuals) {
+			receivedIndividuals.add(individual);
+		}
+	}
+	
+	protected Individual getRecievedIndividual() {
+		
+		synchronized(receivedIndividuals) {
+			if (! receivedIndividuals.isEmpty()) {
+				return receivedIndividuals.remove(0);
+			}
+		}
+		return null;
+	}
+	
 	protected ACLMessage respondToAccessesResult(ACLMessage request,
 			Action action) {
 
@@ -157,7 +222,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		reply.setLanguage(codec.getName());
 		reply.setOntology(ResultOntology.getInstance().getName());
 		
+		//active waiting for some result
 		ResultOfComputing resultOfComputing = getBestresultOfComputing();
+		while (resultOfComputing == null) {
+			logger.log(Level.INFO, "resultOfComputing is null");
+			resultOfComputing = getBestresultOfComputing();
+		}
 		
 		Result result = new Result(action.getAction(), resultOfComputing);
 
@@ -172,6 +242,22 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 
+	public class MyRunnable implements Runnable {
+
+		private Agent_ComputingAgent agent;
+		private Problem problem;
+		
+		public MyRunnable(Agent_ComputingAgent agent, Problem problem) {
+			this.agent = agent;
+			this.problem = problem;
+		}
+		
+		@Override
+		public void run() {
+			agent.startComputing(problem, null);
+			
+		}}
+	
 	private ACLMessage respondToStartComputing(ACLMessage request, Action action) {
 		
 		StartComputing startComputing = (StartComputing) action.getAction();
@@ -186,24 +272,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return reply;
 		}
 		
-		addBehaviour(new SimpleBehaviour() {
-
-			private static final long serialVersionUID = 1L;
-
-			private boolean isDone = false;
-			
-			@Override
-			public void action() {
-				startComputing(problem);
-				isDone = true;
-				
-			}
-
-			@Override
-			public boolean done() {
-				return isDone;
-			}} );
 		
+		Runnable myRunnable = new MyRunnable(this, problem);
+
+		thread = new Thread(myRunnable);		
+		thread.start();
+
+			
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 		reply.setContent("OK");
@@ -237,21 +312,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return null;
 		
 	}
-
-	private ACLMessage respondToUseIndividual(ACLMessage request,
-			Action action) {
-		
-		UseIndividual useIndividual = (UseIndividual) action.getAction();
-		Individual individual = useIndividual.getIndividual();
-		
-		receivedIndividuals.add(individual);
-		
-		ACLMessage reply = request.createReply();
-		reply.setPerformative(ACLMessage.INFORM);
-		reply.setContent("OK");
-		
-		return reply;
-	}
 	
 	
 	protected final ProblemTool getProblemTool() {
@@ -270,7 +330,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 	protected void commitSuicide() {
 		
-		logger.log(Level.INFO, "Waiting for killing himself");				
+		logger.log(Level.INFO, "Waiting for killing himself");
+
 		ManagerAgentService.sendKillAgent(this, getAID(), logger);
 	}
 	
@@ -280,23 +341,37 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		String resultLog = "Generation " +
 				result.getGenerationNumber() + ": " +
 				result.getFitnessResult();
-		//logger.log(Level.INFO, resultLog);
-		
-		long LOG_PERIOD_MS = 1000;
+		logger.log(Level.INFO, resultLog);
 		
 		long nowMs = System.currentTimeMillis();
-		if (timeOfLastLogMs + LOG_PERIOD_MS < nowMs) {
+		if (timeOfLastLogMs + Configuration.LOG_PERIOD_MS < nowMs) {
 			
-			DataManagerService service = new DataManagerService();
-			service.sendPartResultMessage(this, result, logger);
+			DataManagerService.sendPartResultMessage(this, result, logger);
 			
 			timeOfLastLogMs = nowMs;
 		}
 		
 	}
+	
+	private long timeOfLastIndividualDistributionMs = System.currentTimeMillis();
+	protected void distributeIndividualToNeighours(Individual individual) {
+		
+		if(! individual.validation()) {
+			throw new IllegalStateException("Individual to distribution is not valid");
+		}
+		
+		long nowMs = System.currentTimeMillis();
+		if (timeOfLastIndividualDistributionMs +
+				Configuration.INDIVIDUAL_BROADCAST_PERIOD_MS < nowMs) {
+			
+			ComputingAgentService.sendIndividualToNeighbours(this, individual, logger);
+			
+			timeOfLastIndividualDistributionMs = nowMs;
+		}
+	}
 
 	protected abstract boolean isAbleToSolve(Class<?> problem, Class<?> representation);
-	public abstract void startComputing(Problem problem);
+	public abstract void startComputing(Problem problem, Behaviour behaviour);
 	public abstract void prepareToDie();
 	
 }

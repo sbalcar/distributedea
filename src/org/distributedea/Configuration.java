@@ -1,5 +1,7 @@
 package org.distributedea;
 
+import jade.core.AID;
+
 /**
  * Constants of this project wrapper
  * @author stepan
@@ -7,6 +9,33 @@ package org.distributedea;
  */
 public class Configuration {
 
+	/**
+	 * Agent ComputingAgent configuration
+	 */
+	/** Period of sending result from Computing Agent to DataManager Agent */
+	public static long LOG_PERIOD_MS = 1000;
+	/** Period of sending Individual from Computing Agent to another Computing Agents */
+	public static long INDIVIDUAL_BROADCAST_PERIOD_MS = 1000;
+	
+	
+	/**
+	 * Agent ManagerAgent configuration
+	 *  AID = <AgentName> + <Delimiter> + <AgentID> + <Delimiter> + <ContainerID>
+	 */
+	/** Agent name delimiter followed by agent ID */
+	public static char AGENT_NUMBER_PREFIX = '-';
+	/** Agent name delimiter followed by container ID */
+	public static char CONTAINER_NUMBER_PREFIX = '_';
+	
+	
+	/**
+	 *  Agent CentralManager configuration
+	 */
+	/** Period of Scheduler replanning */
+	public static long REPLAN_PERIOD_MS = 10000;
+	
+	
+	
 	/**
 	 * Provides way to system agents required to run master node
 	 * @return name of the file with relative path
@@ -39,6 +68,15 @@ public class Configuration {
 
 	/**
 	 * Provides way to the instance of Problem
+	 * @return
+	 */
+	public static String getInputProblemFile() {
+
+		return "inputs" + System.getProperty("file.separator")
+				+ InputConfiguration.inputProblemFileName;
+	}
+	/**
+	 * Provides way to the instance of Problem
 	 * @param name of the file with relative path
 	 * @return
 	 */
@@ -61,12 +99,33 @@ public class Configuration {
 	}
 
 	/**
-	 * Provides way to the solution instance by name
-	 * @param fileName
+	 * Provides way to the centralized solution of whole Distributed Evolution
 	 * @return
 	 */
 	public static String getResultFile() {
 
 		return "results.txt";
 	}
+
+	/**
+	 * Provides name of directory for log files of Computing Agents
+	 * @return
+	 */
+	public static String getComputingAgentLogDirectory() {
+
+		return "log";
+
+	}
+	
+	/**
+	 * Provides log file with path for concrete Computing Agent
+	 * @param computingAgentAID
+	 * @return
+	 */
+	public static String getComputingAgentLogFile(AID computingAgentAID) {
+
+		return getComputingAgentLogDirectory() + System.getProperty("file.separator")
+				+ computingAgentAID.getLocalName() + ".log";
+	}
+	
 }

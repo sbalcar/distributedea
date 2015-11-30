@@ -5,6 +5,7 @@ import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.management.CreateAgent;
+import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
@@ -24,6 +25,7 @@ public class ManagementOntology extends BeanOntology {
         	add(DescribeNode.class);
         	add(NodeInfo.class);
             add(CreateAgent.class);
+            add(CreatedAgent.class);
             add(PrepareYourselfToKill.class);
             add(KillAgent.class);
             add(KillContainer.class);

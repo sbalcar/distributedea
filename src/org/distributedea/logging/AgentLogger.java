@@ -1,12 +1,13 @@
 package org.distributedea.logging;
 
+
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
 
 public class AgentLogger {
 	
-	private Agent_DistributedEA agent;
+	protected Agent_DistributedEA agent;
 	
 	public AgentLogger(Agent_DistributedEA agent) {
 		this.agent = agent;
@@ -26,5 +27,5 @@ public class AgentLogger {
 		//:TODO send info to Agent_Logger
 		ConsoleLogger.log(logLevel, source, message);
 	}
-	
+		
 }
