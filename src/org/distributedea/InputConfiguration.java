@@ -8,7 +8,7 @@ import org.distributedea.problems.tsp.point.permutation.ProblemToolPoint2opt;
 public class InputConfiguration {
 
 	public static boolean automaticStart = true;
-	public static boolean individualDistribution = false;
+	public static boolean individualDistribution = true;
 	
 	public static String inputProblemFileName = "wi29.tsp";
 	

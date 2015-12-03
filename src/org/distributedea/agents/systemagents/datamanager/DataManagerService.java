@@ -2,7 +2,6 @@ package org.distributedea.agents.systemagents.datamanager;
 
 import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.systemagents.Agent_DataManager;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.results.PartResult;
@@ -26,22 +25,8 @@ public class DataManagerService {
 	public static void sendPartResultMessage(Agent_DistributedEA agent,
 			PartResult result, AgentLogger logger) {
 		
-//		AID [] aidDataManagers = agent.searchDF(
-//				Agent_DataManager.class.getName());
-		AID aidDataManager = new AID(AgentNames.DATA_MANAGER.getName(), true);
-		AID [] aidDataManagers = new AID [1];
-		aidDataManagers[0] = aidDataManager;
-		
-		if (aidDataManagers == null || aidDataManagers.length == 0) {
-			throw new IllegalStateException("Agent DataManager doesn't exist for agent " + agent.getAID().getLocalName());
-			
-		} else if (aidDataManagers.length > 1) {
-			throw new IllegalStateException("More than one Agent DataManager");
-		}
+		AID dataManagerAID = new AID(AgentNames.DATA_MANAGER.getName(), false);
 
-		
-		AID dataManagerAID = aidDataManagers[0];
-		
 		Ontology ontology = ResultOntology.getInstance();
 		
 	     ACLMessage msgPartResult = new ACLMessage(ACLMessage.INFORM);

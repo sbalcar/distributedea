@@ -94,24 +94,6 @@ public class Agent_DataManager extends Agent_DistributedEA {
 
 	}
 
-	protected void registrDF() {
-        
-        ServiceDescription sd  = new ServiceDescription();
-        sd.setType(getType());
-        sd.setName(AgentNames.DATA_MANAGER.getName());
-        
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
-        dfd.addServices(sd);
-        
-        try {  
-            DFService.register(this, dfd );  
-        
-        } catch (FIPAException fe) {
-        	logger.logThrowable("Registration faild", fe);
-        }
-	}
-	
 	private Map<String, PartResult> partResultOfCA = new HashMap<String, PartResult>();
 	
 	protected ACLMessage respondToPartResult(ACLMessage request, Action action) {
@@ -121,23 +103,31 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		String senderName = aid.getName();
 
 		partResultOfCA.put(senderName, result);
+		int numberOfPartResult = partResultOfCA.size();
 		
 		AID [] aidComputingAgents = this.searchDF(
 				Agent_ComputingAgent.class.getName());
 		int numberOfCA = aidComputingAgents.length;
-		//System.out.println("numberOfCA: " + numberOfCA);
 		
-		if (partResultOfCA.size() == numberOfCA) {
-		
-			String row = "";
+		if (numberOfPartResult > numberOfCA && 1 == 3) {
+			
+			partResultOfCA.clear();
+			partResultOfCA.put(senderName, result);
+			
+		} else if (numberOfPartResult == numberOfCA) {
+			
+			String rowResult = "";
+			String rowDescription = "#";
 			for (PartResult partResultI : partResultOfCA.values()) {
-				row += partResultI.getFitnessResult() + " ";
+				rowResult += partResultI.getFitnessResult() + " ";
+				rowDescription += partResultI.getAgentDescription() + " ";
 			}
 			
 			String fileName = Configuration.getResultFile();
 			try {
 				Writer writer = new BufferedWriter(new FileWriter(fileName, true));
-				writer.append(row + "\n");
+				writer.append(rowDescription + "\n");
+				writer.append(rowResult + "\n");
 				writer.close();
 			} catch (IOException e) {
 				logger.logThrowable("Part result can't be logged", e);

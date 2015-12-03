@@ -18,6 +18,7 @@ import jade.wrapper.PlatformController;
 import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -338,6 +339,27 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	public static AgentController createAgent(Agent_DistributedEA agent,
 			String type, String name, List<Argument> argumentList, AgentLogger logger) {
 		
+		Class<?> agentTypeClass = null;
+		try {
+			agentTypeClass = Class.forName(type);
+		} catch (ClassNotFoundException e1) {
+			return null;
+		}
+		
+		// starts agents which are in system only one-times
+		List<Class<?>> uniqueAgentList = Configuration.agentsWithoutSuffix();
+		
+		if (uniqueAgentList.contains(agentTypeClass)) {
+			
+			try {
+				return createAndStartAgent(agent, name, type, argumentList);
+				
+			} catch (ControllerException e) {
+				return null;
+			}
+		}
+		
+		// starts another agents
 		String containerID = "";
 		if (agent instanceof Agent_Initiator) {
 			Agent_Initiator aIntitiator = (Agent_Initiator) agent;
@@ -420,7 +442,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 					+ containerNameWitID;
 			
 			AgentController agentController = createAndStartAgent(
-					agent, agentFullName, containerNameWitID, type, argumentList);
+					agent, agentFullName, type, argumentList);
 			return agentController;
 			
 		} catch (ControllerException e) {
@@ -441,8 +463,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @throws ControllerException
 	 */
 	private static AgentController createAndStartAgent(Agent_DistributedEA agent,
-			String agentName, String numberOfContainer, String type,
-			List<Argument> argumentList) throws ControllerException {
+			String agentName, String type, List<Argument> argumentList) throws ControllerException {
 		
 		// get a container controller
 		PlatformController container = agent.getContainerController();
@@ -455,8 +476,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			
 			String argumet1 = "";					
 			for (Argument argumentI : arguments.getArguments()) {
-				String agentNameI = argumentI.getValue() +
-						Configuration.CONTAINER_NUMBER_PREFIX + numberOfContainer;
+				String agentNameI = argumentI.getValue();
+						//Configuration.CONTAINER_NUMBER_PREFIX + numberOfContainer;
 				argumet1 += agentNameI + "; ";
 			}
 			argumet1.trim();

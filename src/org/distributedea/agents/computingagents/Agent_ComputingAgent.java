@@ -346,6 +346,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		long nowMs = System.currentTimeMillis();
 		if (timeOfLastLogMs + Configuration.LOG_PERIOD_MS < nowMs) {
 			
+			result.setAgentDescription("" + this.getLocalName());
 			DataManagerService.sendPartResultMessage(this, result, logger);
 			
 			timeOfLastLogMs = nowMs;

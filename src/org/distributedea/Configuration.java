@@ -1,5 +1,12 @@
 package org.distributedea;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.distributedea.agents.systemagents.Agent_CentralLoger;
+import org.distributedea.agents.systemagents.Agent_CentralManager;
+import org.distributedea.agents.systemagents.Agent_DataManager;
+
 import jade.core.AID;
 
 /**
@@ -126,6 +133,22 @@ public class Configuration {
 
 		return getComputingAgentLogDirectory() + System.getProperty("file.separator")
 				+ computingAgentAID.getLocalName() + ".log";
+	}
+	
+	
+	/**
+	 * Provides Classes of unique agents which doesn't contain suffix
+	 * @return
+	 */
+	public static List<Class<?>> agentsWithoutSuffix() {
+		
+		Class<?>[] classes = new Class[] {
+				Agent_CentralManager.class,
+				Agent_DataManager.class,
+				Agent_CentralLoger.class
+			};
+		
+		return Arrays.asList(classes);
 	}
 	
 }

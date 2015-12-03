@@ -6,8 +6,16 @@ public class PartResult  implements AgentAction  {
 
 	private static final long serialVersionUID = 1L;
 	
+	private String agentDescription;
 	private long generationNumber;
 	private double fitnessResult;
+	
+	public String getAgentDescription() {
+		return agentDescription;
+	}
+	public void setAgentDescription(String agentDescription) {
+		this.agentDescription = agentDescription;
+	}
 	
 	public long getGenerationNumber() {
 		return generationNumber;

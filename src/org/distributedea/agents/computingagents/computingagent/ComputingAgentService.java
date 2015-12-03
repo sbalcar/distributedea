@@ -181,7 +181,7 @@ public class ComputingAgentService {
 		AID [] aidOfComputingAgents = agent.searchDF(
 				Agent_ComputingAgent.class.getName());
 		if (aidOfComputingAgents == null) {
-			throw new IllegalStateException("Computing agent can't find any neighbour");
+			throw new IllegalStateException("Computing agent can't find any neighbour " + agent.getAID().getLocalName());
 		}
 		List<AID> aidOfComputingAgentsWithoutSender = new ArrayList<AID>(Arrays.asList(aidOfComputingAgents));
 		aidOfComputingAgentsWithoutSender.remove(agent.getAID());
