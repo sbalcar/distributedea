@@ -2,22 +2,21 @@ package org.distributedea.agents.computingagents;
 
 import jade.core.behaviours.Behaviour;
 
-import java.util.Random;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.evolution.Convertor;
 import org.distributedea.agents.computingagents.computingagent.evolution.EACrossoverWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolution.EAFitnessWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolution.EAMutationWrapper;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
 import org.jgap.Configuration;
 import org.jgap.Genotype;
@@ -46,7 +45,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			logger.logThrowable("Can't wait to stop thread", e);
+			getCALogger().logThrowable("Can't wait to stop thread", e);
 		}
 		
 		// deregistres agent from DF
@@ -74,7 +73,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		}
 		
 		if (! isAble) {
-			logger.logThrowable(
+			getCALogger().logThrowable(
 					"Agent is not able to solve this type of Problem by using "
 					+ "this reperesentation",
 					new IllegalStateException("Can't solve problem"));
@@ -87,22 +86,23 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	public void startComputing(Problem problem, Behaviour behaviour) {
 
 		if (! isAbleToSolve(problem)) {
+			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
 			commitSuicide();
 			return;
 		}
 	
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problem.getProblemToolClass(), logger);
+				problem.getProblemToolClass(), getCALogger());
 		setProblemTool(problemTool);
 		
-		int popSize = 5;
+		int popSize = 50;
 		double mutationRate = 0.9;
 		double crossRate = 0.5;
 		
 		// generates Individuals
 		Vector<IndividualPermutation> individuals = new Vector<IndividualPermutation>();
 		for (int i = 0; i < popSize; i++) {
-			Individual individualI = problemTool.generateIndividual(problem, logger);
+			Individual individualI = problemTool.generateIndividual(problem, getCALogger());
 			// cast tested before
 			individuals.add((IndividualPermutation) individualI);
 		}
@@ -117,7 +117,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			population = new Population(conf);
 			
 		} catch (InvalidConfigurationException e1) {
-			logger.logThrowable("Invalid Configuration", e1);
+			getCALogger().logThrowable("Invalid Configuration", e1);
 			commitSuicide();
 			return;
 		}
@@ -129,7 +129,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				population.addChromosome(chromI);
 			}
 		} catch (InvalidConfigurationException e) {
-			logger.logThrowable("Invalid Configuration", e);
+			getCALogger().logThrowable("Invalid Configuration", e);
 			commitSuicide();
 			return;
 		}
@@ -138,7 +138,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			
 			conf.setSampleChromosome(population.getChromosome(0));
 			conf.setFitnessFunction(
-					new EAFitnessWrapper(conf, false,  problem, problemTool, logger));
+					new EAFitnessWrapper(conf, false,  problem, problemTool, getCALogger()));
 			conf.setPopulationSize(popSize);
 			
             //conf.removeNaturalSelectors(false);
@@ -147,84 +147,75 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			
 			conf.getGeneticOperators().clear();
 			conf.addGeneticOperator(
-					new EAMutationWrapper(mutationRate, problem, problemTool, conf, logger));
+					new EAMutationWrapper(mutationRate, problem, problemTool, conf, getCALogger()));
 			conf.addGeneticOperator(
-					new EACrossoverWrapper(crossRate, problem, problemTool, conf, logger));
+					new EACrossoverWrapper(crossRate, problem, problemTool, conf, getCALogger()));
 			conf.addNaturalSelector(new StandardPostSelector(conf), false);
 			
 			Genotype pop = new Genotype(conf, population);
 			
-			IChromosome bestChromosome = pop.getFittestChromosome();
-			Individual individual =
-					Convertor.convertToIndividual(bestChromosome, conf);
-			double fitnessValue =
-					problemTool.fitness(individual, problem, logger);
 			
-			PartResult result = new PartResult();
-			result.setGenerationNumber(-1);
-			result.setFitnessResult(fitnessValue);
+			long generationNumberI = -1;
 			
-			logResultByUsingDatamanager(result);
+			// best chromosome from actual generation
+			IChromosome choosenChromosomeI = pop.getFittestChromosome();
+			Individual individualI =
+					Convertor.convertToIndividual(choosenChromosomeI, conf);
+			double fitnessI =
+					problemTool.fitness(individualI, problem, getCALogger());
 			
-//			Random ran = new Random();
-//			int x = ran.nextInt(3);
+			// save, log and distribute computed Individual
+			processComputedIndividual(individualI,
+					fitnessI, generationNumberI, problem);
 			
-			long i = 0;
 			while (true) {
+				// increment next number of generation
+				generationNumberI++;
 				
 				// try - for situation when some operator doesn't work correctly
 				try {
 					pop.evolve();
 				} catch (Exception e) {
-					logger.logThrowable("Error by evolving", e);
+					getCALogger().logThrowable("Error by evolving", e);
 					commitSuicide();
 					return;
 				}
 				
-				IChromosome bestChromosomeI = pop.getFittestChromosome();
-				Individual individualI =
-						Convertor.convertToIndividual(bestChromosomeI, conf);
+				// best chromosome from actual generation
+				choosenChromosomeI = pop.getFittestChromosome();
+				individualI =
+						Convertor.convertToIndividual(choosenChromosomeI, conf);
 
-				double fitnessValueI =
-						problemTool.fitness(individualI, problem, logger);
+				fitnessI =
+						problemTool.fitness(individualI, problem, getCALogger());
 				
-				// export best result of computing
-				ResultOfComputing resultOfComputing = new ResultOfComputing();
-				resultOfComputing.setBestIndividual(individualI);
-				resultOfComputing.setFitnessValue(fitnessValueI);
-	
-				setBestresultOfComputing(resultOfComputing);
+				// save, log and distribute computed Individual
+				processComputedIndividual(individualI,
+						fitnessI, generationNumberI, problem);
 				
-				PartResult resultI = new PartResult();
-				resultI.setGenerationNumber(i);
-				resultI.setFitnessResult(fitnessValueI);
-				
-				//saves data in Agent DataManager
-				logResultByUsingDatamanager(resultI);
-				
-				// best individual distribution to neighbours
+				// send new Individual to distributed neighbors
 				if (InputConfiguration.individualDistribution) {
 					distributeIndividualToNeighours(individualI);
 				}
 				
 				//take received individual to new generation
 				Individual recievedIndividual = getRecievedIndividual();
-				if (recievedIndividual != null) {
-					IChromosome recievedChrom = Convertor.convertToIChromosome(recievedIndividual, conf);
-					pop.getPopulation().addChromosome(recievedChrom);
+				double recievedFitnessI = problemTool.fitness(recievedIndividual,
+						problem, getCALogger());
+				if (InputConfiguration.individualDistribution &&
+						! Double.isNaN(recievedFitnessI) &&
+						ProblemToolEvaluation.isFistFitnessBetterThanSecond(
+								recievedFitnessI, fitnessI, problem)) {
+		
+					IChromosome recievedChromI = Convertor
+							.convertToIChromosome(recievedIndividual, conf);
+					pop.getPopulation().addChromosome(recievedChromI);
 				}
-/*				
-				if (i == 10000 + 50000*x) {
-					commitSuicide();
-					return;
-				}
-*/				
-				i++;
+
 			}
 			
-		}
-		catch (InvalidConfigurationException e) {
-			logger.logThrowable("Invalid Configuration", e);
+		} catch (InvalidConfigurationException e) {
+			getCALogger().logThrowable("Invalid Configuration", e);
 			commitSuicide();
 			return;
 		}

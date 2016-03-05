@@ -18,7 +18,7 @@ public class Agent_RandomSearch extends Agent_HillClimbing {
 	protected Individual getNewIndividual(Individual individual,
 			Problem problem, ProblemTool problemTool) {
 
-		return problemTool.generateIndividual(problem, logger);
+		return problemTool.generateIndividual(problem, getLogger());
 	}
 	
 }

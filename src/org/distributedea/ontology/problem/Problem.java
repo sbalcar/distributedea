@@ -43,5 +43,5 @@ public abstract class Problem  implements Concept {
 		
 		return false;
 	}
-	
+
 }

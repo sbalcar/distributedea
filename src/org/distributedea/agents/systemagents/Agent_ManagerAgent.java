@@ -18,7 +18,6 @@ import jade.wrapper.PlatformController;
 import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -93,9 +92,9 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 					}
 
 				} catch (OntologyException e) {
-					logger.logThrowable("Problem extracting content", e);
+					getLogger().logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logger.logThrowable("Codec problem", e);
+					getLogger().logThrowable("Codec problem", e);
 				}
 
 				ACLMessage failure = request.createReply();
@@ -150,9 +149,9 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		try {
 			getContentManager().fillContent(reply, result);
 		} catch (CodecException e) {
-			logger.logThrowable("CodecException by sending NodeInfo", e);
+			getLogger().logThrowable("CodecException by sending NodeInfo", e);
 		} catch (OntologyException e) {
-			logger.logThrowable(e.getMessage(), e);
+			getLogger().logThrowable(e.getMessage(), e);
 		}
 
 		return reply;
@@ -178,18 +177,18 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		Arguments arguments = createAgent.getArguments();
 		List<Argument> argumentList = arguments.getArguments();
 		
-		logger.log(Level.INFO, "Creating agent " + agentName);
+		getLogger().log(Level.INFO, "Creating agent " + agentName);
 		AgentController createdAgentController = createAgent(this, agentType, agentName,
-				argumentList, logger);
+				argumentList, getLogger());
 		
 		AID createdAgentAID = null;
 		try {
 			createdAgentAID = new AID(createdAgentController.getName(), false);
 			String name =  createdAgentAID.getLocalName().substring(0,
 					createdAgentAID.getLocalName().indexOf('@'));
-			logger.log(Level.INFO, "Agent " + name + " was created");
+			getLogger().log(Level.INFO, "Agent " + name + " was created");
 		} catch (StaleProxyException e1) {
-			logger.logThrowable("Error by finding new Agent AID", e1);
+			getLogger().logThrowable("Error by finding new Agent AID", e1);
 			throw new IllegalStateException("Error by finding new Agent AID");
 		}
 		
@@ -206,9 +205,9 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		try {
 			getContentManager().fillContent(reply, result);
 		} catch (CodecException e) {
-			logger.logThrowable("CodecException by sending NodeInfo", e);
+			getLogger().logThrowable("CodecException by sending NodeInfo", e);
 		} catch (OntologyException e) {
-			logger.logThrowable(e.getMessage(), e);
+			getLogger().logThrowable(e.getMessage(), e);
 		}
 
 		return reply;
@@ -231,12 +230,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			agentController =
 					getContainerController().getAgent(agentNameToKill);
 		} catch (ControllerException e1) {
-			logger.logThrowable("Error by accessing agent controller", e1);
+			getLogger().logThrowable("Error by accessing agent controller", e1);
 			return null;
 		}
 		
 		AID aid = new AID(agentNameToKill, false);
-		ComputingAgentService.sendPrepareYourselfToKill(this, aid, logger);
+		ComputingAgentService.sendPrepareYourselfToKill(this, aid, getLogger());
 		
 		
 		final String agentNameToKillFinal = agentNameToKill;
@@ -245,21 +244,21 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		Runnable myRunnable = new Runnable(){
 
 		     public void run(){
-		    	 logger.log(Level.INFO, "Waiting for killing " + agentNameToKillFinal);
+		    	 getLogger().log(Level.INFO, "Waiting for killing " + agentNameToKillFinal);
 		     
 		    	 try {
 		    		 Thread.sleep(1000);
 		    	 } catch (InterruptedException e1) {
-					 logger.log(Level.SEVERE, "Can't wait for killing himself");
+		    		 getLogger().log(Level.SEVERE, "Can't wait for killing himself");
 				 }
 		        
 		 		try {
 		 			agentControllerFinal.kill();
 				} catch (StaleProxyException e) {
-					logger.log(Level.INFO, "Agent had already killed himself");
+					getLogger().log(Level.INFO, "Agent had already killed himself");
 				}
 				
-				logger.log(Level.INFO, "Agent " + agentNameToKillFinal + " was killed");
+		 		getLogger().log(Level.INFO, "Agent " + agentNameToKillFinal + " was killed");
 
 				
 		     }
@@ -284,11 +283,11 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	protected ACLMessage respondToKillContainer(ACLMessage request,
 			Action action) {
 
-		logger.log(Level.INFO, "Killing container");
+		getLogger().log(Level.INFO, "Killing container");
 		
 		// TODO - kill agents
 	
-		final boolean isAgentOnMainControler =  isAgentOnMainControler(this, logger);
+		final boolean isAgentOnMainControler =  isAgentOnMainControler(this, getLogger());
 		
 		Runnable myRunnable = new Runnable(){
 			
@@ -304,13 +303,13 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		        try {
 					Thread.sleep(seconds);
 				} catch (InterruptedException e1) {
-					logger.logThrowable("Error by Thread sleep", e1);
+					getLogger().logThrowable("Error by Thread sleep", e1);
 				}
 		        
 				try {
 					getContainerController().kill();
 				} catch (StaleProxyException e) {
-					logger.logThrowable("StaleProxyException by killing container", e);
+					getLogger().logThrowable("StaleProxyException by killing container", e);
 				}
 
 		     }

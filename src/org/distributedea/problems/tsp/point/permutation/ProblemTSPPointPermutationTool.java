@@ -15,6 +15,7 @@ import org.distributedea.problems.tsp.gps.permutation.IProblemTSPPermutationTool
 import org.distributedea.problems.tsp.gps.permutation.ProblemTSPGPSEuc2DPermutationTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
 import org.distributedea.problems.tsp.point.ProblemTSPPointTool;
+import org.distributedea.problems.tsp.point.permutation.tools.PermutationTool;
 
 public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool implements IProblemTSPPermutationTool {
 
@@ -22,6 +23,14 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	public Class<?> reprezentationWhichUses() {
 
 		return IndividualPermutation.class;
+	}
+	
+	@Override
+	public Individual generateFirstIndividual(Problem problem,
+			AgentLogger logger) {
+		
+		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
+		return tool.generateFirstIndividual(problem, logger);
 	}
 	
 	@Override
@@ -36,6 +45,21 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 		
 		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
 		return tool.generateIndividual(positions);
+	}
+	
+	@Override
+	public Individual generateNextIndividual(Problem problem,
+			Individual individual, AgentLogger logger) {
+		
+		IndividualPermutation individualPerm = (IndividualPermutation) individual;
+		List<Integer> perm = individualPerm.getPermutation();
+		
+		List<Integer> permNew = PermutationTool.nextPermutation(perm);
+		
+		IndividualPermutation individualPermNew = new IndividualPermutation();
+		individualPermNew.setPermutation(permNew);
+		
+		return individualPermNew;
 	}
 	
 	@Override
@@ -97,6 +121,14 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 			throws ProblemToolException {
 		
 		throw new ProblemToolException("Not possible to implement in this context");
+	}
+	
+	@Override
+	public Individual getNeighbor(Individual individual, Problem problem,
+			long neighborIndex, AgentLogger logger) throws ProblemToolException {
+		
+		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
+		return tool.generateIndividual(problem, logger);
 	}
 	
 }

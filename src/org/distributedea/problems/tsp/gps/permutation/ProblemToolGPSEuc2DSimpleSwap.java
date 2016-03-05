@@ -8,8 +8,11 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.tsp.point.permutation.ProblemTSPPointPermutationTool;
+import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSwap;
 
 /**
  * Problem tool for TSP Problem Represent by Permutation implements Simple gene swap operator
@@ -18,6 +21,27 @@ import org.distributedea.problems.exceptions.ProblemToolException;
  */
 public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutationTool {
 
+	
+	@Override
+	public Individual generateFirstIndividual(Problem problem,
+			AgentLogger logger) {
+
+		ProblemTSP problemTSPGPS = (ProblemTSP) problem;
+		
+		int minValue = problemTSPGPS.minOfPositionNumbers();
+		
+		List<Integer> permutation = new ArrayList<Integer>();
+		for (int numberI = 0; numberI <  problemTSPGPS.numberOfPositions();
+				numberI++) {
+			permutation.add(minValue + numberI);
+		}
+		
+		IndividualPermutation individualPerm = new IndividualPermutation();
+		individualPerm.setPermutation(permutation);
+		
+		return individualPerm;
+	}
+	
 	/**
 	 * Improvement - swaps two genes
 	 * @param individual
@@ -135,6 +159,21 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 		result[1] = individual1;
 		
 		return result;
+	}
+
+	@Override
+	public Individual generateNextIndividual(Problem problem,
+			Individual individual, AgentLogger logger) {
+		
+		ProblemTSPPointPermutationTool tool = new ProblemToolPointSimpleSwap();
+		return tool.generateNextIndividual(problem, individual, logger);
+	}
+
+	@Override
+	public Individual getNeighbor(Individual individual, Problem problem,
+			long neighborIndex, AgentLogger logger) throws ProblemToolException {
+
+		return generateIndividual(problem, logger);
 	}
 	
 }

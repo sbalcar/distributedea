@@ -8,6 +8,11 @@
         </agent>
         <agent type="org.distributedea.agents.computingagents.Agent_Evolution" name="Agent_Evolution">
         </agent>
-        
+        <agent type="org.distributedea.agents.computingagents.Agent_BruteForce" name="Agent_BruteForce">
+        </agent>        
+        <agent type="org.distributedea.agents.computingagents.Agent_TabuSearch" name="Agent_TabuSearch">
+        </agent> 
+        <agent type="org.distributedea.agents.computingagents.Agent_SimulatedAnnealing" name="Agent_SimulatedAnnealing">
+        </agent> 
     </agents>
 </configuration>

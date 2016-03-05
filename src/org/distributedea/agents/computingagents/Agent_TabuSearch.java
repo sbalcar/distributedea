@@ -1,62 +1,27 @@
 package org.distributedea.agents.computingagents;
 
-import jade.core.behaviours.Behaviour;
-
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
+
+import jade.core.behaviours.Behaviour;
 
 import org.distributedea.InputConfiguration;
 import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
-/**
- * Agent represents Hill Climbing Algorithm Method
- * @author stepan
- *
- */
-public class Agent_HillClimbing extends Agent_ComputingAgent {
+public class Agent_TabuSearch extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
-
-	
-	@Override
-	public void prepareToDie() {
-		
-		// deregistre agent from DF
-		deregistrDF();
-	}
 	
 	@Override
 	protected boolean isAbleToSolve(Class<?> problem, Class<?> representation) {
 		
-		boolean isAble = false;
-		
-		if (problem == ProblemTSPGPS.class) {
-			if (representation == IndividualPermutation.class) {
-				isAble = true;
-			}	
-		} else if (problem == ProblemTSPPoint.class) {
-			if (representation == IndividualPermutation.class) {
-				isAble = true;
-			}
-			
-		}
-		
-		
-		if (! isAble) {
-			getCALogger().logThrowable(
-					"Agent is not able to solve this type of Problem by using "
-					+ "this reperesentation",
-					new IllegalStateException());
-		}
-		
-		return isAble;
+		return true;
 	}
 
 	@Override
@@ -70,51 +35,79 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
 				problem.getProblemToolClass(), getCALogger());
-		
-		
+
+        int tabuListSize = 500;
+		Queue<Individual> tabuList = new LinkedList<Individual>();
+        
 		long generationNumberI = -1;
 		
 		Individual individualI =
-				problemTool.generateIndividual(problem, getCALogger());
-		
+				problemTool.generateFirstIndividual(problem, getCALogger());
 		double fitnessI =
 				problemTool.fitness(individualI, problem, getCALogger());
+		
+		// add actual individual in the Tabu Set
+		tabuList.offer(individualI);
 		
 		// save, log and distribute computed Individual
 		processComputedIndividual(individualI,
 				fitnessI, generationNumberI, problem);
 		
-		
 		while (true) {
-			// increment next number of generation
-			generationNumberI++;
 			
-			
-			fitnessI = problemTool.fitness(individualI, problem, getCALogger());
-						
-			logResultByUsingDatamanager(generationNumberI, fitnessI);
-			
-			Individual individualNew = null;
-			try {
-				individualNew = getNewIndividual(individualI, problem, problemTool);
-			} catch (ProblemToolException e) {
-				getCALogger().log(Level.INFO, "Problem to generate a new individual");
-				commitSuicide();
-				return;
+			//adjust the size of the taboo on the acceptable limit
+			while (tabuList.size() >= tabuListSize) {
+				tabuList.poll();
 			}
 			
-			double fitnessNew =
-					problemTool.fitness(individualNew, problem, getCALogger());
+			// going through neighbors
+			Individual neighborJ = null;
+			double neighborFitnessJ = -1;
 			
-			boolean isNewIndividualBetter =
-					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							fitnessNew, fitnessI, problem);
-
-			if (isNewIndividualBetter) {
-				getCALogger().log(Level.INFO, "JUMP");
-				fitnessI = fitnessNew;
-				individualI = individualNew;
+			long neighborIndex = 0;
+			while (true) {
+				// increment next number of generation
+				generationNumberI++;
+				
+				try {
+					neighborJ = problemTool.getNeighbor(individualI, problem,
+							neighborIndex, getCALogger());
+				} catch (ProblemToolException e) {
+					getCALogger().log(Level.INFO, "Problem to find the neighbour to individual");
+					commitSuicide();
+					return;
+				}
+				
+				// not available next better neighbor 
+				if (neighborJ == null) {
+					break;
+				}
+				
+				neighborFitnessJ =
+					problemTool.fitness(neighborJ, problem, getCALogger());
+				
+				boolean isNeighborlBetter =
+						ProblemToolEvaluation.isFistFitnessBetterThanSecond(
+								neighborFitnessJ, fitnessI, problem);
+				
+				// new better indiviual found
+				if (isNeighborlBetter && ! tabuList.contains(neighborJ) ) {
+					break;
+				}
+				
+				neighborIndex++;
 			}
+			
+			individualI = neighborJ;
+			fitnessI = neighborFitnessJ;
+			// generate new individual in local extreme
+			if (individualI == null) {
+			    individualI = problemTool.generateFirstIndividual(problem, getCALogger());
+			    fitnessI = problemTool.fitness(individualI, problem, getCALogger());
+			}
+			
+			// add actual individual in the Tabu Set
+			tabuList.offer(individualI);
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualI,
@@ -131,6 +124,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 					problem, getCALogger());
 			if (InputConfiguration.individualDistribution &&
 					! Double.isNaN(recievedFitnessI) &&
+					! tabuList.contains(recievedIndividual) &&
 					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
 							recievedFitnessI, fitnessI, problem)) {
 				
@@ -138,18 +132,19 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 				individualI = recievedIndividual;
 				fitnessI = recievedFitnessI;
 				
+				tabuList.offer(individualI);
+				
 				// save and log received Individual
 				processRecievedIndividual(individualI,
 						fitnessI, generationNumberI, problem);
 			}
 			
 		}
+
 	}
 
-	protected Individual getNewIndividual(Individual individual,
-			Problem problem, ProblemTool problemTool) throws ProblemToolException {
-		
-		return problemTool.improveIndividual(individual, problem, getCALogger());
+	@Override
+	public void prepareToDie() {
 	}
-	
+
 }

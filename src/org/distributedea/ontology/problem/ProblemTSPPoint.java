@@ -1,5 +1,6 @@
 package org.distributedea.ontology.problem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.ontology.problem.tsp.Position;
@@ -11,6 +12,17 @@ public class ProblemTSPPoint extends ProblemTSP {
 
 	private List<PositionPoint> positions;
 
+	@Override
+	public List<Position> exportPositions() {
+		
+		List<Position> positionsList = new ArrayList<Position>();
+		for (PositionPoint positionPointI : positions) {
+			positionsList.add(positionPointI);
+		}
+		
+		return positionsList;
+	}
+	
 	public List<PositionPoint> getPositions() {
 		return positions;
 	}

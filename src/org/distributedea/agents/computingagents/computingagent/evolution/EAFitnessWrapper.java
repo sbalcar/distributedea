@@ -24,7 +24,8 @@ public class EAFitnessWrapper extends FitnessFunction {
 	private ProblemTool problemTool;
 	private AgentLogger logger;
 	
-	public EAFitnessWrapper(Configuration conf, boolean isMaximalization, Problem problem, ProblemTool problemTool, AgentLogger logger) {
+	public EAFitnessWrapper(Configuration conf, boolean isMaximalization,
+			Problem problem, ProblemTool problemTool, AgentLogger logger) {
 		this.conf = conf;
 		this.isMaximalization = isMaximalization;
 		this.problem = problem;

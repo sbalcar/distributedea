@@ -188,6 +188,10 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 			ProblemTSP problem, IProblemTSPPermutationTool tool,
 			AgentLogger logger) {
 		
+		if (individual == null) {
+			return Double.NaN;
+		}
+		
 		List<Integer> permutation = individual.getPermutation();
 		
 		double distance = 0;

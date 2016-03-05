@@ -67,9 +67,9 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 
 
 				} catch (OntologyException e) {
-					logger.logThrowable("Problem extracting content", e);
+					getLogger().logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logger.logThrowable("Codec problem", e);
+					getLogger().logThrowable("Codec problem", e);
 				}
 
 				ACLMessage failure = request.createReply();
@@ -91,7 +91,7 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 	 */
 	private ACLMessage respondToLogMessage(ACLMessage request, Action a) {
 
-		logger.log(Level.INFO, "respondToLogMessage");
+		getLogger().log(Level.INFO, "respondToLogMessage");
 
 		@SuppressWarnings("unused")
 		LogMessage logMessage = (LogMessage) a.getAction();
@@ -104,9 +104,9 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 		try {
 			getContentManager().fillContent(reply, result);
 		} catch (CodecException e) {
-			logger.logThrowable("CodecException by sending the answer for LogMessage", e);
+			getLogger().logThrowable("CodecException by sending the answer for LogMessage", e);
 		} catch (OntologyException e) {
-			logger.logThrowable("OntologyException by sending the answer for LogMessage", e);
+			getLogger().logThrowable("OntologyException by sending the answer for LogMessage", e);
 		}
 
 		return reply;

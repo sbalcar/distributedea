@@ -78,9 +78,9 @@ public class Agent_DataManager extends Agent_DistributedEA {
 
 
 				} catch (OntologyException e) {
-					logger.logThrowable("Problem extracting content", e);
+					getLogger().logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logger.logThrowable("Codec problem", e);
+					getLogger().logThrowable("Codec problem", e);
 				}
 
 				return null;
@@ -130,7 +130,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 				writer.append(rowResult + "\n");
 				writer.close();
 			} catch (IOException e) {
-				logger.logThrowable("Part result can't be logged", e);
+				getLogger().logThrowable("Part result can't be logged", e);
 			}
 		}
 		
@@ -160,7 +160,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 			writer = new BufferedWriter(new FileWriter(fileName));
 			writer.close();
 		} catch (IOException e) {
-			logger.logThrowable("Error by rewiting file", e);
+			getLogger().logThrowable("Error by rewiting file", e);
 		}
 	}
 	

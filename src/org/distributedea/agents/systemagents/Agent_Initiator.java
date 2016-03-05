@@ -45,10 +45,10 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		initAgent();
 		// Agent Initiator doesn't have any DF registration
 
-		logger.log(Level.INFO, "Agent Intitator is starting - " + "AID: " + getAID().getName());
+		getLogger().log(Level.INFO, "Agent Intitator is starting - " + "AID: " + getAID().getName());
 
 		String fileName = null;
-		if (Agent_ManagerAgent.isAgentOnMainControler(this, logger)) {
+		if (Agent_ManagerAgent.isAgentOnMainControler(this, getLogger())) {
 
 			fileName = org.distributedea.Configuration.getConfigurationFile();
 		} else {
@@ -57,12 +57,12 @@ public class Agent_Initiator extends Agent_DistributedEA {
 					.getConfigurationSlaveFile();
 		}
 
-		logger.log(Level.INFO, "Reading configuration from: " + fileName);
+		getLogger().log(Level.INFO, "Reading configuration from: " + fileName);
 
 		XmlConfigurationProvider configProvider =
 				new XmlConfigurationProvider();
 		AgentConfigurations configuration =
-				configProvider.getConfiguration(fileName, logger);
+				configProvider.getConfiguration(fileName, getLogger());
 
 		List<AgentConfiguration> agentConfigurations =
 				configuration.getAgentConfigurations();
@@ -86,16 +86,16 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		if (managerAgentConfigurations.size() != 1) {
 
 			if (managerAgentConfigurations.isEmpty()) {
-				logger.log(Level.SEVERE, "Error in the config file - isn't any Agent Manager");
+				getLogger().log(Level.SEVERE, "Error in the config file - isn't any Agent Manager");
 			}
 			if (managerAgentConfigurations.size() > 1) {
-				logger.log(Level.SEVERE, "Error in the config file - More than one Agent Manager");
+				getLogger().log(Level.SEVERE, "Error in the config file - More than one Agent Manager");
 			}
 
 			try {
 				getContainerController().kill();
 			} catch (StaleProxyException e) {
-				logger.logThrowable("Exception by killing container", e);
+				getLogger().logThrowable("Exception by killing container", e);
 			}
 		}
 
@@ -111,15 +111,15 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		if (aManagerAgent == null) {
 
-			logger.log(Level.SEVERE, "Error by creating agent");
+			getLogger().log(Level.SEVERE, "Error by creating agent");
 			try {
 				getContainerController().kill();
 			} catch (StaleProxyException e) {
-				logger.logThrowable("Exception by killing container", e);
+				getLogger().logThrowable("Exception by killing container", e);
 			}
 		}
 
-		logger.log(Level.INFO, "-------" + this.getAID().getName() + " "
+		getLogger().log(Level.INFO, "-------" + this.getAID().getName() + " "
 				+ this.getAID().getLocalName());
 
 		String agentname = null;
@@ -127,7 +127,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			String fullName = aManagerAgent.getName();
 			agentname = fullName.substring(0, fullName.indexOf('@'));
 		} catch (StaleProxyException e) {
-			logger.logThrowable("Get name by agent", e);
+			getLogger().logThrowable("Get name by agent", e);
 		}
 
 		AID aManagerAgentAID = new AID(agentname, false);
@@ -139,14 +139,14 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			List<Argument> argumentsI = configurationI.getArguments();
 
 			AID result = ManagerAgentService.sendCreateAgent(this,
-					aManagerAgentAID, agentTypeI, agentNameI, argumentsI, logger);
+					aManagerAgentAID, agentTypeI, agentNameI, argumentsI, getLogger());
 
 			if (result == null) {
-				logger.log(Level.SEVERE, "Error by creating agent");
+				getLogger().log(Level.SEVERE, "Error by creating agent");
 				try {
 					getContainerController().kill();
 				} catch (StaleProxyException e) {
-					logger.logThrowable("Exception by killing container", e);
+					getLogger().logThrowable("Exception by killing container", e);
 				}
 			}
 
@@ -166,7 +166,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 	public AgentController createAgent(Agent_DistributedEA agent, String type,
 			String name, Arguments arguments) {
 
-		return Agent_ManagerAgent.createAgent(this, type, name, null, logger);
+		return Agent_ManagerAgent.createAgent(this, type, name, null, getLogger());
 	}
 
 
@@ -183,7 +183,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		try {
 			hosname = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
-			logger.logThrowable("df", e);
+			getLogger().logThrowable("df", e);
 			return null;
 		}
 

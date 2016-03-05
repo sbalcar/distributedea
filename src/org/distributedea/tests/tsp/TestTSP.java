@@ -15,57 +15,75 @@ public class TestTSP {
 		// Euclidean 2D distance
 		ProblemTool problemToolGPS = new ProblemToolGPSEuc2DSimpleSwap();
 		
+		boolean fitnessGPSNaNResult = false;
+		double fitnessGPSNaN = problemToolGPS.fitness(null, null, null);
+		if (Double.isNaN(fitnessGPSNaN)) {
+			fitnessGPSNaNResult = true;
+		}
+		
 		String italyFileName = "it16862";
 		double italyExpectedValue = 557315;
 		boolean italyResult = genericTSPTest(italyFileName, problemToolGPS,
-				italyExpectedValue);
+				italyExpectedValue, 0);
 
 		String pbnFileName = "pbn423";
 		double pbnExpectedValue = 1365;
 		boolean pbnResult = genericTSPTest(pbnFileName, problemToolGPS,
-				pbnExpectedValue);
+				pbnExpectedValue, 0);
 		
-		boolean resultGPS_E = italyResult && pbnResult;
+		boolean resultGPS_E = fitnessGPSNaNResult && italyResult && pbnResult;
 		
 		
 		ProblemTool problemToolPoint = new ProblemToolPointSimpleSwap();
 		
+		boolean fitnessPointNaNResult = false;
+		double fitnessPointNaN = problemToolGPS.fitness(null, null, null);
+		if (Double.isNaN(fitnessPointNaN)) {
+			fitnessPointNaNResult = true;
+		}
+		
+		String simpleTestName = "simpleTest";
+		double simpleTestExpectedValue = 1025.509594617172;
+		boolean simpleTestResult = genericTSPTest(simpleTestName, problemToolPoint,
+				simpleTestExpectedValue, 1);
+		
 		String xqfFileName = "xqf131";
 		double xqfExpectedValue = 564;
 		boolean xqfResult = genericTSPTest(xqfFileName, problemToolPoint,
-				xqfExpectedValue);
+				xqfExpectedValue, 0);
 		
 		String xqlFileName = "xql662";
 		double xqlExpectedValue = 2513;
 		boolean xqlResult = genericTSPTest(xqlFileName, problemToolPoint,
-				xqlExpectedValue);
+				xqlExpectedValue, 0);
 		
 		String xitFileName = "xit1083";
 		double xitExpectedValue = 3558;
 		boolean xitResult = genericTSPTest(xitFileName, problemToolPoint,
-				xitExpectedValue);
+				xitExpectedValue, 0);
 		
 		String pbmFileName = "pbm436";
 		double pbmExpectedValue = 1443;
 		boolean pbmResult = genericTSPTest(pbmFileName, problemToolPoint,
-				pbmExpectedValue);
+				pbmExpectedValue, 0);
 		
 		String djbFileName = "djb2036";
 		double djbExpectedValue = 6197;
 		boolean djbResult = genericTSPTest(djbFileName, problemToolPoint,
-				djbExpectedValue);
+				djbExpectedValue, 0);
 		
 		String xmcFileName = "xmc10150";
 		double xmcExpectedValue = 28387;
 		boolean xmcResult = genericTSPTest(xmcFileName, problemToolPoint,
-				xmcExpectedValue);
+				xmcExpectedValue, 0);
 		
 		String fncFileName = "fnc19402";
 		double fncExpectedValue = 59288;
 		boolean fncResult = genericTSPTest(fncFileName, problemToolPoint,
-				fncExpectedValue);
+				fncExpectedValue, 0);
 		
-		boolean resultPoint = xqfResult && xqlResult && xitResult &&
+		boolean resultPoint = fitnessPointNaNResult && 
+				simpleTestResult &&  xqfResult && xqlResult && xitResult &&
 				pbmResult && djbResult && xmcResult && fncResult;
 		
 		
@@ -79,7 +97,7 @@ public class TestTSP {
 	}
 
 	private static boolean genericTSPTest(String inputFileName,
-			ProblemTool problemTool, double expectedFitness) {
+			ProblemTool problemTool, double expectedFitness, double permissibleError) {
 		
 		AgentLogger logger = new AgentLogger(null);
 		
@@ -97,7 +115,7 @@ public class TestTSP {
 		System.out.println("Expected Fitness: " + expectedFitness);
 		System.out.println("Fitness: " + value);
 		
-		if (expectedFitness == value) {
+		if (Math.abs(expectedFitness - value) <= permissibleError) {
 			return true;
 		}
 		

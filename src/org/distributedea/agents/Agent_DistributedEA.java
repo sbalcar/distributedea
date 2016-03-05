@@ -28,12 +28,24 @@ public abstract class Agent_DistributedEA extends Agent {
 	private static final long serialVersionUID = 1L;
 	
 	protected Codec codec = new SLCodec();
-	protected AgentLogger logger = new AgentLogger(this);
+	
+	//TODO:
+	private AgentLogger logger = new AgentLogger(this); //null;
 
 	
 	public Codec getCodec() {
 		return codec;
 	}
+
+	public AgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new AgentLogger(this);
+		}
+		return logger;
+	}
+
+	
 	
 	public abstract List<Ontology> getOntologies();
 	

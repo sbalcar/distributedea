@@ -121,11 +121,19 @@ public class Configuration {
 	public static String getComputingAgentLogDirectory() {
 
 		return "log";
+	}
 
+	/**
+	 * Provides name of directory for log files of Computing Agents
+	 * @return
+	 */
+	public static String getComputingAgentLogResultDirectory() {
+
+		return "log" + System.getProperty("file.separator") + "result";
 	}
 	
 	/**
-	 * Provides log file with path for concrete Computing Agent
+	 * Provides log file with a path for concrete Computing Agent
 	 * @param computingAgentAID
 	 * @return
 	 */
@@ -134,7 +142,17 @@ public class Configuration {
 		return getComputingAgentLogDirectory() + System.getProperty("file.separator")
 				+ computingAgentAID.getLocalName() + ".log";
 	}
-	
+
+	/**
+	 * Provides log file with a path for the Best Result(Individual)
+	 * @param computingAgentAID - name of file contains on their AID
+	 * @return
+	 */
+	public static String getComputingAgentLogResultFile(AID computingAgentAID) {
+
+		return getComputingAgentLogResultDirectory() + System.getProperty("file.separator")
+				+ computingAgentAID.getLocalName() + ".rslt";
+	}
 	
 	/**
 	 * Provides Classes of unique agents which doesn't contain suffix

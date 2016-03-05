@@ -3,6 +3,7 @@ package org.distributedea.ontology.problem;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
 
 public class ProblemTSPGPS extends ProblemTSP {
@@ -11,6 +12,18 @@ public class ProblemTSPGPS extends ProblemTSP {
 
 	private List<PositionGPS> positions;
 
+
+	@Override
+	public List<Position> exportPositions() {
+		
+		List<Position> positionsList = new ArrayList<Position>();
+		for (PositionGPS positionGPSI : positions) {
+			positionsList.add(positionGPSI);
+		}
+		
+		return positionsList;
+	}
+	
 	public ProblemTSPGPS() {
 		this.positions = new ArrayList<PositionGPS>();
 	}

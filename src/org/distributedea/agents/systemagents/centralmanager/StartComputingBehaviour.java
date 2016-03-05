@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.Configuration;
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerSimple;
@@ -125,7 +126,14 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 		
 		
 		
-		Scheduler scheduler = new SchedulerSimple();
+		Scheduler scheduler;
+		try {
+			scheduler = (Scheduler) InputConfiguration.scheduler.newInstance();
+		} catch (InstantiationException | IllegalAccessException e1) {
+			logger.logThrowable("Scheduller wasn't initialized", e1);
+			throw new IllegalStateException("Scheduller wasn't initialized");
+		}
+		
 		scheduler.agentInitialization(centralManager, problem, configurations,
 				availableProblemTools, logger);
 		

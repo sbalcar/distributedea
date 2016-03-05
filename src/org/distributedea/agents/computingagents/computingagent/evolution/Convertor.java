@@ -1,6 +1,7 @@
 package org.distributedea.agents.computingagents.computingagent.evolution;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.distributedea.ontology.individuals.Individual;
@@ -51,15 +52,19 @@ public class Convertor {
 			throws InvalidConfigurationException {
 		
 		Gene[] sampleGenes = new Gene[individual.sizeOfPermutation()];
+		List<Integer> permutation = individual.getPermutation();
+		
+		int minVal = Collections.min(permutation);
+		int maxVal = Collections.max(permutation);
+		
 		for (int i = 0; i < sampleGenes.length; i++) {
-			sampleGenes[i] = new IntegerGene(conf, 0, sampleGenes.length -1);
+			sampleGenes[i] = new IntegerGene(conf, minVal, maxVal);
 		}
 		
 		for (int numberIndex = 0;
 				numberIndex < individual.sizeOfPermutation(); numberIndex++) {
 			Gene geneI = sampleGenes[numberIndex];
-			geneI.setAllele(
-					individual.getPermutation().get(numberIndex) -1);
+			geneI.setAllele(permutation.get(numberIndex));
 		}
 		
 		return new Chromosome(conf, sampleGenes);
@@ -110,7 +115,7 @@ public class Convertor {
 			Gene genI = genes[i];
 			
 			int genValueI = (int) genI.getAllele();
-			permutation.add(genValueI +1);
+			permutation.add(genValueI);
 		}
 		
 		IndividualPermutation individual = new IndividualPermutation();

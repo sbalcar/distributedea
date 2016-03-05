@@ -45,7 +45,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		try {
 			Thread.sleep(4 * 1000);
 		} catch (Exception e) {
-			logger.logThrowable("Unable to wait for initialization", e);
+			getLogger().logThrowable("Unable to wait for initialization", e);
 			return;
 		}
 		
@@ -53,7 +53,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		if (InputConfiguration.automaticStart) {
 			addBehaviour(instanceStartComputingBehaviour());
 		} else {
-			addBehaviour(new ConsoleAutomatBehaviour(logger));
+			addBehaviour(new ConsoleAutomatBehaviour(getLogger()));
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 				problemFileName,
 				methodsFileName,
 				InputConfiguration.availableProblemTools,
-				logger);
+				getLogger());
 		
 		return behaviour;
 	}

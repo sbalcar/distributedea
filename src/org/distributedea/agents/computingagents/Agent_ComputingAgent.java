@@ -26,6 +26,7 @@ import org.distributedea.agents.computingagents.computingagent.ComputingAgentSer
 import org.distributedea.agents.computingagents.computingagent.logging.AgentComputingLogger;
 import org.distributedea.agents.systemagents.datamanager.DataManagerService;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
@@ -38,6 +39,7 @@ import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
 
 /**
@@ -48,6 +50,8 @@ import org.distributedea.problems.ProblemToolValidation;
 public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
+
+	private AgentLogger logger = null;
 	
 	private ProblemTool problemTool = null;
 	private ResultOfComputing bestResultOfComputing = null;
@@ -57,6 +61,21 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	protected Thread thread = null;
 
+	
+	
+	public AgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new AgentComputingLogger(this);
+		}
+		return logger;
+	}
+	
+	public AgentComputingLogger getCALogger() {
+		return (AgentComputingLogger) getLogger();
+	}
+	
+	
 	@Override
 	public List<Ontology> getOntologies() {
 
@@ -86,15 +105,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
             DFService.register(this, dfd );  
         
         } catch (FIPAException fe) {
-        	logger.logThrowable("Registration faild", fe);
+        	getLogger().logThrowable("Registration faild", fe);
         }
 	}
 	
 	@Override
 	protected void setup() {
-		
-		// rewriting by another type of logge
-		this.logger = new AgentComputingLogger(this);
 		
 		initAgent();
 		registrDF();
@@ -115,22 +131,22 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 							getContentManager().extractContent(msgRequest);
 					
 					if (action.getAction() instanceof AccessesResult) {
-						logger.log(Level.INFO, "Request for AccessesResult");
+						getLogger().log(Level.INFO, "Request for AccessesResult");
 						return respondToAccessesResult(msgRequest, action);
 						
 					} else if (action.getAction() instanceof StartComputing) {
-						logger.log(Level.INFO, "Request for StartComputing");
+						getLogger().log(Level.INFO, "Request for StartComputing");
 						return respondToStartComputing(msgRequest, action);
 						
 					} else if (action.getAction() instanceof PrepareYourselfToKill) {
-						logger.log(Level.INFO, "Request for PrepareYourselfToKill");
+						getLogger().log(Level.INFO, "Request for PrepareYourselfToKill");
 						return respondToPrepareYourselfToKill(msgRequest, action);
 					}
 
 				} catch (OntologyException e) {
-					logger.logThrowable("Problem extracting content", e);
+					getLogger().logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logger.logThrowable("Codec problem", e);
+					getLogger().logThrowable("Codec problem", e);
 				}
 
 				ACLMessage failure = msgRequest.createReply();
@@ -165,14 +181,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 							getContentManager().extractContent(msgInform);
 					
 					if (action.getAction() instanceof Individual) {
-						logger.log(Level.INFO, "Inform with Individual");
+						getLogger().log(Level.INFO, "Inform with Individual");
 						processIndividual(msgInform, action);
 					}
 
 				} catch (OntologyException e) {
-					logger.logThrowable("Problem extracting content", e);
+					getLogger().logThrowable("Problem extracting content", e);
 				} catch (CodecException e) {
-					logger.logThrowable("Codec problem", e);
+					getLogger().logThrowable("Codec problem", e);
 				}
 
 				return null;
@@ -225,7 +241,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		//active waiting for some result
 		ResultOfComputing resultOfComputing = getBestresultOfComputing();
 		while (resultOfComputing == null) {
-			logger.log(Level.INFO, "resultOfComputing is null");
+			getLogger().log(Level.INFO, "resultOfComputing is null");
 			resultOfComputing = getBestresultOfComputing();
 		}
 		
@@ -234,9 +250,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		try {
 			getContentManager().fillContent(reply, result);
 		} catch (CodecException e) {
-			logger.logThrowable("CodecException by sending ResultOfComputing", e);
+			getLogger().logThrowable("CodecException by sending ResultOfComputing", e);
 		} catch (OntologyException e) {
-			logger.logThrowable("OntologyException by sending ResultOfComputing", e);
+			getLogger().logThrowable("OntologyException by sending ResultOfComputing", e);
 		}
 
 		return reply;
@@ -289,12 +305,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected boolean isAbleToSolve(Problem problem) {
 		
 		// tests Problem validation
-		if (! problem.testIsValid(logger) ) {
+		if (! problem.testIsValid(getLogger()) ) {
 			return false;
 		}
 		
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problem.getProblemToolClass(), logger);
+				problem.getProblemToolClass(), getLogger());
 	
 		// check if this agent is able to solve this type of problem
 		if (! isAbleToSolve(problem.getClass(),
@@ -330,24 +346,23 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 	protected void commitSuicide() {
 		
-		logger.log(Level.INFO, "Waiting for killing himself");
+		getLogger().log(Level.INFO, "Waiting for killing himself");
 
-		ManagerAgentService.sendKillAgent(this, getAID(), logger);
+		ManagerAgentService.sendKillAgent(this, getAID(), getLogger());
 	}
 	
 	private long timeOfLastLogMs = System.currentTimeMillis();
-	protected void logResultByUsingDatamanager(PartResult result) {
-		
-		String resultLog = "Generation " +
-				result.getGenerationNumber() + ": " +
-				result.getFitnessResult();
-		logger.log(Level.INFO, resultLog);
+	protected void logResultByUsingDatamanager(long generationNumber, double fitnessValue) {
+				
+		PartResult result = new PartResult();
+		result.setGenerationNumber(generationNumber);
+		result.setFitnessResult(fitnessValue);
 		
 		long nowMs = System.currentTimeMillis();
 		if (timeOfLastLogMs + Configuration.LOG_PERIOD_MS < nowMs) {
 			
 			result.setAgentDescription("" + this.getLocalName());
-			DataManagerService.sendPartResultMessage(this, result, logger);
+			DataManagerService.sendPartResultMessage(this, result, getLogger());
 			
 			timeOfLastLogMs = nowMs;
 		}
@@ -365,7 +380,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		if (timeOfLastIndividualDistributionMs +
 				Configuration.INDIVIDUAL_BROADCAST_PERIOD_MS < nowMs) {
 			
-			ComputingAgentService.sendIndividualToNeighbours(this, individual, logger);
+			ComputingAgentService.sendIndividualToNeighbours(this, individual, getLogger());
 			
 			timeOfLastIndividualDistributionMs = nowMs;
 		}
@@ -374,5 +389,83 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected abstract boolean isAbleToSolve(Class<?> problem, Class<?> representation);
 	public abstract void startComputing(Problem problem, Behaviour behaviour);
 	public abstract void prepareToDie();
+	
+	/**
+	 * save, send to DataManager and neighbors and log computed individual
+	 * @param individual
+	 * @param fitness
+	 * @param generationNumber
+	 */
+	protected void processComputedIndividual(Individual individual,
+			double fitness, long generationNumber, Problem problem) {
+
+		// log in local file
+		String resultLog = "Generation " +
+				generationNumber + ": " +
+				fitness;
+		getLogger().log(Level.INFO, resultLog);
+		
+		// update saved best result of computing
+		boolean isNewIndividualBetter = false;
+		if (generationNumber != -1) {
+			
+			double fitnessValueBest = getBestresultOfComputing().getFitnessValue();
+			isNewIndividualBetter =
+					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
+							fitness, fitnessValueBest, problem);
+		}
+
+		if (generationNumber == -1 || isNewIndividualBetter) {
+		
+			ResultOfComputing resultOfComputingNew = new ResultOfComputing();
+			resultOfComputingNew.setBestIndividual(individual);
+			resultOfComputingNew.setFitnessValue(fitness);
+			
+			setBestresultOfComputing(resultOfComputingNew);
+		}
+		
+		// send individual description to Agent DataManager
+		logResultByUsingDatamanager(generationNumber, fitness);
+		
+		
+		getCALogger().logBestResult(individual, fitness);
+		
+	}
+	
+	/**
+	 * save, send to DataManager and log received individual
+	 * @param receivedIndividual
+	 * @param receivedFitness
+	 * @param generationNumber
+	 * @param problem
+	 */
+	protected void processRecievedIndividual(Individual receivedIndividual,
+			double receivedFitness, long generationNumber, Problem problem) {
+		
+		ResultOfComputing resultOfComputing = getBestresultOfComputing();
+		double bestFitness = resultOfComputing.getFitnessValue();
+		
+		boolean isReceivedIndividualBetter =
+				ProblemToolEvaluation.isFistFitnessBetterThanSecond(
+						receivedFitness, bestFitness, problem);
+		
+		if (isReceivedIndividualBetter) {
+			
+			ResultOfComputing resultOfComputingNew = new ResultOfComputing();
+			resultOfComputingNew.setBestIndividual(receivedIndividual);
+			resultOfComputingNew.setFitnessValue(receivedFitness);
+			
+			setBestresultOfComputing(resultOfComputingNew);
+			
+			
+			double fitnessImprovement = Math.abs(receivedFitness -bestFitness);
+			
+			getCALogger().logDiffImprovementOfDistribution(fitnessImprovement);
+		} else {
+			// not improved
+			getCALogger().logDiffImprovementOfDistribution(0);
+		}
+
+	}
 	
 }

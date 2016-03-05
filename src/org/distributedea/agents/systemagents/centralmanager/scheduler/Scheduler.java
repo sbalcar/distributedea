@@ -14,11 +14,11 @@ public interface Scheduler {
 
 	/**
 	 * Initialize computing agents on distributed nodes
-	 * @param centramManager
+	 * @param centralManager
 	 * @param configurations
 	 * @param logger
 	 */
-	public void agentInitialization(Agent_CentralManager centramManager,
+	public void agentInitialization(Agent_CentralManager centralManager,
 			Problem problem, AgentConfiguration [] configurations,
 			Class<?> [] availablProblemTools, AgentLogger logger);
 	
@@ -28,7 +28,7 @@ public interface Scheduler {
 	 * @param problemTool
 	 * @param logger
 	 */
-	public void replan(Agent_CentralManager centramManager,
+	public void replan(Agent_CentralManager centralManager,
 			Problem problem, AgentConfiguration [] configurations,
 			Class<?> []  availableProblemTools, AgentLogger logger);
 }
