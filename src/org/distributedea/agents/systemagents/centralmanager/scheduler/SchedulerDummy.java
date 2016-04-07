@@ -24,7 +24,7 @@ public class SchedulerDummy implements Scheduler {
 	int NODE_INDEX = 0;
 	
 	/** index on the method in the list of methods (configuration/methods.xml) */
-	int COMPUTING_AGENT_INDEX = 5;
+	int COMPUTING_AGENT_INDEX = 1;
 	
 	/** index on the Problem Tool in the list of tolls */
 	int PROBLEM_TOOL_INDEX = 0;

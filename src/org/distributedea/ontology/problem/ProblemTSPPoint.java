@@ -3,6 +3,8 @@ package org.distributedea.ontology.problem;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionPoint;
 
@@ -45,6 +47,11 @@ public class ProblemTSPPoint extends ProblemTSP {
 	@Override
 	public int numberOfPositions() {
 		return positions.size();
+	}
+
+	@Override
+	public boolean testIsValid(Individual individual, AgentLogger logger) {
+		return true;
 	}
 	
 }

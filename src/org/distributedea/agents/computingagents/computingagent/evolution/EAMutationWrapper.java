@@ -101,7 +101,7 @@ public class EAMutationWrapper implements GeneticOperator {
 		Individual individual = null;
 		try {
 			individual = Convertor.convertToIndividual(
-					chromosume, conf);
+					chromosume, problem, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Chromosome to Individual", e);
 			return null;
@@ -119,7 +119,7 @@ public class EAMutationWrapper implements GeneticOperator {
 		IChromosome newChromosumeI = null;
 		try {
 			newChromosumeI = Convertor.convertToIChromosome(
-					individualNew, conf);
+					individualNew, problem, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Individual to Chromosome", e);
 			return null;

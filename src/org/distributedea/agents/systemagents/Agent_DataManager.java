@@ -5,11 +5,7 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.core.AID;
-import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
@@ -24,13 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.distributedea.AgentNames;
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.Agent_ComputingAgent;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.results.PartResult;
 
+/**
+ * System-agent who manage data resources multi-agent framework
+ * @author stepan
+ *
+ */
 public class Agent_DataManager extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
@@ -51,11 +51,14 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		initAgent();
 		registrDF();
 		
-		// clears  old results of computing - rewrites old file
+		// cleans old results of computing
 		cleanResult();
 
-		// clear old logs of Computing Agents - removes old files
+		// cleans old logs of Computing Agents
 		cleanLogDirectory();
+		
+		// cleans old improvement of distribution for each Computing Agent
+		cleanLogImprovementOfDistributionDirectory();
 		
 		
 		MessageTemplate mesTemplate =
@@ -109,7 +112,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 				Agent_ComputingAgent.class.getName());
 		int numberOfCA = aidComputingAgents.length;
 		
-		if (numberOfPartResult > numberOfCA && 1 == 3) {
+		if (numberOfPartResult > numberOfCA) {
 			
 			partResultOfCA.clear();
 			partResultOfCA.put(senderName, result);
@@ -117,7 +120,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		} else if (numberOfPartResult == numberOfCA) {
 			
 			String rowResult = "";
-			String rowDescription = "#";
+			String rowDescription = Configuration.COMMENT_CHAR;
 			for (PartResult partResultI : partResultOfCA.values()) {
 				rowResult += partResultI.getFitnessResult() + " ";
 				rowDescription += partResultI.getAgentDescription() + " ";
@@ -137,13 +140,35 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		return null;
 	}
 
-	private void cleanLogDirectory() {
+	/**
+	 * Removes all files in the Log directory
+	 */
+	protected void cleanLogDirectory() {
 		
 		String logDirectoryName = Configuration.getComputingAgentLogDirectory();
+
+		cleanDirectory(logDirectoryName);
+	}
+	
+	/**
+	 * Removes all files in the Log of Distribution Improvement directory
+	 */
+	protected void cleanLogImprovementOfDistributionDirectory() {
+		
+		String logDirectoryName = Configuration.getComputingAgentLogImprovementOfDistributionDirectory();
+		
+		cleanDirectory(logDirectoryName);
+	}
+
+	/**
+	 * Removes all files in the given directory
+	 */
+	private void cleanDirectory(String logDirectoryName) {
+		
 		File logDirectory = new File(logDirectoryName);
 		
 		File[] files = logDirectory.listFiles();
-	    if (files != null) { //some JVMs return null for empty dirs
+	    if (files != null) { //some JVMs return null for empty directories
 	        for(File fileI: files) {
 	            if(! fileI.isDirectory()) {
 	            	fileI.delete();
@@ -151,7 +176,11 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	        }
 	    }
 	}
+
 	
+	/**
+	 * Empty the file for centralized result
+	 */
 	private void cleanResult() {
 		
 		String fileName = Configuration.getResultFile();

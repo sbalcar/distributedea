@@ -6,11 +6,18 @@ import java.util.List;
 
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
+import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problem.ProblemContinousOpt;
+import org.distributedea.ontology.problem.continousoptimalization.Interval;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolValidation;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
+import org.jgap.impl.DoubleGene;
 import org.jgap.impl.IntegerGene;
 
 /**
@@ -28,13 +35,23 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	public static IChromosome convertToIChromosome(Individual individual,
-			Configuration conf) throws InvalidConfigurationException {
+			Problem problem, Configuration conf) throws InvalidConfigurationException {
 	
 		if (individual instanceof IndividualPermutation) {
 			
 			IndividualPermutation individualPermutation =
 					(IndividualPermutation) individual;
-			return convertToIChromosome(individualPermutation, conf);
+			return convertToIChromosome(individualPermutation, null, conf);
+			
+		} else if (individual instanceof IndividualPoint) {
+			
+			IndividualPoint individualPoint =
+					(IndividualPoint)individual;
+			
+			ProblemContinousOpt problemCO =
+					(ProblemContinousOpt)problem;
+			
+			return convertToIChromosome(individualPoint, problemCO, conf);
 		}
 		
 		return null;
@@ -48,7 +65,8 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	private static Chromosome convertToIChromosome(
-			IndividualPermutation individual, Configuration conf)
+			IndividualPermutation individual, Problem problem,
+			Configuration conf)
 			throws InvalidConfigurationException {
 		
 		Gene[] sampleGenes = new Gene[individual.sizeOfPermutation()];
@@ -70,6 +88,34 @@ public class Convertor {
 		return new Chromosome(conf, sampleGenes);
 	}
 
+	private static Chromosome convertToIChromosome(
+			IndividualPoint individual, ProblemContinousOpt problem,
+			Configuration conf)
+			throws InvalidConfigurationException {
+		
+		List<Interval> intervals = problem.getIntervals();
+		
+		Gene[] sampleGenes = new Gene[problem.getDimension()];
+		for (int i = 0; i < sampleGenes.length; i++) {
+
+			Interval intervalI = intervals.get(i);
+			
+			int minVal = (int) intervalI.getMin();
+			int maxVal = (int) intervalI.getMax();
+			
+			sampleGenes[i] = new DoubleGene(conf, minVal, maxVal);
+		}
+		
+		List<Double> coordinates = individual.getCoordinates();
+		
+		for (int numberIndex = 0;
+				numberIndex < coordinates.size(); numberIndex++) {
+			Gene geneI = sampleGenes[numberIndex];
+			geneI.setAllele(coordinates.get(numberIndex));
+		}
+		
+		return new Chromosome(conf, sampleGenes);
+	}
 	/**
 	 * Converts jgap IChromosome to general individual
 	 * @param chromosome
@@ -78,16 +124,31 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	public static Individual convertToIndividual(IChromosome chromosome,
-			Configuration conf) throws InvalidConfigurationException {
+			Problem problem, Configuration conf) throws InvalidConfigurationException {
 	
 		Individual convertedIndividual = null;
 		
-		if (chromosome instanceof Chromosome) {
+		String problemToolClass = problem.getProblemToolClass();
+		
+		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
+				problemToolClass, null);
+		
+		Class<?> reprezentation = problemTool.reprezentationWhichUses();
+		
+		Chromosome chromosomeCh =
+				(Chromosome) chromosome;
+		
+		if (reprezentation == IndividualPoint.class) {
 			
-			Chromosome chromosomeCh =
-					(Chromosome) chromosome;
-			convertedIndividual = convertToIndividualPermutation(chromosomeCh, conf);
+			convertedIndividual =
+					convertToIndividualPoint(chromosomeCh, conf);
+			
+		} else if (reprezentation == IndividualPermutation.class) {
+			
+			convertedIndividual =
+					convertToIndividualPermutation(chromosomeCh, conf);
 		}
+		
 		
 		if (convertedIndividual == null ||
 				! convertedIndividual.validation()) {
@@ -123,4 +184,25 @@ public class Convertor {
 		
 		return individual;
 	}
+	
+	private static IndividualPoint convertToIndividualPoint(
+			Chromosome chromosome, Configuration conf)
+			throws InvalidConfigurationException {
+		
+		Gene[] genes = chromosome.getGenes();
+		
+		List<Double> coordinates = new ArrayList<>();
+		for (int i = 0; i < genes.length; i++) {
+			Gene genI = genes[i];
+			
+			double genValueI = (double) genI.getAllele();
+			coordinates.add(genValueI);
+		}
+		
+		IndividualPoint individual = new IndividualPoint();
+		individual.setCoordinates(coordinates);
+		
+		return individual;
+	}
+	
 }

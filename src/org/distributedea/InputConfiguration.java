@@ -1,27 +1,57 @@
 package org.distributedea;
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerDummy;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerRunEachOnce;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerSimple;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
-import org.distributedea.problems.tsp.point.permutation.ProblemToolPoint2opt;
 
+/**
+ * Contains parameters settings for the current way of solving 
+ * @author stepan
+ *
+ */
 public class InputConfiguration {
 
-	public static boolean automaticStart = true;
-	public static boolean individualDistribution = true;
+	/**
+	 * Allows automatic skipping machine, offering the option of framework,
+	 * in the case of value is True straight starts computing
+	 */
+	public static boolean automaticStart;
 	
-	//public static String inputProblemFileName = "wi29.tsp";
-	public static String inputProblemFileName = "simpleTest.tsp";
+	/**
+	 * Turns on broadcast computed individuals to distributed agents
+	 */
+	public static boolean individualDistribution;
 	
-	public static Class<?> problemToSolve = ProblemTSPGPS.class;
-	
-	//public static Class<?> scheduler = SchedulerSimple.class;
-	//public static Class<?> scheduler = SchedulerDummy.class;
-	public static Class<?> scheduler = SchedulerRunEachOnce.class;
+		
+	/**
+	 * Declares the type of problem which will be loaded to solve
+	 */
+	public static Class<?> problemToSolve;
 
-	public static Class<?> [] availableProblemTools =
-			{ProblemToolGPSEuc2D2opt.class};
+	/**
+	 * Defines the filename with the input Problem
+	 */
+	public static String inputProblemFileName;
+
+	
+	/**
+	 * Declares the Scheduler Class which will be used to direction of the evolution
+	 */
+	public static Class<?> scheduler;
+
+	/**
+	 * Declares the set of available ProblemTools for Computing Agents
+	 */
+	public static Class<?> [] availableProblemTools;
+	
+	
+	/**
+	 * Test validity of the current setting
+	 * @return
+	 */
+	public static boolean isValid() {
+		
+		InputContOpt test = new InputContOpt();
+		test.test02();
+		
+		return true;
+	}
+	
 }

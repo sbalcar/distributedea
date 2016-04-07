@@ -12,6 +12,11 @@ import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
+/**
+ * Agent represents Simulated Annealing Algorithm Method
+ * @author stepan
+ *
+ */
 public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
@@ -60,7 +65,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
 				problem.getProblemToolClass(), getCALogger());
-		
+		problemTool.initialization(problem, getLogger());
 		
 		long generationNumberI = -1;
 		

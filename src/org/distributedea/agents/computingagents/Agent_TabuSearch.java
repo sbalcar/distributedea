@@ -14,6 +14,11 @@ import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
+/**
+ * Agent represents TabuSearch Algorithm Method
+ * @author stepan
+ *
+ */
 public class Agent_TabuSearch extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
@@ -35,6 +40,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
 				problem.getProblemToolClass(), getCALogger());
+		problemTool.initialization(problem, getLogger());
 
         int tabuListSize = 500;
 		Queue<Individual> tabuList = new LinkedList<Individual>();

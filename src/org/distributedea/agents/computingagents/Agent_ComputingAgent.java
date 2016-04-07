@@ -51,29 +51,38 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
 
+	// logger for Computing Agent
 	private AgentLogger logger = null;
 	
-	private ProblemTool problemTool = null;
+	// best result of computing (Individual and fitness)
 	private ResultOfComputing bestResultOfComputing = null;
 	
+	// set of received Individuals from distribution
 	protected List<Individual> receivedIndividuals =
 			Collections.synchronizedList(new ArrayList<Individual>());
 
 	protected Thread thread = null;
 
+	/**
+	 * Specifies whether the agent can solve the Problem using a given
+	 * Individual representation
+	 * @param problem
+	 * @param representation
+	 * @return
+	 */
+	protected abstract boolean isAbleToSolve(Class<?> problem, Class<?> representation);
 	
+	/**
+	 * Starts computing a given Problem
+	 * @param problem
+	 * @param behaviour
+	 */
+	public abstract void startComputing(Problem problem, Behaviour behaviour);
 	
-	public AgentLogger getLogger() {
-		
-		if (logger == null) {
-			this.logger = new AgentComputingLogger(this);
-		}
-		return logger;
-	}
-	
-	public AgentComputingLogger getCALogger() {
-		return (AgentComputingLogger) getLogger();
-	}
+	/**
+	 * Prepares for the killing
+	 */
+	public abstract void prepareToDie();
 	
 	
 	@Override
@@ -87,9 +96,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return ontologies;
 	}
 
-	/**
-	 * Agent DF registration as Computing Agent
-	 */
+
 	@Override
 	protected void registrDF() {
 		        
@@ -108,6 +115,26 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
         	getLogger().logThrowable("Registration faild", fe);
         }
 	}
+	
+	
+	public AgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new AgentComputingLogger(this);
+		}
+		return logger;
+	}
+	public AgentComputingLogger getCALogger() {
+		return (AgentComputingLogger) getLogger();
+	}
+	
+	public ResultOfComputing getBestresultOfComputing() {
+		return bestResultOfComputing;
+	}
+	public void setBestresultOfComputing(ResultOfComputing resultOfComputing) {
+		this.bestResultOfComputing = resultOfComputing;
+	}
+	
 	
 	@Override
 	protected void setup() {
@@ -329,21 +356,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 	}
 	
-	
-	protected final ProblemTool getProblemTool() {
-		return problemTool;
-	}
-	protected final void setProblemTool(ProblemTool problemTool) {
-		this.problemTool = problemTool;
-	}
 
-	public ResultOfComputing getBestresultOfComputing() {
-		return bestResultOfComputing;
-	}
-	public void setBestresultOfComputing(ResultOfComputing resultOfComputing) {
-		this.bestResultOfComputing = resultOfComputing;
-	}
-	
 	protected void commitSuicide() {
 		
 		getLogger().log(Level.INFO, "Waiting for killing himself");
@@ -372,7 +385,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	private long timeOfLastIndividualDistributionMs = System.currentTimeMillis();
 	protected void distributeIndividualToNeighours(Individual individual) {
 		
-		if(! individual.validation()) {
+		if (individual == null) {
+			return;
+		}
+		
+		if (! individual.validation()) {
 			throw new IllegalStateException("Individual to distribution is not valid");
 		}
 		
@@ -386,9 +403,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 	}
 
-	protected abstract boolean isAbleToSolve(Class<?> problem, Class<?> representation);
-	public abstract void startComputing(Problem problem, Behaviour behaviour);
-	public abstract void prepareToDie();
 	
 	/**
 	 * save, send to DataManager and neighbors and log computed individual

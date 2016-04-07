@@ -12,7 +12,9 @@ import org.distributedea.agents.computingagents.computingagent.evolution.EAFitne
 import org.distributedea.agents.computingagents.computingagent.evolution.EAMutationWrapper;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
+import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.problems.ProblemTool;
@@ -70,6 +72,10 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
+		} else if (problem == ProblemContinousOpt.class) {
+			if (representation == IndividualPoint.class) {
+				isAble = true;
+			}			
 		}
 		
 		if (! isAble) {
@@ -93,18 +99,17 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
 				problem.getProblemToolClass(), getCALogger());
-		setProblemTool(problemTool);
+		problemTool.initialization(problem, getLogger());
 		
 		int popSize = 50;
 		double mutationRate = 0.9;
 		double crossRate = 0.5;
 		
 		// generates Individuals
-		Vector<IndividualPermutation> individuals = new Vector<IndividualPermutation>();
+		Vector<Individual> individuals = new Vector<Individual>();
 		for (int i = 0; i < popSize; i++) {
 			Individual individualI = problemTool.generateIndividual(problem, getCALogger());
-			// cast tested before
-			individuals.add((IndividualPermutation) individualI);
+			individuals.add(individualI);
 		}
 		
 		
@@ -123,8 +128,8 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		}
 		
 		try {
-			for (IndividualPermutation individualI : individuals) {
-				IChromosome chromI = Convertor.convertToIChromosome(individualI, conf);
+			for (Individual individualI : individuals) {
+				IChromosome chromI = Convertor.convertToIChromosome(individualI, problem, conf);
 				
 				population.addChromosome(chromI);
 			}
@@ -138,7 +143,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			
 			conf.setSampleChromosome(population.getChromosome(0));
 			conf.setFitnessFunction(
-					new EAFitnessWrapper(conf, false,  problem, problemTool, getCALogger()));
+					new EAFitnessWrapper(conf, problem, problemTool, getCALogger()));
 			conf.setPopulationSize(popSize);
 			
             //conf.removeNaturalSelectors(false);
@@ -160,7 +165,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			// best chromosome from actual generation
 			IChromosome choosenChromosomeI = pop.getFittestChromosome();
 			Individual individualI =
-					Convertor.convertToIndividual(choosenChromosomeI, conf);
+					Convertor.convertToIndividual(choosenChromosomeI, problem, conf);
 			double fitnessI =
 					problemTool.fitness(individualI, problem, getCALogger());
 			
@@ -184,7 +189,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				// best chromosome from actual generation
 				choosenChromosomeI = pop.getFittestChromosome();
 				individualI =
-						Convertor.convertToIndividual(choosenChromosomeI, conf);
+						Convertor.convertToIndividual(choosenChromosomeI, problem, conf);
 
 				fitnessI =
 						problemTool.fitness(individualI, problem, getCALogger());
@@ -208,8 +213,11 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 								recievedFitnessI, fitnessI, problem)) {
 		
 					IChromosome recievedChromI = Convertor
-							.convertToIChromosome(recievedIndividual, conf);
+							.convertToIChromosome(recievedIndividual, problem, conf);
 					pop.getPopulation().addChromosome(recievedChromI);
+					
+					processRecievedIndividual(recievedIndividual,
+							recievedFitnessI, generationNumberI, problem);
 				}
 
 			}

@@ -5,7 +5,9 @@ import jade.core.behaviours.Behaviour;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.apache.log4j.lf5.LogLevel;
 import org.distributedea.Configuration;
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
@@ -40,6 +42,12 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		
 		initAgent();
 		registrDF();
+		
+		boolean isInputValid = InputConfiguration.isValid();
+		if (! isInputValid) {
+			getLogger().log(Level.WARNING, "No valid input");
+			return;
+		}
 		
 		// waiting for initialization of all System Agents
 		try {

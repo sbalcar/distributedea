@@ -47,10 +47,15 @@ public class AgentComputingLogger extends AgentLogger {
 			dir.mkdir();
 		}
 		
+		String individualString = "null";
+		if (individual != null) {
+			individualString = individual.toLogString();
+		}
+		
 		try {
 			PrintWriter writer = new PrintWriter(new File(fileName));
-			writer.println("Fitness: " + fitness);
-			writer.append(individual.toLogString());
+			writer.append(Configuration.COMMENT_CHAR + " Fitness: " + fitness + "\n");
+			writer.append(individualString);
 			writer.close();
 		} catch (IOException e) {
 			ConsoleLogger.logThrowable("Log message in Computing agent " +
@@ -65,13 +70,21 @@ public class AgentComputingLogger extends AgentLogger {
 	 */
 	public void logDiffImprovementOfDistribution(double deltaFitness) {
 
-		String fileName = Configuration.getComputingAgentLogResultFile(agent.getAID());
+		String fileName = Configuration.getComputingAgentLogImprovementOfDistributionFile(agent.getAID());
 		
-		File dir = new File(Configuration.getComputingAgentLogResultDirectory());
+		File dir = new File(Configuration.getComputingAgentLogImprovementOfDistributionDirectory());
 		if (! dir.exists()) {
 			dir.mkdir();
 		}
 		
+		try {
+			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
+			writer.append("Delta: " + deltaFitness + "\n");
+			writer.close();
+		} catch (IOException e) {
+			ConsoleLogger.logThrowable("Log message in Computing agent " +
+					agent.getAID() + "can't be logged", e);
+		}
 
 	}
 	

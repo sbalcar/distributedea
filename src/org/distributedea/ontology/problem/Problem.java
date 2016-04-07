@@ -3,24 +3,50 @@ package org.distributedea.ontology.problem;
 import java.util.logging.Level;
 
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
 
 import jade.content.Concept;
 
-public abstract class Problem  implements Concept {
+/**
+ * Ontology which represents Problem to solve
+ */
+public abstract class Problem implements Concept {
 
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Problem Tool to use for solving Problem 
+	 */
 	private String problemToolClass;
 
-	
+	/**
+	 * Reports whether it is a maximization or minimization Problem
+	 * @return True for maximization Problem
+	 */
 	public abstract boolean isMaximizationProblem();
 	
+	/**
+	 * Tests whether the Individual is valid solution of the Problem
+	 * @param individual
+	 * @param logger
+	 * @return
+	 */
+	public abstract boolean testIsValid(Individual individual, AgentLogger logger);
+	
+	/**
+	 * get Problem Tool
+	 * @return
+	 */
 	public String getProblemToolClass() {
 		return problemToolClass;
 	}
 
+	/**
+	 * set Problem Tool
+	 * @param problemToolClass
+	 */
 	public void setProblemToolClass(String problemToolClass) {
 		this.problemToolClass = problemToolClass;
 	}
@@ -43,5 +69,5 @@ public abstract class Problem  implements Concept {
 		
 		return false;
 	}
-
+	
 }

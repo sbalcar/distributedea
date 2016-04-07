@@ -22,6 +22,14 @@ import org.distributedea.problems.ProblemTool;
 public abstract class ProblemTSPTool implements ProblemTool {
 	
 	@Override
+	public void initialization(Problem problem, AgentLogger logger) {
+	}
+
+	@Override
+	public void exit() {
+	}
+	
+	@Override
 	public Problem readProblem(String inputFileName, AgentLogger logger) {
 
 		List<PositionGPS> positions = new ArrayList<PositionGPS>();

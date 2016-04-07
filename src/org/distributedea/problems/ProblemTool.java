@@ -10,6 +10,9 @@ public interface ProblemTool {
 	public Class<?> problemWhichSolves();
 	public Class<?> reprezentationWhichUses();
 	
+	public void initialization(Problem problem, AgentLogger logger);
+	public void exit();
+	
 	/**
 	 * Reads instance of the Problem from the file,
 	 * for the illegal input file name returns null

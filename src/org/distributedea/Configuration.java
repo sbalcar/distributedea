@@ -1,5 +1,6 @@
 package org.distributedea;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +17,11 @@ import jade.core.AID;
  */
 public class Configuration {
 
+	/**
+	 * Char which is used as comment
+	 */
+	public static String COMMENT_CHAR = "#";
+	
 	/**
 	 * Agent ComputingAgent configuration
 	 */
@@ -49,7 +55,7 @@ public class Configuration {
 	 */
 	public static String getConfigurationFile() {
 
-		return "configuration" + System.getProperty("file.separator")
+		return "configuration" + File.separator
 				+ "configuration.xml";
 	}
 	
@@ -59,7 +65,7 @@ public class Configuration {
 	 */
 	public static String getConfigurationSlaveFile() {
 
-		return "configuration" + System.getProperty("file.separator")
+		return "configuration" + File.separator
 				+ "configurationSlave.xml";
 	}
 
@@ -69,7 +75,7 @@ public class Configuration {
 	 */
 	public static String getMethodsFile() {
 
-		return "configuration" + System.getProperty("file.separator")
+		return "configuration" + File.separator
 				+ "methods.xml";
 	}
 
@@ -79,7 +85,7 @@ public class Configuration {
 	 */
 	public static String getInputProblemFile() {
 
-		return "inputs" + System.getProperty("file.separator")
+		return "inputs" + File.separator
 				+ InputConfiguration.inputProblemFileName;
 	}
 	/**
@@ -89,8 +95,7 @@ public class Configuration {
 	 */
 	public static String getInputFile(String fileName) {
 
-		return "inputs" + System.getProperty("file.separator")
-				+ fileName;
+		return "inputs" + File.separator + fileName;
 	}
 	
 	/**
@@ -100,9 +105,8 @@ public class Configuration {
 	 */
 	public static String getSolutionFile(String fileName) {
 
-		return "inputs" + System.getProperty("file.separator")
-				+ "solutions" + System.getProperty("file.separator")
-				+ fileName;
+		return "inputs" + File.separator + "solutions" +
+				File.separator + fileName;
 	}
 
 	/**
@@ -129,7 +133,12 @@ public class Configuration {
 	 */
 	public static String getComputingAgentLogResultDirectory() {
 
-		return "log" + System.getProperty("file.separator") + "result";
+		return "log" + File.separator + "result";
+	}
+
+	public static String getComputingAgentLogImprovementOfDistributionDirectory() {
+
+		return "log" + File.separator + "improvementOfDistribution";
 	}
 	
 	/**
@@ -139,7 +148,7 @@ public class Configuration {
 	 */
 	public static String getComputingAgentLogFile(AID computingAgentAID) {
 
-		return getComputingAgentLogDirectory() + System.getProperty("file.separator")
+		return getComputingAgentLogDirectory() + File.separator
 				+ computingAgentAID.getLocalName() + ".log";
 	}
 
@@ -150,8 +159,14 @@ public class Configuration {
 	 */
 	public static String getComputingAgentLogResultFile(AID computingAgentAID) {
 
-		return getComputingAgentLogResultDirectory() + System.getProperty("file.separator")
+		return getComputingAgentLogResultDirectory() + File.separator
 				+ computingAgentAID.getLocalName() + ".rslt";
+	}
+	
+	public static String getComputingAgentLogImprovementOfDistributionFile(AID computingAgentAID) {
+
+		return getComputingAgentLogImprovementOfDistributionDirectory() + File.separator
+				+ computingAgentAID.getLocalName() + ".impr";
 	}
 	
 	/**

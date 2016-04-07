@@ -9,6 +9,11 @@ import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
 
+/**
+ * Agent represents Brute Force Algorithm Method
+ * @author stepan
+ *
+ */
 public class Agent_BruteForce extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
@@ -29,6 +34,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 		
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
 				problem.getProblemToolClass(), getLogger());
+		problemTool.initialization(problem, getLogger());
 		
 		long generationNumberI = -1;
 		
@@ -83,9 +89,6 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 
 	@Override
 	public void prepareToDie() {
-		// TODO Auto-generated method stub
-		
 	}
-
 
 }

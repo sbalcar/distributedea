@@ -7,7 +7,9 @@ import java.util.logging.Level;
 import org.distributedea.InputConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
+import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.problems.ProblemTool;
@@ -45,7 +47,10 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-			
+		} else if (problem == ProblemContinousOpt.class) {
+			if (representation == IndividualPoint.class) {
+				isAble = true;
+			}			
 		}
 		
 		
@@ -70,7 +75,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		
 		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
 				problem.getProblemToolClass(), getCALogger());
-		
+		problemTool.initialization(problem, getLogger());
 		
 		long generationNumberI = -1;
 		

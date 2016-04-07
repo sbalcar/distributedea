@@ -27,13 +27,16 @@ public abstract class Agent_DistributedEA extends Agent {
 
 	private static final long serialVersionUID = 1L;
 	
-	protected Codec codec = new SLCodec();
+	protected Codec codec = null;
 	
-	//TODO:
-	private AgentLogger logger = new AgentLogger(this); //null;
+	private AgentLogger logger = null;
 
 	
 	public Codec getCodec() {
+		
+		if (codec == null) {
+			this.codec = new SLCodec();
+		}
 		return codec;
 	}
 
@@ -46,7 +49,10 @@ public abstract class Agent_DistributedEA extends Agent {
 	}
 
 	
-	
+	/**
+	 * Defines Ontology with which the agent can work
+	 * @return
+	 */
 	public abstract List<Ontology> getOntologies();
 	
 	/**
@@ -135,7 +141,7 @@ public abstract class Agent_DistributedEA extends Agent {
             return agents;
 
         } catch (FIPAException fe) {
-        	logger.logThrowable("Error by searching in DF", fe);
+        	getLogger().logThrowable("Error by searching in DF", fe);
         }
         
         return null;
@@ -147,7 +153,7 @@ public abstract class Agent_DistributedEA extends Agent {
 	protected void initAgent() {
 		
 		String name = getAID().getName();
-		logger.log(Level.INFO, "Agent " + name + " is alive...");
+		getLogger().log(Level.INFO, "Agent " + name + " is alive...");
 		
 		getContentManager().registerLanguage(getCodec());
 
@@ -173,7 +179,7 @@ public abstract class Agent_DistributedEA extends Agent {
             DFService.register(this, dfd );  
         
         } catch (FIPAException fe) {
-        	logger.logThrowable("Registration faild", fe);
+        	getLogger().logThrowable("Registration faild", fe);
         }
 	}
 	
@@ -185,7 +191,7 @@ public abstract class Agent_DistributedEA extends Agent {
         try {
 			DFService.deregister(this);
 		} catch (FIPAException e) {
-			logger.logThrowable("Error by deregistration", e);
+			getLogger().logThrowable("Error by deregistration", e);
 		}  
         
 	}
