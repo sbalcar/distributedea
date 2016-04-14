@@ -10,8 +10,8 @@ public interface ProblemTool {
 	public Class<?> problemWhichSolves();
 	public Class<?> reprezentationWhichUses();
 	
-	public void initialization(Problem problem, AgentLogger logger);
-	public void exit();
+	public void initialization(Problem problem, AgentLogger logger) throws ProblemToolException;
+	public void exit() throws ProblemToolException;
 	
 	/**
 	 * Reads instance of the Problem from the file,

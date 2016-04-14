@@ -24,6 +24,7 @@ import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
 import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
+import org.distributedea.problems.exceptions.ProblemToolException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,7 +52,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	}
 
 	@Override
-	public void initialization(Problem problem, AgentLogger logger) {
+	public void initialization(Problem problem, AgentLogger logger) throws ProblemToolException {
 		
     	System.setProperty("java.library.path", "." + File.separator + "lib");
     	
@@ -63,12 +64,13 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
     	int functionID = Integer.parseInt(functionIDString.substring(1));
     	
     	bbobTools = new BbobTools(logger);
+    	
     	try {
 			fgeneric = bbobTools.getInstanceJNIfgeneric();
 		} catch (BbobException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProblemToolException("Problem Tool can't initialize Bbob");
 		}
+
     	
         JNIfgeneric.Params params = new JNIfgeneric.Params();
         
@@ -83,7 +85,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	}
 
 	@Override
-	public void exit() {
+	public void exit() throws ProblemToolException {
 		
 		double ret = fgeneric.exitBBOB();
         if (ret == 0.) {
@@ -95,8 +97,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
         try {
 			bbobTools.clean();
 		} catch (BbobException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProblemToolException("Problem Tool can't exit Bbob");
 		}
 	}
 	
@@ -287,7 +288,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 		try {
 			solutionString = BbobTools.readFile(fileName);
 		} catch (IOException e) {
-			logger.logThrowable("Cann't read solution from file " + fileName, e);
+			logger.logThrowable("Can't read solution from file " + fileName, e);
 			return null;
 		}
 		

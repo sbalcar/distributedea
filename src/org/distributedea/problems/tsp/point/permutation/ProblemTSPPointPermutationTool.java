@@ -120,7 +120,13 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 			Individual individual4, Problem problem, AgentLogger logger)
 			throws ProblemToolException {
 		
-		throw new ProblemToolException("Not possible to implement in this context");
+		Individual[] individualA =
+				createNewIndividual(individual1, individual2, problem, logger);
+		Individual[] individualB =
+				createNewIndividual(individual3, individual4, problem, logger);
+		
+		return createNewIndividual(individualA[0], individualB[0],
+				problem, logger);
 	}
 	
 	@Override

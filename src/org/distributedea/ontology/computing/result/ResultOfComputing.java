@@ -22,7 +22,7 @@ public class ResultOfComputing implements Concept {
 		this.problemToolClass = problemToolClass;
 	}
 	
-	public Individual getBestIndividual() {
+	public Individual getIndividual() {
 		return bestIndividual;
 	}
 	

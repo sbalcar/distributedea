@@ -334,8 +334,8 @@ public class BbobTools {
 		try {
 			object = aClass.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			logger.logThrowable("Bbob cann't be instanced", e);
-			throw new BbobException("Bbob cann't be instanced");
+			logger.logThrowable("Bbob can't be instanced", e);
+			throw new BbobException("Bbob can't be instanced");
 		}
 	    IJNIfgeneric fgeneric = (IJNIfgeneric) object;
 	    

@@ -130,13 +130,42 @@ public class ProblemTolRandomMove extends ProblemContinuousOptTool {
 			Individual individual4, Problem problem, AgentLogger logger)
 			throws ProblemToolException {
 		
-		Individual[] individualA =
-				createNewIndividual(individual1, individual2, problem, logger);
-		Individual[] individualB =
-				createNewIndividual(individual3, individual4, problem, logger);
+		double F = 1.0;
 		
-		return createNewIndividual(individualA[0], individualB[0],
-				problem, logger);
+		IndividualPoint individualP2 = (IndividualPoint) individual2;
+		IndividualPoint individualP3 = (IndividualPoint) individual3;
+		IndividualPoint individualP4 = (IndividualPoint) individual4;
+		
+		ProblemContinousOpt problemCO = (ProblemContinousOpt) problem;
+		
+		List<Double> coordinates = new ArrayList<Double>();
+		for (int i = 0; i < individualP2.getCoordinates().size(); i++) {
+			
+			double indACoorI = individualP2.exportCoordinate(i);
+			double indBCoorI = individualP3.exportCoordinate(i);
+			double indCCoorI = individualP4.exportCoordinate(i);
+			
+			double valueNew = indACoorI+F*(indBCoorI-indCCoorI);
+			
+			Interval intervalI = problemCO.getIntervals().get(i);
+			
+			// corrects the new computed value
+			double intervalSize = intervalI.getMax() - intervalI.getMin();
+			if (valueNew < intervalI.getMin()) {
+				valueNew += intervalSize;
+			}
+			if (intervalI.getMax() < valueNew) {
+				valueNew -= intervalSize;
+			}
+			
+			coordinates.add(valueNew);
+		}
+		
+		IndividualPoint individualNew = new IndividualPoint();
+		individualNew.setCoordinates(coordinates);
+		
+		Individual[] individuals = {individualNew};
+		return individuals;
 	}
 
 }

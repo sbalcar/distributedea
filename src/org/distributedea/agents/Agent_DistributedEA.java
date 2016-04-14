@@ -32,6 +32,10 @@ public abstract class Agent_DistributedEA extends Agent {
 	private AgentLogger logger = null;
 
 	
+	/**
+	 * Get Codec for coding ACL messages 
+	 * @return
+	 */
 	public Codec getCodec() {
 		
 		if (codec == null) {
@@ -40,6 +44,10 @@ public abstract class Agent_DistributedEA extends Agent {
 		return codec;
 	}
 
+	/**
+	 * Get Logger
+	 * @return
+	 */
 	public AgentLogger getLogger() {
 		
 		if (logger == null) {

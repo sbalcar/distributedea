@@ -8,6 +8,7 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
+import org.distributedea.problems.exceptions.ProblemToolException;
 
 /**
  * Agent represents Brute Force Algorithm Method
@@ -25,7 +26,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 	}
 
 	@Override
-	public void startComputing(Problem problem, Behaviour behaviour) {
+	public void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
 		
 		if (! isAbleToSolve(problem)) {
 			commitSuicide();
@@ -44,7 +45,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 				problemTool.fitness(individualI, problem, getLogger());
 		
 		// save, log and distribute computed Individual
-		processComputedIndividual(individualI,
+		processIndividualFromInitGeneration(individualI,
 				fitnessI, generationNumberI, problem);
 		
 		while (individualI != null) {
@@ -56,7 +57,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 			fitnessI =
 					problemTool.fitness(individualI, problem, getLogger());
 			
-			// save, log and distribute computed Individual
+			// save, log and distribute new computed Individual
 			processComputedIndividual(individualI,
 					fitnessI, generationNumberI, problem);
 			

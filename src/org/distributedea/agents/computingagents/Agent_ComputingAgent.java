@@ -41,6 +41,7 @@ import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
+import org.distributedea.problems.exceptions.ProblemToolException;
 
 /**
  * Abstract class of Agent which is inherited by all Computing Agents
@@ -77,7 +78,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param problem
 	 * @param behaviour
 	 */
-	public abstract void startComputing(Problem problem, Behaviour behaviour);
+	public abstract void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException;
 	
 	/**
 	 * Prepares for the killing
@@ -285,19 +286,25 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 
-	public class MyRunnable implements Runnable {
+	public class ComputingRunnable implements Runnable {
 
 		private Agent_ComputingAgent agent;
 		private Problem problem;
 		
-		public MyRunnable(Agent_ComputingAgent agent, Problem problem) {
+		public ComputingRunnable(Agent_ComputingAgent agent, Problem problem) {
 			this.agent = agent;
 			this.problem = problem;
 		}
 		
 		@Override
 		public void run() {
-			agent.startComputing(problem, null);
+			
+			try {
+				agent.startComputing(problem, null);
+			} catch (ProblemToolException e) {
+				this.agent.getLogger().logThrowable("Error in the ProblemTool", e);
+				this.agent.commitSuicide();
+			}
 			
 		}}
 	
@@ -316,7 +323,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		
-		Runnable myRunnable = new MyRunnable(this, problem);
+		Runnable myRunnable = new ComputingRunnable(this, problem);
 
 		thread = new Thread(myRunnable);		
 		thread.start();
@@ -402,17 +409,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			timeOfLastIndividualDistributionMs = nowMs;
 		}
 	}
-
 	
-	/**
-	 * save, send to DataManager and neighbors and log computed individual
-	 * @param individual
-	 * @param fitness
-	 * @param generationNumber
-	 */
-	protected void processComputedIndividual(Individual individual,
+	protected void processIndividualFromInitGeneration(Individual individual,
 			double fitness, long generationNumber, Problem problem) {
-
+		
+		if (generationNumber != -1) {
+			throw new IllegalStateException();
+		}
+		
 		// log in local file
 		String resultLog = "Generation " +
 				generationNumber + ": " +
@@ -420,31 +424,60 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		getLogger().log(Level.INFO, resultLog);
 		
 		// update saved best result of computing
-		boolean isNewIndividualBetter = false;
-		if (generationNumber != -1) {
-			
-			double fitnessValueBest = getBestresultOfComputing().getFitnessValue();
-			isNewIndividualBetter =
-					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							fitness, fitnessValueBest, problem);
-		}
+		ResultOfComputing resultOfComputingNew = new ResultOfComputing();
+		resultOfComputingNew.setBestIndividual(individual);
+		resultOfComputingNew.setFitnessValue(fitness);
+		
+		setBestresultOfComputing(resultOfComputingNew);
+		
+		
+		// send individual description to Agent DataManager
+		logResultByUsingDatamanager(generationNumber, fitness);
+		
+		
+		// log individual as best result
+		getCALogger().logBestResult(individual, fitness);
+	}
 
-		if (generationNumber == -1 || isNewIndividualBetter) {
+	protected void processComputedIndividual(Individual individual,
+			double fitness, long generationNumber, Problem problem) {
+
+		if (generationNumber == -1) {
+			throw new IllegalStateException();
+		}
+		
+		// log in local file
+		String resultLog = "Generation " +
+				generationNumber + ": " +
+				fitness;
+		getLogger().log(Level.INFO, resultLog);
+		
+		// update saved best result of computing
+		double fitnessSavedAsBest = getBestresultOfComputing().getFitnessValue();
+		boolean isNewIndividualBetter =
+				ProblemToolEvaluation.isFistFitnessBetterThanSecond(
+							fitness, fitnessSavedAsBest, problem);
+
+		if (isNewIndividualBetter) {
 		
 			ResultOfComputing resultOfComputingNew = new ResultOfComputing();
 			resultOfComputingNew.setBestIndividual(individual);
 			resultOfComputingNew.setFitnessValue(fitness);
 			
 			setBestresultOfComputing(resultOfComputingNew);
+			
+			
+			// send individual description to Agent DataManager
+			logResultByUsingDatamanager(generationNumber, fitness);
+
+			
+			// log individual as best result
+			getCALogger().logBestResult(individual, fitness);
+						
 		}
 		
-		// send individual description to Agent DataManager
-		logResultByUsingDatamanager(generationNumber, fitness);
-		
-		
-		getCALogger().logBestResult(individual, fitness);
-		
 	}
+	
 	
 	/**
 	 * save, send to DataManager and log received individual
@@ -474,10 +507,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			
 			double fitnessImprovement = Math.abs(receivedFitness -bestFitness);
 			
-			getCALogger().logDiffImprovementOfDistribution(fitnessImprovement);
-		} else {
-			// not improved
-			getCALogger().logDiffImprovementOfDistribution(0);
+			getCALogger().logDiffImprovementOfDistribution(fitnessImprovement, generationNumber);
 		}
 
 	}

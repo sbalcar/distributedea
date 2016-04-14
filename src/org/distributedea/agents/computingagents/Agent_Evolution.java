@@ -20,6 +20,7 @@ import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
+import org.distributedea.problems.exceptions.ProblemToolException;
 import org.jgap.Configuration;
 import org.jgap.Genotype;
 import org.jgap.IChromosome;
@@ -89,7 +90,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	public void startComputing(Problem problem, Behaviour behaviour) {
+	public void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
 
 		if (! isAbleToSolve(problem)) {
 			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
@@ -170,7 +171,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 					problemTool.fitness(individualI, problem, getCALogger());
 			
 			// save, log and distribute computed Individual
-			processComputedIndividual(individualI,
+			processIndividualFromInitGeneration(individualI,
 					fitnessI, generationNumberI, problem);
 			
 			while (true) {

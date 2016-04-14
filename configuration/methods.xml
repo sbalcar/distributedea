@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <agents>
-
         <agent type="org.distributedea.agents.computingagents.Agent_HillClimbing" name="Agent_HillClimbing">
         </agent>
         <agent type="org.distributedea.agents.computingagents.Agent_RandomSearch" name="Agent_RandomSearch">
@@ -13,6 +12,8 @@
         <agent type="org.distributedea.agents.computingagents.Agent_TabuSearch" name="Agent_TabuSearch">
         </agent> 
         <agent type="org.distributedea.agents.computingagents.Agent_SimulatedAnnealing" name="Agent_SimulatedAnnealing">
-        </agent> 
+        </agent>
+        <agent type="org.distributedea.agents.computingagents.Agent_DifferentialEvolution" name="Agent_DifferentialEvolution">
+        </agent>
     </agents>
 </configuration>

@@ -54,7 +54,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
     }
     
    	@Override
-	public void startComputing(Problem problem, Behaviour behaviour) {
+	public void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
 		
 		if (! isAbleToSolve(problem)) {
 			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
@@ -76,7 +76,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 				problemTool.fitness(individualI, problem, getCALogger());
 		
 		//saves data in Agent DataManager
-        processComputedIndividual(individualI,
+		processIndividualFromInitGeneration(individualI,
     			fitnessI, generationNumberI, problem);
 		
 		double temperatureI = TEMPERATURE;

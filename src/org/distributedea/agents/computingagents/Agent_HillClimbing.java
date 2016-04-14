@@ -65,7 +65,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	@Override
-	public void startComputing(Problem problem, Behaviour behaviour) {
+	public void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
 		
 		if (! isAbleToSolve(problem)) {
 			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
@@ -86,7 +86,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 				problemTool.fitness(individualI, problem, getCALogger());
 		
 		// save, log and distribute computed Individual
-		processComputedIndividual(individualI,
+		processIndividualFromInitGeneration(individualI,
 				fitnessI, generationNumberI, problem);
 		
 		

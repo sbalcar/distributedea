@@ -14,11 +14,12 @@ import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
 import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
+import org.distributedea.problems.exceptions.ProblemToolException;
 
 
 public class TestCO {
 
-	private void test1() {
+	private void test1() throws ProblemToolException {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		
@@ -35,7 +36,7 @@ public class TestCO {
 		tool.exit();
 	}
 	
-	private void test2() {
+	private void test2() throws ProblemToolException {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		
@@ -71,7 +72,7 @@ public class TestCO {
 		tool2.exit();
 	}
 
-	private void test3() throws BbobException {
+	private void test3() throws BbobException, ProblemToolException {
 	    
 	    String inputFileName = "inputs" + File.separator + "f01.co";
 	    
@@ -155,7 +156,7 @@ public class TestCO {
 		//test.test1();
 		//test.test2();
 		//test.test3();
-		//test.test4();		
+		//test.test4();
 	}
 	
 }

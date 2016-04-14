@@ -68,7 +68,7 @@ public class AgentComputingLogger extends AgentLogger {
 	 * log the benefit of received fitness value and the best Individual 
 	 * @param deltaFitness
 	 */
-	public void logDiffImprovementOfDistribution(double deltaFitness) {
+	public void logDiffImprovementOfDistribution(double deltaFitness, long generationNumber) {
 
 		String fileName = Configuration.getComputingAgentLogImprovementOfDistributionFile(agent.getAID());
 		
@@ -79,7 +79,11 @@ public class AgentComputingLogger extends AgentLogger {
 		
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
-			writer.append("Delta: " + deltaFitness + "\n");
+			if (generationNumber == -1) {
+				writer.append(Configuration.COMMENT_CHAR + "Delta improvement of Individual distrubution\n");
+			}
+			writer.append(Configuration.COMMENT_CHAR + "Generation: " + generationNumber + "\n");
+			writer.append(deltaFitness + "\n");
 			writer.close();
 		} catch (IOException e) {
 			ConsoleLogger.logThrowable("Log message in Computing agent " +
