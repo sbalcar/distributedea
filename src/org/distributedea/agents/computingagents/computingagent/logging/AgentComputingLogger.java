@@ -12,6 +12,7 @@ import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.individuals.Individual;
 
 public class AgentComputingLogger extends AgentLogger {
@@ -68,7 +69,8 @@ public class AgentComputingLogger extends AgentLogger {
 	 * log the benefit of received fitness value and the best Individual 
 	 * @param deltaFitness
 	 */
-	public void logDiffImprovementOfDistribution(double deltaFitness, long generationNumber) {
+	public void logDiffImprovementOfDistribution(double deltaFitness, long generationNumber,
+			Individual individual, AgentDescription descriptionOfSolutionBuilder) {
 
 		String fileName = Configuration.getComputingAgentLogImprovementOfDistributionFile(agent.getAID());
 		
@@ -82,7 +84,7 @@ public class AgentComputingLogger extends AgentLogger {
 			if (generationNumber == -1) {
 				writer.append(Configuration.COMMENT_CHAR + "Delta improvement of Individual distrubution\n");
 			}
-			writer.append(Configuration.COMMENT_CHAR + "Generation: " + generationNumber + "\n");
+			writer.append(Configuration.COMMENT_CHAR + "Generation: " + generationNumber + " - " + descriptionOfSolutionBuilder.getAgentConfiguration().getAgentName() +"\n");
 			writer.append(deltaFitness + "\n");
 			writer.close();
 		} catch (IOException e) {

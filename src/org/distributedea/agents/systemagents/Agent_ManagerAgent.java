@@ -23,16 +23,17 @@ import java.util.logging.Level;
 
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.Agent_ComputingAgent;
-import org.distributedea.agents.computingagents.computingagent.ComputingAgentService;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
+import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Argument;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
-import org.distributedea.ontology.management.agent.Argument;
-import org.distributedea.ontology.management.agent.Arguments;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
 
@@ -171,20 +172,20 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	protected ACLMessage respondToCreateAgent(ACLMessage request, Action action) {
 
 		CreateAgent createAgent = (CreateAgent) action.getAction();
+		AgentConfiguration configuration = createAgent.getConfiguration();
 
-		String agentType = createAgent.getType();
-		String agentName = createAgent.getName();
-		Arguments arguments = createAgent.getArguments();
-		List<Argument> argumentList = arguments.getArguments();
+		String agentType = configuration.getAgentType();
+		String agentName = configuration.getAgentName();
 		
-		getLogger().log(Level.INFO, "Creating agent " + agentName);
-		AgentController createdAgentController = createAgent(this, agentType, agentName,
-				argumentList, getLogger());
+		String s = "Creating agentName " + agentName + " agentType " + agentType;
+		getLogger().log(Level.INFO, s);
+		
+		AgentController createdAgentController = createAgent(this, configuration, getLogger());
 		
 		AID createdAgentAID = null;
 		try {
 			createdAgentAID = new AID(createdAgentController.getName(), false);
-			String name =  createdAgentAID.getLocalName().substring(0,
+			String name = createdAgentAID.getLocalName().substring(0,
 					createdAgentAID.getLocalName().indexOf('@'));
 			getLogger().log(Level.INFO, "Agent " + name + " was created");
 		} catch (StaleProxyException e1) {
@@ -241,7 +242,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		final String agentNameToKillFinal = agentNameToKill;
 		final AgentController agentControllerFinal = agentController;
 		
-		Runnable myRunnable = new Runnable(){
+		Runnable myRunnable = new Runnable() {
 
 		     public void run(){
 		    	 getLogger().log(Level.INFO, "Waiting for killing " + agentNameToKillFinal);
@@ -336,11 +337,11 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return - confirms creation
 	 */
 	public static AgentController createAgent(Agent_DistributedEA agent,
-			String type, String name, List<Argument> argumentList, AgentLogger logger) {
+			AgentConfiguration configuration, AgentLogger logger) {
 		
 		Class<?> agentTypeClass = null;
 		try {
-			agentTypeClass = Class.forName(type);
+			agentTypeClass = Class.forName(configuration.getAgentType());
 		} catch (ClassNotFoundException e1) {
 			return null;
 		}
@@ -351,7 +352,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		if (uniqueAgentList.contains(agentTypeClass)) {
 			
 			try {
-				return createAndStartAgent(agent, name, type, argumentList);
+				return createAndStartAgent(agent, configuration);
 				
 			} catch (ControllerException e) {
 				return null;
@@ -373,8 +374,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		AgentController controller = null;
 		while (true) {
 			
-			controller = tryCreateAgent(agent, type, name, numberOfAgentI,
-					numberOfContainerI, containerID, argumentList, logger);
+			controller = tryCreateAgent(agent, configuration, numberOfAgentI,
+					numberOfContainerI, containerID, logger);
 			if (controller != null) {
 				return controller;
 			}
@@ -403,23 +404,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return
 	 */
 	private static AgentController tryCreateAgent(Agent_DistributedEA agent,
-			String type, String name, int numberOfAgent, int numberOfContainer,
-			String containerID, List<Argument> argumentList, AgentLogger logger) {
+			AgentConfiguration configuration, int numberOfAgent, int numberOfContainer,
+			String containerID, AgentLogger logger) {
 		
-		if (type.isEmpty()) {
-			logger.log(Level.SEVERE, "Can't create agent with type = null");
-			return null;
-		}
-
-		if (name.isEmpty()) {
-			logger.log(Level.SEVERE, "Can't create agent with name = null");
-			return null;
-		}
-
-		if (containerID == null) {
-			logger.log(Level.SEVERE, "Number of container can't be null");
-			return null;
-		}
+		String agentType = configuration.getAgentType();
+		String agentName = configuration.getAgentName();
+		List<Argument> arguments = configuration.getArguments();
 		
 		try {
 			String  agentChar = "";
@@ -434,14 +424,21 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 				containerChar = "" + cChar;
 			}
 			
-			String agentNameWitID = name + agentChar;
+			String agentNameWitID = agentName + agentChar;
 			String containerNameWitID = containerID + containerChar;
 			
 			String agentFullName = agentNameWitID + Configuration.CONTAINER_NUMBER_PREFIX
 					+ containerNameWitID;
 			
+			//System.out.println("agentFullName: " + agentFullName);
+			
+			AgentConfiguration configurationI = new AgentConfiguration();
+			configurationI.setAgentName(agentFullName);
+			configurationI.setAgentType(agentType);
+			configurationI.setArguments(arguments);
+			
 			AgentController agentController = createAndStartAgent(
-					agent, agentFullName, type, argumentList);
+					agent, configurationI);
 			return agentController;
 			
 		} catch (ControllerException e) {
@@ -462,40 +459,23 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @throws ControllerException
 	 */
 	private static AgentController createAndStartAgent(Agent_DistributedEA agent,
-			String agentName, String type, List<Argument> argumentList) throws ControllerException {
+			AgentConfiguration configuration) throws ControllerException {
+		
+		String agentType = configuration.getAgentType();
+		String agentName = configuration.getAgentName();
+		List<Argument> arguments = configuration.getArguments();
+		
+		Object[] jadeArgs = null;
+		if (agentType.equals(Sniffer.class.getName())) {
+			
+			jadeArgs = Arguments.transformAgrumentsForSniffer(arguments);
+		}
 		
 		// get a container controller
 		PlatformController container = agent.getContainerController();
 		
-		AgentController createdAgent = null;
-		
-		if (type.equals(Sniffer.class.getName())) {
-
-			Arguments arguments = new Arguments(argumentList);
-			
-			String argumet1 = "";					
-			for (Argument argumentI : arguments.getArguments()) {
-				String agentNameI = argumentI.getValue();
-						//Configuration.CONTAINER_NUMBER_PREFIX + numberOfContainer;
-				argumet1 += agentNameI + "; ";
-			}
-			argumet1.trim();
-			
-			Object[] args = null;
-			
-			//removes the last semicolon
-			if (! argumet1.isEmpty()) {
-				args = new Object[1];
-				args[0] = argumet1.substring(0, argumet1.length() -2);
-			}
-								
-			createdAgent = container.createNewAgent(
-					agentName, type, args);
-		} else {
-			createdAgent = container.createNewAgent(
-					agentName, type, null);
-			
-		}
+		AgentController createdAgent = container.
+				createNewAgent(agentName, agentType, jadeArgs);
 		
 		createdAgent.start();
 		

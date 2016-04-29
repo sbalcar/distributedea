@@ -61,6 +61,31 @@ public class IndividualPoint  extends Individual {
 	}
 	
 	@Override
+	public boolean equals(Object other) {
+		
+	    if (!(other instanceof IndividualPoint)) {
+	        return false;
+	    }
+	    
+	    IndividualPoint indPoint = (IndividualPoint)other;
+	    
+	    if (this.coordinates.size() != indPoint.getCoordinates().size()) {
+	    	return false;
+	    }
+	    
+	    for (int coorIndex = 0; coorIndex < this.coordinates.size(); coorIndex++) {
+	    	Double thisCoorI = this.getCoordinates().get(coorIndex);
+	    	Double otherCoorI = indPoint.getCoordinates().get(coorIndex);
+	    	
+	    	if (thisCoorI != otherCoorI) {
+	    		return false;
+	    	}
+	    }
+	    
+	    return true;
+	}
+	
+	@Override
 	public String toLogString() {
 		return coordinates.toString();
 	}

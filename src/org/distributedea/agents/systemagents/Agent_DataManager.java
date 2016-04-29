@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.results.PartResult;
 
@@ -51,8 +51,6 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		initAgent();
 		registrDF();
 		
-		// cleans old results of computing
-		cleanResult();
 
 		// cleans old logs of Computing Agents
 		cleanLogDirectory();
@@ -119,27 +117,35 @@ public class Agent_DataManager extends Agent_DistributedEA {
 			
 		} else if (numberOfPartResult == numberOfCA) {
 			
-			String rowResult = "";
-			String rowDescription = Configuration.COMMENT_CHAR;
-			for (PartResult partResultI : partResultOfCA.values()) {
-				rowResult += partResultI.getFitnessResult() + " ";
-				rowDescription += partResultI.getAgentDescription() + " ";
-			}
-			
-			String fileName = Configuration.getResultFile();
-			try {
-				Writer writer = new BufferedWriter(new FileWriter(fileName, true));
-				writer.append(rowDescription + "\n");
-				writer.append(rowResult + "\n");
-				writer.close();
-			} catch (IOException e) {
-				getLogger().logThrowable("Part result can't be logged", e);
-			}
+			writeResultToFile();
 		}
 		
 		return null;
 	}
 
+	private int number = Configuration.getUniqueResultFileNumber();
+	
+	private void writeResultToFile() {
+		
+		String rowResult = "";
+		String rowDescription = Configuration.COMMENT_CHAR + " ";
+		for (PartResult partResultI : partResultOfCA.values()) {
+			rowResult += partResultI.getFitnessResult() + " ";
+			rowDescription += partResultI.getAgentDescription() + " ";
+		}
+		
+		String fileName = Configuration.getResultFile(number);
+		try {
+			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
+			writer.append(rowDescription.trim() + "\n");
+			writer.append(rowResult.trim() + "\n");
+			writer.close();
+		} catch (IOException e) {
+			getLogger().logThrowable("Part result can't be logged", e);
+		}
+		
+	}
+	
 	/**
 	 * Removes all files in the Log directory
 	 */
@@ -177,20 +183,5 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	    }
 	}
 
-	
-	/**
-	 * Empty the file for centralized result
-	 */
-	private void cleanResult() {
-		
-		String fileName = Configuration.getResultFile();
-		Writer writer;
-		try {
-			writer = new BufferedWriter(new FileWriter(fileName));
-			writer.close();
-		} catch (IOException e) {
-			getLogger().logThrowable("Error by rewiting file", e);
-		}
-	}
 	
 }

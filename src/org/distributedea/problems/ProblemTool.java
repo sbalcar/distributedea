@@ -51,7 +51,7 @@ public interface ProblemTool {
 			throws ProblemToolException;
 	public Individual[] createNewIndividual(Individual individual1, 
 			Individual individual2, Individual individual3,
-			Individual individual4, Problem problem, AgentLogger logger)
+			Problem problem, AgentLogger logger)
 			throws ProblemToolException;
 	
 }

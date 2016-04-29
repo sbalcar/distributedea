@@ -8,13 +8,11 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
-import org.distributedea.configuration.AgentConfiguration;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.configuration.XmlConfigurationProvider;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
-import org.distributedea.ontology.management.agent.Argument;
-import org.distributedea.ontology.management.agent.Arguments;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 
 import jade.content.onto.Ontology;
 import jade.core.AID;
@@ -101,12 +99,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		AgentConfiguration agentManagerConf = managerAgentConfigurations.get(0);
 
-		String agentType = agentManagerConf.getAgentType();
-		String agentName = agentManagerConf.getAgentName();
-		List<Argument> arguments = agentManagerConf.getArguments();
-
-		AgentController aManagerAgent = createAgent(this, agentType, agentName,
-				new Arguments(arguments));
+		AgentController aManagerAgent = createAgent(this, agentManagerConf);
 		
 
 		if (aManagerAgent == null) {
@@ -134,12 +127,8 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		for (AgentConfiguration configurationI : noManagerAgentConfigurations) {
 
-			String agentTypeI = configurationI.getAgentType();
-			String agentNameI = configurationI.getAgentName();
-			List<Argument> argumentsI = configurationI.getArguments();
-
 			AID result = ManagerAgentService.sendCreateAgent(this,
-					aManagerAgentAID, agentTypeI, agentNameI, argumentsI, getLogger());
+					aManagerAgentAID, configurationI, getLogger());
 
 			if (result == null) {
 				getLogger().log(Level.SEVERE, "Error by creating agent");
@@ -163,10 +152,9 @@ public class Agent_Initiator extends Agent_DistributedEA {
 	 * @param name - agent name
 	 * @return - confirms creation
 	 */
-	public AgentController createAgent(Agent_DistributedEA agent, String type,
-			String name, Arguments arguments) {
+	public AgentController createAgent(Agent_DistributedEA agent, AgentConfiguration agentManagerConf) {
 
-		return Agent_ManagerAgent.createAgent(this, type, name, null, getLogger());
+		return Agent_ManagerAgent.createAgent(this, agentManagerConf, getLogger());
 	}
 
 

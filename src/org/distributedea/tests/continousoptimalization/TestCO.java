@@ -2,14 +2,20 @@ package org.distributedea.tests.continousoptimalization;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.distributedea.agents.computingagents.Agent_Evolution;
+import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.continuousoptimization.ProblemTolRandomMove;
+import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
@@ -23,7 +29,7 @@ public class TestCO {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		
-		ProblemTool tool = new ProblemTolRandomMove();
+		ProblemTool tool = new ProblemToolRandomMove();
 		
 		Problem problem = tool.readProblem(inputFileName, null);
 		tool.initialization(problem, null);
@@ -40,7 +46,7 @@ public class TestCO {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		
-		ProblemTool tool1 = new ProblemTolRandomMove();
+		ProblemTool tool1 = new ProblemToolRandomMove();
 		
 		Problem problem1 = tool1.readProblem(inputFileName, null);
 		tool1.initialization(problem1, null);
@@ -50,7 +56,7 @@ public class TestCO {
 		} catch (InterruptedException e) {
 		}
 		
-		ProblemTool tool2 = new ProblemTolRandomMove();
+		ProblemTool tool2 = new ProblemToolRandomMove();
 		
 		Problem problem2 = tool2.readProblem(inputFileName, null);
 		tool2.initialization(problem2, null);
@@ -76,7 +82,7 @@ public class TestCO {
 	    
 	    String inputFileName = "inputs" + File.separator + "f01.co";
 	    
-	    ProblemTool tool = new ProblemTolRandomMove();
+	    ProblemTool tool = new ProblemToolRandomMove();
 		Problem problem = tool.readProblem(inputFileName, null);
 		tool.initialization(problem, null);
 		
@@ -136,19 +142,56 @@ public class TestCO {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		
-		ProblemTool problemTool = new ProblemTolRandomMove();
+		ProblemTool problemTool = new ProblemToolRandomMove();
 		Problem problem = problemTool.readProblem(inputFileName, null);
 		
 		
 		String solutionFileName = "log" + File.separator + "result" +
 				File.separator + "Agent_Evolution_14.rslt";
 		
-		ProblemTolRandomMove tool = new ProblemTolRandomMove();
+		ProblemToolRandomMove tool = new ProblemToolRandomMove();
 		
 		@SuppressWarnings("unused")
 		Individual individual = tool.readSolution(solutionFileName, problem, null);
 	}
 	
+	
+	private void test5() {
+		
+		Map<AgentDescription, Integer> map = new HashMap<AgentDescription, Integer>();
+			
+		AgentConfiguration ac1 = new AgentConfiguration();
+		ac1.setAgentType(Agent_Evolution.class.getName());
+		ac1.setAgentName("Agent_Evolution-17");
+		AgentDescription a1 = new AgentDescription();
+		a1.setAgentConfiguration(ac1);
+		a1.setProblemToolClass(ProblemToolRandomMove.class.getName());
+		
+		AgentConfiguration ac2 = new AgentConfiguration();
+		ac2.setAgentType(Agent_Evolution.class.getName());
+		ac2.setAgentName("Agent_Evolution-17");
+		AgentDescription a2 = new AgentDescription();
+		a2.setAgentConfiguration(ac2);
+		a2.setProblemToolClass(ProblemToolRandomMove.class.getName());
+		
+		map.put(a1, 1);
+		map.put(a2, 2);
+		
+		// Agent description should be the same
+		if (map.size() != 1) {
+			System.out.println("Error");
+		}
+		
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(80);
+		list.add(3);
+		list.add(-4);
+		list.add(8);
+		list.add(55);
+		java.util.Collections.sort(list);
+		
+		
+	}
 	
 	public static void main(String [] args) throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InstantiationException, InterruptedException {
 
@@ -157,6 +200,8 @@ public class TestCO {
 		//test.test2();
 		//test.test3();
 		//test.test4();
+		test.test5();
+		
 	}
 	
 }

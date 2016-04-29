@@ -17,6 +17,11 @@ public abstract class Problem implements Concept {
 	private static final long serialVersionUID = 1L;
 	
 	/**
+	 * 
+	 */
+	private String problemID;
+	
+	/**
 	 * Problem Tool to use for solving Problem 
 	 */
 	private String problemToolClass;
@@ -35,6 +40,23 @@ public abstract class Problem implements Concept {
 	 */
 	public abstract boolean testIsValid(Individual individual, AgentLogger logger);
 	
+	
+	/**
+	 * get Problem IDentification
+	 * @return
+	 */
+	public String getProblemID() {
+		return problemID;
+	}
+
+	/**
+	 * set Problem IDentification
+	 * @param problemID
+	 */
+	public void setProblemID(String problemID) {
+		this.problemID = problemID;
+	}
+
 	/**
 	 * get Problem Tool
 	 * @return

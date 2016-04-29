@@ -7,12 +7,17 @@ import java.util.logging.Level;
 import jade.core.behaviours.Behaviour;
 
 import org.distributedea.InputConfiguration;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
@@ -27,7 +32,16 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 
 		boolean isAble = false;
 		
-		if (problem == ProblemContinousOpt.class) {
+		
+		if (problem == ProblemTSPGPS.class) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
+		} else if (problem == ProblemTSPPoint.class) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
+		} else if (problem == ProblemContinousOpt.class) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
@@ -37,7 +51,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 
 	@Override
-	public void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
 
 		if (! isAbleToSolve(problem)) {
 			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
@@ -76,7 +90,8 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 				fitnessI, generationNumberI, problem);
 		
 		
-		while (true) {
+		while (computingThread.continueInTheNextGeneration()) {
+			
 			// increment next number of generation
 			generationNumberI++;
 			
@@ -106,8 +121,8 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			Individual individual3 = population.get(index3);
 			
 			Individual[] individualsNew =
-					problemTool.createNewIndividual(individualCandidate, individual1,
-							individual2, individual3, problem, getCALogger() );
+					problemTool.createNewIndividual(individual1, individual2,
+							individual3, problem, getCALogger() );
 			Individual individualNew = individualsNew[0];
 
 			double fitnessNew =
@@ -129,11 +144,12 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			// send new Individual to distributed neighbors
 			if (InputConfiguration.individualDistribution) {
-				distributeIndividualToNeighours(individualNew);
+				distributeIndividualToNeighours(individualNew, problem);
 			}
 			
 			//take received individual to new generation
-			Individual recievedIndividual = getRecievedIndividual();
+			IndividualWrapper recievedIndividualW = getRecievedIndividual();
+			Individual recievedIndividual = recievedIndividualW.getIndividual();
 			double recievedFitnessI = problemTool.fitness(recievedIndividual,
 					problem, getCALogger());
 			if (InputConfiguration.individualDistribution &&
@@ -146,7 +162,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 				population.set(candidateIndex, recievedIndividual);
 				
 				// save and log received Individual
-				processRecievedIndividual(recievedIndividual,
+				processRecievedIndividual(recievedIndividualW,
 						recievedFitnessI, generationNumberI, problem);
 			}
 		}
@@ -186,7 +202,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	public void prepareToDie() {
+	protected void prepareToDie() {
 	}
 
 

@@ -76,7 +76,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			Individual individual4, Problem problem, AgentLogger logger)
+			Problem problem, AgentLogger logger)
 			throws ProblemToolException {
 
 		throw new ProblemToolException("Not possible to implement in this context");

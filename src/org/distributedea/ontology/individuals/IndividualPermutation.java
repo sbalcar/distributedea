@@ -51,7 +51,7 @@ public class IndividualPermutation extends Individual {
 		
 		int minVal = Collections.min(getPermutation());
 		
-		for (int valueI = minVal; valueI < getPermutation().size(); valueI++) {
+		for (int valueI = minVal; valueI <= getPermutation().size(); valueI++) {
 			for (int itemI : getPermutation()) {
 				if (valueI == itemI) {
 					numberOfElement++;
@@ -59,7 +59,7 @@ public class IndividualPermutation extends Individual {
 			}
 		}
 		
-		if (numberOfElement == getPermutation().size()) {
+		if (numberOfElement == sizeOfPermutation()) {
 			return true;
 		} else {
 			return false;

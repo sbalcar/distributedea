@@ -11,7 +11,7 @@ import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
-public class ProblemTolRandomMove extends ProblemContinuousOptTool {
+public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 
 	private double maxStep = 0.005;
 	
@@ -127,23 +127,23 @@ public class ProblemTolRandomMove extends ProblemContinuousOptTool {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			Individual individual4, Problem problem, AgentLogger logger)
+			Problem problem, AgentLogger logger)
 			throws ProblemToolException {
 		
 		double F = 1.0;
 		
+		IndividualPoint individualP1 = (IndividualPoint) individual1;
 		IndividualPoint individualP2 = (IndividualPoint) individual2;
 		IndividualPoint individualP3 = (IndividualPoint) individual3;
-		IndividualPoint individualP4 = (IndividualPoint) individual4;
 		
 		ProblemContinousOpt problemCO = (ProblemContinousOpt) problem;
 		
 		List<Double> coordinates = new ArrayList<Double>();
-		for (int i = 0; i < individualP2.getCoordinates().size(); i++) {
+		for (int i = 0; i < individualP1.getCoordinates().size(); i++) {
 			
-			double indACoorI = individualP2.exportCoordinate(i);
-			double indBCoorI = individualP3.exportCoordinate(i);
-			double indCCoorI = individualP4.exportCoordinate(i);
+			double indACoorI = individualP1.exportCoordinate(i);
+			double indBCoorI = individualP2.exportCoordinate(i);
+			double indCCoorI = individualP3.exportCoordinate(i);
 			
 			double valueNew = indACoorI+F*(indBCoorI-indCCoorI);
 			

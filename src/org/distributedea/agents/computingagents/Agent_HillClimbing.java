@@ -5,9 +5,11 @@ import jade.core.behaviours.Behaviour;
 import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -28,7 +30,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 
 	
 	@Override
-	public void prepareToDie() {
+	protected void prepareToDie() {
 		
 		// deregistre agent from DF
 		deregistrDF();
@@ -65,7 +67,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	@Override
-	public void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
 		
 		if (! isAbleToSolve(problem)) {
 			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
@@ -90,7 +92,8 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 				fitnessI, generationNumberI, problem);
 		
 		
-		while (true) {
+		while (computingThread.continueInTheNextGeneration()) {
+			
 			// increment next number of generation
 			generationNumberI++;
 			
@@ -127,11 +130,12 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			
 			// send new Individual to distributed neighbors
 			if (InputConfiguration.individualDistribution) {
-				distributeIndividualToNeighours(individualI);
+				distributeIndividualToNeighours(individualI, problem);
 			}
 			
 			//take received individual to new generation
-			Individual recievedIndividual = getRecievedIndividual();
+			IndividualWrapper recievedIndividualW = getRecievedIndividual();
+			Individual recievedIndividual = recievedIndividualW.getIndividual();
 			double recievedFitnessI = problemTool.fitness(recievedIndividual,
 					problem, getCALogger());
 			if (InputConfiguration.individualDistribution &&
@@ -144,7 +148,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 				fitnessI = recievedFitnessI;
 				
 				// save and log received Individual
-				processRecievedIndividual(individualI,
+				processRecievedIndividual(recievedIndividualW,
 						fitnessI, generationNumberI, problem);
 			}
 			

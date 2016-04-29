@@ -1,7 +1,8 @@
 package org.distributedea.configuration;
 
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.management.agent.Argument;
+import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Argument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

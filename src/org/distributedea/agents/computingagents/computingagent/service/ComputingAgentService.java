@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent;
+package org.distributedea.agents.computingagents.computingagent.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.ManagementOntology;
@@ -25,7 +25,9 @@ import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
-import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.helpmate.HelpmateList;
+import org.distributedea.ontology.helpmate.ReportHelpmate;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
 
@@ -169,9 +171,65 @@ public class ComputingAgentService {
 		return resultOfComputing;
 	}
 	
+	public static HelpmateList sendReportHelpmate(Agent_DistributedEA agent,
+			AID computingAgent, boolean newStatisticsForEachQuery, AgentLogger logger) {
+		
+		if (agent == null) {
+			throw new IllegalArgumentException(
+					"Argument agentKiller can't be null");
+		}
+
+		Ontology ontology = ResultOntology.getInstance();
+
+		ACLMessage msgAccessesResult = new ACLMessage(ACLMessage.REQUEST);
+		msgAccessesResult.addReceiver(computingAgent);
+		msgAccessesResult.setSender(agent.getAID());
+		msgAccessesResult.setLanguage(agent.getCodec().getName());
+		msgAccessesResult.setOntology(ontology.getName());
+
+		ReportHelpmate reportHelpmate = new ReportHelpmate();
+		reportHelpmate.setNewStatisticsForEachQuery(newStatisticsForEachQuery);
+		
+		Action action = new Action(agent.getAID(), reportHelpmate);
+		
+		try {
+			agent.getContentManager().fillContent(msgAccessesResult, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending AccessesResult", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending AccessesResult", e);
+		}
+		
+		ACLMessage msgRetursName = null;
+		try {
+			msgRetursName = FIPAService
+					.doFipaRequestClient(agent, msgAccessesResult);
+		} catch (FIPAException e) {
+			logger.logThrowable("FIPAException by receiving ResultOfComputing", e);
+			return null;
+		}
+		
+		HelpmateList helpmateList = null;
+		try {
+			Result result = (Result)
+					agent.getContentManager().extractContent(msgRetursName);
+
+			helpmateList = (HelpmateList) result.getValue();
+
+		} catch (UngroundedException e) {
+			logger.logThrowable("UngroundedException by receiving ResultOfComputing", e);
+		} catch (CodecException e) {
+			logger.logThrowable("CodecException by receiving ResultOfComputing", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by receiving ResultOfComputing", e);
+		}
+		
+		return helpmateList;
+	}
 	
 	public static void sendIndividualToNeighbours(Agent_DistributedEA agent,
-			Individual individual, AgentLogger logger) {
+			IndividualWrapper individual, AgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(

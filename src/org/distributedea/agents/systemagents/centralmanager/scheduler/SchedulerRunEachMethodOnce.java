@@ -1,20 +1,22 @@
 package org.distributedea.agents.systemagents.centralmanager.scheduler;
 
-import jade.core.AID;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.agents.computingagents.Agent_ComputingAgent;
-import org.distributedea.agents.computingagents.computingagent.ComputingAgentService;
+import jade.core.AID;
+
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
-import org.distributedea.configuration.AgentConfiguration;
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.management.agent.Argument;
+import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.problem.Problem;
 
-public class SchedulerRunEachOnce implements Scheduler {
+public class SchedulerRunEachMethodOnce implements Scheduler {
 
 	int NODE_INDEX = 0;
 	
@@ -23,8 +25,8 @@ public class SchedulerRunEachOnce implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, AgentConfiguration[] configurations,
-			Class<?>[] availablProblemTools, AgentLogger logger) {
+			Problem problem, List<AgentConfiguration> configurations,
+			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException {
 
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
@@ -35,19 +37,15 @@ public class SchedulerRunEachOnce implements Scheduler {
 		try {
 			managerAidI = aidManagerAgents[NODE_INDEX];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new IllegalStateException("Manager agent to create Computing Agent not available");
+			throw new SchedulerException("Manager agent to create Computing Agent not available");
 		}
 		
 
 		// create one agent for each configuration
 		for (AgentConfiguration agentConfigurationI : configurations) {
-					
-			String agentType = agentConfigurationI.getAgentType();
-			String agentName = agentConfigurationI.getAgentName();
-			List<Argument> arguments = agentConfigurationI.getArguments();
-			
+						
 			ManagerAgentService.sendCreateAgent(centralManager,
-					managerAidI, agentType, agentName, arguments, logger);
+					managerAidI, agentConfigurationI, logger);
 
 		}
 		
@@ -55,12 +53,12 @@ public class SchedulerRunEachOnce implements Scheduler {
 		// chooses ProblemTool by index
 		Class<?> problemToolI;
 		try {
-			problemToolI = availablProblemTools[PROBLEM_TOOL_INDEX];
+			problemToolI = availablProblemTools.get(PROBLEM_TOOL_INDEX);
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new IllegalStateException("ProblemTool not available");
+			throw new SchedulerException("ProblemTool not available");
 		}
 		
-		// assumes the existence of only one Computing Agent
+		// search all Computing Agents
 		AID [] aidComputingAgents = centralManager.searchDF(
 				Agent_ComputingAgent.class.getName());
 		
@@ -71,16 +69,26 @@ public class SchedulerRunEachOnce implements Scheduler {
 			ComputingAgentService.sendStartComputing(
 					centralManager, aidComputingAgentI, problem, logger);
 
-		}		
+		}
 		
 	}
 
 	
-	
 	@Override
 	public void replan(Agent_CentralManager centralManager, Problem problem,
-			AgentConfiguration[] configurations,
-			Class<?>[] availableProblemTools, AgentLogger logger) {
+			List<AgentConfiguration> configurations,
+			List<Class<?>> availableProblemTools, AgentLogger logger) {
 	}
 
+	@Override
+	public boolean continueWithComputingInTheNextGeneration() {
+		return true;
+	}
+
+	@Override
+	public void exit() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

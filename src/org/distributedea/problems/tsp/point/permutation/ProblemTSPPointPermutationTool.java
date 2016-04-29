@@ -116,17 +116,14 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Individual individual3,
-			Individual individual4, Problem problem, AgentLogger logger)
-			throws ProblemToolException {
+			Individual individual2, Individual individual3, Problem problem,
+			AgentLogger logger) throws ProblemToolException {
 		
-		Individual[] individualA =
-				createNewIndividual(individual1, individual2, problem, logger);
-		Individual[] individualB =
-				createNewIndividual(individual3, individual4, problem, logger);
+		IndividualPermutation ind1 = (IndividualPermutation) individual1;
+		IndividualPermutation ind2 = (IndividualPermutation) individual2;
 		
-		return createNewIndividual(individualA[0], individualB[0],
-				problem, logger);
+		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
+		return tool.singlePointCrossover(ind1, ind2);
 	}
 	
 	@Override

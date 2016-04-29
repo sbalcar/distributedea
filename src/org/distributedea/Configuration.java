@@ -83,10 +83,10 @@ public class Configuration {
 	 * Provides way to the instance of Problem
 	 * @return
 	 */
-	public static String getInputProblemFile() {
+	public static String getInputProblemFile(String inputProblemFileName) {
 
 		return "inputs" + File.separator
-				+ InputConfiguration.inputProblemFileName;
+				+ inputProblemFileName;
 	}
 	/**
 	 * Provides way to the instance of Problem
@@ -110,14 +110,42 @@ public class Configuration {
 	}
 
 	/**
-	 * Provides way to the centralized solution of whole Distributed Evolution
+	 * Provides name of directory for the centralized solution of whole Distributed Evolution
 	 * @return
 	 */
-	public static String getResultFile() {
+	public static String getResultDirectory() {
 
-		return "results.txt";
+		return "result";
 	}
 
+	/**
+	 * Provides way to the centralized solution
+	 * @param fileName
+	 * @return
+	 */
+	public static String getResultFile(int fileNumber) {
+		
+		return getResultDirectory() + File.separator +
+				"results" + fileNumber +".txt";
+	}
+	
+	/**
+	 * Provides unique file number
+	 * @param fileName
+	 * @return
+	 */
+	public static int getUniqueResultFileNumber() {
+		
+		int number = -1;
+		
+		File file;
+		do {
+			file = new File(getResultFile(number++));
+		} while(file.exists());
+		
+		return number;
+	}
+	
 	/**
 	 * Provides name of directory for log files of Computing Agents
 	 * @return

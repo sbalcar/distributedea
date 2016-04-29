@@ -7,7 +7,9 @@ import java.util.logging.Level;
 import jade.core.behaviours.Behaviour;
 
 import org.distributedea.InputConfiguration;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
@@ -30,7 +32,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	}
 
 	@Override
-	public void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
 		
 		if (! isAbleToSolve(problem)) {
 			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
@@ -59,7 +61,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		processIndividualFromInitGeneration(individualI,
 				fitnessI, generationNumberI, problem);
 		
-		while (true) {
+		while (computingThread.continueInTheNextGeneration()) {
 			
 			//adjust the size of the taboo on the acceptable limit
 			while (tabuList.size() >= tabuListSize) {
@@ -121,11 +123,12 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			
 			// send new Individual to distributed neighbors
 			if (InputConfiguration.individualDistribution) {
-				distributeIndividualToNeighours(individualI);
+				distributeIndividualToNeighours(individualI, problem);
 			}
 			
 			//take received individual to new generation
-			Individual recievedIndividual = getRecievedIndividual();
+			IndividualWrapper recievedIndividualW = getRecievedIndividual();
+			Individual recievedIndividual = recievedIndividualW.getIndividual();
 			double recievedFitnessI = problemTool.fitness(recievedIndividual,
 					problem, getCALogger());
 			if (InputConfiguration.individualDistribution &&
@@ -141,7 +144,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 				tabuList.offer(individualI);
 				
 				// save and log received Individual
-				processRecievedIndividual(individualI,
+				processRecievedIndividual(recievedIndividualW,
 						fitnessI, generationNumberI, problem);
 			}
 			
@@ -150,7 +153,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	}
 
 	@Override
-	public void prepareToDie() {
+	protected void prepareToDie() {
 	}
 
 }

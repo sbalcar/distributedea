@@ -1,6 +1,10 @@
 package org.distributedea;
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerRunEachOnce;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerRunEachMethodOnce;
+import org.distributedea.ontology.job.Job;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
@@ -11,43 +15,58 @@ import org.distributedea.problems.tsp.point.permutation.ProblemToolPoint2opt;
  */
 public class InputTSP {
 
-	public void initialization01() {
+	public Job initialization01() {
 		
 		InputConfiguration.automaticStart = true;
-		InputConfiguration.individualDistribution = true;
 		
-		InputConfiguration.inputProblemFileName = "simpleTest.tsp";
-		InputConfiguration.problemToSolve = ProblemTSPGPS.class;
+		Job job = new Job();
+		job.setJobID("tsp01");
+		job.setIndividualDistribution(true);
+		job.setProblemToSolve(ProblemTSPGPS.class);
+		job.setProblemFileName("simpleTest.tsp");
+		job.setMethodsFileName(Configuration.getMethodsFile());
 		
-		InputConfiguration.scheduler = SchedulerRunEachOnce.class;
+		job.setScheduler(SchedulerRunEachMethodOnce.class);
+		job.setAvailableProblemTools(new ArrayList<Class<?>>(
+			    Arrays.asList(ProblemToolGPSEuc2D2opt.class)));
 		
-		InputConfiguration.availableProblemTools = new Class[]
-			{ProblemToolGPSEuc2D2opt.class};
+		return job;
 	}
 	
-	public void initialization02() {
-
+	public Job initialization02() {
+		
 		InputConfiguration.automaticStart = true;
-		InputConfiguration.individualDistribution = true;
 		
-		InputConfiguration.inputProblemFileName = "wi29.tsp";
-		InputConfiguration.problemToSolve = ProblemTSPGPS.class;
+		Job job = new Job();
+		job.setJobID("tsp02");
+		job.setIndividualDistribution(true);
+		job.setProblemToSolve(ProblemTSPGPS.class);
+		job.setProblemFileName("wi29.tsp");
+		job.setMethodsFileName(Configuration.getMethodsFile());
 		
-		InputConfiguration.scheduler = SchedulerRunEachOnce.class;
+		job.setScheduler(SchedulerRunEachMethodOnce.class);	
+		job.setAvailableProblemTools(new ArrayList<Class<?>>(
+			    Arrays.asList(ProblemToolGPSEuc2D2opt.class)));
 		
-		InputConfiguration.availableProblemTools = new Class[]
-			{ProblemToolGPSEuc2D2opt.class};
+		return job;
 	}
 
-	public void initialization03() {
+	public Job initialization03() {
 		
-		InputConfiguration.inputProblemFileName = "djb2036.tsp";
-		InputConfiguration.problemToSolve = ProblemTSPPoint.class;
+		InputConfiguration.automaticStart = true;
 		
-		InputConfiguration.scheduler = SchedulerRunEachOnce.class;
+		Job job = new Job();
+		job.setJobID("tsp03");
+		job.setIndividualDistribution(true);
+		job.setProblemToSolve(ProblemTSPPoint.class);
+		job.setProblemFileName("djb2036.tsp");
+		job.setMethodsFileName(Configuration.getMethodsFile());
 		
-		InputConfiguration.availableProblemTools = new Class[]
-				{ProblemToolPoint2opt.class};
+		job.setScheduler(SchedulerRunEachMethodOnce.class);
+		job.setAvailableProblemTools(new ArrayList<Class<?>>(
+			    Arrays.asList(ProblemToolPoint2opt.class)));
+		
+		return job;
 	}
 	
 }

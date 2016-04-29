@@ -1,7 +1,5 @@
 package org.distributedea.agents.systemagents.manageragent;
 
-import java.util.List;
-
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
@@ -20,12 +18,11 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ManagementOntology;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
-import org.distributedea.ontology.management.agent.Argument;
-import org.distributedea.ontology.management.agent.Arguments;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
 
@@ -119,7 +116,7 @@ public class ManagerAgentService {
 	 * @return
 	 */
 	public static AID sendCreateAgent(Agent_DistributedEA agentSender,
-			AID agentReciever, String agentType, String agentName, List<Argument> arguments,
+			AID agentReciever, AgentConfiguration agentConfiguration,
 			AgentLogger logger) {
 		
 		if (agentSender == null) {
@@ -132,6 +129,17 @@ public class ManagerAgentService {
 					"Argument agentReciever can't be null");
 		}
 		
+		if (agentConfiguration == null) {
+			throw new IllegalArgumentException(
+					"Argument agentConfiguration can't be null");
+		}
+
+		if (logger == null) {
+			throw new IllegalArgumentException(
+					"Argument logger can't be null");
+		}
+		
+		
 		Ontology ontology = ManagementOntology.getInstance();
 
 		ACLMessage msgCreateA = new ACLMessage(ACLMessage.REQUEST);
@@ -141,9 +149,7 @@ public class ManagerAgentService {
 		msgCreateA.setOntology(ontology.getName());
 
 		CreateAgent createAgent = new CreateAgent();
-		createAgent.setType(agentType);
-		createAgent.setName(agentName);
-		createAgent.setArguments(new Arguments(arguments));
+		createAgent.setConfiguration(agentConfiguration);
 		
 		Action action = new Action(agentSender.getAID(), createAgent);
 		

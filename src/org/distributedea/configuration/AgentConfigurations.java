@@ -2,6 +2,8 @@ package org.distributedea.configuration;
 
 import java.util.List;
 
+import org.distributedea.ontology.configuration.AgentConfiguration;
+
 public class AgentConfigurations {
 	
 	private List<AgentConfiguration> agentConfigurations;
