@@ -89,11 +89,9 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 			}
 				
 		}
-				
+	
+		problemTool.exit();
 	}
 
-	@Override
-	protected void prepareToDie() {
-	}
 
 }

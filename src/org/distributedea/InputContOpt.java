@@ -15,7 +15,7 @@ import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
  */
 public class InputContOpt {
 
-	public Job test01() {
+	public static Job test01() {
 		
 		InputConfiguration.automaticStart = true;
 		
@@ -33,7 +33,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public Job test02() {
+	public static Job test02() {
 		
 		InputConfiguration.automaticStart = true;
 		
@@ -51,7 +51,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public Job test03() {
+	public static Job test03() {
 		
 		InputConfiguration.automaticStart = true;
 		

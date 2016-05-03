@@ -19,4 +19,6 @@ public class InputConfiguration {
 	 */
 	public static boolean individualDistribution = true;
 	
+	
+	public static int numberOfReplanning = 50;
 }

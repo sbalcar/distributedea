@@ -42,27 +42,6 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void prepareToDie() {
-		
-		// stops computing in separated thread
-		computingThread.stop();
-		
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			getCALogger().logThrowable("Can't wait to stop thread", e);
-		}
-		
-		// deregistres agent from DF
-		//  before derestration have to be stop computing(after deregistration
-		//  agent can no communicate wit another agents)
-		deregistrDF();
-		
-		// removes all Behaviors in agent (kill himself)
-		//doDelete();
-	}
-
-	@Override
 	protected boolean isAbleToSolve(Class<?> problem, Class<?> representation) {
 		
 		boolean isAble = false;
@@ -232,6 +211,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			return;
 		}
 		
+		problemTool.exit();
 
 	}
 	

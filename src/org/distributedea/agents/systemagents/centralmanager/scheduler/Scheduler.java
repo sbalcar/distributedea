@@ -44,6 +44,6 @@ public interface Scheduler {
 	/**
 	 * Exit
 	 */
-	public void exit();
+	public void exit(Agent_CentralManager centralManager, AgentLogger logger);
 	
 }

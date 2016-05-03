@@ -3,8 +3,10 @@ package org.distributedea.agents.systemagents;
 import jade.content.onto.Ontology;
 import jade.core.behaviours.Behaviour;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
@@ -50,16 +52,23 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 			return;
 		}
 
-		List<Job> jobs = InputJobQueue.getInputJobs();
+		List<Job> jobs = null;
+		try {
+			jobs = InputJobQueue.getInputJobs();
+		} catch (FileNotFoundException e) {
+			getLogger().log(Level.INFO, "Can not load input jobs");
+		}
 		
 		// adding Behaviour for computing
 		if (InputConfiguration.automaticStart) {
 
-			for (Job jobI: jobs) {
-				Behaviour behaviourCompI =
-						new StartComputingBehaviour(jobI, getLogger());
-				addBehaviour(behaviourCompI);
-			}
+			if (jobs != null)
+				for (Job jobI: jobs) {
+					getLogger().log(Level.INFO, "Receiving job: " + jobI.getJobID());
+					Behaviour behaviourCompI =
+							new StartComputingBehaviour(jobI, getLogger());
+					addBehaviour(behaviourCompI);
+				}
 			
 		} else {
 			Behaviour behaviourAutI =

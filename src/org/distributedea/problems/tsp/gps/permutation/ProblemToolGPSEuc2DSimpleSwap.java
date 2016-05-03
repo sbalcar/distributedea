@@ -11,6 +11,7 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.tsp.gps.permutation.operators.SinglePointCrossover;
 import org.distributedea.problems.tsp.point.permutation.ProblemTSPPointPermutationTool;
 import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSwap;
 
@@ -119,46 +120,23 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
 		IndividualPermutation ind2 = (IndividualPermutation) individual2;
 		
-		return singlePointCrossover(ind1, ind2);
+		return SinglePointCrossover.crossover(ind1, ind2);
 	}
 	
-	public Individual[] singlePointCrossover(IndividualPermutation individual1,
-			IndividualPermutation individual2) {
+	@Override
+	public Individual[] createNewIndividual(Individual individual1,
+			Individual individual2, Individual individual3, Problem problem,
+			AgentLogger logger) throws ProblemToolException {
 		
-		List<Integer> perm1 = individual1.getPermutation();
-		List<Integer> perm2 = individual2.getPermutation();
+		IndividualPermutation ind1 = (IndividualPermutation) individual1;
+		IndividualPermutation ind2 = (IndividualPermutation) individual2;
+		IndividualPermutation ind3 = (IndividualPermutation) individual2;
 		
-		Random rand = new Random();
-		int  point = rand.nextInt(perm1.size());
+		Individual[] res1 =
+				SinglePointCrossover.crossover(ind1, ind2);
+		IndividualPermutation ind = (IndividualPermutation) res1[0];
 		
-		List<Integer> permNewStart = new ArrayList<Integer>();
-		for (int geneIndex = 0; geneIndex < point; geneIndex++) {
-			int geneI = perm1.get(geneIndex);
-			permNewStart.add(geneI);
-			if (geneIndex == point) {
-				break;
-			}
-		}
-		
-		List<Integer> remainder = new ArrayList<Integer>();
-		for (int geneI : perm2) {
-			if (! permNewStart.contains(geneI)) {
-				remainder.add(geneI);
-			}
-		}
-		
-		List<Integer> permNew1 = new ArrayList<Integer>();
-		permNew1.addAll(permNewStart);
-		permNew1.addAll(remainder);
-		
-		IndividualPermutation individualNew = new IndividualPermutation();
-		individualNew.setPermutation(permNew1);
-		
-		Individual[] result = new Individual[2];
-		result[0] = individualNew;
-		result[1] = individual1;
-		
-		return result;
+		return SinglePointCrossover.crossover(ind, ind3);
 	}
 
 	@Override

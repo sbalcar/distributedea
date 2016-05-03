@@ -14,6 +14,7 @@ import org.distributedea.problems.exceptions.ProblemToolException;
 import org.distributedea.problems.tsp.gps.permutation.IProblemTSPPermutationTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemTSPGPSEuc2DPermutationTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
+import org.distributedea.problems.tsp.gps.permutation.operators.SinglePointCrossover;
 import org.distributedea.problems.tsp.point.ProblemTSPPointTool;
 import org.distributedea.problems.tsp.point.permutation.tools.PermutationTool;
 
@@ -110,8 +111,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
 		IndividualPermutation ind2 = (IndividualPermutation) individual2;
 		
-		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.singlePointCrossover(ind1, ind2);
+		return SinglePointCrossover.crossover(ind1, ind2);
 	}
 	
 	@Override
@@ -122,8 +122,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
 		IndividualPermutation ind2 = (IndividualPermutation) individual2;
 		
-		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.singlePointCrossover(ind1, ind2);
+		return SinglePointCrossover.crossover(ind1, ind2);
 	}
 	
 	@Override

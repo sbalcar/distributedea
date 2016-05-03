@@ -73,7 +73,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			double neighborFitnessJ = -1;
 			
 			long neighborIndex = 0;
-			while (true) {
+			while (computingThread.continueInTheNextGeneration()) {
 				// increment next number of generation
 				generationNumberI++;
 				
@@ -149,11 +149,9 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			}
 			
 		}
+		
+		problemTool.exit();
 
-	}
-
-	@Override
-	protected void prepareToDie() {
 	}
 
 }

@@ -5,6 +5,7 @@ import jade.core.AID;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
@@ -67,4 +68,21 @@ public class SchedulerTool {
 				centralManager, newAgent, problem, logger);
 	}
 	
+	public static void killAllComputingAgent(Agent_CentralManager centralManager, AgentLogger logger) {
+		
+		AID [] aidComputingAgents = centralManager.searchDF(
+				Agent_ComputingAgent.class.getName());
+		
+		for (AID compAID : aidComputingAgents) {
+		
+			// kill agent
+			ManagerAgentService.sendKillAgent(centralManager, compAID, logger);
+		}
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			logger.logThrowable("", e);
+		}
+	}
 }

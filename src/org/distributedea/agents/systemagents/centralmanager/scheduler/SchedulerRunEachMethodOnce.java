@@ -1,6 +1,5 @@
 package org.distributedea.agents.systemagents.centralmanager.scheduler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jade.core.AID;
@@ -10,9 +9,9 @@ import org.distributedea.agents.computingagents.computingagent.service.Computing
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.problem.Problem;
 
@@ -86,8 +85,9 @@ public class SchedulerRunEachMethodOnce implements Scheduler {
 	}
 
 	@Override
-	public void exit() {
-		// TODO Auto-generated method stub
+	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
+		
+		SchedulerTool.killAllComputingAgent(centralManager, logger);
 		
 	}
 	

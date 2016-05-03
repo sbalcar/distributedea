@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
@@ -36,9 +37,10 @@ public class SchedulerInitialization implements Scheduler {
 	}
 
 	@Override
-	public void exit() {
-		// TODO Auto-generated method stub
+	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		
+		SchedulerTool.killAllComputingAgent(centralManager, logger);
+	
 	}
 
 	

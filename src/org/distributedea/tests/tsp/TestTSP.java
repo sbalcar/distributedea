@@ -102,7 +102,7 @@ public class TestTSP {
 		AgentLogger logger = new AgentLogger(null);
 		
 		String problemFileName = 
-				org.distributedea.Configuration.getInputFile(inputFileName + ".tsp");
+				org.distributedea.Configuration.getInputProblemFile(inputFileName + ".tsp");
 		
 		Problem problem = problemTool.readProblem(problemFileName, logger);
 		problem.setProblemToolClass(problemTool.getClass().getName());

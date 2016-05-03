@@ -26,7 +26,6 @@ import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.logging.AgentComputingLogger;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
-import org.distributedea.agents.systemagents.datamanager.DataManagerService;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ComputingOntology;
@@ -45,7 +44,6 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.results.PartResult;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
@@ -88,11 +86,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param behaviour
 	 */
 	protected abstract void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException;
-	
-	/**
-	 * Prepares for the killing
-	 */
-	protected abstract void prepareToDie();
 	
 	
 	@Override
@@ -353,7 +346,10 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		computingThread.stopComputing();
 		
-		prepareToDie();
+		// deregistres agent from DF
+		//  before derestration have to be stop computing(after deregistration
+		//  agent can no communicate wit another agents)
+		deregistrDF();
 		
 		return null;
 	}
@@ -425,23 +421,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		ManagerAgentService.sendKillAgent(this, getAID(), getLogger());
 	}
 	
-	private long timeOfLastLogMs = System.currentTimeMillis();
-	protected void logResultByUsingDatamanager(long generationNumber, double fitnessValue) {
-				
-		PartResult result = new PartResult();
-		result.setGenerationNumber(generationNumber);
-		result.setFitnessResult(fitnessValue);
-		
-		long nowMs = System.currentTimeMillis();
-		if (timeOfLastLogMs + Configuration.LOG_PERIOD_MS < nowMs) {
-			
-			result.setAgentDescription("" + this.getLocalName());
-			DataManagerService.sendPartResultMessage(this, result, getLogger());
-			
-			timeOfLastLogMs = nowMs;
-		}
-		
-	}
+
 	
 	private long timeOfLastIndividualDistributionMs = System.currentTimeMillis();
 	protected void distributeIndividualToNeighours(Individual individual, Problem problem) {
@@ -507,7 +487,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		
 		// send individual description to Agent DataManager
-		logResultByUsingDatamanager(generationNumber, fitness);
+		//logResultByUsingDatamanager(generationNumber, fitness);
 		
 		
 		// log individual as best result
@@ -543,7 +523,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			
 			
 			// send individual description to Agent DataManager
-			logResultByUsingDatamanager(generationNumber, fitness);
+			//logResultByUsingDatamanager(generationNumber, fitness);
 
 			
 			// log individual as best result

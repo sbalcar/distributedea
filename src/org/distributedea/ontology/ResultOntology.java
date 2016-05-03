@@ -7,7 +7,7 @@ import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.results.PartResult;
+import org.distributedea.ontology.saveresult.SaveResultOfComputing;
 
 import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
@@ -24,7 +24,7 @@ public class ResultOntology extends BeanOntology {
         String agentDescriptionPackage = AgentDescription.class.getPackage().getName();
         
         try {
-        	add(PartResult.class);
+        	add(SaveResultOfComputing.class);
         	add(AccessesResult.class);
         	add(ResultOfComputing.class);
         	

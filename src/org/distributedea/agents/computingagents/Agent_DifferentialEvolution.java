@@ -167,6 +167,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			}
 		}
 		
+		problemTool.exit();
 		
 	}
 
@@ -199,10 +200,6 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		result.setBestIndividual(bestIndividual);
 		
 		return result;
-	}
-	
-	@Override
-	protected void prepareToDie() {
 	}
 
 

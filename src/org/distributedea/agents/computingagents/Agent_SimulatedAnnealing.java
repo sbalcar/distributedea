@@ -145,11 +145,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
             temperatureI *= 1-coolingRateI;
 		}
 		
-	}
-
-	@Override
-	protected void prepareToDie() {
-		
+		problemTool.exit();
 	}
 
 }

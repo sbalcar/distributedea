@@ -7,6 +7,7 @@ import java.util.Map;
 
 import jade.core.AID;
 
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
@@ -23,6 +24,8 @@ public class SchedulerFollowupHelpers implements Scheduler {
 
 	private boolean NEW_STATISTICS_FOR_EACH_QUERY = true;
 	
+	private int numberOfReplaning = 0;
+	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
 			Problem problem, List<AgentConfiguration> configurations,
@@ -38,6 +41,8 @@ public class SchedulerFollowupHelpers implements Scheduler {
 	public void replan(Agent_CentralManager centralManager, Problem problem,
 			List<AgentConfiguration> configurations,
 			List<Class<?>> availableProblemTools, AgentLogger logger) throws SchedulerException {
+		
+		numberOfReplaning++;
 		
 		// search all Computing Agents
 		AID [] aidComputingAgents = centralManager.searchDF(
@@ -127,13 +132,13 @@ public class SchedulerFollowupHelpers implements Scheduler {
 
 	@Override
 	public boolean continueWithComputingInTheNextGeneration() {
-		return true;
+		return numberOfReplaning < InputConfiguration.numberOfReplanning;
 	}
 
 	@Override
-	public void exit() {
-		// TODO Auto-generated method stub
+	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		
+		SchedulerTool.killAllComputingAgent(centralManager, logger);
 	}
 	
 }

@@ -1,20 +1,28 @@
 package org.distributedea.agents.systemagents.centralmanager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.Configuration;
+import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.agents.systemagents.datamanager.DataManagerService;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.configuration.XmlConfigurationProvider;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.job.Job;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolEvaluation;
 
+import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 
 public class StartComputingBehaviour extends OneShotBehaviour {
@@ -124,18 +132,67 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 		
 			
 		while (scheduler.continueWithComputingInTheNextGeneration()) {
+			
+			// sleep
 			try {
 				Thread.sleep(Configuration.REPLAN_PERIOD_MS);
 			} catch (InterruptedException e) {
 				logger.logThrowable("Error by waiting for replan", e);
 			}
 			
+			// Get Result of Computing
+			AID [] aidOfComputingAgents = centralManager.searchDF(
+					Agent_ComputingAgent.class.getName());
+			
+			List<ResultOfComputing> resultOfComputingAgents = new ArrayList<ResultOfComputing>();
+			for (AID computingAgentI : aidOfComputingAgents) {
+							
+				ResultOfComputing resultOfComputingI =
+						ComputingAgentService.sendAccessesResult(centralManager, computingAgentI, logger);
+				resultOfComputingAgents.add(resultOfComputingI);
+			}
+			
+			ResultOfComputing resultI = getBestResultOfComputing(resultOfComputingAgents, problem);
+			saveResult(resultI);
+			
+			// log information about re-planning
 			logger.log(Level.INFO, "Replanning");
+			
+			// re-planning
 			scheduler.replan(centralManager, problem, agentConfigurations,
 					availableProblemTools, logger);
 		}
-		scheduler.exit();
+		scheduler.exit(centralManager, logger);
 
+	}
+	
+	private ResultOfComputing getBestResultOfComputing(List<ResultOfComputing> resultOfComputingAgents, Problem problem) {
+		
+		if (resultOfComputingAgents == null || resultOfComputingAgents.isEmpty()) {
+			return null;
+		}
+		
+		ResultOfComputing bestResult = resultOfComputingAgents.get(0);
+		
+		for (ResultOfComputing resultOfComputingI : resultOfComputingAgents) {
+			
+			double fitnessValueI = resultOfComputingI.getFitnessValue();
+			
+			boolean isBetter = ProblemToolEvaluation.isFistFitnessBetterThanSecond(
+					fitnessValueI, bestResult.getFitnessValue(), problem);
+			if (isBetter) {
+				bestResult = resultOfComputingI;
+			}
+		}
+		
+		return bestResult;
+	}
+	
+	private void saveResult(ResultOfComputing bestResult) {
+		
+		logger.log(Level.INFO, "" + bestResult.getFitnessValue());
+		
+		DataManagerService.sendResultOfComputing((Agent_DistributedEA) this.myAgent, bestResult, logger);
 	}
 	
 }

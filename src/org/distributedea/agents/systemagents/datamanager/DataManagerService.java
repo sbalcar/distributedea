@@ -4,7 +4,7 @@ import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.results.PartResult;
+import org.distributedea.ontology.computing.result.ResultOfComputing;
 
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
@@ -15,29 +15,22 @@ import jade.lang.acl.ACLMessage;
 
 public class DataManagerService {
 
-	/**
-	 * Sends PartResult to DataManager
-	 * 
-	 * @param agent
-	 * @param result
-	 * @param logger
-	 */
-	public static void sendPartResultMessage(Agent_DistributedEA agent,
-			PartResult result, AgentLogger logger) {
+	public static void sendResultOfComputing(Agent_DistributedEA agent,
+			ResultOfComputing result, AgentLogger logger) {
 		
 		AID dataManagerAID = new AID(AgentNames.DATA_MANAGER.getName(), false);
-
+		
 		Ontology ontology = ResultOntology.getInstance();
 		
-	     ACLMessage msgPartResult = new ACLMessage(ACLMessage.INFORM);
-	     msgPartResult.addReceiver(dataManagerAID);
-	     msgPartResult.setSender(agent.getAID());
-	     msgPartResult.setLanguage(agent.getCodec().getName());
-	     msgPartResult.setOntology(ontology.getName());
+		ACLMessage msgPartResult = new ACLMessage(ACLMessage.INFORM);
+		msgPartResult.addReceiver(dataManagerAID);
+		msgPartResult.setSender(agent.getAID());
+		msgPartResult.setLanguage(agent.getCodec().getName());
+		msgPartResult.setOntology(ontology.getName());
 	     
-	     Action action = new Action(agent.getAID(), result);
-
-	     try {
+		Action action = new Action(agent.getAID(), result);
+		
+		try {
 			agent.getContentManager().fillContent(msgPartResult, action);
 		} catch (CodecException e) {
 			logger.logThrowable("Codec Exception by sending", e);
@@ -47,4 +40,5 @@ public class DataManagerService {
 
 	    agent.send(msgPartResult);
 	}
+	
 }

@@ -27,14 +27,6 @@ import org.distributedea.problems.exceptions.ProblemToolException;
 public class Agent_HillClimbing extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
-
-	
-	@Override
-	protected void prepareToDie() {
-		
-		// deregistre agent from DF
-		deregistrDF();
-	}
 	
 	@Override
 	protected boolean isAbleToSolve(Class<?> problem, Class<?> representation) {
@@ -99,8 +91,6 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			
 			
 			fitnessI = problemTool.fitness(individualI, problem, getCALogger());
-						
-			logResultByUsingDatamanager(generationNumberI, fitnessI);
 			
 			Individual individualNew = null;
 			try {
@@ -153,6 +143,8 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			}
 			
 		}
+		
+		problemTool.exit();
 	}
 
 	protected Individual getNewIndividual(Individual individual,

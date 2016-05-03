@@ -4,7 +4,6 @@ import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
-import jade.core.AID;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -16,15 +15,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.results.PartResult;
+import org.distributedea.ontology.computing.result.ResultOfComputing;
 
 /**
  * System-agent who manage data resources multi-agent framework
@@ -73,8 +69,8 @@ public class Agent_DataManager extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(request);
 
-					if (action.getAction() instanceof PartResult) {
-						return respondToPartResult(request, action);
+					if (action.getAction() instanceof ResultOfComputing) {
+						return respondToResultOfComputing(request, action);
 					}
 
 
@@ -94,10 +90,30 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		});
 
 	}
-
+	
+	private int number = Configuration.getUniqueResultFileNumber();
+	
+	protected ACLMessage respondToResultOfComputing(ACLMessage request,
+			Action action) {
+		
+		ResultOfComputing result = (ResultOfComputing)action.getAction();
+		
+		String fileName = Configuration.getResultFile(number);
+		try {
+			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
+			writer.append(result.getFitnessValue() + "\n");
+			writer.close();
+		} catch (IOException e) {
+			getLogger().logThrowable("Part result can't be logged", e);
+		}
+		
+		return null;
+	}
+	
+	/*
 	private Map<String, PartResult> partResultOfCA = new HashMap<String, PartResult>();
 	
-	protected ACLMessage respondToPartResult(ACLMessage request, Action action) {
+	protected ACLMessage respondToResultOfComputing(ACLMessage request, Action action) {
 		
 		PartResult result = (PartResult)action.getAction();
 		AID aid = request.getSender();
@@ -145,7 +161,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		}
 		
 	}
-	
+*/	
 	/**
 	 * Removes all files in the Log directory
 	 */

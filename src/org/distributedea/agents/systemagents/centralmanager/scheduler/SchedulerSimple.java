@@ -159,8 +159,9 @@ public class SchedulerSimple implements Scheduler {
 	}
 
 	@Override
-	public void exit() {
-		// TODO Auto-generated method stub
+	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
+		
+		SchedulerTool.killAllComputingAgent(centralManager, logger);
 		
 	}
 

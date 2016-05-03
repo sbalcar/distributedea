@@ -25,8 +25,7 @@ public class Configuration {
 	/**
 	 * Agent ComputingAgent configuration
 	 */
-	/** Period of sending result from Computing Agent to DataManager Agent */
-	public static long LOG_PERIOD_MS = 1000;
+
 	/** Period of sending Individual from Computing Agent to another Computing Agents */
 	public static long INDIVIDUAL_BROADCAST_PERIOD_MS = 1000;
 	
@@ -40,6 +39,7 @@ public class Configuration {
 	/** Agent name delimiter followed by container ID */
 	public static char CONTAINER_NUMBER_PREFIX = '_';
 	
+	public static String JOB_SUFIX = "job";
 	
 	/**
 	 *  Agent CentralManager configuration
@@ -81,22 +81,20 @@ public class Configuration {
 
 	/**
 	 * Provides way to the instance of Problem
-	 * @return
-	 */
-	public static String getInputProblemFile(String inputProblemFileName) {
-
-		return "inputs" + File.separator
-				+ inputProblemFileName;
-	}
-	/**
-	 * Provides way to the instance of Problem
 	 * @param name of the file with relative path
 	 * @return
 	 */
-	public static String getInputFile(String fileName) {
+	public static String getInputProblemFile(String fileName) {
 
 		return "inputs" + File.separator + fileName;
 	}
+	
+	
+	public static String getJobsDirectory() {
+
+		return "jobqueue";
+	}
+	
 	
 	/**
 	 * Provides way to the solution instance by name
@@ -126,7 +124,7 @@ public class Configuration {
 	public static String getResultFile(int fileNumber) {
 		
 		return getResultDirectory() + File.separator +
-				"results" + fileNumber +".txt";
+				"result" + fileNumber +".txt";
 	}
 	
 	/**
