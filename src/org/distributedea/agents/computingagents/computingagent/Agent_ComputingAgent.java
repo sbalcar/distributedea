@@ -42,11 +42,12 @@ import org.distributedea.ontology.helpmate.HelpmateList;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemToolEvaluation;
-import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
 /**
@@ -60,9 +61,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	// logger for Computing Agent
 	private AgentLogger logger = null;
-	
-	// best result of computing (Individual and fitness)
-	private ResultOfComputing bestResultOfComputing = null;
 	
 	// the set of received Individuals from distribution
 	protected List<IndividualWrapper> receivedIndividuals =
@@ -78,14 +76,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param representation
 	 * @return
 	 */
-	protected abstract boolean isAbleToSolve(Class<?> problem, Class<?> representation);
+	protected abstract boolean isAbleToSolve(ProblemStruct problemStruct);
 	
 	/**
 	 * Starts computing a given Problem
 	 * @param problem
 	 * @param behaviour
 	 */
-	protected abstract void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException;
+	protected abstract void startComputing(Problem problem, Class<?> problemTool, String jobID, Behaviour behaviour) throws ProblemToolException;
 	
 	
 	@Override
@@ -129,13 +127,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	public AgentComputingLogger getCALogger() {
 		return (AgentComputingLogger) getLogger();
-	}
-	
-	public ResultOfComputing getBestresultOfComputing() {
-		return bestResultOfComputing;
-	}
-	public void setBestresultOfComputing(ResultOfComputing resultOfComputing) {
-		this.bestResultOfComputing = resultOfComputing;
 	}
 	
 	
@@ -276,10 +267,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		reply.setOntology(ResultOntology.getInstance().getName());
 		
 		//active waiting for some result
-		ResultOfComputing resultOfComputing = getBestresultOfComputing();
+		ResultOfComputing resultOfComputing = computingThread.getBestresultOfComputing();
+		
 		while (resultOfComputing == null) {
 			getLogger().log(Level.INFO, "resultOfComputing is null");
-			resultOfComputing = getBestresultOfComputing();
+			resultOfComputing = computingThread.getBestresultOfComputing();
 		}
 		
 		Result result = new Result(action.getAction(), resultOfComputing);
@@ -299,10 +291,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	private ACLMessage respondToStartComputing(ACLMessage request, Action action) {
 		
 		StartComputing startComputing = (StartComputing) action.getAction();
-		final Problem problem = startComputing.getProblem();
+		final ProblemWrapper problemWrapper = startComputing.getProblemWrapper();
+		
+		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
 		
 		boolean isComputing = (computingThread != null) && computingThread.isAlive();
-		if ((! isAbleToSolve(problem)) || isComputing) {
+		if ((! isAbleToSolveProblem(problemStruct)) || isComputing) {
 
 			ACLMessage reply = request.createReply();
 			reply.setPerformative(ACLMessage.REFUSE);
@@ -311,8 +305,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return reply;
 		}
 		
-		
-		this.computingThread = new ComputingThread(this, problem);	
+		this.computingThread = new ComputingThread(this, problemStruct);	
 		this.computingThread.start();
 
 			
@@ -323,19 +316,15 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 	
-	protected boolean isAbleToSolve(Problem problem) {
+	protected boolean isAbleToSolveProblem(ProblemStruct problemStruct) {
 		
 		// tests Problem validation
-		if (! problem.testIsValid(getLogger()) ) {
+		if (! problemStruct.testIsValid(getLogger()) ) {
 			return false;
 		}
-		
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problem.getProblemToolClass(), getLogger());
 	
 		// check if this agent is able to solve this type of problem
-		if (! isAbleToSolve(problem.getClass(),
-				problemTool.reprezentationWhichUses()) ) {
+		if (! isAbleToSolve(problemStruct) ) {
 			return false;
 		}
 		
@@ -346,12 +335,36 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		computingThread.stopComputing();
 		
+		try {
+			computingThread.join();
+		} catch (InterruptedException e) {
+			getLogger().logThrowable("Error by waiting to end of computing Thread", e);
+		}
+		
 		// deregistres agent from DF
 		//  before derestration have to be stop computing(after deregistration
 		//  agent can no communicate wit another agents)
 		deregistrDF();
 		
-		return null;
+		ACLMessage reply = request.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+		reply.setLanguage(codec.getName());
+		reply.setOntology(ManagementOntology.getInstance().getName());
+		
+		
+		EverythingPreparedToBeKilled everythingPrepared = new EverythingPreparedToBeKilled();
+		
+		Result result = new Result(action.getAction(), everythingPrepared);
+
+		try {
+			getContentManager().fillContent(reply, result);
+		} catch (CodecException e) {
+			getLogger().logThrowable("CodecException by sending ResultOfComputing", e);
+		} catch (OntologyException e) {
+			getLogger().logThrowable("OntologyException by sending ResultOfComputing", e);
+		}
+
+		return reply;
 	}
 	
 
@@ -424,7 +437,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	
 	private long timeOfLastIndividualDistributionMs = System.currentTimeMillis();
-	protected void distributeIndividualToNeighours(Individual individual, Problem problem) {
+	protected void distributeIndividualToNeighours(Individual individual, Problem problem, String jobID) {
 		
 		if (individual == null) {
 			return;
@@ -442,7 +455,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			AgentDescription description = getAgentDescription(problem);
 			
 			IndividualWrapper individualWrapper = new IndividualWrapper();
-			individualWrapper.setJobID(problem.getProblemID());
+			individualWrapper.setJobID(jobID);
 			individualWrapper.setAgentDescription(description);
 			individualWrapper.setIndividual(individual);
 			
@@ -460,13 +473,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		AgentDescription description = new AgentDescription();
 		description.setAgentConfiguration(agentConfiguration);
-		description.setProblemToolClass(problem.getProblemToolClass());
+		description.importProblemToolClass(computingThread.getProblemTool());
 		
 		return description;
 	}
 	
 	protected void processIndividualFromInitGeneration(Individual individual,
-			double fitness, long generationNumber, Problem problem) {
+			double fitness, long generationNumber, Problem problem, String jobID) {
 		
 		if (generationNumber != -1) {
 			throw new IllegalStateException();
@@ -480,10 +493,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		// update saved best result of computing
 		ResultOfComputing resultOfComputingNew = new ResultOfComputing();
+		resultOfComputingNew.setJobID(jobID);
 		resultOfComputingNew.setBestIndividual(individual);
 		resultOfComputingNew.setFitnessValue(fitness);
 		
-		setBestresultOfComputing(resultOfComputingNew);
+		computingThread.setBestresultOfComputing(resultOfComputingNew);
 		
 		
 		// send individual description to Agent DataManager
@@ -508,7 +522,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		getLogger().log(Level.INFO, resultLog);
 		
 		// update saved best result of computing
-		double fitnessSavedAsBest = getBestresultOfComputing().getFitnessValue();
+		double fitnessSavedAsBest = computingThread.getBestresultOfComputing().getFitnessValue();
 		boolean isNewIndividualBetter =
 				ProblemToolEvaluation.isFistFitnessBetterThanSecond(
 							fitness, fitnessSavedAsBest, problem);
@@ -519,7 +533,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			resultOfComputingNew.setBestIndividual(individual);
 			resultOfComputingNew.setFitnessValue(fitness);
 			
-			setBestresultOfComputing(resultOfComputingNew);
+			computingThread.setBestresultOfComputing(resultOfComputingNew);
 			
 			
 			// send individual description to Agent DataManager
@@ -546,7 +560,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected void processRecievedIndividual(IndividualWrapper receivedIndividualW,
 			double receivedFitness, long generationNumber, Problem problem) {
 		
-		ResultOfComputing resultOfComputing = getBestresultOfComputing();
+		ResultOfComputing resultOfComputing = computingThread.getBestresultOfComputing();
 		double bestFitness = resultOfComputing.getFitnessValue();
 		
 		boolean isReceivedIndividualBetter =
@@ -570,7 +584,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			resultOfComputingNew.setBestIndividual(receivedIndividual);
 			resultOfComputingNew.setFitnessValue(receivedFitness);
 			
-			setBestresultOfComputing(resultOfComputingNew);
+			computingThread.setBestresultOfComputing(resultOfComputingNew);
 			
 			
 			double fitnessImprovement = Math.abs(receivedFitness -bestFitness);

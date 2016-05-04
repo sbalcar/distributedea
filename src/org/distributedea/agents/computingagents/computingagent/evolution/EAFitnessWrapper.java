@@ -36,7 +36,7 @@ public class EAFitnessWrapper extends FitnessFunction {
 		
 		Individual individual = null;
 		try {
-			individual = Convertor.convertToIndividual(chromosome, problem, conf);
+			individual = Convertor.convertToIndividual(chromosome, problem, problemTool, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Invalid Configuration", e);
 			return -1;

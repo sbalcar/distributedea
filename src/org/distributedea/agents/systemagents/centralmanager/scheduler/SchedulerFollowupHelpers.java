@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import jade.core.AID;
 
@@ -25,14 +26,17 @@ public class SchedulerFollowupHelpers implements Scheduler {
 	private boolean NEW_STATISTICS_FOR_EACH_QUERY = true;
 	
 	private int numberOfReplaning = 0;
+	private String jobID;
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, List<AgentConfiguration> configurations,
+			Problem problem, String jobID, List<AgentConfiguration> configurations,
 			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException {
 		
+		this.jobID = jobID;
+		
 		SchedulerRunEachMethodOnce scheduler = new SchedulerRunEachMethodOnce();
-		scheduler.agentInitialization(centralManager, problem, configurations,
+		scheduler.agentInitialization(centralManager, problem, jobID, configurations,
 				availablProblemTools, logger);
 		
 	}
@@ -110,20 +114,23 @@ public class SchedulerFollowupHelpers implements Scheduler {
 		}
 		
 		String minPriorityAgentName = minPriorityDescription.getAgentConfiguration().getAgentName();
-		System.out.println("The worst: " + minPriorityAgentName + " priority: " + minPriority);
+		logger.log(Level.INFO, "The worst: " + minPriorityAgentName + " priority: " + minPriority);
 
 		String maxPriorityAgentName = maxPriorityDescription.getAgentConfiguration().getAgentName();
-		System.out.println("The best : " + maxPriorityAgentName + " priority: " + maxPriority);
+		logger.log(Level.INFO, "The best : " + maxPriorityAgentName + " priority: " + maxPriority);
 		
 		
 		AgentConfiguration bestConfiguration = maxPriorityDescription.getAgentConfiguration();
 		bestConfiguration.editAgentName();
+		Class<?> bestProblemToolClass = maxPriorityDescription.exportProblemToolClass();
+
+		
 		AID worstAID = new AID(minPriorityAgentName, false);
 		
 		// kill agent with the smallest priority and run the agent with the highest priority
 		try {
 			SchedulerTool.killAndCreateAgent(centralManager, worstAID,
-						bestConfiguration, problem, logger);
+						bestConfiguration, problem, bestProblemToolClass, jobID, logger);
 		} catch (SchedulerException e) {
 			logger.logThrowable("Error by replacing agent", e);
 			throw new SchedulerException("");

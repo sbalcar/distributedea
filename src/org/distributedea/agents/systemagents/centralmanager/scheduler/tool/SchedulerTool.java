@@ -35,7 +35,7 @@ public class SchedulerTool {
 	}
 	
 	public static void killAndCreateAgent(Agent_CentralManager centralManager, AID worstAID,
-			AgentConfiguration bestConfiguration, Problem problem, AgentLogger logger) throws SchedulerException {
+			AgentConfiguration bestConfiguration, Problem problem, Class<?> problemTool, String jobID, AgentLogger logger) throws SchedulerException {
 
 		
 		// kill worst agent
@@ -65,7 +65,7 @@ public class SchedulerTool {
 		
 		// start computing
 		ComputingAgentService.sendStartComputing(
-				centralManager, newAgent, problem, logger);
+				centralManager, newAgent, problem, problemTool, jobID, logger);
 	}
 	
 	public static void killAllComputingAgent(Agent_CentralManager centralManager, AgentLogger logger) {

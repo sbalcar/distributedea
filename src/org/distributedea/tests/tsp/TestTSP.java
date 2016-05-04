@@ -4,6 +4,7 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
 import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSwap;
@@ -105,7 +106,9 @@ public class TestTSP {
 				org.distributedea.Configuration.getInputProblemFile(inputFileName + ".tsp");
 		
 		Problem problem = problemTool.readProblem(problemFileName, logger);
-		problem.setProblemToolClass(problemTool.getClass().getName());
+		ProblemWrapper problemWrapper = new ProblemWrapper();
+		problemWrapper.setProblemToolClass(problemTool.getClass().getName());
+
 		
 		
 		Individual individual = (IndividualPermutation)

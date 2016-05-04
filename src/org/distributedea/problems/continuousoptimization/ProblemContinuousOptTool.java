@@ -200,7 +200,8 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 			return null;
 		}
 		
-		ProblemContinousOpt problem = new ProblemContinousOpt();		
+		ProblemContinousOpt problem = new ProblemContinousOpt();
+		problem.setProblemFileName(inputFileName);
 		problem.setFunctionID(functionID);
 		problem.setDimension(dimension);
 		problem.setIntervals(intervals);

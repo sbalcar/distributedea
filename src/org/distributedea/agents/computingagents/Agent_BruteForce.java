@@ -7,9 +7,9 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
-import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
 /**
@@ -22,21 +22,15 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected boolean isAbleToSolve(Class<?> problem, Class<?> representation) {
+	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 		
 		return true;
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
-		
-		if (! isAbleToSolve(problem)) {
-			commitSuicide();
-			return;
-		}
-		
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problem.getProblemToolClass(), getLogger());
+	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID, Behaviour behaviour) throws ProblemToolException {
+				
+		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
 		
 		long generationNumberI = -1;
@@ -48,7 +42,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualI,
-				fitnessI, generationNumberI, problem);
+				fitnessI, generationNumberI, problem, jobID);
 		
 		while (individualI != null && computingThread.continueInTheNextGeneration()) {
 			
@@ -66,7 +60,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 			
 			// send new Individual to distributed neighbors
 			if (InputConfiguration.individualDistribution) {
-				distributeIndividualToNeighours(individualI, problem);
+				distributeIndividualToNeighours(individualI, problem, jobID);
 			}
 			
 			// take received individual to new generation

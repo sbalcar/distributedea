@@ -28,13 +28,15 @@ import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.helpmate.HelpmateList;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 public class ComputingAgentService {
 
 	public static boolean sendStartComputing(Agent_DistributedEA agent, AID computingAgent,
-			Problem problem, AgentLogger logger) {
+			Problem problem, Class<?> problemTool, String jobID, AgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -49,8 +51,13 @@ public class ComputingAgentService {
 		msgStartComputing.setLanguage(agent.getCodec().getName());
 		msgStartComputing.setOntology(ontology.getName());
 
+		ProblemWrapper wrapper = new ProblemWrapper();
+		wrapper.setJobID(jobID);
+		wrapper.setProblemFileName(problem.getProblemFileName());
+		wrapper.importProblemToolClass(problemTool);
+		
 		StartComputing startComputing = new StartComputing();
-		startComputing.setProblem(problem);
+		startComputing.setProblemWrapper(wrapper);
 		
 		Action action = new Action(agent.getAID(), startComputing);
 		
@@ -80,7 +87,7 @@ public class ComputingAgentService {
 	}
 	
 	
-	public static boolean sendPrepareYourselfToKill(Agent_DistributedEA agent, AID computingAgent,
+	public static EverythingPreparedToBeKilled sendPrepareYourselfToKill(Agent_DistributedEA agent, AID computingAgent,
 			AgentLogger logger) {
 		
 		if (agent == null) {
@@ -90,29 +97,52 @@ public class ComputingAgentService {
 
 		Ontology ontology = ManagementOntology.getInstance();
 
-		ACLMessage msgStartComputing = new ACLMessage(ACLMessage.REQUEST);
-		msgStartComputing.addReceiver(computingAgent);
-		msgStartComputing.setSender(agent.getAID());
-		msgStartComputing.setLanguage(agent.getCodec().getName());
-		msgStartComputing.setOntology(ontology.getName());
+		ACLMessage msgPrepareYourselfToKill = new ACLMessage(ACLMessage.REQUEST);
+		msgPrepareYourselfToKill.addReceiver(computingAgent);
+		msgPrepareYourselfToKill.setSender(agent.getAID());
+		msgPrepareYourselfToKill.setLanguage(agent.getCodec().getName());
+		msgPrepareYourselfToKill.setOntology(ontology.getName());
 
 		PrepareYourselfToKill prepareToKill = new PrepareYourselfToKill();
 		
 		Action action = new Action(agent.getAID(), prepareToKill);
 		
 		try {
-			agent.getContentManager().fillContent(msgStartComputing, action);
+			agent.getContentManager().fillContent(msgPrepareYourselfToKill, action);
 			
 		} catch (Codec.CodecException e) {
 			logger.logThrowable("CodecException by sending PrepareYourselfToKill", e);
-			return false;
+			return null;
 		} catch (OntologyException e) {
 			logger.logThrowable("OntologyException by sending PrepareYourselfToKill", e);
-			return false;
+			return null;
 		}
-	
-		agent.send(msgStartComputing);
-		return true;
+		
+		ACLMessage msgRetursName = null;
+		try {
+			msgRetursName = FIPAService
+					.doFipaRequestClient(agent, msgPrepareYourselfToKill);
+		} catch (FIPAException e) {
+			logger.logThrowable("FIPAException by receiving ResultOfComputing", e);
+			return null;
+		}
+		
+		EverythingPreparedToBeKilled everythingPreparedToBeKilled = null;
+		try {
+			Result result = (Result)
+					agent.getContentManager().extractContent(msgRetursName);
+
+			everythingPreparedToBeKilled = (EverythingPreparedToBeKilled) result.getValue();
+
+		} catch (UngroundedException e) {
+			logger.logThrowable("UngroundedException by receiving ResultOfComputing", e);
+		} catch (CodecException e) {
+			logger.logThrowable("CodecException by receiving ResultOfComputing", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by receiving ResultOfComputing", e);
+		}
+		
+		return everythingPreparedToBeKilled;
 	}
 	
 	public static ResultOfComputing sendAccessesResult(Agent_DistributedEA agent,

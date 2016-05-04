@@ -2,7 +2,6 @@ package org.distributedea.agents.computingagents;
 
 import java.util.Random;
 import java.util.Vector;
-import java.util.logging.Level;
 
 import jade.core.behaviours.Behaviour;
 
@@ -18,6 +17,7 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
@@ -28,8 +28,14 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected boolean isAbleToSolve(Class<?> problem, Class<?> representation) {
+	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 
+		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
+				problemStruct.getProblemToolClass(), getLogger());
+		
+		Class<?> problem = problemStruct.getProblem().getClass();
+		Class<?> representation = problemTool.reprezentationWhichUses();
+		
 		boolean isAble = false;
 		
 		
@@ -51,16 +57,9 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
-
-		if (! isAbleToSolve(problem)) {
-			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
-			commitSuicide();
-			return;
-		}
+	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID, Behaviour behaviour) throws ProblemToolException {
 	
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problem.getProblemToolClass(), getCALogger());
+		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
 		
 		
@@ -87,7 +86,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualI,
-				fitnessI, generationNumberI, problem);
+				fitnessI, generationNumberI, problem, jobID);
 		
 		
 		while (computingThread.continueInTheNextGeneration()) {
@@ -144,7 +143,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			// send new Individual to distributed neighbors
 			if (InputConfiguration.individualDistribution) {
-				distributeIndividualToNeighours(individualNew, problem);
+				distributeIndividualToNeighours(individualNew, problem, jobID);
 			}
 			
 			//take received individual to new generation

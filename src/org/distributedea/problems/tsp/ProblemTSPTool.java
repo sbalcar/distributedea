@@ -41,6 +41,7 @@ public abstract class ProblemTSPTool implements ProblemTool {
 		}
 		
 		ProblemTSPGPS problem = new ProblemTSPGPS();
+		problem.setProblemFileName(inputProblemFileName);
 		problem.setPositions(positions);
 		
 		return problem;

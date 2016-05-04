@@ -239,34 +239,14 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		ComputingAgentService.sendPrepareYourselfToKill(this, aid, getLogger());
 		
 		
-		final String agentNameToKillFinal = agentNameToKill;
 		final AgentController agentControllerFinal = agentController;
+
+ 		try {
+ 			agentControllerFinal.kill();
+		} catch (StaleProxyException e) {
+			getLogger().log(Level.INFO, "Agent had already killed himself");
+		}
 		
-		Runnable myRunnable = new Runnable() {
-
-		     public void run(){
-		    	 getLogger().log(Level.INFO, "Waiting for killing " + agentNameToKillFinal);
-		     
-		    	 try {
-		    		 Thread.sleep(1000);
-		    	 } catch (InterruptedException e1) {
-		    		 getLogger().log(Level.SEVERE, "Can't wait for killing himself");
-				 }
-		        
-		 		try {
-		 			agentControllerFinal.kill();
-				} catch (StaleProxyException e) {
-					getLogger().log(Level.INFO, "Agent had already killed himself");
-				}
-				
-		 		getLogger().log(Level.INFO, "Agent " + agentNameToKillFinal + " was killed");
-
-				
-		     }
-		   };
-
-		Thread thread = new Thread(myRunnable);
-		thread.start();
 		
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);

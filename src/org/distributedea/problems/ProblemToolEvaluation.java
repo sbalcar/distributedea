@@ -42,4 +42,16 @@ public class ProblemToolEvaluation {
 			double fitness2, Problem problem) {
 		return (fintess1 == fitness2);
 	}
+	
+	public static ProblemTool getProblemToolFromClass(Class<?> problemToolClass) {
+		
+		ProblemTool problemTool = null;
+		try {
+			problemTool = (ProblemTool) problemToolClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+		}
+		
+		return problemTool;
+	}
+	
 }

@@ -32,7 +32,7 @@ public class SchedulerDummy implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, List<AgentConfiguration> configurations,
+			Problem problem, String JobID, List<AgentConfiguration> configurations,
 			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
@@ -74,10 +74,8 @@ public class SchedulerDummy implements Scheduler {
 		
 		AID computingAgent = aidComputingAgents[0];
 		
-		
-		problem.setProblemToolClass(problemToolI.getName());
 		ComputingAgentService.sendStartComputing(
-				centralManager, computingAgent, problem, logger);
+				centralManager, computingAgent, problem, problemToolI, JobID, logger);
 		
 
 	}

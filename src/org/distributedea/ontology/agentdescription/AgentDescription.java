@@ -33,8 +33,14 @@ public class AgentDescription implements Concept {
 		this.problemToolClass = problemToolClass;
 	}
 
-	public Class<?> exportProblemToolClass() throws ClassNotFoundException {
-		return Class.forName(problemToolClass);
+	public Class<?> exportProblemToolClass() {
+		try {
+			return Class.forName(problemToolClass);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	public void importProblemToolClass(Class<?> problemToolClass) {
 		this.problemToolClass = problemToolClass.getName();

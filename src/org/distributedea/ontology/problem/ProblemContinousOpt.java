@@ -23,6 +23,9 @@ public class ProblemContinousOpt extends Problem {
 	/** Limiting the space intervals */
 	private List<Interval> intervals;
 
+	private String problemFileName;
+	
+	
 	public String getFunctionID() {
 		return functionID;
 	}
@@ -42,6 +45,16 @@ public class ProblemContinousOpt extends Problem {
 	}
 	public void setIntervals(List<Interval> intervals) {
 		this.intervals = intervals;
+	}
+	
+	@Override
+	public String getProblemFileName() {
+		return problemFileName;
+	}
+	@Override
+	public void setProblemFileName(String fileName) {
+		this.problemFileName = fileName;
+		
 	}
 	
 	@Override

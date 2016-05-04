@@ -27,7 +27,7 @@ public class SchedulerRunOneSeveralTimes implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, List<AgentConfiguration> configurations,
+			Problem problem, String jobID, List<AgentConfiguration> configurations,
 			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException {
 
 		
@@ -61,10 +61,9 @@ public class SchedulerRunOneSeveralTimes implements Scheduler {
 		
 		// start computing in all created computing agents
 		for (AID aidComputingAgentI : aidComputingAgents) {
-						
-			problem.setProblemToolClass(problemToolI.getName());
+			
 			ComputingAgentService.sendStartComputing(
-					centralManager, aidComputingAgentI, problem, logger);
+					centralManager, aidComputingAgentI, problem, problemToolI, jobID, logger);
 
 		}	
 		

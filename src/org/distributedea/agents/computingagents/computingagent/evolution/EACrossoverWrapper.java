@@ -113,7 +113,7 @@ public class EACrossoverWrapper implements GeneticOperator {
 		Individual individualPerm1 = null;
 		try {
 			individualPerm1 = Convertor.convertToIndividual(
-					chromosome1, problem, conf);
+					chromosome1, problem, problemTool, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Chromosome to Individual", e);
 			return null;
@@ -123,7 +123,7 @@ public class EACrossoverWrapper implements GeneticOperator {
 		Individual individualPerm2 = null;
 		try {
 			individualPerm2 = Convertor.convertToIndividual(
-					chromosome2, problem, conf);
+					chromosome2, problem, problemTool, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Chromosome to Individual", e);
 			return null;

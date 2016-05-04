@@ -115,8 +115,6 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 		}
 		
 		Problem problem = problemTool.readProblem(problemFileName, logger);
-		problem.setProblemID(jobID);
-				
 		
 		Scheduler scheduler;
 		try {
@@ -127,10 +125,10 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 		}
 		
 		Agent_CentralManager centralManager = (Agent_CentralManager) myAgent;
-		scheduler.agentInitialization(centralManager, problem, agentConfigurations,
+		scheduler.agentInitialization(centralManager, problem, jobID, agentConfigurations,
 				availableProblemTools, logger);
 		
-			
+		long generation = 0;
 		while (scheduler.continueWithComputingInTheNextGeneration()) {
 			
 			// sleep
@@ -156,7 +154,7 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 			saveResult(resultI);
 			
 			// log information about re-planning
-			logger.log(Level.INFO, "Replanning");
+			logger.log(Level.INFO, "Replanning: " + generation++);
 			
 			// re-planning
 			scheduler.replan(centralManager, problem, agentConfigurations,
@@ -190,9 +188,11 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 	
 	private void saveResult(ResultOfComputing bestResult) {
 		
-		logger.log(Level.INFO, "" + bestResult.getFitnessValue());
+		if (bestResult != null) {
+			logger.log(Level.INFO, "" + bestResult.getFitnessValue());
 		
-		DataManagerService.sendResultOfComputing((Agent_DistributedEA) this.myAgent, bestResult, logger);
+			DataManagerService.sendResultOfComputing((Agent_DistributedEA) this.myAgent, bestResult, logger);
+		}
 	}
 	
 }

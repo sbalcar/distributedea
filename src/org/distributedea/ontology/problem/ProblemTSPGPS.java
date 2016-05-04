@@ -13,7 +13,7 @@ public class ProblemTSPGPS extends ProblemTSP {
 	private static final long serialVersionUID = 1L;
 
 	private List<PositionGPS> positions;
-
+	private String problemFileName;
 
 	@Override
 	public List<Position> exportPositions() {
@@ -48,6 +48,17 @@ public class ProblemTSPGPS extends ProblemTSP {
 		
 		return null;
 	}
+	
+	
+	@Override
+	public String getProblemFileName() {
+		return problemFileName;
+	}
+	@Override
+	public void setProblemFileName(String fileName) {
+		this.problemFileName = fileName;
+	}
+	
 	
 	public int numberOfPositions() {
 		return positions.size();

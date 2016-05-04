@@ -11,7 +11,6 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.ProblemToolValidation;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.Gene;
@@ -124,14 +123,9 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	public static Individual convertToIndividual(IChromosome chromosome,
-			Problem problem, Configuration conf) throws InvalidConfigurationException {
+			Problem problem, ProblemTool problemTool, Configuration conf) throws InvalidConfigurationException {
 	
 		Individual convertedIndividual = null;
-		
-		String problemToolClass = problem.getProblemToolClass();
-		
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problemToolClass, null);
 		
 		Class<?> reprezentation = problemTool.reprezentationWhichUses();
 		

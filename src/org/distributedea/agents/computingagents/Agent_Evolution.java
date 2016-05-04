@@ -3,7 +3,6 @@ package org.distributedea.agents.computingagents;
 import jade.core.behaviours.Behaviour;
 
 import java.util.Vector;
-import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
@@ -19,6 +18,7 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.ProblemToolValidation;
@@ -41,8 +41,15 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
 
+
 	@Override
-	protected boolean isAbleToSolve(Class<?> problem, Class<?> representation) {
+	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
+
+		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
+				problemStruct.getProblemToolClass(), getLogger());
+		
+		Class<?> problem = problemStruct.getProblem().getClass();
+		Class<?> representation = problemTool.reprezentationWhichUses();
 		
 		boolean isAble = false;
 		
@@ -71,16 +78,9 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	protected void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
-
-		if (! isAbleToSolve(problem)) {
-			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
-			commitSuicide();
-			return;
-		}
-	
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problem.getProblemToolClass(), getCALogger());
+	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID, Behaviour behaviour) throws ProblemToolException {
+		
+		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
 		
 		int popSize = 50;
@@ -147,13 +147,13 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			// best chromosome from actual generation
 			IChromosome choosenChromosomeI = pop.getFittestChromosome();
 			Individual individualI =
-					Convertor.convertToIndividual(choosenChromosomeI, problem, conf);
+					Convertor.convertToIndividual(choosenChromosomeI, problem, problemTool, conf);
 			double fitnessI =
 					problemTool.fitness(individualI, problem, getCALogger());
 			
 			// save, log and distribute computed Individual
 			processIndividualFromInitGeneration(individualI,
-					fitnessI, generationNumberI, problem);
+					fitnessI, generationNumberI, problem, jobID);
 			
 			while (computingThread.continueInTheNextGeneration()) {
 				// increment next number of generation
@@ -171,7 +171,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				// best chromosome from actual generation
 				choosenChromosomeI = pop.getFittestChromosome();
 				individualI =
-						Convertor.convertToIndividual(choosenChromosomeI, problem, conf);
+						Convertor.convertToIndividual(choosenChromosomeI, problem, problemTool, conf);
 
 				fitnessI =
 						problemTool.fitness(individualI, problem, getCALogger());
@@ -182,7 +182,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				
 				// send new Individual to distributed neighbors
 				if (InputConfiguration.individualDistribution) {
-					distributeIndividualToNeighours(individualI, problem);
+					distributeIndividualToNeighours(individualI, problem, jobID);
 				}
 				
 				//take received individual to new generation

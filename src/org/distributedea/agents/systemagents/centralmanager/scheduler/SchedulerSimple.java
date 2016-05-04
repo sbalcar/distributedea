@@ -12,6 +12,7 @@ import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Sched
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
@@ -22,11 +23,15 @@ public class SchedulerSimple implements Scheduler {
 
 	int index = 2;
 	
+	private String jobID;
+	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, List<AgentConfiguration> configurations,
+			Problem problem, String jobID, List<AgentConfiguration> configurations,
 			List<Class<?>> availableProblemTools, AgentLogger logger) throws SchedulerException {
-				
+		
+		this.jobID = jobID;
+		
 		List<NodeInfo> availableNodes = SchedulerTool.getAvailableNodes(centralManager, logger);
 		
 		initializeComputingAgents(centralManager, availableNodes, configurations, logger);
@@ -78,12 +83,11 @@ public class SchedulerSimple implements Scheduler {
 		for (AID computingAgentI : aidComputingAgents) {
 			
 			Class<?> problemToolClass = availableProblemTools.get(problemToolIndex);
-			problem.setProblemToolClass(problemToolClass.getName());
 			
 			problemToolIndex = (problemToolIndex +1) % availableProblemTools.size();
 			
 			ComputingAgentService.sendStartComputing(
-					centralManager, computingAgentI, problem, logger);
+					centralManager, computingAgentI, problem, problemToolClass, jobID, logger);
 		}
 
 	}
@@ -148,9 +152,12 @@ public class SchedulerSimple implements Scheduler {
 		AID worstAID = aidOfComputingAgents[worstIndex];
 
 		AgentConfiguration bestConfiguration = bestResult.exportAgentConfiguration();
+		AgentDescription bestDescription = bestResult.getAgentDescription();
+		Class<?> bestProblemToolClass = bestDescription.exportProblemToolClass();
+		String jobID = bestResult.getJobID();
 		
 		SchedulerTool.killAndCreateAgent(centralManager, worstAID,
-				bestConfiguration, problem, logger);
+				bestConfiguration, problem, bestProblemToolClass, jobID, logger);
 	}
 	
 	@Override

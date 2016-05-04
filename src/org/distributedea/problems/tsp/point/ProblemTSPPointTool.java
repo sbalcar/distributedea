@@ -26,6 +26,7 @@ public abstract class ProblemTSPPointTool extends ProblemTSPTool {
 		}
 		
 		ProblemTSPPoint problem = new ProblemTSPPoint();
+		problem.setProblemFileName(inputFileName);
 		problem.setPositions(positions);
 		
 		return problem;

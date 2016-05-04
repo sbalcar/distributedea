@@ -121,27 +121,10 @@ public class Configuration {
 	 * @param fileName
 	 * @return
 	 */
-	public static String getResultFile(int fileNumber) {
+	public static String getResultFile(String fileID) {
 		
 		return getResultDirectory() + File.separator +
-				"result" + fileNumber +".txt";
-	}
-	
-	/**
-	 * Provides unique file number
-	 * @param fileName
-	 * @return
-	 */
-	public static int getUniqueResultFileNumber() {
-		
-		int number = -1;
-		
-		File file;
-		do {
-			file = new File(getResultFile(number++));
-		} while(file.exists());
-		
-		return number;
+				"result-" + fileID +".txt";
 	}
 	
 	/**

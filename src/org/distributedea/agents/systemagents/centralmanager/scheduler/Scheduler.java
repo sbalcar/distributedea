@@ -22,7 +22,7 @@ public interface Scheduler {
 	 * @param logger
 	 */
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, List<AgentConfiguration> configurations,
+			Problem problem, String JobID, List<AgentConfiguration> configurations,
 			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException;
 	
 	/**

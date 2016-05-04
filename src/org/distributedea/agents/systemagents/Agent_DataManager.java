@@ -91,14 +91,12 @@ public class Agent_DataManager extends Agent_DistributedEA {
 
 	}
 	
-	private int number = Configuration.getUniqueResultFileNumber();
-	
 	protected ACLMessage respondToResultOfComputing(ACLMessage request,
 			Action action) {
 		
 		ResultOfComputing result = (ResultOfComputing)action.getAction();
 		
-		String fileName = Configuration.getResultFile(number);
+		String fileName = Configuration.getResultFile(result.getJobID());
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
 			writer.append(result.getFitnessValue() + "\n");

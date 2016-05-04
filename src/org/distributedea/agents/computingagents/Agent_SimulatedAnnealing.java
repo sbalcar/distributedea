@@ -9,9 +9,9 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
-import org.distributedea.problems.ProblemToolValidation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
 /**
@@ -30,8 +30,9 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 	double COOLING_RATE = 0.002;
 	
 	
+
 	@Override
-	protected boolean isAbleToSolve(Class<?> problem, Class<?> representation) {
+	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 
 		return true;
 	}
@@ -56,17 +57,9 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
     }
     
    	@Override
-   	protected void startComputing(Problem problem, Behaviour behaviour) throws ProblemToolException {
-		
-		if (! isAbleToSolve(problem)) {
-			getCALogger().log(Level.INFO, "Agent can't solve this Problem");
-			commitSuicide();
-			return;
-		}
-
-		
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problem.getProblemToolClass(), getCALogger());
+   	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID, Behaviour behaviour) throws ProblemToolException {
+				
+		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
 		
 		long generationNumberI = -1;
@@ -79,7 +72,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		
 		//saves data in Agent DataManager
 		processIndividualFromInitGeneration(individualI,
-    			fitnessI, generationNumberI, problem);
+    			fitnessI, generationNumberI, problem, jobID);
 		
 		double temperatureI = TEMPERATURE;
         double coolingRateI = COOLING_RATE;
@@ -119,7 +112,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
             
 			// send new Individual to distributed neighbors
 			if (InputConfiguration.individualDistribution) {
-				distributeIndividualToNeighours(individualI, problem);
+				distributeIndividualToNeighours(individualI, problem, jobID);
 			}
             
 			//take received individual to new generation

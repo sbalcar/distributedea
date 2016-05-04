@@ -13,6 +13,7 @@ import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
 import org.distributedea.ontology.problem.tsp.PositionPoint;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 public class ComputingOntology extends BeanOntology {
 
@@ -27,6 +28,7 @@ public class ComputingOntology extends BeanOntology {
             add(StartComputing.class);
             add(individualPackage);
             
+            add(ProblemWrapper.class);
             add(Problem.class);
             
             add(ProblemTSPGPS.class);
