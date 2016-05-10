@@ -1,6 +1,5 @@
 package org.distributedea.agents.systemagents.centralmanager.scheduler;
 
-import java.util.List;
 
 import jade.core.AID;
 
@@ -11,11 +10,13 @@ import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
+import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
-public class SchedulerRunEachMethodOnce implements Scheduler {
+public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 
 	int NODE_INDEX = 0;
 	
@@ -24,8 +25,8 @@ public class SchedulerRunEachMethodOnce implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, String jobID, List<AgentConfiguration> configurations,
-			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException {
+			Job job, AgentConfigurations configurations,
+			AgentLogger logger) throws SchedulerException {
 
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
@@ -41,21 +42,15 @@ public class SchedulerRunEachMethodOnce implements Scheduler {
 		
 
 		// create one agent for each configuration
-		for (AgentConfiguration agentConfigurationI : configurations) {
+		for (AgentConfiguration agentConfigurationI : configurations.getAgentConfigurations()) {
 						
 			ManagerAgentService.sendCreateAgent(centralManager,
 					managerAidI, agentConfigurationI, logger);
 
 		}
 		
-
 		// chooses ProblemTool by index
-		Class<?> problemToolI;
-		try {
-			problemToolI = availablProblemTools.get(PROBLEM_TOOL_INDEX);
-		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new SchedulerException("ProblemTool not available");
-		}
+		Class<?> problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
 		
 		// search all Computing Agents
 		AID [] aidComputingAgents = centralManager.searchDF(
@@ -63,9 +58,15 @@ public class SchedulerRunEachMethodOnce implements Scheduler {
 		
 		// start computing in all created computing agents
 		for (AID aidComputingAgentI : aidComputingAgents) {
-						
+			
+			ProblemStruct problemStruct = new ProblemStruct();
+			problemStruct.setJobID(job.getJobID());
+			problemStruct.setIndividualDistribution(job.getIndividualDistribution());
+			problemStruct.setProblem(job.getProblem());
+			problemStruct.setProblemToolClass(problemToolI.getName());
+			
 			ComputingAgentService.sendStartComputing(
-					centralManager, aidComputingAgentI, problem, problemToolI, jobID, logger);
+					centralManager, aidComputingAgentI, problemStruct, logger);
 
 		}
 		
@@ -73,16 +74,11 @@ public class SchedulerRunEachMethodOnce implements Scheduler {
 
 	
 	@Override
-	public void replan(Agent_CentralManager centralManager, Problem problem,
-			List<AgentConfiguration> configurations,
-			List<Class<?>> availableProblemTools, AgentLogger logger) {
+	public void replan(Agent_CentralManager centralManager, Job job,
+			AgentConfigurations configurations, AgentLogger logger) {
 	}
 
-	@Override
-	public boolean continueWithComputingInTheNextGeneration() {
-		return true;
-	}
-
+	
 	@Override
 	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		

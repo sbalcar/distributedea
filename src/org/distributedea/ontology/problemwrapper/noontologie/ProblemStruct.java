@@ -13,6 +13,11 @@ public class ProblemStruct {
 	private String jobID;
 	
 	/**
+	 * Turns on broadcast computed individuals to distributed agents
+	 */
+	private boolean individualDistribution;
+	
+	/**
 	 * Problem Tool to use for solving Problem 
 	 */
 	private String problemToolClass;
@@ -30,6 +35,15 @@ public class ProblemStruct {
 		this.jobID = jobID;
 	}
 
+	
+	public boolean getIndividualDistribution() {
+		return individualDistribution;
+	}
+	public void setIndividualDistribution(boolean individualDistribution) {
+		this.individualDistribution = individualDistribution;
+	}
+	
+	
 	public String getProblemToolClass() {
 		return problemToolClass;
 	}
@@ -46,12 +60,14 @@ public class ProblemStruct {
 		return null;
 	}
 
+	
 	public Problem getProblem() {
 		return problem;
 	}
 	public void setProblem(Problem problem) {
 		this.problem = problem;
 	}
+	
 	
 	public boolean testIsValid(AgentLogger logger) {
 		

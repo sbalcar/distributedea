@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager;
+package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.job.noontology.JobWrapper;
 
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -20,10 +20,10 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Job> jobs;
+	private List<JobWrapper> jobs;
 	private AgentLogger logger;
 	
-	public ConsoleAutomatBehaviour(List<Job> jobs, AgentLogger logger) {
+	public ConsoleAutomatBehaviour(List<JobWrapper> jobs, AgentLogger logger) {
 		this.jobs = jobs;
 		this.logger = logger;
 	}
@@ -67,9 +67,9 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 
 	protected void startCommand(String jobID) {
 		
-		Job job = null;
+		JobWrapper job = null;
 		
-		for (Job jobI: jobs) {
+		for (JobWrapper jobI: jobs) {
 			if (jobID.equals(jobI.getJobID())) {
 				job = jobI;
 			}

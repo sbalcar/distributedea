@@ -13,12 +13,5 @@ public class InputConfiguration {
 	 * in the case of value is True straight starts computing
 	 */
 	public static boolean automaticStart = true;
-		
-	/**
-	 * Turns on broadcast computed individuals to distributed agents
-	 */
-	public static boolean individualDistribution = true;
 	
-	
-	public static int numberOfReplanning = 50;
 }

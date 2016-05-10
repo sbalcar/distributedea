@@ -39,11 +39,29 @@ public class AgentComputingLogger extends AgentLogger {
 		writeToFile(line);
 	}
 	
-	public void logBestResult(Individual individual, double fitness) {
-
-		String fileName = Configuration.getComputingAgentLogResultFile(agent.getAID());
+	public void logComputedResult(double fitness, long generationNumber, String jobID) {
 		
-		File dir = new File(Configuration.getComputingAgentLogResultDirectory());
+		String fileName = Configuration.getComputingAgentResultDirectory(agent.getAID(), jobID);
+		
+		try {
+			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
+			if (generationNumber == -1) {
+				writer.append(Configuration.COMMENT_CHAR + "Result of Individual distrubution\n");
+			}
+			writer.append(fitness + "\n");
+			writer.close();
+		} catch (IOException e) {
+			ConsoleLogger.logThrowable("Log message in Computing agent " +
+					agent.getAID() + "can't be logged", e);
+		}
+		
+	}
+	
+	public void logBestSolution(Individual individual, double fitness, String jobID) {
+
+		String fileName = Configuration.getComputingAgentSolutionFile(agent.getAID(), jobID);
+		
+		File dir = new File(Configuration.getComputingAgentLogSolutionDirectory(jobID));
 		if (! dir.exists()) {
 			dir.mkdir();
 		}
@@ -70,11 +88,11 @@ public class AgentComputingLogger extends AgentLogger {
 	 * @param deltaFitness
 	 */
 	public void logDiffImprovementOfDistribution(double deltaFitness, long generationNumber,
-			Individual individual, AgentDescription descriptionOfSolutionBuilder) {
+			Individual individual, AgentDescription descriptionOfSolutionBuilder, String jobID) {
 
-		String fileName = Configuration.getComputingAgentLogImprovementOfDistributionFile(agent.getAID());
+		String fileName = Configuration.getComputingAgentLogImprovementOfDistributionFile(agent.getAID(), jobID);
 		
-		File dir = new File(Configuration.getComputingAgentLogImprovementOfDistributionDirectory());
+		File dir = new File(Configuration.getComputingAgentLogImprovementOfDistributionDirectory(jobID));
 		if (! dir.exists()) {
 			dir.mkdir();
 		}
@@ -84,7 +102,7 @@ public class AgentComputingLogger extends AgentLogger {
 			if (generationNumber == -1) {
 				writer.append(Configuration.COMMENT_CHAR + "Delta improvement of Individual distrubution\n");
 			}
-			writer.append(Configuration.COMMENT_CHAR + "Generation: " + generationNumber + " - " + descriptionOfSolutionBuilder.getAgentConfiguration().getAgentName() +"\n");
+			writer.append(Configuration.COMMENT_CHAR + "Generation: " + generationNumber + " - " + descriptionOfSolutionBuilder.getAgentConfiguration().getAgentName() + "\n");
 			writer.append(deltaFitness + "\n");
 			writer.close();
 		} catch (IOException e) {
@@ -95,7 +113,7 @@ public class AgentComputingLogger extends AgentLogger {
 	}
 	
 	private void writeToFile(String line) {
-
+		
 		String fileName = Configuration.getComputingAgentLogFile(agent.getAID());
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
@@ -105,6 +123,7 @@ public class AgentComputingLogger extends AgentLogger {
 			ConsoleLogger.logThrowable("Log message in Computing agent " +
 					agent.getAID() + "can't be logged", e);
 		}
+
 	}
 
 	

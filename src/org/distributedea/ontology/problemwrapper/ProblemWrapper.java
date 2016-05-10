@@ -16,6 +16,9 @@ public class ProblemWrapper implements Concept {
 	 */
 	private String jobID;
 	
+	
+	private boolean individualDistribution;
+	
 	/**
 	 * Problem Tool to use for solving Problem 
 	 */
@@ -39,6 +42,15 @@ public class ProblemWrapper implements Concept {
 	 */
 	public void setJobID(String jobID) {
 		this.jobID = jobID;
+	}
+	
+	
+	
+	public boolean isIndividualDistribution() {
+		return individualDistribution;
+	}
+	public void setIndividualDistribution(boolean individualDistribution) {
+		this.individualDistribution = individualDistribution;
 	}
 	
 	
@@ -98,6 +110,7 @@ public class ProblemWrapper implements Concept {
 		
 		ProblemStruct struct = new ProblemStruct();
 		struct.setJobID(getJobID());
+		struct.setIndividualDistribution(individualDistribution);
 		struct.setProblemToolClass(getProblemToolClass());
 		struct.setProblem(exportProblem(logger));
 		

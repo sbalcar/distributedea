@@ -13,11 +13,12 @@ import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.management.computingnode.NodeInfoWrapper;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class SchedulerTool {
 
-	public static List<NodeInfo> getAvailableNodes(Agent_CentralManager centralManager, AgentLogger logger) {
+	public static NodeInfoWrapper getAvailableNodes(Agent_CentralManager centralManager, AgentLogger logger) {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
 				Agent_ManagerAgent.class.getName());
@@ -31,11 +32,14 @@ public class SchedulerTool {
 			nodeInfos.add(nodeInfoI);
 		}
 		
-		return nodeInfos;
+		NodeInfoWrapper wrapper = new NodeInfoWrapper();
+		wrapper.setNodeInfos(nodeInfos);
+		
+		return wrapper;
 	}
 	
 	public static void killAndCreateAgent(Agent_CentralManager centralManager, AID worstAID,
-			AgentConfiguration bestConfiguration, Problem problem, Class<?> problemTool, String jobID, AgentLogger logger) throws SchedulerException {
+			AgentConfiguration bestConfiguration, ProblemStruct problemStruct, AgentLogger logger) throws SchedulerException {
 
 		
 		// kill worst agent
@@ -65,7 +69,7 @@ public class SchedulerTool {
 		
 		// start computing
 		ComputingAgentService.sendStartComputing(
-				centralManager, newAgent, problem, problemTool, jobID, logger);
+				centralManager, newAgent, problemStruct, logger);
 	}
 	
 	public static void killAllComputingAgent(Agent_CentralManager centralManager, AgentLogger logger) {

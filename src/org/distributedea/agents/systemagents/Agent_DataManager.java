@@ -165,9 +165,9 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	 */
 	protected void cleanLogDirectory() {
 		
-		String logDirectoryName = Configuration.getComputingAgentLogDirectory();
+		//String logDirectoryName = Configuration.getComputingAgentLogDirectory();
 
-		cleanDirectory(logDirectoryName);
+		//cleanDirectory(logDirectoryName);
 	}
 	
 	/**
@@ -175,9 +175,9 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	 */
 	protected void cleanLogImprovementOfDistributionDirectory() {
 		
-		String logDirectoryName = Configuration.getComputingAgentLogImprovementOfDistributionDirectory();
+		//String logDirectoryName = Configuration.getComputingAgentLogImprovementOfDistributionDirectory();
 		
-		cleanDirectory(logDirectoryName);
+		//cleanDirectory(logDirectoryName);
 	}
 
 	/**
@@ -197,5 +197,32 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	    }
 	}
 
+	public static void createSpaceForJob(String jobID) {
+		
+		String logDirectoryName = Configuration.getLogDirectory();
+		File logDirectory = new File(logDirectoryName);
+		if (! logDirectory.isDirectory()) {
+			logDirectory.mkdir();
+		}
+		
+		String logCADirectoryName = Configuration.getComputingAgentLogDirectory(jobID);
+		File logCADirectory = new File(logCADirectoryName);
+		if (! logCADirectory.isDirectory()) {
+			logCADirectory.mkdir();
+		}
+		
+		String logCAResultDirectoryName = Configuration.getComputingAgentLogSolutionDirectory(jobID);
+		File logCAResultDirectory = new File(logCAResultDirectoryName);
+		if (! logCAResultDirectory.isDirectory()) {
+			logCAResultDirectory.mkdir();
+		}
+		
+		String logCAImprovementDirectoryName = Configuration.getComputingAgentLogImprovementOfDistributionDirectory(jobID);
+		File logCAImprovementDirectory = new File(logCAImprovementDirectoryName);
+		if (! logCAImprovementDirectory.isDirectory()) {
+			logCAImprovementDirectory.mkdir();
+		}
+		
+	}
 	
 }

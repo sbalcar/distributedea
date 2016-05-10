@@ -1,41 +1,71 @@
 package org.distributedea.agents.systemagents.centralmanager.scheduler;
 
+import jade.core.AID;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
+import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
+import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.ontology.management.computingnode.NodeInfoWrapper;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
 public class SchedulerInitialization implements Scheduler {
 
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, String jobID, List<AgentConfiguration> configurations,
-			List<Class<?>> availablProblemTools, AgentLogger logger)
-			throws SchedulerException {
+			Job job, AgentConfigurations configurations,
+			AgentLogger logger) throws SchedulerException {
 		
 		List<AgentDescription> descriptions =
-				getCartesianProductOfConfigurationsAndTools(configurations, availablProblemTools);
+				getCartesianProductOfConfigurationsAndTools(configurations, job.getProblemTools());
+		int numberOfDescriotion = descriptions.size();
+		
+		NodeInfoWrapper availableNodes = SchedulerTool.getAvailableNodes(centralManager, logger);
+		int numberOfCPU = availableNodes.exportNumberOfCores();
+		List<AID> aids = availableNodes.exportManagersAID();
+		
+		int e = Math.max(numberOfCPU, numberOfDescriotion);
+		
+		for (int cpuIndex = 0; cpuIndex < e; cpuIndex++) {	
+		
+			AgentDescription agentDescriptionI = descriptions.get(cpuIndex % numberOfDescriotion);
+			AgentConfiguration agentConfigurationI = agentDescriptionI.getAgentConfiguration();
+			Class<?> problemToolI = agentDescriptionI.exportProblemToolClass();
+			
+			AID managerAgentOfEmptyCoreAIDI = aids.get(cpuIndex % aids.size());
+			
+			AID createdAgentI = ManagerAgentService.sendCreateAgent(centralManager,
+					managerAgentOfEmptyCoreAIDI, agentConfigurationI, logger);
+			
+			ProblemStruct problemStruct = new ProblemStruct();
+			problemStruct.setJobID(job.getJobID());
+			problemStruct.setIndividualDistribution(job.getIndividualDistribution());
+			problemStruct.setProblem(job.getProblem());
+			problemStruct.setProblemToolClass(problemToolI.getName());
+			
+			ComputingAgentService.sendStartComputing(
+					centralManager, createdAgentI, problemStruct, logger);
+		}
 		
 	}
-
+	
 	@Override
-	public boolean continueWithComputingInTheNextGeneration() {
-		return true;
+	public void replan(Agent_CentralManager centralManager, Job job,
+			AgentConfigurations configurations,
+			AgentLogger logger) throws SchedulerException {
 	}
 
-	@Override
-	public void replan(Agent_CentralManager centralManager, Problem problem,
-			List<AgentConfiguration> configurations,
-			List<Class<?>> availableProblemTools, AgentLogger logger)
-			throws SchedulerException {
-	}
-
+	
 	@Override
 	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		
@@ -45,13 +75,13 @@ public class SchedulerInitialization implements Scheduler {
 
 	
 	public static List<AgentDescription> getCartesianProductOfConfigurationsAndTools(
-			List<AgentConfiguration> configurations, List<Class<?>> problemTools) {
+			AgentConfigurations configurations, ProblemTools problemTools) {
 		
 		List<AgentDescription> descriptions = new ArrayList<AgentDescription>();
 		
-		for (AgentConfiguration configurationI : configurations) {
+		for (AgentConfiguration configurationI : configurations.getAgentConfigurations()) {
 			
-			for (Class<?> problemToolsI : problemTools) {
+			for (Class<?> problemToolsI : problemTools.getProblemTools()) {
 				
 				AgentDescription descriptionI = new AgentDescription();
 				descriptionI.setAgentConfiguration(configurationI);

@@ -57,13 +57,8 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		getLogger().log(Level.INFO, "Reading configuration from: " + fileName);
 
-		XmlConfigurationProvider configProvider =
-				new XmlConfigurationProvider();
 		AgentConfigurations configuration =
-				configProvider.getConfiguration(fileName, getLogger());
-
-		List<AgentConfiguration> agentConfigurations =
-				configuration.getAgentConfigurations();
+				XmlConfigurationProvider.getConfiguration(fileName, getLogger());
 
 		List<AgentConfiguration> managerAgentConfigurations =
 				new ArrayList<AgentConfiguration>();
@@ -71,7 +66,8 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		List<AgentConfiguration> noManagerAgentConfigurations =
 				new ArrayList<AgentConfiguration>();
 
-		for (AgentConfiguration agentConfigurationI : agentConfigurations) {
+		for (AgentConfiguration agentConfigurationI :
+				configuration.getAgentConfigurations()) {
 			String agentType = agentConfigurationI.getAgentType();
 
 			if (agentType.equals(Agent_ManagerAgent.class.getName())) {

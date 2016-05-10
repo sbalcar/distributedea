@@ -4,7 +4,6 @@ import jade.core.behaviours.Behaviour;
 
 import java.util.Vector;
 
-import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.evolution.Convertor;
 import org.distributedea.agents.computingagents.computingagent.evolution.EACrossoverWrapper;
@@ -181,7 +180,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 						fitnessI, generationNumberI, problem);
 				
 				// send new Individual to distributed neighbors
-				if (InputConfiguration.individualDistribution) {
+				if (computingThread.isIndividualDistribution()) {
 					distributeIndividualToNeighours(individualI, problem, jobID);
 				}
 				
@@ -190,7 +189,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				Individual recievedIndividual = recievedIndividualW.getIndividual();
 				double recievedFitnessI = problemTool.fitness(recievedIndividual,
 						problem, getCALogger());
-				if (InputConfiguration.individualDistribution &&
+				if (computingThread.isIndividualDistribution() &&
 						! Double.isNaN(recievedFitnessI) &&
 						ProblemToolEvaluation.isFistFitnessBetterThanSecond(
 								recievedFitnessI, fitnessI, problem)) {

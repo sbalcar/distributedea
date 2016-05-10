@@ -16,7 +16,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +62,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	private AgentLogger logger = null;
 	
 	// the set of received Individuals from distribution
-	protected List<IndividualWrapper> receivedIndividuals =
-			Collections.synchronizedList(new ArrayList<IndividualWrapper>());
+	protected IndividualModel receivedIndividuals = new IndividualModel();
 	
 	// computing thread
 	protected ComputingThread computingThread = null;
@@ -240,19 +238,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			throw new IllegalStateException("Recieved Individual is not valid");
 		}
 		
-		synchronized(receivedIndividuals) {
-			receivedIndividuals.add(individualWrapper);
-		}
+		receivedIndividuals.add(individualWrapper);
 	}
 	
 	protected IndividualWrapper getRecievedIndividual() {
 		
-		synchronized(receivedIndividuals) {
-			if (! receivedIndividuals.isEmpty()) {
-				return receivedIndividuals.remove(0);
-			}
-		}
-		return new IndividualWrapper();
+		return receivedIndividuals.getIndividual();		
 	}
 	
 	protected ACLMessage respondToAccessesResult(ACLMessage request,
@@ -505,7 +496,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		
 		// log individual as best result
-		getCALogger().logBestResult(individual, fitness);
+		getCALogger().logBestSolution(individual, fitness, computingThread.getJobID());
 	}
 
 	protected void processComputedIndividual(Individual individual,
@@ -515,11 +506,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			throw new IllegalStateException();
 		}
 		
-		// log in local file
-		String resultLog = "Generation " +
-				generationNumber + ": " +
-				fitness;
-		getLogger().log(Level.INFO, resultLog);
+		//log finess as result
+		getCALogger().logComputedResult(fitness, generationNumber, computingThread.getJobID());
+		
 		
 		// update saved best result of computing
 		double fitnessSavedAsBest = computingThread.getBestresultOfComputing().getFitnessValue();
@@ -540,9 +529,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			//logResultByUsingDatamanager(generationNumber, fitness);
 
 			
-			// log individual as best result
-			getCALogger().logBestResult(individual, fitness);
-						
+			// log individual as best solution
+			getCALogger().logBestSolution(individual, fitness, computingThread.getJobID());
+			
 		}
 		
 	}
@@ -586,11 +575,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			
 			computingThread.setBestresultOfComputing(resultOfComputingNew);
 			
-			
+			String jobID = receivedIndividualW.getJobID();
 			double fitnessImprovement = Math.abs(receivedFitness -bestFitness);
 			
 			getCALogger().logDiffImprovementOfDistribution(fitnessImprovement, generationNumber,
-					null, description);
+					receivedIndividual, description, jobID);
 		}
 
 	}

@@ -1,12 +1,11 @@
 package org.distributedea.agents.systemagents.centralmanager.scheduler;
 
-import java.util.List;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.job.noontology.Job;
 
 /**
  * Represents central planner of distributed evolution compute
@@ -14,22 +13,17 @@ import org.distributedea.ontology.problem.Problem;
  *
  */
 public interface Scheduler {
-
+	
 	/**
 	 * Initialize computing agents on distributed nodes
 	 * @param centralManager
 	 * @param configurations
 	 * @param logger
 	 */
-	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, String JobID, List<AgentConfiguration> configurations,
-			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException;
+	public abstract void agentInitialization(Agent_CentralManager centralManager,
+			Job job, AgentConfigurations configurations,
+			AgentLogger logger) throws SchedulerException;
 	
-	/**
-	 * Decide on the continuation of the calculation
-	 * @return
-	 */
-	public boolean continueWithComputingInTheNextGeneration();
 	
 	/**
 	 * Replan computing agents on distributed nodes
@@ -37,13 +31,13 @@ public interface Scheduler {
 	 * @param problemTool
 	 * @param logger
 	 */
-	public void replan(Agent_CentralManager centralManager,
-			Problem problem, List<AgentConfiguration> configurations,
-			List<Class<?>> availableProblemTools, AgentLogger logger) throws SchedulerException;
+	public abstract void replan(Agent_CentralManager centralManager,
+			Job job, AgentConfigurations configurations,
+			AgentLogger logger) throws SchedulerException;
 	
 	/**
 	 * Exit
 	 */
-	public void exit(Agent_CentralManager centralManager, AgentLogger logger);
+	public abstract void exit(Agent_CentralManager centralManager, AgentLogger logger);
 	
 }

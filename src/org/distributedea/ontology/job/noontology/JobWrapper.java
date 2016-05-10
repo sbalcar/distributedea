@@ -1,23 +1,41 @@
-package org.distributedea.ontology.job;
+package org.distributedea.ontology.job.noontology;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
 import com.thoughtworks.xstream.XStream;
 
 import jade.content.Concept;
 
-public class Job implements Concept {
+
+@XmlRootElement (name="jobs")
+public class JobWrapper implements Concept, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public JobWrapper() {
+	}
+	
 	/**
 	 * Declares Job IDentification
 	 */
 	private String jobID;
+	
+	/**
+	 * Define number of replaning of Scheduler
+	 */
+	private long countOfReplaning;
 	
 	/**
 	 * Inform about type of Problem to solve
@@ -37,7 +55,7 @@ public class Job implements Concept {
 	/**
 	 * Declares the set of available ProblemTools for Computing Agents
 	 */
-	private List<Class<?>> availableProblemTools;
+	private ProblemTools problemTools;
 	
 	
 	/**
@@ -45,18 +63,27 @@ public class Job implements Concept {
 	 */
 	private boolean individualDistribution;
 	
+	
 	/**
 	 * Declares the Scheduler Class which will be used to direction of the evolution
 	 */
-	private Class<?> scheduler;
-	
+	private List<Scheduler> schedulers;	
+	//@XmlElement
+
 	
 	public String getJobID() {
 		return jobID;
 	}
 	public void setJobID(String jobID) {
 		this.jobID = jobID;
-	}	
+	}
+	
+	public long getCountOfReplaning() {
+		return countOfReplaning;
+	}
+	public void setCountOfReplaning(long countOfReplaning) {
+		this.countOfReplaning = countOfReplaning;
+	}
 	
 	public Class<?> getProblemToSolve() {
 		return problemToSolve;
@@ -79,11 +106,11 @@ public class Job implements Concept {
 		this.methodsFileName = methodsFileName;
 	}
 	
-	public List<Class<?>> getAvailableProblemTools() {
-		return availableProblemTools;
+	public ProblemTools getProblemTools() {
+		return problemTools;
 	}
-	public void setAvailableProblemTools(List<Class<?>> availableProblemTools) {
-		this.availableProblemTools = availableProblemTools;
+	public void setProblemTools(ProblemTools problemTools) {
+		this.problemTools = problemTools;
 	}
 
 	public boolean isIndividualDistribution() {
@@ -93,26 +120,33 @@ public class Job implements Concept {
 		this.individualDistribution = individualDistribution;
 	}
 	
-	public Class<?> getScheduler() {
-		return scheduler;
+	public Scheduler getScheduler() {
+		if (this.schedulers == null || this.schedulers.isEmpty()) {
+			return null;
+		}
+		return this.schedulers.get(0);
 	}
-	public void setScheduler(Class<?> scheduler) {
-		this.scheduler = scheduler;
+	public void setScheduler(Scheduler scheduler) {
+		if (this.schedulers == null) {
+			this.schedulers = new ArrayList<Scheduler>();
+		}
+		this.schedulers.add(scheduler);
 	}
-	
 
 	/**
 	 * Exports structure as the XML String to the file
 	 * 
 	 * @throws FileNotFoundException
+	 * @throws JAXBException 
 	 */
-	public void exportXML(String fileName) throws FileNotFoundException {
+	public void exportXML(String fileName) throws FileNotFoundException, JAXBException {
 
 		String xml = exportXML();
-
+		System.out.println(xml);
 		PrintWriter file = new PrintWriter(fileName);
 		file.println(xml);
 		file.close();
+		
 	}
 	
 	/**
@@ -127,11 +161,11 @@ public class Job implements Concept {
 	}
 	
 	/**
-	 * Import the {@link Job} from the file
+	 * Import the {@link JobWrapper} from the file
 	 * 
 	 * @throws FileNotFoundException
 	 */
-	public static Job importXML(File file)
+	public static JobWrapper importXML(File file)
 			throws FileNotFoundException {
 
 		Scanner scanner = new Scanner(file);
@@ -139,19 +173,20 @@ public class Job implements Concept {
 		scanner.close();
 
 		return importXML(xml);
+		
 	}
 
 	/**
-	 * Import the {@link Job} from the String
+	 * Import the {@link JobWrapper} from the String
 	 */
-	public static Job importXML(String xml) {
+	public static JobWrapper importXML(String xml) {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
 
 		xstream.aliasAttribute("type", "class");
 
-		return (Job) xstream.fromXML(xml);
+		return (JobWrapper) xstream.fromXML(xml);
 	}
 	
 }

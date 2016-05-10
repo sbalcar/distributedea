@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import jade.core.behaviours.Behaviour;
 
-import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
@@ -57,7 +56,8 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, Class<?> problemToolClass,
+			String jobID, Behaviour behaviour) throws ProblemToolException {
 	
 		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
@@ -142,7 +142,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 					fitnessNew, generationNumberI, problem);
 			
 			// send new Individual to distributed neighbors
-			if (InputConfiguration.individualDistribution) {
+			if (computingThread.isIndividualDistribution()) {
 				distributeIndividualToNeighours(individualNew, problem, jobID);
 			}
 			
@@ -151,7 +151,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			Individual recievedIndividual = recievedIndividualW.getIndividual();
 			double recievedFitnessI = problemTool.fitness(recievedIndividual,
 					problem, getCALogger());
-			if (InputConfiguration.individualDistribution &&
+			if (computingThread.isIndividualDistribution() &&
 					! Double.isNaN(recievedFitnessI) &&
 					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
 							recievedFitnessI, fitnessI, problem) &&

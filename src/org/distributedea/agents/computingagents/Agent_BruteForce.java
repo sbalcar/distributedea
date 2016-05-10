@@ -2,7 +2,6 @@ package org.distributedea.agents.computingagents;
 
 import jade.core.behaviours.Behaviour;
 
-import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -59,7 +58,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 					fitnessI, generationNumberI, problem);
 			
 			// send new Individual to distributed neighbors
-			if (InputConfiguration.individualDistribution) {
+			if (computingThread.isIndividualDistribution()) {
 				distributeIndividualToNeighours(individualI, problem, jobID);
 			}
 			
@@ -68,7 +67,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 			Individual recievedIndividual = recievedIndividualW.getIndividual();
 			double recievedFitnessI = problemTool.fitness(recievedIndividual,
 					problem, getLogger());
-			if (InputConfiguration.individualDistribution &&
+			if (computingThread.isIndividualDistribution() &&
 					! Double.isNaN(recievedFitnessI) &&
 					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
 							recievedFitnessI, fitnessI, problem)) {

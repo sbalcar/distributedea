@@ -6,7 +6,6 @@ import java.util.logging.Level;
 
 import jade.core.behaviours.Behaviour;
 
-import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -33,7 +32,8 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID,
+			Behaviour behaviour) throws ProblemToolException {
 		
 		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
@@ -116,7 +116,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 					fitnessI, generationNumberI, problem);
 			
 			// send new Individual to distributed neighbors
-			if (InputConfiguration.individualDistribution) {
+			if (computingThread.isIndividualDistribution()) {
 				distributeIndividualToNeighours(individualI, problem, jobID);
 			}
 			
@@ -125,7 +125,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			Individual recievedIndividual = recievedIndividualW.getIndividual();
 			double recievedFitnessI = problemTool.fitness(recievedIndividual,
 					problem, getCALogger());
-			if (InputConfiguration.individualDistribution &&
+			if (computingThread.isIndividualDistribution() &&
 					! Double.isNaN(recievedFitnessI) &&
 					! tabuList.contains(recievedIndividual) &&
 					ProblemToolEvaluation.isFistFitnessBetterThanSecond(

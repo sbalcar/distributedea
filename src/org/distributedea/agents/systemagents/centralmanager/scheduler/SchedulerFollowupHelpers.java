@@ -8,45 +8,42 @@ import java.util.logging.Level;
 
 import jade.core.AID;
 
-import org.distributedea.InputConfiguration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
+import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.AgentDescriptionWrapper;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.HelpmateList;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class SchedulerFollowupHelpers implements Scheduler {
 
 	private boolean NEW_STATISTICS_FOR_EACH_QUERY = true;
 	
-	private int numberOfReplaning = 0;
-	private String jobID;
+	public SchedulerFollowupHelpers() {}
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Problem problem, String jobID, List<AgentConfiguration> configurations,
-			List<Class<?>> availablProblemTools, AgentLogger logger) throws SchedulerException {
+			Job job, AgentConfigurations configurations,
+			AgentLogger logger) throws SchedulerException {
 		
-		this.jobID = jobID;
-		
-		SchedulerRunEachMethodOnce scheduler = new SchedulerRunEachMethodOnce();
-		scheduler.agentInitialization(centralManager, problem, jobID, configurations,
-				availablProblemTools, logger);
+		SchedulerInitializationRunEachMethodOnce scheduler = new SchedulerInitializationRunEachMethodOnce();
+		scheduler.agentInitialization(centralManager, job, configurations,
+				logger);
 		
 	}
 
 	@Override
-	public void replan(Agent_CentralManager centralManager, Problem problem,
-			List<AgentConfiguration> configurations,
-			List<Class<?>> availableProblemTools, AgentLogger logger) throws SchedulerException {
-		
-		numberOfReplaning++;
+	public void replan(Agent_CentralManager centralManager, Job job,
+			AgentConfigurations configurations,
+			AgentLogger logger) throws SchedulerException {
+
 		
 		// search all Computing Agents
 		AID [] aidComputingAgents = centralManager.searchDF(
@@ -127,21 +124,22 @@ public class SchedulerFollowupHelpers implements Scheduler {
 		
 		AID worstAID = new AID(minPriorityAgentName, false);
 		
+		ProblemStruct problemStruct = new ProblemStruct();
+		problemStruct.setJobID(job.getJobID());
+		problemStruct.setIndividualDistribution(job.getIndividualDistribution());
+		problemStruct.setProblem(job.getProblem());
+		problemStruct.setProblemToolClass(bestProblemToolClass.getName());
+		
 		// kill agent with the smallest priority and run the agent with the highest priority
 		try {
 			SchedulerTool.killAndCreateAgent(centralManager, worstAID,
-						bestConfiguration, problem, bestProblemToolClass, jobID, logger);
+						bestConfiguration, problemStruct, logger);
 		} catch (SchedulerException e) {
 			logger.logThrowable("Error by replacing agent", e);
 			throw new SchedulerException("");
 		}
 	}
-
-	@Override
-	public boolean continueWithComputingInTheNextGeneration() {
-		return numberOfReplaning < InputConfiguration.numberOfReplanning;
-	}
-
+	
 	@Override
 	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		

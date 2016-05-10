@@ -34,7 +34,7 @@ public class XmlConfigurationProvider {
 	 * @param filePath
 	 * @return
 	 */
-	public AgentConfigurations getConfiguration(String filePath, AgentLogger logger) {
+	public static AgentConfigurations getConfiguration(String filePath, AgentLogger logger) {
 		
 		List<AgentConfiguration> agentConfigurations =
 				new ArrayList<AgentConfiguration>();
@@ -71,7 +71,7 @@ public class XmlConfigurationProvider {
 	 * @param nNode
 	 * @return
 	 */
-	private AgentConfiguration getAgent(Node nNode) {
+	private static AgentConfiguration getAgent(Node nNode) {
 		
 		Element eElement = (Element) nNode;
 		String name = eElement.getAttribute(NAME);
@@ -87,7 +87,7 @@ public class XmlConfigurationProvider {
 	 * @param agentElement
 	 * @return
 	 */
-	private List<Argument> getArguments(Element agentElement) {
+	private static List<Argument> getArguments(Element agentElement) {
 		
 		List<Argument> arguments = new ArrayList<Argument>();
 		

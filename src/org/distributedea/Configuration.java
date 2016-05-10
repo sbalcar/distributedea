@@ -127,28 +127,43 @@ public class Configuration {
 				"result-" + fileID +".txt";
 	}
 	
-	/**
-	 * Provides name of directory for log files of Computing Agents
-	 * @return
-	 */
-	public static String getComputingAgentLogDirectory() {
-
+	public static String getLogDirectory() {
 		return "log";
 	}
-
+	
 	/**
 	 * Provides name of directory for log files of Computing Agents
 	 * @return
 	 */
-	public static String getComputingAgentLogResultDirectory() {
+	public static String getComputingAgentLogDirectory(String jobID) {
 
-		return "log" + File.separator + "result";
+		return getLogDirectory() + File.separator + jobID;
 	}
 
-	public static String getComputingAgentLogImprovementOfDistributionDirectory() {
+	/**
+	 * Provides name of directory for Result files of Computing Agents
+	 * @return
+	 */
+	public static String getComputingAgentResultDirectory(AID computingAgentAID, String jobID) {
 
-		return "log" + File.separator + "improvementOfDistribution";
+		return getLogDirectory() + File.separator + jobID + File.separator
+				+ computingAgentAID.getLocalName() + ".rslt";
 	}
+	
+	/**
+	 * Provides name of directory for Solution files of Computing Agents
+	 * @return
+	 */
+	public static String getComputingAgentLogSolutionDirectory(String jobID) {
+
+		return getComputingAgentLogDirectory(jobID) + File.separator + "solution";
+	}
+
+	public static String getComputingAgentLogImprovementOfDistributionDirectory(String jobID) {
+
+		return getComputingAgentLogDirectory(jobID) + File.separator + "improvementOfDistribution";
+	}
+
 	
 	/**
 	 * Provides log file with a path for concrete Computing Agent
@@ -157,8 +172,20 @@ public class Configuration {
 	 */
 	public static String getComputingAgentLogFile(AID computingAgentAID) {
 
-		return getComputingAgentLogDirectory() + File.separator
+		return getLogDirectory() + File.separator
 				+ computingAgentAID.getLocalName() + ".log";
+	}
+	
+	
+	/**
+	 * Provides log file with a path for concrete Computing Agent
+	 * @param computingAgentAID
+	 * @return
+	 */
+	public static String getComputingAgentResultFile(AID computingAgentAID, String jobID) {
+
+		return getComputingAgentLogDirectory(jobID) + File.separator
+				+ computingAgentAID.getLocalName() + ".rslt";
 	}
 
 	/**
@@ -166,15 +193,15 @@ public class Configuration {
 	 * @param computingAgentAID - name of file contains on their AID
 	 * @return
 	 */
-	public static String getComputingAgentLogResultFile(AID computingAgentAID) {
+	public static String getComputingAgentSolutionFile(AID computingAgentAID, String jobID) {
 
-		return getComputingAgentLogResultDirectory() + File.separator
-				+ computingAgentAID.getLocalName() + ".rslt";
+		return getComputingAgentLogSolutionDirectory(jobID) + File.separator
+				+ computingAgentAID.getLocalName() + ".sol";
 	}
 	
-	public static String getComputingAgentLogImprovementOfDistributionFile(AID computingAgentAID) {
+	public static String getComputingAgentLogImprovementOfDistributionFile(AID computingAgentAID, String jobID) {
 
-		return getComputingAgentLogImprovementOfDistributionDirectory() + File.separator
+		return getComputingAgentLogImprovementOfDistributionDirectory(jobID) + File.separator
 				+ computingAgentAID.getLocalName() + ".impr";
 	}
 	

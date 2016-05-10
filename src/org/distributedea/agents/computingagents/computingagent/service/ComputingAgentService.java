@@ -18,6 +18,7 @@ import jade.lang.acl.ACLMessage;
 
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.ManagementOntology;
@@ -25,18 +26,19 @@ import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
 import org.distributedea.ontology.helpmate.HelpmateList;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class ComputingAgentService {
 
 	public static boolean sendStartComputing(Agent_DistributedEA agent, AID computingAgent,
-			Problem problem, Class<?> problemTool, String jobID, AgentLogger logger) {
+			ProblemStruct problemStruct, AgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -51,10 +53,16 @@ public class ComputingAgentService {
 		msgStartComputing.setLanguage(agent.getCodec().getName());
 		msgStartComputing.setOntology(ontology.getName());
 
+		String jobID = problemStruct.getJobID();
+		boolean individualDistribution = problemStruct.getIndividualDistribution();
+		String problemFileName = problemStruct.getProblem().getProblemFileName();
+		String problemTool = problemStruct.getProblemToolClass();
+		
 		ProblemWrapper wrapper = new ProblemWrapper();
 		wrapper.setJobID(jobID);
-		wrapper.setProblemFileName(problem.getProblemFileName());
-		wrapper.importProblemToolClass(problemTool);
+		wrapper.setIndividualDistribution(individualDistribution);
+		wrapper.setProblemFileName(problemFileName);
+		wrapper.setProblemToolClass(problemTool);
 		
 		StartComputing startComputing = new StartComputing();
 		startComputing.setProblemWrapper(wrapper);
@@ -145,6 +153,24 @@ public class ComputingAgentService {
 		return everythingPreparedToBeKilled;
 	}
 	
+	public static ResultOfComputingWrapper sendAccessesResult(Agent_CentralManager centralManager,
+			AgentLogger logger) {
+		
+		// Get Result of Computing
+		AID [] aidOfComputingAgents = centralManager.searchDF(
+				Agent_ComputingAgent.class.getName());
+		
+		ResultOfComputingWrapper resultOfComputingAgents = new ResultOfComputingWrapper();
+		for (AID computingAgentI : aidOfComputingAgents) {
+						
+			ResultOfComputing resultOfComputingI =
+					ComputingAgentService.sendAccessesResult(centralManager, computingAgentI, logger);
+			resultOfComputingAgents.addResultOfComputing(resultOfComputingI);
+		}
+		
+		return resultOfComputingAgents;
+	}
+
 	public static ResultOfComputing sendAccessesResult(Agent_DistributedEA agent,
 			AID computingAgent, AgentLogger logger) {
 		

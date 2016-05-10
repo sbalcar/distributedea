@@ -10,14 +10,14 @@ import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.systemagents.centralmanager.ConsoleAutomatBehaviour;
 import org.distributedea.agents.systemagents.centralmanager.InputJobQueue;
-import org.distributedea.agents.systemagents.centralmanager.StartComputingBehaviour;
+import org.distributedea.agents.systemagents.centralmanager.behaviours.ConsoleAutomatBehaviour;
+import org.distributedea.agents.systemagents.centralmanager.behaviours.StartComputingBehaviour;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.job.noontology.JobWrapper;
 
 public class Agent_CentralManager extends Agent_DistributedEA {
 
@@ -52,7 +52,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 			return;
 		}
 
-		List<Job> jobs = null;
+		List<JobWrapper> jobs = null;
 		try {
 			jobs = InputJobQueue.getInputJobs();
 		} catch (FileNotFoundException e) {
@@ -63,10 +63,11 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		if (InputConfiguration.automaticStart) {
 
 			if (jobs != null)
-				for (Job jobI: jobs) {
+				for (JobWrapper jobI: jobs) {
 					getLogger().log(Level.INFO, "Receiving job: " + jobI.getJobID());
 					Behaviour behaviourCompI =
 							new StartComputingBehaviour(jobI, getLogger());
+					Agent_DataManager.createSpaceForJob(jobI.getJobID());
 					addBehaviour(behaviourCompI);
 				}
 			

@@ -10,6 +10,7 @@ public class ComputingThread extends Thread {
 	private Agent_ComputingAgent agent;
 	
 	private String jobID;
+	private boolean individualDistribution;
 	private Class<?> problemToolClass;
 	private Problem problem;
 	private boolean isComputing;
@@ -19,6 +20,7 @@ public class ComputingThread extends Thread {
 	
 	public ComputingThread(Agent_ComputingAgent agent, ProblemStruct problemStruct) {
 		this.agent = agent;
+		this.individualDistribution = problemStruct.getIndividualDistribution();
 		this.jobID = problemStruct.getJobID();
 		this.problemToolClass = problemStruct.exportProblemToolClass(agent.getLogger());
 		this.problem = problemStruct.getProblem();
@@ -27,6 +29,9 @@ public class ComputingThread extends Thread {
 	
 	public String getJobID() {
 		return this.jobID;
+	}
+	public boolean isIndividualDistribution() {
+		return this.individualDistribution;
 	}
 	public Class<?> getProblemTool() {
 		return this.problemToolClass;
