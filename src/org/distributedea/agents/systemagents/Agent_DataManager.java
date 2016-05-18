@@ -21,6 +21,7 @@ import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.job.JobID;
 
 /**
  * System-agent who manage data resources multi-agent framework
@@ -197,13 +198,19 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	    }
 	}
 
-	public static void createSpaceForJob(String jobID) {
+	public static void createLogSpaceForJob(JobID jobID) {
 		
-		String logDirectoryName = Configuration.getLogDirectory();
+		String logDirectoryName = Configuration.getLogBatchDirectory(jobID.getBatchID());
 		File logDirectory = new File(logDirectoryName);
 		if (! logDirectory.isDirectory()) {
 			logDirectory.mkdir();
 		}
+		
+		String logBatchDirectoryName = Configuration.getInputBatchDirectory(jobID.getBatchID());
+		File logBatchDirectory = new File(logBatchDirectoryName);
+		if (! logBatchDirectory.isDirectory()) {
+			logBatchDirectory.mkdir();
+		}	
 		
 		String logCADirectoryName = Configuration.getComputingAgentLogDirectory(jobID);
 		File logCADirectory = new File(logCADirectoryName);
@@ -221,6 +228,18 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		File logCAImprovementDirectory = new File(logCAImprovementDirectoryName);
 		if (! logCAImprovementDirectory.isDirectory()) {
 			logCAImprovementDirectory.mkdir();
+		}
+		
+	}
+	
+	public static void createResultSpaceForJob(JobID jobID) {
+		
+		String batchID = jobID.getBatchID();
+		String resultBatchDirName = Configuration.getResultDirectory(batchID);
+		
+		File resultBatchDirectory = new File(resultBatchDirName);
+		if (! resultBatchDirectory.isDirectory()) {
+			resultBatchDirectory.mkdir();
 		}
 		
 	}

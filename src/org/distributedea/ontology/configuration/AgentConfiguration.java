@@ -1,6 +1,11 @@
 package org.distributedea.ontology.configuration;
 
+import jade.core.AID;
+
 import java.util.List;
+
+import org.distributedea.Configuration;
+import org.distributedea.agents.computingagents.Agent_BruteForce;
 
 
 public class AgentConfiguration {
@@ -9,6 +14,10 @@ public class AgentConfiguration {
 	private String agentType;
 	private List<Argument> arguments;
 
+	private String containerID;
+	private int numberOfContainer = 0;
+	private int numberOfAgent = 0;
+	
 	public AgentConfiguration() {}
 	
 	public AgentConfiguration(String agentName, String agentType,
@@ -25,16 +34,19 @@ public class AgentConfiguration {
 	public void setAgentName(String agentName) {
 		this.agentName = agentName;
 	}
-	public void editAgentName() {
-		int index = agentName.lastIndexOf('_');
-		this.agentName = agentName.substring(0, index);
-	}
 	
 	public String getAgentType() {
 		return agentType;
 	}
 	public void setAgentType(String agentType) {
 		this.agentType = agentType;
+	}
+	public Class<?> exportAgentType() {
+		try {
+			return Class.forName(getAgentType());
+		} catch (ClassNotFoundException e1) {
+			return null;
+		}
 	}
 	
 	public List<Argument> getArguments() {
@@ -43,6 +55,92 @@ public class AgentConfiguration {
 	public void setArguments(List<Argument> arguments) {
 		this.arguments = arguments;
 	}	
+	
+	
+	public String getContainerID() {
+		return containerID;
+	}
+	public void setContainerID(String containerID) {
+		this.containerID = containerID;
+	}
+
+	public int getNumberOfContainer() {
+		return numberOfContainer;
+	}
+	public void setNumberOfContainer(int numberOfContainer) {
+		this.numberOfContainer = numberOfContainer;
+	}
+	public void incrementNumberOfContainer() {
+		this.numberOfContainer++;
+	}
+	
+	public int getNumberOfAgent() {
+		return numberOfAgent;
+	}
+	public void setNumberOfAgent(int numberOfAgent) {
+		this.numberOfAgent = numberOfAgent;
+	}
+	public void incrementNumberOfAgent() {
+		this.numberOfAgent++;
+	}
+	
+	public boolean exportIsComputingAgent() {
+		
+		String namespace = Agent_BruteForce.class.getPackage().getName();
+		if (agentType.startsWith(namespace)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean exportIsAgentWitoutSuffix() {
+		
+		Class<?> agentTypeClass = exportAgentType();
+		
+		// starts agents which are in system only one-times
+		List<Class<?>> uniqueAgentList = Configuration.agentsWithoutSuffix();
+		
+		if (uniqueAgentList.contains(agentTypeClass)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public String exportAgentname() {
+		
+		if (exportIsAgentWitoutSuffix()) {
+			return getAgentName();
+		}
+		
+		String  agentChar = "";
+		if (numberOfAgent > 0) {
+			char aChar = (char) ('a' + numberOfAgent);
+			agentChar = "" + Configuration.AGENT_NUMBER_PREFIX + aChar;
+		}
+		
+		String  containerChar = "";
+		if (numberOfContainer > 0) {
+			char cChar = (char) ('a' + numberOfContainer);
+			containerChar = "" + cChar;
+		}
+		
+		String agentNameWitID = agentName + agentChar;
+		String containerNameWitID = containerID + containerChar;
+		
+		String agentFullName = agentNameWitID +
+				Configuration.CONTAINER_NUMBER_PREFIX +
+				containerNameWitID;
+		
+		return agentFullName;
+	}
+	
+	public AID exportAgentAID() {
+		
+		String agentName = exportAgentname();
+		return new AID(agentName, false);
+	}
 	
 	@Override
 	public boolean equals(Object other) {

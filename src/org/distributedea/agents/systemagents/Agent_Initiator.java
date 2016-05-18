@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.distributedea.AgentNames;
+import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
@@ -16,7 +18,6 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 
 import jade.content.onto.Ontology;
 import jade.core.AID;
-import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
 /**
@@ -87,6 +88,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			}
 
 			try {
+				System.out.println("Killing");
 				getContainerController().kill();
 			} catch (StaleProxyException e) {
 				getLogger().logThrowable("Exception by killing container", e);
@@ -95,13 +97,14 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		AgentConfiguration agentManagerConf = managerAgentConfigurations.get(0);
 
-		AgentController aManagerAgent = createAgent(this, agentManagerConf);
+		AgentConfiguration aManagerAgent = createAgent(this, agentManagerConf);
 		
 
 		if (aManagerAgent == null) {
 
 			getLogger().log(Level.SEVERE, "Error by creating agent");
 			try {
+				System.out.println("Killing");
 				getContainerController().kill();
 			} catch (StaleProxyException e) {
 				getLogger().logThrowable("Exception by killing container", e);
@@ -111,15 +114,13 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		getLogger().log(Level.INFO, "-------" + this.getAID().getName() + " "
 				+ this.getAID().getLocalName());
 
-		String agentname = null;
-		try {
-			String fullName = aManagerAgent.getName();
-			agentname = fullName.substring(0, fullName.indexOf('@'));
-		} catch (StaleProxyException e) {
-			getLogger().logThrowable("Get name by agent", e);
-		}
 
-		AID aManagerAgentAID = new AID(agentname, false);
+		String managerAgentname =
+				AgentNames.MANAGER_AGENT.getName() +
+				Configuration.CONTAINER_NUMBER_PREFIX +
+				cutFromHosntameContainerID();
+
+		AID aManagerAgentAID = new AID(managerAgentname, false);
 
 		for (AgentConfiguration configurationI : noManagerAgentConfigurations) {
 
@@ -129,6 +130,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			if (result == null) {
 				getLogger().log(Level.SEVERE, "Error by creating agent");
 				try {
+					System.out.println("Killing");
 					getContainerController().kill();
 				} catch (StaleProxyException e) {
 					getLogger().logThrowable("Exception by killing container", e);
@@ -148,7 +150,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 	 * @param name - agent name
 	 * @return - confirms creation
 	 */
-	public AgentController createAgent(Agent_DistributedEA agent, AgentConfiguration agentManagerConf) {
+	public AgentConfiguration createAgent(Agent_DistributedEA agent, AgentConfiguration agentManagerConf) {
 
 		return Agent_ManagerAgent.createAgent(this, agentManagerConf, getLogger());
 	}

@@ -1,7 +1,10 @@
 package org.distributedea.ontology.individualwrapper;
 
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.problem.Problem;
+import org.distributedea.problems.ProblemTool;
 
 import jade.content.Concept;
 
@@ -12,20 +15,20 @@ public class IndividualWrapper implements Concept {
 
 	private static final long serialVersionUID = -3883073526379640439L;
 
-	private Individual individual;
+	private IndividualEvaluated individualEvaluated;
 	
 	private AgentDescription agentDescription;
 
-	private String jobID;
+	private JobID jobID;
 	
 	
-	public Individual getIndividual() {
-		return individual;
+	public IndividualEvaluated getIndividualEvaluated() {
+		return individualEvaluated;
 	}
-	public void setIndividual(Individual individual) {
-		this.individual = individual;
+	public void setIndividualEvaluated(IndividualEvaluated individualEvaluated) {
+		this.individualEvaluated = individualEvaluated;
 	}
-
+	
 	public AgentDescription getAgentDescription() {
 		return agentDescription;
 	}
@@ -33,11 +36,33 @@ public class IndividualWrapper implements Concept {
 		this.agentDescription = agentDescription;
 	}
 	
-	public String getJobID() {
+	public JobID getJobID() {
 		return jobID;
 	}
-	public void setJobID(String jobID) {
+	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
 	}
+
+	public boolean validation(Problem problem, AgentLogger logger) {
+		
+		if (problem == null) {
+			return false;
+		}
+		
+		try {
+			return validEvaluatedIndividual(problem, logger);
+		} catch (InstantiationException | IllegalAccessException e) {
+			logger.logThrowable("", e);
+			return false;
+		}
+		
+	}
 	
+	private boolean validEvaluatedIndividual(Problem problem, AgentLogger logger) throws InstantiationException, IllegalAccessException {
+		
+		Class<?> problemToolClass = agentDescription.exportProblemToolClass();
+		ProblemTool problemTool = (ProblemTool) problemToolClass.newInstance();
+		
+		return individualEvaluated.validation(problem, problemTool, logger);
+	}
 }

@@ -6,7 +6,7 @@ import jade.content.Concept;
 
 public class AgentDescription implements Concept {
 
-	private static final long serialVersionUID = 6236536606034332068L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Agent configuration
@@ -37,10 +37,8 @@ public class AgentDescription implements Concept {
 		try {
 			return Class.forName(problemToolClass);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 	public void importProblemToolClass(Class<?> problemToolClass) {
 		this.problemToolClass = problemToolClass.getName();

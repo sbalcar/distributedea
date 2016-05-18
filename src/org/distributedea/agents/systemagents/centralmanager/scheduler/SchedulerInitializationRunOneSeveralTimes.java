@@ -7,7 +7,7 @@ import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Sched
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.ontology.job.Job;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
 public class SchedulerInitializationRunOneSeveralTimes implements Scheduler {

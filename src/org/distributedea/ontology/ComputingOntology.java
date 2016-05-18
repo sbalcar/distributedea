@@ -6,6 +6,7 @@ import jade.content.onto.Ontology;
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -26,9 +27,10 @@ public class ComputingOntology extends BeanOntology {
         
         try {
             add(StartComputing.class);
-            add(individualPackage);
-            
             add(ProblemWrapper.class);
+            add(individualPackage);
+            add(JobID.class);
+            
             add(Problem.class);
             
             add(ProblemTSPGPS.class);

@@ -5,7 +5,7 @@ import jade.core.AID;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodeInfoWrapper {
+public class NodeInfosWrapper {
 
 	private List<NodeInfo> nodeInfos;
 	

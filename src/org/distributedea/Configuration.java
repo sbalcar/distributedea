@@ -7,6 +7,7 @@ import java.util.List;
 import org.distributedea.agents.systemagents.Agent_CentralLoger;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_DataManager;
+import org.distributedea.ontology.job.JobID;
 
 import jade.core.AID;
 
@@ -49,36 +50,49 @@ public class Configuration {
 	
 	
 	
+	private static String getDirectoryOfConfiguration() {
+		
+		return "configuration";
+	}
 	/**
 	 * Provides way to system agents required to run master node
 	 * @return name of the file with relative path
 	 */
 	public static String getConfigurationFile() {
 
-		return "configuration" + File.separator
-				+ "configuration.xml";
+		return getDirectoryOfConfiguration() + File.separator +
+				"configuration.xml";
 	}
-	
+
 	/**
 	 * Provides way to system agents required to run slave node
 	 * @return name of the file with relative path
 	 */
 	public static String getConfigurationSlaveFile() {
 
-		return "configuration" + File.separator
-				+ "configurationSlave.xml";
+		return getDirectoryOfConfiguration() + File.separator +
+				"configurationSlave.xml";
 	}
-
+	
 	/**
 	 * Provides way to set of Methods (Computing agents) for planning to slave nodes
 	 * @return name of the file with relative path
 	 */
 	public static String getMethodsFile() {
 
-		return "configuration" + File.separator
-				+ "methods.xml";
+		return getDirectoryOfConfiguration() + File.separator +
+				"methods.xml";
 	}
 
+	/**
+	 * Directory with input files
+	 * @return
+	 */
+	public static String getDirectoryOfInputs() {
+		
+		return "inputs";
+	}
+	
 	/**
 	 * Provides way to the instance of Problem
 	 * @param name of the file with relative path
@@ -86,15 +100,9 @@ public class Configuration {
 	 */
 	public static String getInputProblemFile(String fileName) {
 
-		return "inputs" + File.separator + fileName;
+		return getDirectoryOfInputs() + File.separator +
+				fileName;
 	}
-	
-	
-	public static String getJobsDirectory() {
-
-		return "jobqueue";
-	}
-	
 	
 	/**
 	 * Provides way to the solution instance by name
@@ -103,65 +111,113 @@ public class Configuration {
 	 */
 	public static String getSolutionFile(String fileName) {
 
-		return "inputs" + File.separator + "solutions" +
-				File.separator + fileName;
+		return getDirectoryOfInputs() + File.separator +
+				"solutions" + File.separator +
+				fileName;
 	}
+	
+	/**
+	 * Directory with input Batches
+	 * @return
+	 */
+	public static String getDirectoryOfInputBatches() {
+
+		return "jobqueue";
+	}
+	
+	public static String getInputBatchDirectory(String batchID) {
+
+		return getDirectoryOfInputBatches() + File.separator + batchID;
+	}
+
+	public static String getInputJobFile(String batchID, String jobID) {
+
+		return getInputBatchDirectory(batchID) + File.separator +
+				jobID + "." + Configuration.JOB_SUFIX;
+	}
+	
 
 	/**
 	 * Provides name of directory for the centralized solution of whole Distributed Evolution
 	 * @return
 	 */
-	public static String getResultDirectory() {
+	public static String getDirectoryofResults() {
 
 		return "result";
 	}
 
+	public static String getResultDirectory(String batchID) {
+
+		return getDirectoryofResults() + File.separator + batchID;
+	}
+	
 	/**
 	 * Provides way to the centralized solution
 	 * @param fileName
 	 * @return
 	 */
-	public static String getResultFile(String fileID) {
+	public static String getResultFile(JobID jobID) {
 		
-		return getResultDirectory() + File.separator +
-				"result-" + fileID +".txt";
+		return getResultDirectory(jobID.getBatchID()) + File.separator +
+				"result-" + jobID.getJobID() +".txt";
 	}
 	
+	
 	public static String getLogDirectory() {
+		
 		return "log";
+	}
+
+	public static String getGeneralLogDirectoryForComputingAgent(
+			AID computingAgentAID) {
+		
+		return getLogDirectory() + File.separator +
+				computingAgentAID.getLocalName() + ".log";
+	}
+	
+	public static String getLogBatchDirectory(String batchID) {
+		
+		return getLogDirectory() + File.separator + batchID;
 	}
 	
 	/**
 	 * Provides name of directory for log files of Computing Agents
 	 * @return
 	 */
-	public static String getComputingAgentLogDirectory(String jobID) {
+	public static String getComputingAgentLogDirectory(JobID jobID) {
 
-		return getLogDirectory() + File.separator + jobID;
+		String batchID = jobID.getBatchID();
+		return getLogBatchDirectory(batchID) + File.separator +
+				jobID.getJobID();
 	}
 
 	/**
 	 * Provides name of directory for Result files of Computing Agents
 	 * @return
 	 */
-	public static String getComputingAgentResultDirectory(AID computingAgentAID, String jobID) {
+	public static String getComputingAgentResultDirectory(
+			AID computingAgentAID, JobID jobID) {
 
-		return getLogDirectory() + File.separator + jobID + File.separator
-				+ computingAgentAID.getLocalName() + ".rslt";
+		String batchID = jobID.getBatchID();
+		return getLogBatchDirectory(batchID) + File.separator +
+				jobID.getJobID() + File.separator +
+				computingAgentAID.getLocalName() + ".rslt";
 	}
 	
 	/**
 	 * Provides name of directory for Solution files of Computing Agents
 	 * @return
 	 */
-	public static String getComputingAgentLogSolutionDirectory(String jobID) {
+	public static String getComputingAgentLogSolutionDirectory(JobID jobID) {
 
 		return getComputingAgentLogDirectory(jobID) + File.separator + "solution";
 	}
 
-	public static String getComputingAgentLogImprovementOfDistributionDirectory(String jobID) {
+	public static String getComputingAgentLogImprovementOfDistributionDirectory(
+			JobID jobID) {
 
-		return getComputingAgentLogDirectory(jobID) + File.separator + "improvementOfDistribution";
+		return getComputingAgentLogDirectory(jobID) + File.separator +
+				"improvementOfDistribution";
 	}
 
 	
@@ -170,9 +226,11 @@ public class Configuration {
 	 * @param computingAgentAID
 	 * @return
 	 */
-	public static String getComputingAgentLogFile(AID computingAgentAID) {
+	public static String getComputingAgentLogFile(AID computingAgentAID,
+			JobID jobID) {
 
-		return getLogDirectory() + File.separator
+		String batchID = jobID.getBatchID();
+		return getLogBatchDirectory(batchID) + File.separator
 				+ computingAgentAID.getLocalName() + ".log";
 	}
 	
@@ -182,7 +240,7 @@ public class Configuration {
 	 * @param computingAgentAID
 	 * @return
 	 */
-	public static String getComputingAgentResultFile(AID computingAgentAID, String jobID) {
+	public static String getComputingAgentResultFile(AID computingAgentAID, JobID jobID) {
 
 		return getComputingAgentLogDirectory(jobID) + File.separator
 				+ computingAgentAID.getLocalName() + ".rslt";
@@ -193,13 +251,13 @@ public class Configuration {
 	 * @param computingAgentAID - name of file contains on their AID
 	 * @return
 	 */
-	public static String getComputingAgentSolutionFile(AID computingAgentAID, String jobID) {
+	public static String getComputingAgentSolutionFile(AID computingAgentAID, JobID jobID) {
 
 		return getComputingAgentLogSolutionDirectory(jobID) + File.separator
 				+ computingAgentAID.getLocalName() + ".sol";
 	}
 	
-	public static String getComputingAgentLogImprovementOfDistributionFile(AID computingAgentAID, String jobID) {
+	public static String getComputingAgentLogImprovementOfDistributionFile(AID computingAgentAID, JobID jobID) {
 
 		return getComputingAgentLogImprovementOfDistributionDirectory(jobID) + File.separator
 				+ computingAgentAID.getLocalName() + ".impr";

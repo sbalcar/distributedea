@@ -1,6 +1,7 @@
 package org.distributedea.ontology.problemwrapper;
 
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
@@ -14,7 +15,7 @@ public class ProblemWrapper implements Concept {
 	/**
 	 * Job identification
 	 */
-	private String jobID;
+	private JobID jobID;
 	
 	
 	private boolean individualDistribution;
@@ -33,14 +34,14 @@ public class ProblemWrapper implements Concept {
 	 * get Problem IDentification
 	 * @return
 	 */
-	public String getJobID() {
+	public JobID getJobID() {
 		return jobID;
 	}
 	/**
 	 * set Problem IDentification
 	 * @param problemID
 	 */
-	public void setJobID(String jobID) {
+	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
 	}
 	

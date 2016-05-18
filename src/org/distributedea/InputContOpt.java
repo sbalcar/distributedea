@@ -14,7 +14,7 @@ import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
  */
 public class InputContOpt {
 
-	public static JobWrapper test01() {
+	public static JobWrapper test01(String batchID) {
 		
 		InputConfiguration.automaticStart = true;
 		
@@ -33,7 +33,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static JobWrapper test02() {
+	public static JobWrapper test02(String batchID) {
 		
 		InputConfiguration.automaticStart = true;
 		
@@ -52,7 +52,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static JobWrapper test03() {
+	public static JobWrapper test03(String batchID) {
 		
 		InputConfiguration.automaticStart = true;
 		

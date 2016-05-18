@@ -21,7 +21,7 @@ public class CreatedAgent implements Concept {
 	}
 	public void importCreatedAgentName(AID createdAgentAID) {
 		String globalName = createdAgentAID.getLocalName();
-		this.createdAgentName = globalName.substring(0, globalName.indexOf('@'));
+		this.createdAgentName = globalName;
 	}
 
 }

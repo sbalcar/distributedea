@@ -3,6 +3,7 @@ package org.distributedea.ontology.computing.result;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.job.JobID;
 
 import jade.content.Concept;
 
@@ -15,7 +16,7 @@ public class ResultOfComputing implements Concept {
 	private Individual bestIndividual;
 	private double fitnessValue;
 
-	private String jobID;
+	private JobID jobID;
 	
 	
 	public AgentDescription getAgentDescription() {
@@ -39,10 +40,10 @@ public class ResultOfComputing implements Concept {
 		this.fitnessValue = fitnessValue;
 	}
 	
-	public String getJobID() {
+	public JobID getJobID() {
 		return jobID;
 	}
-	public void setJobID(String jobID) {
+	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
 	}
 	

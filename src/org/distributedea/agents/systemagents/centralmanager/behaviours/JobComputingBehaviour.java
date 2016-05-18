@@ -1,6 +1,8 @@
 package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 
+import java.io.File;
+import java.text.NumberFormat;
 import java.util.logging.Level;
 
 import org.distributedea.Configuration;
@@ -15,7 +17,8 @@ import org.distributedea.configuration.XmlConfigurationProvider;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
-import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.noontology.JobWrapper;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
@@ -23,11 +26,13 @@ import org.distributedea.problems.ProblemTool;
 
 import jade.core.behaviours.OneShotBehaviour;
 
-public class StartComputingBehaviour extends OneShotBehaviour {
+public class JobComputingBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
 	private String jobID;
+	private String batchID;
+	private boolean individualDistribution;
 	private long countOfReplaning;
 	private Scheduler scheduler;
 	private Class<?> problemToSolve;
@@ -36,10 +41,12 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 	private ProblemTools problemTools;
 	private AgentLogger logger;
 	
-	public StartComputingBehaviour(
-			JobWrapper job, AgentLogger logger) {
+	public JobComputingBehaviour(
+			JobWrapper job, String batchID, AgentLogger logger) {
 		
 		this.jobID = job.getJobID();
+		this.batchID = batchID;
+		this.individualDistribution = job.isIndividualDistribution();
 		this.countOfReplaning = job.getCountOfReplaning();
 		this.scheduler = job.getScheduler();
 		this.problemToSolve = job.getProblemToSolve();
@@ -90,17 +97,20 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 		Agent_CentralManager centralManager = (Agent_CentralManager) myAgent;
 		
 		Job job = new Job();
-		job.setJobID(jobID);
-		job.setIndividualDistribution(areAgentConfigurationsValid);
+		job.setJobID(new JobID(batchID, jobID));
+		job.setIndividualDistribution(individualDistribution);
 		job.setProblem(problem);
 		job.setProblemTools(problemTools);
 		
-		
+		logger.log(Level.INFO, "Start computing Job: " + jobID);
 		scheduler.agentInitialization(centralManager, job,
 				agentConfigurations, logger);
 		
 		long generation = 0;
 		while (generation < countOfReplaning) {
+			
+			//printMemory();
+			//printSpace();
 			
 			// sleep
 			try {
@@ -137,4 +147,35 @@ public class StartComputingBehaviour extends OneShotBehaviour {
 		}
 	}
 	
+	@SuppressWarnings("unused")
+	private void printMemory() {
+		Runtime runtime = Runtime.getRuntime();
+
+		NumberFormat format = NumberFormat.getInstance();
+
+		long maxMemory = runtime.maxMemory();
+		long allocatedMemory = runtime.totalMemory();
+		long freeMemory = runtime.freeMemory();
+
+		System.out.println("free memory: " + format.format(freeMemory / 1024) + "<br/>");
+		System.out.println("allocated memory: " + format.format(allocatedMemory / 1024) + "<br/>");
+		System.out.println("max memory: " + format.format(maxMemory / 1024) + "<br/>");
+		System.out.println("total free memory: " + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024) + "<br/>");
+	}
+	
+
+	@SuppressWarnings("unused")
+	private void printSpace() {
+		
+        File diskPartition = new File("~/");
+        long totalCapacity = diskPartition.getTotalSpace();
+        long freePartitionSpace = diskPartition.getFreeSpace();
+        long usablePatitionSpace = diskPartition.getUsableSpace(); 
+
+        System.out.println("totalCapacity: " + totalCapacity);
+        System.out.println("freePartitionSpace: " + freePartitionSpace);
+        System.out.println("usablePatitionSpace: " + usablePatitionSpace);
+	}
+
+
 }

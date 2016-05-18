@@ -12,7 +12,9 @@ import org.distributedea.agents.computingagents.computingagent.evolution.EAMutat
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -77,7 +79,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, Class<?> problemToolClass, JobID jobID, Behaviour behaviour) throws ProblemToolException {
 		
 		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
@@ -181,25 +183,23 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				
 				// send new Individual to distributed neighbors
 				if (computingThread.isIndividualDistribution()) {
-					distributeIndividualToNeighours(individualI, problem, jobID);
+					distributeIndividualToNeighours(individualI, fitnessI, problem, jobID);
 				}
 				
 				//take received individual to new generation
-				IndividualWrapper recievedIndividualW = getRecievedIndividual();
-				Individual recievedIndividual = recievedIndividualW.getIndividual();
-				double recievedFitnessI = problemTool.fitness(recievedIndividual,
-						problem, getCALogger());
+				IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
+				
 				if (computingThread.isIndividualDistribution() &&
-						! Double.isNaN(recievedFitnessI) &&
-						ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-								recievedFitnessI, fitnessI, problem)) {
-		
+						ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
+								recievedIndividualW, fitnessI, problem)) {
+					
+					IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
+					
 					IChromosome recievedChromI = Convertor
-							.convertToIChromosome(recievedIndividual, problem, conf);
+							.convertToIChromosome(recievedIndividual.getIndividual(), problem, conf);
 					pop.getPopulation().addChromosome(recievedChromI);
 					
-					processRecievedIndividual(recievedIndividualW,
-							recievedFitnessI, generationNumberI, problem);
+					processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
 				}
 
 			}

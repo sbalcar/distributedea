@@ -14,6 +14,7 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.job.JobID;
 
 public class AgentComputingLogger extends AgentLogger {
 
@@ -24,22 +25,25 @@ public class AgentComputingLogger extends AgentLogger {
 	public void logThrowable(String message, Throwable throwable) {
 		
 		String line = message + " " + throwable;
+		//System.out.println(line);
 		writeToFile(line);
 	}
 	
 	public void log(Level logLevel, String message) {
 		
 		String line = logLevel + " " + message;
+		//System.out.println(line);
 		writeToFile(line);
 	}
 	
 	public void log(Level logLevel, String source, String message) {
 		
 		String line = logLevel + " " + source + " " + message;
+		//System.out.println(line);
 		writeToFile(line);
 	}
 	
-	public void logComputedResult(double fitness, long generationNumber, String jobID) {
+	public void logComputedResult(double fitness, long generationNumber, JobID jobID) {
 		
 		String fileName = Configuration.getComputingAgentResultDirectory(agent.getAID(), jobID);
 		
@@ -57,7 +61,7 @@ public class AgentComputingLogger extends AgentLogger {
 		
 	}
 	
-	public void logBestSolution(Individual individual, double fitness, String jobID) {
+	public void logBestSolution(Individual individual, double fitness, JobID jobID) {
 
 		String fileName = Configuration.getComputingAgentSolutionFile(agent.getAID(), jobID);
 		
@@ -88,7 +92,7 @@ public class AgentComputingLogger extends AgentLogger {
 	 * @param deltaFitness
 	 */
 	public void logDiffImprovementOfDistribution(double deltaFitness, long generationNumber,
-			Individual individual, AgentDescription descriptionOfSolutionBuilder, String jobID) {
+			Individual individual, AgentDescription descriptionOfSolutionBuilder, JobID jobID) {
 
 		String fileName = Configuration.getComputingAgentLogImprovementOfDistributionFile(agent.getAID(), jobID);
 		
@@ -114,7 +118,7 @@ public class AgentComputingLogger extends AgentLogger {
 	
 	private void writeToFile(String line) {
 		
-		String fileName = Configuration.getComputingAgentLogFile(agent.getAID());
+		String fileName = Configuration.getGeneralLogDirectoryForComputingAgent(agent.getAID());
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
 			writer.append(line + "\n");

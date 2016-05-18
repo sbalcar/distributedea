@@ -27,9 +27,12 @@ import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
+import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.helpmate.HelpmateList;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
@@ -37,6 +40,50 @@ import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class ComputingAgentService {
 
+	public static void sendRequiredAgent(Agent_DistributedEA agent, AID computingAgent,
+			AgentConfiguration agentConfiguration, AgentLogger logger) {
+		
+		RequiredAgent requiredAgent = new RequiredAgent();
+		requiredAgent.setAgentConfiguration(agentConfiguration);
+		
+		
+		if (agent == null) {
+			throw new IllegalArgumentException(
+					"Argument agent sender can't be null");
+		}
+		
+		Ontology ontology = ManagementOntology.getInstance();
+		
+		ACLMessage msgRequiredAgent = new ACLMessage(ACLMessage.INFORM);
+		msgRequiredAgent.setSender(agent.getAID());
+		msgRequiredAgent.addReceiver(computingAgent);
+		msgRequiredAgent.setLanguage(agent.getCodec().getName());
+		msgRequiredAgent.setOntology(ontology.getName());
+
+		
+		Action action = new Action(computingAgent, requiredAgent);
+		
+		try {
+			agent.getContentManager().fillContent(msgRequiredAgent, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending Individual", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending Individual", e);
+		}
+		
+		agent.send(msgRequiredAgent);
+		
+	}
+	
+	/**
+	 * Sends message StartComputing contains Problem definition to Computing Agent
+	 * @param agent
+	 * @param computingAgent
+	 * @param problemStruct
+	 * @param logger
+	 * @return
+	 */
 	public static boolean sendStartComputing(Agent_DistributedEA agent, AID computingAgent,
 			ProblemStruct problemStruct, AgentLogger logger) {
 		
@@ -53,7 +100,7 @@ public class ComputingAgentService {
 		msgStartComputing.setLanguage(agent.getCodec().getName());
 		msgStartComputing.setOntology(ontology.getName());
 
-		String jobID = problemStruct.getJobID();
+		JobID jobID = problemStruct.getJobID();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
 		String problemFileName = problemStruct.getProblem().getProblemFileName();
 		String problemTool = problemStruct.getProblemToolClass();

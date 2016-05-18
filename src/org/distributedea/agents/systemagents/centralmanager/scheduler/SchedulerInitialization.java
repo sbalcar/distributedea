@@ -14,8 +14,8 @@ import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.job.noontology.Job;
-import org.distributedea.ontology.management.computingnode.NodeInfoWrapper;
+import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
@@ -30,7 +30,7 @@ public class SchedulerInitialization implements Scheduler {
 				getCartesianProductOfConfigurationsAndTools(configurations, job.getProblemTools());
 		int numberOfDescriotion = descriptions.size();
 		
-		NodeInfoWrapper availableNodes = SchedulerTool.getAvailableNodes(centralManager, logger);
+		NodeInfosWrapper availableNodes = SchedulerTool.getAvailableNodes(centralManager, logger);
 		int numberOfCPU = availableNodes.exportNumberOfCores();
 		List<AID> aids = availableNodes.exportManagersAID();
 		

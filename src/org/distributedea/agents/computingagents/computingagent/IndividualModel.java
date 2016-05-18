@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemToolEvaluation;
@@ -15,22 +16,37 @@ import org.distributedea.problems.ProblemToolEvaluation;
  */
 public class IndividualModel {
 
+	private int MAX_NUMBER_OF_INDIVIDUAL = 10;
+	
 	private List<IndividualWrapper> receivedIndividuals =
 			Collections.synchronizedList(new ArrayList<IndividualWrapper>());
 	
-	public synchronized void add(IndividualWrapper individualW) {
-		receivedIndividuals.add(individualW);
-	}
-	
-	public synchronized IndividualWrapper getIndividual() {
-		
-		if (! receivedIndividuals.isEmpty()) {
-			return receivedIndividuals.remove(0);
+	/**
+	 * Add Received Individual to Model
+	 * @param individualW
+	 * @param logger
+	 */
+	public synchronized void addIndividual(IndividualWrapper individualW, Problem problem, AgentLogger logger) {
+					
+		if (individualW == null || (! individualW.validation(problem, logger))) {
+			Exception exception = new IllegalStateException("Recieved Individual is not valid");
+			logger.logThrowable("", exception);
+			return;
 		}
 		
-		return new IndividualWrapper();
+		// resize model to the max-defined size
+		while (receivedIndividuals.size() > MAX_NUMBER_OF_INDIVIDUAL) {
+			receivedIndividuals.remove(0);
+		}
+		
+		receivedIndividuals.add(individualW);
 	}
-/*
+
+	/**
+	 * Get the best Individual from Model 
+	 * @param problem
+	 * @return
+	 */
 	public synchronized IndividualWrapper getBestIndividual(Problem problem) {
 		
 		if (receivedIndividuals.isEmpty()) {
@@ -41,8 +57,11 @@ public class IndividualModel {
 		for (IndividualWrapper indWrapI : receivedIndividuals) {
 			
 			boolean isIndividualIBetter =
-					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							indWrapI, bestIndividual, problem);
+					ProblemToolEvaluation.isFistIndividualBetterThanSecond(
+							indWrapI.getIndividualEvaluated(),
+							bestIndividual.getIndividualEvaluated(),
+							problem);
+			
 			if (isIndividualIBetter) {
 				bestIndividual = indWrapI;
 			}
@@ -50,5 +69,5 @@ public class IndividualModel {
 		
 		return bestIndividual;
 	}
-	*/
+
 }

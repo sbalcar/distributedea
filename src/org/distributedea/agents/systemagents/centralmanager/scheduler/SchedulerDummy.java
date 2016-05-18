@@ -13,7 +13,7 @@ import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.ontology.job.Job;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 /**

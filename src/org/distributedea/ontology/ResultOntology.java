@@ -7,6 +7,7 @@ import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.saveresult.SaveResultOfComputing;
 
 import jade.content.onto.BeanOntology;
@@ -32,6 +33,7 @@ public class ResultOntology extends BeanOntology {
         	
             add(IndividualWrapper.class);
             add(individualPackage);
+            add(JobID.class);
             
             add(agentDescriptionPackage);
         	

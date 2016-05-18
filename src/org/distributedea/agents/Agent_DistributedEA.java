@@ -78,7 +78,7 @@ public abstract class Agent_DistributedEA extends Agent {
 	 * @return
 	 */
 	public final String getNumberOfContainer() {
-		
+
 		String localName = getAID().getLocalName();
 		
 		int charIndex;

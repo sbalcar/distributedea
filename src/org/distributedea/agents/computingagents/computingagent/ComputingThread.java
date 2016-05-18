@@ -1,6 +1,8 @@
 package org.distributedea.agents.computingagents.computingagent;
 
+import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.exceptions.ProblemToolException;
@@ -9,7 +11,7 @@ public class ComputingThread extends Thread {
 
 	private Agent_ComputingAgent agent;
 	
-	private String jobID;
+	private JobID jobID;
 	private boolean individualDistribution;
 	private Class<?> problemToolClass;
 	private Problem problem;
@@ -27,7 +29,7 @@ public class ComputingThread extends Thread {
 		this.isComputing = true;
 	}
 	
-	public String getJobID() {
+	public JobID getJobID() {
 		return this.jobID;
 	}
 	public boolean isIndividualDistribution() {
@@ -57,6 +59,12 @@ public class ComputingThread extends Thread {
 		this.bestResultOfComputing = resultOfComputing;
 		
 		if (resultOfComputing != null) {
+						
+			AgentDescription agentDescription = new AgentDescription();
+			agentDescription.importProblemToolClass(problemToolClass);
+			agentDescription.setAgentConfiguration(agent.requiredAgentConfiguration);
+			
+			resultOfComputing.setAgentDescription(agentDescription);
 			resultOfComputing.setJobID(jobID);
 		}
 	}

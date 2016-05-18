@@ -4,8 +4,10 @@ import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
@@ -31,6 +33,8 @@ public class ManagementOntology extends BeanOntology {
             add(EverythingPreparedToBeKilled.class);
             add(KillAgent.class);
             add(KillContainer.class);
+            add(RequiredAgent.class);
+            add(AgentConfiguration.class);
             add(Arguments.class);
             add(Argument.class);
 

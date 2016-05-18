@@ -43,14 +43,37 @@ public class ResultOfComputingWrapper implements Concept {
 			
 			double fitnessValueI = resultOfComputingI.getFitnessValue();
 			
-			boolean isBetter = ProblemToolEvaluation.isFistFitnessBetterThanSecond(
+			boolean isNewIndividualBetter = ProblemToolEvaluation.isFistFitnessBetterThanSecond(
 					fitnessValueI, bestResult.getFitnessValue(), problem);
-			if (isBetter) {
+			if (isNewIndividualBetter) {
 				bestResult = resultOfComputingI;
 			}
 		}
 		
 		return bestResult;
+	}
+
+	public ResultOfComputing exportWorstResultOfComputing(Problem problem) {
+		
+		if (resultOfComputing == null || resultOfComputing.isEmpty()) {
+			return null;
+		}
+		
+		ResultOfComputing worstResult = resultOfComputing.get(0);
+		
+		for (ResultOfComputing resultOfComputingI : resultOfComputing) {
+			
+			double fitnessValueI = resultOfComputingI.getFitnessValue();
+			
+			boolean isNewIndividualWorse =
+					ProblemToolEvaluation.isFistFitnessWorseThanSecond(
+							fitnessValueI, worstResult.getFitnessValue(), problem);
+			if (isNewIndividualWorse) {
+				worstResult = resultOfComputingI;
+			}
+		}
+		
+		return worstResult;
 	}
 	
 }

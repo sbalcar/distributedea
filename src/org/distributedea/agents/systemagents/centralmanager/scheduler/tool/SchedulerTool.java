@@ -11,14 +11,76 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.helpmate.HelpmateList;
+import org.distributedea.ontology.helpmate.HelpmatesWrapper;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
-import org.distributedea.ontology.management.computingnode.NodeInfoWrapper;
+import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
+
 
 public class SchedulerTool {
 
-	public static NodeInfoWrapper getAvailableNodes(Agent_CentralManager centralManager, AgentLogger logger) {
+	/**
+	 * Returns information about best computing helpers at all nodes
+	 * @param centralManager
+	 * @param newStatisticForEachQuery
+	 * @param logger
+	 * @return
+	 */
+	public static HelpmatesWrapper getHelpmates(Agent_CentralManager centralManager, boolean newStatisticForEachQuery, AgentLogger logger) {
+		
+		// search all Computing Agents
+		AID [] aidComputingAgents = centralManager.searchDF(
+				Agent_ComputingAgent.class.getName());
+		
+		HelpmatesWrapper helpers = new HelpmatesWrapper();
+		
+		// going through all computing agents
+		for (AID aidComputingAgentI : aidComputingAgents) {
+			
+			HelpmateList helpmateListI = 
+					ComputingAgentService.sendReportHelpmate(
+							centralManager, aidComputingAgentI,
+							newStatisticForEachQuery, logger);
+			helpers.addHelper(helpmateListI);
+		}
+		return helpers;
+	}
+	
+	/**
+	 * Returns information about the current computing result at all nodes
+	 * @param centralManager
+	 * @param logger
+	 * @return
+	 */
+	public static ResultOfComputingWrapper getResultOfComputings(Agent_CentralManager centralManager, AgentLogger logger) {
+		
+		AID [] aidOfComputingAgents = centralManager.searchDF(
+				Agent_ComputingAgent.class.getName());
+		
+		ResultOfComputingWrapper resultsOfComputing = new ResultOfComputingWrapper();
+		
+		for (AID computingAgentI : aidOfComputingAgents) {
+						
+			ResultOfComputing resultOfComputingI =
+					ComputingAgentService.sendAccessesResult(centralManager, computingAgentI, logger);
+			resultsOfComputing.addResultOfComputing(resultOfComputingI);
+		}
+		
+		return resultsOfComputing;
+	}
+	
+	/**
+	 * Returns information about all Nodes,
+	 * information about Node provides Agent_ManagerAgent
+	 * @param centralManager
+	 * @param logger
+	 * @return
+	 */
+	public static NodeInfosWrapper getAvailableNodes(Agent_CentralManager centralManager, AgentLogger logger) {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
 				Agent_ManagerAgent.class.getName());
@@ -32,40 +94,33 @@ public class SchedulerTool {
 			nodeInfos.add(nodeInfoI);
 		}
 		
-		NodeInfoWrapper wrapper = new NodeInfoWrapper();
+		NodeInfosWrapper wrapper = new NodeInfosWrapper();
 		wrapper.setNodeInfos(nodeInfos);
 		
 		return wrapper;
 	}
 	
-	public static void killAndCreateAgent(Agent_CentralManager centralManager, AID worstAID,
+	/**
+	 * Kills Agent and creates the new Agent
+	 * @param centralManager
+	 * @param agentTokillAID
+	 * @param bestConfiguration
+	 * @param problemStruct
+	 * @param logger
+	 * @throws SchedulerException
+	 */
+	public static void killAndCreateAgent(Agent_CentralManager centralManager, AID agentTokillAID,
 			AgentConfiguration bestConfiguration, ProblemStruct problemStruct, AgentLogger logger) throws SchedulerException {
 
 		
 		// kill worst agent
-		ManagerAgentService.sendKillAgent(centralManager, worstAID, logger);
-	
-		// wait for kill and unregister agent
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			logger.logThrowable("Error by waiting for killing agent " + worstAID.getLocalName(), e);
-			throw new SchedulerException("Error by waiting for killing agent " + worstAID.getLocalName());
-		}
+		ManagerAgentService.sendKillAgent(centralManager, agentTokillAID, logger);
 
-		AID manager = ManagerAgentService.getManagerAgentOfAID(centralManager, worstAID);
+		AID manager = ManagerAgentService.getManagerAgentOfAID(centralManager, agentTokillAID);
 				
 		// create new agent
 		AID newAgent = ManagerAgentService.sendCreateAgent(centralManager,
 				manager, bestConfiguration, logger);
-		
-		// wait for initialization agent
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			logger.logThrowable("Error by waiting for new agent initialization " + newAgent.getLocalName(), e);
-			throw new SchedulerException("Error by waiting for new agent initialization " + newAgent.getLocalName());
-		}
 		
 		// start computing
 		ComputingAgentService.sendStartComputing(

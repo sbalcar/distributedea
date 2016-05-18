@@ -8,16 +8,47 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.distributedea.Configuration;
-import org.distributedea.InputTSP;
+import org.distributedea.ontology.job.noontology.Batch;
 import org.distributedea.ontology.job.noontology.JobWrapper;
 
 public class InputJobQueue {
 
-	public static List<JobWrapper> getInputJobs() throws FileNotFoundException {
+	public static List<Batch> getInputBatches() throws FileNotFoundException {
+		
+		File folder = new File(Configuration.getDirectoryOfInputBatches());
+		File[] listOfFiles = folder.listFiles();
+		
+		List<String> batchIDs = new ArrayList<>();
+
+		for (File fileI : listOfFiles) {
+			if (fileI.isDirectory()) {
+				String batchID = fileI.getName();
+				batchIDs.add(batchID);
+			}
+		}
+		
+		List<Batch> batches = new ArrayList<>();
+		
+		for (String batchIDI : batchIDs) {
+				
+			List<JobWrapper> jobsI = getInputJobsWrappers(batchIDI);
+			
+			Batch batchI = new Batch();
+			batchI.setBatchID(batchIDI);
+			batchI.setJobWrappers(jobsI);
+			
+			batches.add(batchI);
+
+		}
+		
+		return batches;
+	}
+	
+	public static List<JobWrapper> getInputJobsWrappers(String batchID) throws FileNotFoundException {
 		
 		List<JobWrapper> jobs = new ArrayList<JobWrapper>();
 				
-		File folder = new File(Configuration.getJobsDirectory());
+		File folder = new File(Configuration.getInputBatchDirectory(batchID));
 		File[] listOfFiles = folder.listFiles();
 
 		for (File fileI : listOfFiles) {
@@ -31,48 +62,57 @@ public class InputJobQueue {
 		return jobs;
 	}
 
-	public static void exportJobsToJobQueueDirectory() {
-		
-		// removing old job-files in the input queue
-		File folder = new File(Configuration.getJobsDirectory());
+	public static void cleanJobsInQueueDirectory() {
+	
+		// removing old batches in the input queue
+		File folder = new File(Configuration.getDirectoryOfInputBatches());
 		File[] listOfFiles = folder.listFiles();
 
 		for (File fileI : listOfFiles) {
-			if (fileI.isFile() && fileI.getName().endsWith(Configuration.JOB_SUFIX)) {
-				System.out.println("File " + fileI.getName() + " deleted");
-				fileI.delete();
-			}
+			System.out.println("File " + fileI.getName() + " deleted");
+			fileI.delete();
 		}
 		
-		// selecting jobs for computing
-		List<JobWrapper> jobs = new ArrayList<JobWrapper>();		
-		//jobs.add(InputTSP.test04());
+	}
+
+	
+	public static void exportBatchesToJobQueueDirectory(List<Batch> batches) throws FileNotFoundException, JAXBException {
 		
-		for (int i = 0; i < 6; i++)
-			jobs.add(InputTSP.test05(i));
-		
-		
-		// exporting selected jobs to the input directory
-		try {
-			exportToJobQueueDirectory(jobs);
-		} catch (FileNotFoundException | JAXBException e) {
-			e.printStackTrace();
+		for (Batch batchI : batches) {
+			
+			exportBatchToJobQueueDirectory(batchI);
 		}
 	}
-	
-	private static void exportToJobQueueDirectory(List<JobWrapper> jobs) throws FileNotFoundException, JAXBException {
+
+	public static void exportBatchToJobQueueDirectory(Batch batch) throws FileNotFoundException, JAXBException {
 		
-		for (JobWrapper jobI : jobs) {
-			String jobFileI = Configuration.getJobsDirectory() +
-					File.separator + jobI.getJobID() + ".job";
-			jobI.exportXML(jobFileI);
+		String batchID = batch.getBatchID();
+		String jobsDirectory = Configuration.getInputBatchDirectory(batchID);
+		
+		File dir = new File(jobsDirectory);
+		dir.mkdir();
+		
+		List<JobWrapper> jobWrappers = batch.getJobWrappers();
+		
+		for (JobWrapper jobWrpI : jobWrappers) {
+			
+			exportToJobQueueDirectory(jobWrpI, batchID);
 		}
+		
+	}
+	
+	private static void exportToJobQueueDirectory(JobWrapper jobWrp, String batchID) throws FileNotFoundException, JAXBException {
+
+		String jobID = jobWrp.getJobID();
+		
+		String jobsDirectory = Configuration.getInputJobFile(batchID, jobID);
+		
+		jobWrp.exportXML(jobsDirectory);
+		
 	}
 	
 	public static void main(String [] args) throws FileNotFoundException {
 		
-		exportJobsToJobQueueDirectory();
-		JobWrapper job = getInputJobs().get(0);
-		System.out.println(job.getScheduler());
+		cleanJobsInQueueDirectory();
 	}
 }

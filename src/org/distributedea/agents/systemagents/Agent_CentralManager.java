@@ -11,13 +11,13 @@ import java.util.logging.Level;
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.centralmanager.InputJobQueue;
+import org.distributedea.agents.systemagents.centralmanager.behaviours.BatchComputingBehaviour;
 import org.distributedea.agents.systemagents.centralmanager.behaviours.ConsoleAutomatBehaviour;
-import org.distributedea.agents.systemagents.centralmanager.behaviours.StartComputingBehaviour;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.job.noontology.Batch;
 
 public class Agent_CentralManager extends Agent_DistributedEA {
 
@@ -52,28 +52,25 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 			return;
 		}
 
-		List<JobWrapper> jobs = null;
+		List<Batch> batches = null;
 		try {
-			jobs = InputJobQueue.getInputJobs();
+			batches = InputJobQueue.getInputBatches();
 		} catch (FileNotFoundException e) {
 			getLogger().log(Level.INFO, "Can not load input jobs");
 		}
 		
 		// adding Behaviour for computing
-		if (InputConfiguration.automaticStart) {
+		if (InputConfiguration.automaticStart && batches != null) {
 
-			if (jobs != null)
-				for (JobWrapper jobI: jobs) {
-					getLogger().log(Level.INFO, "Receiving job: " + jobI.getJobID());
-					Behaviour behaviourCompI =
-							new StartComputingBehaviour(jobI, getLogger());
-					Agent_DataManager.createSpaceForJob(jobI.getJobID());
-					addBehaviour(behaviourCompI);
-				}
+			for (Batch batchI: batches) {
+				Behaviour behaviourCompI =
+						new BatchComputingBehaviour(batchI, getLogger());
+				addBehaviour(behaviourCompI);
+			}
 			
 		} else {
 			Behaviour behaviourAutI =
-					new ConsoleAutomatBehaviour(jobs, getLogger());
+					new ConsoleAutomatBehaviour(batches, getLogger());
 			addBehaviour(behaviourAutI);
 		}
 	}

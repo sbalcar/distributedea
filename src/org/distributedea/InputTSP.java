@@ -107,7 +107,7 @@ public class InputTSP {
 		JobWrapper job = new JobWrapper();
 		job.setJobID("tsp05-Method" + METHOD_INDEX + "-Tool" + PROBLEM_TOOL_INDEX);
 		job.setCountOfReplaning(50);
-		job.setIndividualDistribution(true);
+		job.setIndividualDistribution(false);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("xit1083.tsp");
 		job.setMethodsFileName(Configuration.getMethodsFile());
@@ -119,4 +119,18 @@ public class InputTSP {
 		return job;
 	}
 	
+	public static JobWrapper test06() {
+				
+		JobWrapper job = new JobWrapper();
+		job.setCountOfReplaning(50);
+		job.setIndividualDistribution(true);
+		job.setProblemToSolve(ProblemTSPGPS.class);
+		job.setProblemFileName("xit1083.tsp");
+		job.setMethodsFileName(Configuration.getMethodsFile());
+		
+		job.setProblemTools(
+				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
+		
+		return job;
+	}
 }

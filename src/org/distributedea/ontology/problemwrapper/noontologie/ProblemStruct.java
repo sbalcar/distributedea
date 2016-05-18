@@ -1,6 +1,7 @@
 package org.distributedea.ontology.problemwrapper.noontologie;
 
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolValidation;
@@ -10,7 +11,7 @@ public class ProblemStruct {
 	/**
 	 * Job identification
 	 */
-	private String jobID;
+	private JobID jobID;
 	
 	/**
 	 * Turns on broadcast computed individuals to distributed agents
@@ -28,10 +29,10 @@ public class ProblemStruct {
 	private Problem problem;
 
 	
-	public String getJobID() {
+	public JobID getJobID() {
 		return jobID;
 	}
-	public void setJobID(String jobID) {
+	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
 	}
 
@@ -59,7 +60,12 @@ public class ProblemStruct {
 		}
 		return null;
 	}
-
+	public void importProblemToolClass(Class<?> problemToolClass) {
+		if (problemToolClass == null) {
+			return;
+		}
+		this.problemToolClass = problemToolClass.getName();
+	}
 	
 	public Problem getProblem() {
 		return problem;

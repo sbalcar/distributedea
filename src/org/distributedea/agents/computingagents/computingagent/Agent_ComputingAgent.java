@@ -37,10 +37,13 @@ import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.helpmate.HelpmateList;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
@@ -60,6 +63,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	// logger for Computing Agent
 	private AgentLogger logger = null;
+	
+	// Agent configuration which required CentralManager from the local Manager
+	protected AgentConfiguration requiredAgentConfiguration = null;
 	
 	// the set of received Individuals from distribution
 	protected IndividualModel receivedIndividuals = new IndividualModel();
@@ -81,7 +87,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param problem
 	 * @param behaviour
 	 */
-	protected abstract void startComputing(Problem problem, Class<?> problemTool, String jobID, Behaviour behaviour) throws ProblemToolException;
+	protected abstract void startComputing(Problem problem, Class<?> problemTool, JobID jobID, Behaviour behaviour) throws ProblemToolException;
 	
 	
 	@Override
@@ -187,12 +193,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		});
 		
 		
-		final MessageTemplate mesTemplateInform =
+		final MessageTemplate mesTemplateResultInform =
 				MessageTemplate.and(
 						MessageTemplate.MatchOntology(ResultOntology.getInstance().getName()),
 						MessageTemplate.MatchPerformative(ACLMessage.INFORM) );
 		
-		addBehaviour(new AchieveREResponder(this, mesTemplateInform) {
+		addBehaviour(new AchieveREResponder(this, mesTemplateResultInform) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -206,6 +212,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 					if (action.getAction() instanceof IndividualWrapper) {
 						getLogger().log(Level.INFO, "Received Individual" );
 						processIndividual(msgInform, action);
+						
 					}
 
 				} catch (OntologyException e) {
@@ -225,26 +232,69 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 		});
 		
+		
+		
+		final MessageTemplate mesTemplateManaInform =
+				MessageTemplate.and(
+						MessageTemplate.MatchOntology(ManagementOntology.getInstance().getName()),
+						MessageTemplate.MatchPerformative(ACLMessage.INFORM) );
+		
+		addBehaviour(new AchieveREResponder(this, mesTemplateManaInform) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected ACLMessage handleRequest(ACLMessage msgInform) {
+				
+				try {
+					Action action = (Action)
+							getContentManager().extractContent(msgInform);
+					
+					if (action.getAction() instanceof RequiredAgent) {
+						getLogger().log(Level.INFO, "Received RequiredAgent" );
+						processRequiredAgent(msgInform, action);
+					}
+
+				} catch (OntologyException e) {
+					getLogger().logThrowable("Problem extracting content", e);
+				} catch (CodecException e) {
+					getLogger().logThrowable("Codec problem", e);
+				}
+
+				return null;
+			}
+			
+			@Override
+			protected ACLMessage prepareResultNotification(ACLMessage request,
+					ACLMessage response) throws FailureException {
+				return null;
+			}
+
+		});
 	}
 
 	
+	protected void processRequiredAgent(ACLMessage msgInform, Action action) {
+
+		RequiredAgent requiredAgent = (RequiredAgent)action.getAction();
+		
+		this.requiredAgentConfiguration = requiredAgent.getAgentConfiguration();
+		
+	}
+
 	protected void processIndividual(ACLMessage request, Action action) {
 		
 		IndividualWrapper individualWrapper = (IndividualWrapper)action.getAction();
-		Individual individual = individualWrapper.getIndividual();
 		
-		if(! individual.validation()) {
-			individual.validation();
-			throw new IllegalStateException("Recieved Individual is not valid");
+		if (computingThread == null || (! computingThread.isAlive())) {
+			return;
 		}
 		
-		receivedIndividuals.add(individualWrapper);
+		Problem problem = computingThread.getProblem();
+		
+		receivedIndividuals.addIndividual(individualWrapper, problem, getLogger());
 	}
 	
-	protected IndividualWrapper getRecievedIndividual() {
-		
-		return receivedIndividuals.getIndividual();		
-	}
 	
 	protected ACLMessage respondToAccessesResult(ACLMessage request,
 			Action action) {
@@ -428,7 +478,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	
 	private long timeOfLastIndividualDistributionMs = System.currentTimeMillis();
-	protected void distributeIndividualToNeighours(Individual individual, Problem problem, String jobID) {
+	protected void distributeIndividualToNeighours(Individual individual, double fitness, Problem problem, JobID jobID) {
 		
 		if (individual == null) {
 			return;
@@ -445,10 +495,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			// set description of agent (part of description)
 			AgentDescription description = getAgentDescription(problem);
 			
+			IndividualEvaluated individualEval = new IndividualEvaluated();
+			individualEval.setIndividual(individual);
+			individualEval.setFitness(fitness);
+			
 			IndividualWrapper individualWrapper = new IndividualWrapper();
 			individualWrapper.setJobID(jobID);
 			individualWrapper.setAgentDescription(description);
-			individualWrapper.setIndividual(individual);
+			individualWrapper.setIndividualEvaluated(individualEval);
 			
 			ComputingAgentService.sendIndividualToNeighbours(this, individualWrapper, getLogger());
 			
@@ -457,20 +511,20 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	
 	private AgentDescription getAgentDescription(Problem problem) {
-
+/*
 		AgentConfiguration agentConfiguration = new AgentConfiguration();
 		agentConfiguration.setAgentType(this.getClass().getName());
 		agentConfiguration.setAgentName(this.getLocalName());
-		
+*/	
 		AgentDescription description = new AgentDescription();
-		description.setAgentConfiguration(agentConfiguration);
+		description.setAgentConfiguration(requiredAgentConfiguration);
 		description.importProblemToolClass(computingThread.getProblemTool());
 		
 		return description;
 	}
 	
 	protected void processIndividualFromInitGeneration(Individual individual,
-			double fitness, long generationNumber, Problem problem, String jobID) {
+			double fitness, long generationNumber, Problem problem, JobID jobID) {
 		
 		if (generationNumber != -1) {
 			throw new IllegalStateException();
@@ -547,17 +601,17 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param problem
 	 */
 	protected void processRecievedIndividual(IndividualWrapper receivedIndividualW,
-			double receivedFitness, long generationNumber, Problem problem) {
+			long generationNumber, Problem problem) {
 		
 		ResultOfComputing resultOfComputing = computingThread.getBestresultOfComputing();
 		double bestFitness = resultOfComputing.getFitnessValue();
 		
+		IndividualEvaluated receivedIndividual = receivedIndividualW.getIndividualEvaluated();
+		AgentDescription description = receivedIndividualW.getAgentDescription();
+		
 		boolean isReceivedIndividualBetter =
 				ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-						receivedFitness, bestFitness, problem);
-		
-		Individual receivedIndividual = receivedIndividualW.getIndividual();
-		AgentDescription description = receivedIndividualW.getAgentDescription();
+						receivedIndividual.getFitness(), bestFitness, problem);
 		
 		// put description to the map
 		if (helpers.containsKey(description)) {
@@ -570,16 +624,16 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		if (isReceivedIndividualBetter) {
 			
 			ResultOfComputing resultOfComputingNew = new ResultOfComputing();
-			resultOfComputingNew.setBestIndividual(receivedIndividual);
-			resultOfComputingNew.setFitnessValue(receivedFitness);
+			resultOfComputingNew.setBestIndividual(receivedIndividual.getIndividual());
+			resultOfComputingNew.setFitnessValue(receivedIndividual.getFitness());
 			
 			computingThread.setBestresultOfComputing(resultOfComputingNew);
 			
-			String jobID = receivedIndividualW.getJobID();
-			double fitnessImprovement = Math.abs(receivedFitness -bestFitness);
+			JobID jobID = receivedIndividualW.getJobID();
+			double fitnessImprovement = Math.abs(receivedIndividual.getFitness() -bestFitness);
 			
 			getCALogger().logDiffImprovementOfDistribution(fitnessImprovement, generationNumber,
-					receivedIndividual, description, jobID);
+					receivedIndividual.getIndividual(), description, jobID);
 		}
 
 	}

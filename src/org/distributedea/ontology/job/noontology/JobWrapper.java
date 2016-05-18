@@ -33,6 +33,11 @@ public class JobWrapper implements Concept, Serializable {
 	private String jobID;
 	
 	/**
+	 * Job Description
+	 */
+	private String description;
+	
+	/**
 	 * Define number of replaning of Scheduler
 	 */
 	private long countOfReplaning;
@@ -67,8 +72,8 @@ public class JobWrapper implements Concept, Serializable {
 	/**
 	 * Declares the Scheduler Class which will be used to direction of the evolution
 	 */
-	private List<Scheduler> schedulers;	
-	//@XmlElement
+	private List<Scheduler> schedulers;	// warning scheduler is wrapped in list because it is necessary for XML serialization
+
 
 	
 	public String getJobID() {
@@ -76,6 +81,14 @@ public class JobWrapper implements Concept, Serializable {
 	}
 	public void setJobID(String jobID) {
 		this.jobID = jobID;
+	}
+	
+	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	public long getCountOfReplaning() {

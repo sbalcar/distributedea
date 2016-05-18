@@ -10,7 +10,7 @@ import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.job.noontology.Batch;
 
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -20,11 +20,11 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<JobWrapper> jobs;
+	private List<Batch> batches;
 	private AgentLogger logger;
 	
-	public ConsoleAutomatBehaviour(List<JobWrapper> jobs, AgentLogger logger) {
-		this.jobs = jobs;
+	public ConsoleAutomatBehaviour(List<Batch> batches, AgentLogger logger) {
+		this.batches = batches;
 		this.logger = logger;
 	}
 	
@@ -51,10 +51,10 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 			} else if (line.equals("start")) {
 				logger.log(Level.INFO, "Starting everything");
 				
-				String jobID = line.substring("start".length());
-				jobID = jobID.trim();
+				String batchID = line.substring("start".length());
+				batchID = batchID.trim();
 						
-				startCommand(jobID);
+				startCommand(batchID);
 				
 			} else {
 				logger.log(Level.INFO, "I don't understand you \n" + 
@@ -65,19 +65,19 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 		}
 	}
 
-	protected void startCommand(String jobID) {
+	protected void startCommand(String batchID) {
 		
-		JobWrapper job = null;
+		Batch batch = null;
 		
-		for (JobWrapper jobI: jobs) {
-			if (jobID.equals(jobI.getJobID())) {
-				job = jobI;
+		for (Batch batchI: batches) {
+			if (batchID.equals(batchI.getBatchID())) {
+				batch = batchI;
 			}
 		}
 		
-		if (job != null) {
+		if (batch != null) {
 			Behaviour behaviourCompI =
-					new StartComputingBehaviour(job, logger);
+					new JobComputingBehaviour(batch.getJobWrappers().get(0), batch.getBatchID(), logger);
 			myAgent.addBehaviour(behaviourCompI);
 		} else {
 			logger.log(Level.INFO, "Error JobID doesn't exist");

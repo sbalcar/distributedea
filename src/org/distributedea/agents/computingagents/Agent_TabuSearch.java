@@ -8,7 +8,9 @@ import jade.core.behaviours.Behaviour;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
@@ -24,7 +26,8 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
 	
-
+	private TabuModel tabu = new TabuModel();
+	
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 		
@@ -32,14 +35,12 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass, String jobID,
+	protected void startComputing(Problem problem, Class<?> problemToolClass, JobID jobID,
 			Behaviour behaviour) throws ProblemToolException {
 		
 		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
 
-        int tabuListSize = 500;
-		Queue<Individual> tabuList = new LinkedList<Individual>();
         
 		long generationNumberI = -1;
 		
@@ -49,18 +50,13 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 				problemTool.fitness(individualI, problem, getCALogger());
 		
 		// add actual individual in the Tabu Set
-		tabuList.offer(individualI);
+		tabu.offer(individualI);
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualI,
 				fitnessI, generationNumberI, problem, jobID);
 		
 		while (computingThread.continueInTheNextGeneration()) {
-			
-			//adjust the size of the taboo on the acceptable limit
-			while (tabuList.size() >= tabuListSize) {
-				tabuList.poll();
-			}
 			
 			// going through neighbors
 			Individual neighborJ = null;
@@ -93,7 +89,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 								neighborFitnessJ, fitnessI, problem);
 				
 				// new better indiviual found
-				if (isNeighborlBetter && ! tabuList.contains(neighborJ) ) {
+				if (isNeighborlBetter && (! tabu.contains(neighborJ)) ) {
 					break;
 				}
 				
@@ -109,7 +105,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			}
 			
 			// add actual individual in the Tabu Set
-			tabuList.offer(individualI);
+			tabu.offer(individualI);
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualI,
@@ -117,29 +113,31 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			
 			// send new Individual to distributed neighbors
 			if (computingThread.isIndividualDistribution()) {
-				distributeIndividualToNeighours(individualI, problem, jobID);
+				distributeIndividualToNeighours(individualI, fitnessI, problem, jobID);
 			}
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = getRecievedIndividual();
-			Individual recievedIndividual = recievedIndividualW.getIndividual();
-			double recievedFitnessI = problemTool.fitness(recievedIndividual,
-					problem, getCALogger());
+			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
+			
+			boolean isReceivedBetter =
+					ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
+							recievedIndividualW, fitnessI, problem);
+
 			if (computingThread.isIndividualDistribution() &&
-					! Double.isNaN(recievedFitnessI) &&
-					! tabuList.contains(recievedIndividual) &&
-					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							recievedFitnessI, fitnessI, problem)) {
+					(! tabu.contains(recievedIndividualW)) &&
+					isReceivedBetter) {
+				
+				IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
 				
 				// update if better that actual
-				individualI = recievedIndividual;
-				fitnessI = recievedFitnessI;
+				individualI = recievedIndividual.getIndividual();
+				fitnessI = recievedIndividual.getFitness();
 				
-				tabuList.offer(individualI);
+				tabu.offer(individualI);
 				
 				// save and log received Individual
 				processRecievedIndividual(recievedIndividualW,
-						fitnessI, generationNumberI, problem);
+						generationNumberI, problem);
 			}
 			
 		}
@@ -148,4 +146,48 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 
 	}
 
+}
+
+
+class TabuModel {
+	
+	private int tabuListSize = 500;
+	
+	private Queue<Individual> tabuList = new LinkedList<Individual>();
+	
+	public boolean contains(IndividualWrapper individualWrapper) {
+		
+		if (individualWrapper == null) {
+			return false;
+		}
+		
+		Individual individual = individualWrapper.getIndividualEvaluated().getIndividual();
+		
+		return tabuList.contains(individual);
+	}
+
+	public boolean contains(Individual individual) {
+		
+		if (individual == null) {
+			return false;
+		}
+		
+		return tabuList.contains(individual);
+	}
+	
+	public void offer(Individual individual) {
+		
+		resize();
+		
+		tabuList.offer(individual);
+	}
+	
+	
+	private void resize() {
+		
+		//adjust the size of the taboo on the acceptable limit
+		while (tabuList.size() >= tabuListSize) {
+			tabuList.poll();
+		}
+	}
 }

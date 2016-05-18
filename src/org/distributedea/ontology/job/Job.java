@@ -1,15 +1,20 @@
-package org.distributedea.ontology.job.noontology;
+package org.distributedea.ontology.job;
 
+
+import jade.content.Concept;
 
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
-public class Job {
+public class Job implements Concept {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Job identification
 	 */
-	private String jobID;
+	private JobID jobID;
 	
 	/**
 	 * Turns on broadcast computed individuals to distributed agents
@@ -27,10 +32,10 @@ public class Job {
 	private Problem problem;
 
 	
-	public String getJobID() {
+	public JobID getJobID() {
 		return jobID;
 	}
-	public void setJobID(String jobID) {
+	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
 	}
 
@@ -58,4 +63,19 @@ public class Job {
 		this.problem = problem;
 	}
 	
+	/**
+	 * Exports the Job as ProblemStruct which contains ProblemTool in argument
+	 * @param problemToolClass
+	 * @return
+	 */
+	public ProblemStruct exportProblemStruct(Class<?> problemToolClass) {
+		
+		ProblemStruct problemStruct = new ProblemStruct();
+		problemStruct.setJobID(getJobID());
+		problemStruct.setIndividualDistribution(getIndividualDistribution());
+		problemStruct.setProblem(getProblem());
+		problemStruct.importProblemToolClass(problemToolClass);
+		
+		return problemStruct;
+	}
 }
