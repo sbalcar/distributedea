@@ -4,14 +4,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.distributedea.Configuration;
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.input.PostProcessing;
-import org.distributedea.input.batches.BatchHomoComparing;
+import org.distributedea.input.Tool;
+import org.distributedea.input.batches.BatchHeteroComparing;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.noontology.Batch;
+import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.problem.Problem;
 
 public class PostProcComparing extends PostProcessing {
 	
@@ -24,24 +30,26 @@ public class PostProcComparing extends PostProcessing {
 		String XLABEL = "čas v sekundách";
 		String YLABEL = "hodnota fitnes v kilometrech";
 		
-		String INPUT_PATH = "matlab";
-		
-		String OUTPUT_FILE = "graph";
+		String OUTPUT_FILE = batch.getBatchID() + "Comparing";
+		String OUTPUT_PATH = "matlab";
 		
 		String matlabSourceCode =
 		"h = figure" + NL +
 		"hold on" + NL +
-		"title('" + TITLE + "')" + NL +
+		"title('" + TITLE + "');" + NL +
 		"xlabel('x: " + XLABEL + "', 'FontSize', 10);" + NL +
 		"ylabel('y: " + YLABEL + "', 'FontSize', 10);" + NL +
 		NL;
 		
-		List<JobID> jobIDs = batch.exportJobIDs();
 		List<String> lineTypes = Arrays.asList("-", "--", ":", "-.");
 		
-		for (int i = 0; i < jobIDs.size(); i++) {
+		String batchID = batch.getBatchID();
+		List<JobWrapper> jobWrappers = batch.getJobWrappers();
+		for (int i = 0; i < jobWrappers.size(); i++) {
 			
-			JobID jobIDI = jobIDs.get(i);
+			JobWrapper jobWrpI = jobWrappers.get(i);
+			
+			JobID jobIDI = processJobWrapper(jobWrpI, batchID);
 			
 			String fileNameI = Configuration.getResultFile(jobIDI);
 			String lineTypeI = lineTypes.get(i % lineTypes.size());
@@ -66,17 +74,17 @@ public class PostProcComparing extends PostProcessing {
 	
 		System.out.println(matlabSourceCode);
 		
-		try(  PrintWriter out = new PrintWriter(INPUT_PATH + File.separator + "filename.m")  ){
+		try(  PrintWriter out = new PrintWriter(OUTPUT_PATH + File.separator + OUTPUT_FILE + ".m")  ){
 		    out.println(matlabSourceCode);
 		    out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
-		String bashSourceCode = "cd matlab;" + NL + 
-		"matlab -nodisplay -r filename";
+		String bashSourceCode = "cd " + OUTPUT_PATH + ";" + NL + 
+		"matlab -nodisplay -r " + OUTPUT_FILE;
 		
-		String bashScriptFileName = INPUT_PATH + File.separator + "run.sh";
+		String bashScriptFileName = OUTPUT_PATH + File.separator + "run.sh";
 		try(  PrintWriter out = new PrintWriter(bashScriptFileName)  ){
 		    out.println(bashSourceCode);
 		    out.close();
@@ -90,6 +98,8 @@ public class PostProcComparing extends PostProcessing {
 			pr0.waitFor();
 			Process pr1 = rt.exec("./" + bashScriptFileName);
 			pr1.waitFor();
+			Process pr2 = rt.exec("rm " + bashScriptFileName);
+			pr2.waitFor();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -97,6 +107,55 @@ public class PostProcComparing extends PostProcessing {
 		System.out.println("Export OK");
 	}
 
+	public JobID processJobWrapper(JobWrapper jobWrp, String batchID) {
+		
+		String jobID = jobWrp.getJobID();
+		int numberOfRuns = jobWrp.getNumberOfRuns();
+		
+		
+		Class<?> jobClass = jobWrp.getProblemToSolve();
+		
+		Problem problem = null;
+		try {
+			problem = (Problem) jobClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+		}
+		
+		
+		Map<JobID, Double> resultsOfJobsMap = Tool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
+		
+		return getBestJobID(resultsOfJobsMap, problem);
+	}
+	
+	protected JobID getBestJobID(Map<JobID, Double> resultsOfJobsMap, Problem problem) {
+		
+		if (resultsOfJobsMap == null || resultsOfJobsMap.isEmpty()) {
+			return null;
+		}
+		
+		List<JobID> jobIDs = new ArrayList<>(resultsOfJobsMap.keySet());
+		List<Double> fitnessValues = new ArrayList<>(resultsOfJobsMap.values());
+		
+		JobID bestJobID = jobIDs.get(0);
+		Double bestFitnessValue = fitnessValues.get(0);
+		
+		for (Map.Entry<JobID, Double> entry : resultsOfJobsMap.entrySet()) {
+			
+			JobID jobIDI = entry.getKey();
+			Double fitnessValueI = entry.getValue();
+		    
+			boolean isBetter = FitnessTool.isFistFitnessBetterThanSecond(
+					fitnessValueI, bestFitnessValue, problem);
+			
+			if (isBetter) {
+				bestJobID = jobIDI;
+				bestFitnessValue = fitnessValueI;
+			}
+		}
+		
+		return bestJobID;
+	}
+	
 	protected String createLegend(List<String> descriptions) {
 		
 		String legend = "";
@@ -114,7 +173,7 @@ public class PostProcComparing extends PostProcessing {
 	
 	public static void main(String [] args) {
 		
-		BatchHomoComparing batchCmp = new BatchHomoComparing(); 
+		BatchHeteroComparing batchCmp = new BatchHeteroComparing();
 		Batch batch = batchCmp.batch();
 		
 		PostProcComparing p = new PostProcComparing();

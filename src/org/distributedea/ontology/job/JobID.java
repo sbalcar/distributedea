@@ -8,12 +8,14 @@ public class JobID implements Concept {
 
 	private String jobID;
 	private String batchID;
+	private int runNumber;
 	
 	public JobID() {}
 	
-	public JobID(String batchName, String jobName) {
+	public JobID(String batchName, String jobName, int runNumber) {
 		this.batchID = batchName;
 		this.jobID = jobName;
+		this.runNumber = runNumber;
 	}
 
 	public String getBatchID() {
@@ -28,5 +30,47 @@ public class JobID implements Concept {
 	}
 	public void setJobID(String jobName) {
 		this.jobID = jobName;
+	}
+
+	public int getRunNumber() {
+		return runNumber;
+	}
+	public void setRunNumber(int runNumber) {
+		this.runNumber = runNumber;
+	}
+	
+	
+	@Override
+	public boolean equals(Object other) {
+		
+	    if (!(other instanceof JobID)) {
+	        return false;
+	    }
+	    
+	    JobID jobIDOuther = (JobID)other;
+	    
+	    boolean aregBatchIDsEqual =
+	    		this.getBatchID().equals(jobIDOuther.getBatchID());
+	    boolean aregJobIDsEqual =
+	    		this.getJobID().equals(jobIDOuther.getJobID());
+	    boolean aregRunNumbersEqual =
+	    		this.getRunNumber() == jobIDOuther.getRunNumber();
+	    
+	    if (aregBatchIDsEqual && aregJobIDsEqual && aregRunNumbersEqual) {
+	    	return true;
+	    }
+	    
+	    return false;
+	}
+	
+    @Override
+    public int hashCode() {
+    	return toString().hashCode();
+    }
+    
+	@Override
+	public String toString() {
+		
+		return batchID + jobID + runNumber;
 	}
 }

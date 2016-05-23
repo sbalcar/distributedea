@@ -25,8 +25,7 @@ public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentConfigurations configurations,
-			AgentLogger logger) throws SchedulerException {
+			Job job, AgentLogger logger) throws SchedulerException {
 
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
@@ -42,6 +41,7 @@ public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 		
 
 		// create one agent for each configuration
+		AgentConfigurations configurations = job.getAgentConfigurations();
 		for (AgentConfiguration agentConfigurationI : configurations.getAgentConfigurations()) {
 						
 			ManagerAgentService.sendCreateAgent(centralManager,
@@ -75,7 +75,7 @@ public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 	
 	@Override
 	public void replan(Agent_CentralManager centralManager, Job job,
-			AgentConfigurations configurations, AgentLogger logger) {
+			AgentLogger logger) {
 	}
 
 	

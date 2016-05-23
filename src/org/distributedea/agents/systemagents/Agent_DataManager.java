@@ -218,6 +218,12 @@ public class Agent_DataManager extends Agent_DistributedEA {
 			logCADirectory.mkdir();
 		}
 		
+		String logCARunDirectoryName = Configuration.getComputingAgentRunLogDirectory(jobID);
+		File logCARunDirectory = new File(logCARunDirectoryName);
+		if (! logCARunDirectory.isDirectory()) {
+			logCARunDirectory.mkdir();
+		}
+		
 		String logCAResultDirectoryName = Configuration.getComputingAgentLogSolutionDirectory(jobID);
 		File logCAResultDirectory = new File(logCAResultDirectoryName);
 		if (! logCAResultDirectory.isDirectory()) {

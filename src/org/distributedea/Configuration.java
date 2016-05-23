@@ -41,6 +41,7 @@ public class Configuration {
 	public static char CONTAINER_NUMBER_PREFIX = '_';
 	
 	public static String JOB_SUFIX = "job";
+	public static String POSTPROCESSING_SUFIX = "ps";
 	
 	/**
 	 *  Agent CentralManager configuration
@@ -136,6 +137,11 @@ public class Configuration {
 				jobID + "." + Configuration.JOB_SUFIX;
 	}
 	
+	public static String getPostProcessingFile(String batchID, String psID) {
+
+		return getInputBatchDirectory(batchID) + File.separator +
+				psID + "." + Configuration.POSTPROCESSING_SUFIX;
+	}
 
 	/**
 	 * Provides name of directory for the centralized solution of whole Distributed Evolution
@@ -159,7 +165,7 @@ public class Configuration {
 	public static String getResultFile(JobID jobID) {
 		
 		return getResultDirectory(jobID.getBatchID()) + File.separator +
-				"result-" + jobID.getJobID() +".txt";
+				"result-" + jobID.getJobID() + "-" + jobID.getRunNumber() + ".txt";
 	}
 	
 	
@@ -191,18 +197,12 @@ public class Configuration {
 				jobID.getJobID();
 	}
 
-	/**
-	 * Provides name of directory for Result files of Computing Agents
-	 * @return
-	 */
-	public static String getComputingAgentResultDirectory(
-			AID computingAgentAID, JobID jobID) {
+	public static String getComputingAgentRunLogDirectory(JobID jobID) {
 
-		String batchID = jobID.getBatchID();
-		return getLogBatchDirectory(batchID) + File.separator +
-				jobID.getJobID() + File.separator +
-				computingAgentAID.getLocalName() + ".rslt";
+		return getComputingAgentLogDirectory(jobID) + File.separator +
+				jobID.getRunNumber();
 	}
+	
 	
 	/**
 	 * Provides name of directory for Solution files of Computing Agents
@@ -210,13 +210,13 @@ public class Configuration {
 	 */
 	public static String getComputingAgentLogSolutionDirectory(JobID jobID) {
 
-		return getComputingAgentLogDirectory(jobID) + File.separator + "solution";
+		return getComputingAgentRunLogDirectory(jobID) + File.separator + "solution";
 	}
 
 	public static String getComputingAgentLogImprovementOfDistributionDirectory(
 			JobID jobID) {
 
-		return getComputingAgentLogDirectory(jobID) + File.separator +
+		return getComputingAgentRunLogDirectory(jobID) + File.separator +
 				"improvementOfDistribution";
 	}
 
@@ -242,7 +242,7 @@ public class Configuration {
 	 */
 	public static String getComputingAgentResultFile(AID computingAgentAID, JobID jobID) {
 
-		return getComputingAgentLogDirectory(jobID) + File.separator
+		return getComputingAgentRunLogDirectory(jobID) + File.separator
 				+ computingAgentAID.getLocalName() + ".rslt";
 	}
 

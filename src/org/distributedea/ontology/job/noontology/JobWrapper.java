@@ -33,6 +33,11 @@ public class JobWrapper implements Concept, Serializable {
 	private String jobID;
 	
 	/**
+	 * Declares the number of job repetitions
+	 */
+	private int numberOfRuns;
+	
+	/**
 	 * Job Description
 	 */
 	private String description;
@@ -83,6 +88,12 @@ public class JobWrapper implements Concept, Serializable {
 		this.jobID = jobID;
 	}
 	
+	public int getNumberOfRuns() {
+		return numberOfRuns;
+	}
+	public void setNumberOfRuns(int numberOfRuns) {
+		this.numberOfRuns = numberOfRuns;
+	}
 	
 	public String getDescription() {
 		return description;

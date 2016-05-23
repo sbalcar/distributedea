@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import javax.xml.bind.JAXBException;
 
+import org.distributedea.input.PostProcessing;
 import org.distributedea.ontology.job.JobID;
 
 import com.thoughtworks.xstream.XStream;
@@ -20,10 +21,11 @@ public class Batch implements Concept {
 	private static final long serialVersionUID = 1L;
 	
 	private String batchID;
+	private String description;
 	
 	private List<JobWrapper> jobWrappers;
 
-	private String description;
+	private List<PostProcessing> postProcessings;
 	
 	
 	public String getBatchID() {
@@ -33,6 +35,12 @@ public class Batch implements Concept {
 		this.batchID = batchID;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 	public List<JobWrapper> getJobWrappers() {
 		return jobWrappers;
@@ -49,14 +57,20 @@ public class Batch implements Concept {
 		this.jobWrappers.add(jobWrappers);
 	}
 	
-	
-	public String getDescription() {
-		return description;
+	public List<PostProcessing> getPostProcessings() {
+		return postProcessings;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setPostProcessings(List<PostProcessing> postProcessings) {
+		this.postProcessings = postProcessings;
 	}
-	
+	public void addPostProcessings(PostProcessing postProcessings) {
+		
+		if (this.postProcessings == null) {
+			this.postProcessings = new ArrayList<>();
+		}
+		
+		this.postProcessings.add(postProcessings);
+	}	
 	
 	public List<JobID> exportJobIDs() {
 		

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.distributedea.Configuration;
+import org.distributedea.input.PostProcessing;
 import org.distributedea.ontology.job.noontology.Batch;
 import org.distributedea.ontology.job.noontology.JobWrapper;
 
@@ -33,9 +34,12 @@ public class InputJobQueue {
 				
 			List<JobWrapper> jobsI = getInputJobsWrappers(batchIDI);
 			
+			List<PostProcessing> postProcI = getInputPostProcessings(batchIDI);
+			
 			Batch batchI = new Batch();
 			batchI.setBatchID(batchIDI);
 			batchI.setJobWrappers(jobsI);
+			batchI.setPostProcessings(postProcI);
 			
 			batches.add(batchI);
 
@@ -46,7 +50,7 @@ public class InputJobQueue {
 	
 	public static List<JobWrapper> getInputJobsWrappers(String batchID) throws FileNotFoundException {
 		
-		List<JobWrapper> jobs = new ArrayList<JobWrapper>();
+		List<JobWrapper> jobs = new ArrayList<>();
 				
 		File folder = new File(Configuration.getInputBatchDirectory(batchID));
 		File[] listOfFiles = folder.listFiles();
@@ -61,6 +65,25 @@ public class InputJobQueue {
 		
 		return jobs;
 	}
+	
+	public static List<PostProcessing> getInputPostProcessings(String batchID) throws FileNotFoundException {
+		
+		List<PostProcessing> postProcessings = new ArrayList<>();
+		
+		File folder = new File(Configuration.getInputBatchDirectory(batchID));
+		File[] listOfFiles = folder.listFiles();
+
+		for (File fileI : listOfFiles) {
+			if (fileI.isFile() && fileI.getName().endsWith(Configuration.POSTPROCESSING_SUFIX)) {
+				System.out.println("File " + fileI.getName());
+				PostProcessing jobI = PostProcessing.importXML(fileI);
+				postProcessings.add(jobI);
+			}
+		}
+		
+		return postProcessings;
+	}
+	
 
 	public static void cleanJobsInQueueDirectory() {
 	
@@ -94,20 +117,38 @@ public class InputJobQueue {
 		
 		List<JobWrapper> jobWrappers = batch.getJobWrappers();
 		
+		// exporting jobs
 		for (JobWrapper jobWrpI : jobWrappers) {
 			
-			exportToJobQueueDirectory(jobWrpI, batchID);
+			exportJobToJobQueueDirectory(jobWrpI, batchID);
+		}
+		
+		List<PostProcessing> postProcessings = batch.getPostProcessings();
+		// exporting post-processings
+		for (PostProcessing postProcI : postProcessings) {
+			
+			exportPostProcessingToJobQueueDirectory(postProcI, batchID);
 		}
 		
 	}
 	
-	private static void exportToJobQueueDirectory(JobWrapper jobWrp, String batchID) throws FileNotFoundException, JAXBException {
+	private static void exportJobToJobQueueDirectory(JobWrapper jobWrp, String batchID) throws FileNotFoundException, JAXBException {
 
 		String jobID = jobWrp.getJobID();
 		
 		String jobsDirectory = Configuration.getInputJobFile(batchID, jobID);
 		
 		jobWrp.exportXML(jobsDirectory);
+		
+	}
+	
+	private static void exportPostProcessingToJobQueueDirectory(PostProcessing postProc, String batchID) throws FileNotFoundException, JAXBException {
+
+		String psID = postProc.getClass().getSimpleName();
+		
+		String postProcsDirectory = Configuration.getPostProcessingFile(batchID, psID);
+		
+		postProc.exportXML(postProcsDirectory);
 		
 	}
 	

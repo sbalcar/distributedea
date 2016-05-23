@@ -28,9 +28,9 @@ public class SchedulerInitializationRunOneSeveralTimes implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentConfigurations configurations,
-			AgentLogger logger) throws SchedulerException {
+			Job job, AgentLogger logger) throws SchedulerException {
 		
+		AgentConfigurations configurations = job.getAgentConfigurations();
 		AgentConfiguration agentConfigurationI = configurations.getAgentConfigurations().get(methodIndex);
 
 		AgentConfigurations configurationsSelected = new AgentConfigurations();
@@ -45,13 +45,12 @@ public class SchedulerInitializationRunOneSeveralTimes implements Scheduler {
 		
 		Scheduler scheduler = new SchedulerInitialization();
 		scheduler.agentInitialization(centralManager, job,
-				configurationsSelected, logger);
+				logger);
 		
 	}
 
 	@Override
 	public void replan(Agent_CentralManager centralManager, Job job,
-			AgentConfigurations configurations,
 			AgentLogger logger) throws SchedulerException {		
 	}
 	

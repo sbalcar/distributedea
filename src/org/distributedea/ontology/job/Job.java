@@ -3,6 +3,7 @@ package org.distributedea.ontology.job;
 
 import jade.content.Concept;
 
+import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
@@ -22,6 +23,11 @@ public class Job implements Concept {
 	private boolean individualDistribution;
 	
 	/**
+	 * Agent configurations - available for problem solving
+	 */
+	private AgentConfigurations agentConfigurations;
+	
+	/**
 	 * Problem Tools to use for solving Problem 
 	 */
 	private ProblemTools problemTools;
@@ -38,7 +44,15 @@ public class Job implements Concept {
 	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
 	}
-
+	
+	
+	public AgentConfigurations getAgentConfigurations() {
+		return agentConfigurations;
+	}
+	public void setAgentConfigurations(AgentConfigurations agentConfigurations) {
+		this.agentConfigurations = agentConfigurations;
+	}
+	
 	
 	public boolean getIndividualDistribution() {
 		return individualDistribution;
@@ -70,8 +84,13 @@ public class Job implements Concept {
 	 */
 	public ProblemStruct exportProblemStruct(Class<?> problemToolClass) {
 		
+		JobID jobIDCopy = new JobID();
+		jobIDCopy.setBatchID(getJobID().getBatchID());
+		jobIDCopy.setJobID(getJobID().getJobID());
+		jobIDCopy.setRunNumber(getJobID().getRunNumber());
+		
 		ProblemStruct problemStruct = new ProblemStruct();
-		problemStruct.setJobID(getJobID());
+		problemStruct.setJobID(jobIDCopy);
 		problemStruct.setIndividualDistribution(getIndividualDistribution());
 		problemStruct.setProblem(getProblem());
 		problemStruct.importProblemToolClass(problemToolClass);

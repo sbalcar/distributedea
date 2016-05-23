@@ -8,7 +8,6 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
-import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
@@ -24,19 +23,17 @@ public class SchedulerFollowupHelpers implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentConfigurations configurations,
-			AgentLogger logger) throws SchedulerException {
+			Job job, AgentLogger logger) throws SchedulerException {
 		
 		SchedulerInitializationRunEachMethodOnce scheduler = new SchedulerInitializationRunEachMethodOnce();
-		scheduler.agentInitialization(centralManager, job, configurations,
-				logger);
+		scheduler.agentInitialization(centralManager, job, logger);
 		
 	}
 
 	
 	@Override
 	public void replan(Agent_CentralManager centralManager, Job job,
-			AgentConfigurations configurations, AgentLogger logger) throws SchedulerException {
+			AgentLogger logger) throws SchedulerException {
 		
 		HelpmatesWrapper helpmates = SchedulerTool.getHelpmates(centralManager, NEW_STATISTICS_FOR_EACH_QUERY, logger);
 		

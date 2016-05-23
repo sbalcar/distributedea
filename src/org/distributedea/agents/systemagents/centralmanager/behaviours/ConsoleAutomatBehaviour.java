@@ -75,13 +75,15 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 			}
 		}
 		
-		if (batch != null) {
-			Behaviour behaviourCompI =
-					new JobComputingBehaviour(batch.getJobWrappers().get(0), batch.getBatchID(), logger);
-			myAgent.addBehaviour(behaviourCompI);
-		} else {
+		if (batch == null) {
 			logger.log(Level.INFO, "Error JobID doesn't exist");
+			return;
 		}
+		
+		Behaviour behaviourCompI =
+					new BatchComputingBehaviour(batch, logger);
+		myAgent.addBehaviour(behaviourCompI);
+		
 	}
 	
 	protected void killCommand() {

@@ -10,6 +10,8 @@ import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerF
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitialization;
 import org.distributedea.input.InputBatch;
+import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
+import org.distributedea.input.postprocessing.matlab.PostProcComparing;
 import org.distributedea.ontology.job.noontology.Batch;
 import org.distributedea.ontology.job.noontology.JobWrapper;
 
@@ -41,6 +43,15 @@ public class BatchHeteroComparing extends InputBatch {
 		batch.addJobWrapper(jobW0);
 		batch.addJobWrapper(jobW1);
 		batch.addJobWrapper(jobW2);
+		
+		
+		PostProcBoxplot ps0 = new PostProcBoxplot();
+
+		PostProcComparing ps1 = new PostProcComparing();
+		
+		
+		batch.addPostProcessings(ps0);
+		batch.addPostProcessings(ps1);
 		
 		return batch;
 	}

@@ -9,52 +9,34 @@ import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
+import org.distributedea.agents.systemagents.Agent_DataManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.datamanager.DataManagerService;
-import org.distributedea.configuration.AgentConfigurations;
-import org.distributedea.configuration.XmlConfigurationProvider;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
 import org.distributedea.ontology.job.Job;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.job.noontology.JobWrapper;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
-import org.distributedea.problems.ProblemTool;
 
 import jade.core.behaviours.OneShotBehaviour;
 
 public class JobComputingBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 1L;
-
-	private String jobID;
-	private String batchID;
-	private boolean individualDistribution;
-	private long countOfReplaning;
+	private Job job;
 	private Scheduler scheduler;
-	private Class<?> problemToSolve;
-	private String problemFileName;
-	private String methodsFileName;
-	private ProblemTools problemTools;
+	private long countOfReplaning;
 	private AgentLogger logger;
 	
-	public JobComputingBehaviour(
-			JobWrapper job, String batchID, AgentLogger logger) {
-		
-		this.jobID = job.getJobID();
-		this.batchID = batchID;
-		this.individualDistribution = job.isIndividualDistribution();
-		this.countOfReplaning = job.getCountOfReplaning();
-		this.scheduler = job.getScheduler();
-		this.problemToSolve = job.getProblemToSolve();
-		this.problemFileName = job.getProblemFileName();
-		this.methodsFileName = job.getMethodsFileName();
-		this.problemTools = job.getProblemTools();
+	public JobComputingBehaviour(Job job, Scheduler scheduler,
+			long countOfReplaning, AgentLogger logger) {
+
+		this.job = job;
+		this.scheduler = scheduler;
+		this.countOfReplaning = countOfReplaning;
 		this.logger = logger;
-		
 	}
 	
 	@Override
@@ -70,41 +52,17 @@ public class JobComputingBehaviour extends OneShotBehaviour {
 	}
 
 	
-	protected void startCommand() throws SchedulerException {
-		
-		boolean areProblemToolsValid = problemTools.valid(problemToSolve, logger);
-		if (! areProblemToolsValid) {
-			throw new SchedulerException("ProblemTools aren't valid");
-		}
-		
-		// AgentConfigurations - Methods reading
-		AgentConfigurations agentConfigurations =
-				XmlConfigurationProvider.getConfiguration(methodsFileName, logger);
-		if (agentConfigurations == null) {
-			throw new SchedulerException("Can not read AgetConfigurations");
-		}
-		
-		boolean areAgentConfigurationsValid = agentConfigurations.valid(logger);
-		if (! areAgentConfigurationsValid) {
-			throw new SchedulerException("AgentConfiguration aren't valid");
-		}
-	
-		
-		// Problem reading and testing
-		ProblemTool problemTool = problemTools.exportProblemTool(0, logger);
-		Problem problem = problemTool.readProblem(problemFileName, logger);
+	protected void startCommand() throws SchedulerException {			
 		
 		Agent_CentralManager centralManager = (Agent_CentralManager) myAgent;
 		
-		Job job = new Job();
-		job.setJobID(new JobID(batchID, jobID));
-		job.setIndividualDistribution(individualDistribution);
-		job.setProblem(problem);
-		job.setProblemTools(problemTools);
+		JobID jobID = job.getJobID();
+		
+		Agent_DataManager.createLogSpaceForJob(jobID);
+		Agent_DataManager.createResultSpaceForJob(jobID);
 		
 		logger.log(Level.INFO, "Start computing Job: " + jobID);
-		scheduler.agentInitialization(centralManager, job,
-				agentConfigurations, logger);
+		scheduler.agentInitialization(centralManager, job, logger);
 		
 		long generation = 0;
 		while (generation < countOfReplaning) {
@@ -122,14 +80,15 @@ public class JobComputingBehaviour extends OneShotBehaviour {
 			ResultOfComputingWrapper resultOfComputingAgents =
 					ComputingAgentService.sendAccessesResult(centralManager, logger);
 			
-			ResultOfComputing resultI = resultOfComputingAgents.exportBestResultOfComputing(problem);
+			Problem problem = job.getProblem();
+ 			ResultOfComputing resultI = resultOfComputingAgents.exportBestResultOfComputing(problem);
 			saveResult(resultI);
 			
 			// log information about re-planning
 			logger.log(Level.INFO, "Replanning: " + generation++ + " / " + countOfReplaning);
 			
 			// re-planning
-			scheduler.replan(centralManager, job, agentConfigurations,
+			scheduler.replan(centralManager, job,
 					logger);
 		}
 		scheduler.exit(centralManager, logger);

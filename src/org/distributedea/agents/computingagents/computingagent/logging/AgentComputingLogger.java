@@ -45,7 +45,7 @@ public class AgentComputingLogger extends AgentLogger {
 	
 	public void logComputedResult(double fitness, long generationNumber, JobID jobID) {
 		
-		String fileName = Configuration.getComputingAgentResultDirectory(agent.getAID(), jobID);
+		String fileName = Configuration.getComputingAgentResultFile(agent.getAID(), jobID);
 		
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));

@@ -33,8 +33,7 @@ public class SchedulerDummy implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentConfigurations configurations,
-			AgentLogger logger) throws SchedulerException {
+			Job job, AgentLogger logger) throws SchedulerException {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
 				Agent_ManagerAgent.class.getName());
@@ -48,6 +47,8 @@ public class SchedulerDummy implements Scheduler {
 		}
 		
 
+		AgentConfigurations configurations = job.getAgentConfigurations();
+		
 		// chooses agent configuration
 		AgentConfiguration agentConfiguration;
 		try {
@@ -85,7 +86,6 @@ public class SchedulerDummy implements Scheduler {
 	
 	@Override
 	public void replan(Agent_CentralManager centralManager, Job job,
-			AgentConfigurations configurations,
 			AgentLogger logger) throws SchedulerException {
 	}
 

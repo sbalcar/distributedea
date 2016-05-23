@@ -23,9 +23,9 @@ public class SchedulerInitialization implements Scheduler {
 
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentConfigurations configurations,
-			AgentLogger logger) throws SchedulerException {
+			Job job, AgentLogger logger) throws SchedulerException {
 		
+		AgentConfigurations configurations = job.getAgentConfigurations();
 		List<AgentDescription> descriptions =
 				getCartesianProductOfConfigurationsAndTools(configurations, job.getProblemTools());
 		int numberOfDescriotion = descriptions.size();
@@ -61,7 +61,6 @@ public class SchedulerInitialization implements Scheduler {
 	
 	@Override
 	public void replan(Agent_CentralManager centralManager, Job job,
-			AgentConfigurations configurations,
 			AgentLogger logger) throws SchedulerException {
 	}
 

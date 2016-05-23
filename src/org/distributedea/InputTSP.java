@@ -23,6 +23,7 @@ public class InputTSP {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("tsp01");
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
@@ -42,6 +43,7 @@ public class InputTSP {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("tsp02");
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
@@ -61,6 +63,7 @@ public class InputTSP {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("tsp03");
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPPoint.class);
@@ -80,6 +83,7 @@ public class InputTSP {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("tsp04");
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
@@ -106,6 +110,7 @@ public class InputTSP {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("tsp05-Method" + METHOD_INDEX + "-Tool" + PROBLEM_TOOL_INDEX);
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(false);
 		job.setProblemToSolve(ProblemTSPGPS.class);
@@ -122,6 +127,7 @@ public class InputTSP {
 	public static JobWrapper test06() {
 				
 		JobWrapper job = new JobWrapper();
+		job.setNumberOfRuns(3);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);

@@ -1,5 +1,6 @@
 package org.distributedea.problems;
 
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
@@ -42,20 +43,8 @@ public class ProblemToolEvaluation {
 	public static boolean isFistFitnessBetterThanSecond(double fintess1,
 			double fitness2, Problem problem) {
 		
-		if (problem.isMaximizationProblem()) {
-			
-			if (fintess1 > fitness2) {
-				return true;
-			}
-		
-		} else {
-
-			if (fintess1 < fitness2) {
-				return true;
-			}
-		}
-		
-		return false;
+		return FitnessTool.isFistFitnessBetterThanSecond(fintess1,
+				fitness2, problem);
 	}
 
 	public static boolean isFistFitnessWorseThanSecond(double fintess1,

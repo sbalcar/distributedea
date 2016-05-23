@@ -20,6 +20,7 @@ public class InputContOpt {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("co01");
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(false);
 		job.setProblemToSolve(ProblemContinousOpt.class);
@@ -39,6 +40,7 @@ public class InputContOpt {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("co02");
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemContinousOpt.class);
@@ -58,6 +60,7 @@ public class InputContOpt {
 		
 		JobWrapper job = new JobWrapper();
 		job.setJobID("co03");
+		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemContinousOpt.class);

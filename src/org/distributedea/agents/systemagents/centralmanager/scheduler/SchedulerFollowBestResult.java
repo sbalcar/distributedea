@@ -7,7 +7,6 @@ import jade.core.AID;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
-import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
@@ -22,11 +21,11 @@ public class SchedulerFollowBestResult implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager, Job job,
-			AgentConfigurations configurations, AgentLogger logger) throws SchedulerException {
+			AgentLogger logger) throws SchedulerException {
 		
 		SchedulerInitialization schedullerInit = new SchedulerInitialization();
 		schedullerInit.agentInitialization(centralManager, job,
-				configurations, logger);
+				logger);
 	}
 
 	/**
@@ -37,7 +36,7 @@ public class SchedulerFollowBestResult implements Scheduler {
 	 */
 	@Override
 	public void replan(Agent_CentralManager centralManager, Job job,
-			AgentConfigurations configurations, AgentLogger logger) throws SchedulerException {		
+			AgentLogger logger) throws SchedulerException {		
 		
 		Problem problem = job.getProblem();
 		

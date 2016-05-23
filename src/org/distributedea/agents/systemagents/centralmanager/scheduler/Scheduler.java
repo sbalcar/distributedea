@@ -3,7 +3,6 @@ package org.distributedea.agents.systemagents.centralmanager.scheduler;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
-import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.job.Job;
 
@@ -21,8 +20,7 @@ public interface Scheduler {
 	 * @param logger
 	 */
 	public abstract void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentConfigurations configurations,
-			AgentLogger logger) throws SchedulerException;
+			Job job, AgentLogger logger) throws SchedulerException;
 	
 	
 	/**
@@ -32,8 +30,7 @@ public interface Scheduler {
 	 * @param logger
 	 */
 	public abstract void replan(Agent_CentralManager centralManager,
-			Job job, AgentConfigurations configurations,
-			AgentLogger logger) throws SchedulerException;
+			Job job, AgentLogger logger) throws SchedulerException;
 	
 	/**
 	 * Exit
