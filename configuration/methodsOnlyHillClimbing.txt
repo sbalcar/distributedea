@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <agents>
+        <agent type="org.distributedea.agents.computingagents.Agent_HillClimbing" name="Agent_HillClimbing">
+        </agent>
+    </agents>
+</configuration>

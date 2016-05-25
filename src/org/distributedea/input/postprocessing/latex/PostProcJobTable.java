@@ -1,7 +1,7 @@
 package org.distributedea.input.postprocessing.latex;
 
 import org.distributedea.input.PostProcessing;
-import org.distributedea.input.batches.BatchHomoComparing;
+import org.distributedea.input.batches.BatchHomoComparingTSP;
 import org.distributedea.ontology.job.noontology.Batch;
 import org.distributedea.ontology.job.noontology.JobWrapper;
 
@@ -49,7 +49,7 @@ public class PostProcJobTable extends PostProcessing {
 
 	public static void main(String [] args) {
 		
-		BatchHomoComparing batchCmp = new BatchHomoComparing(); 
+		BatchHomoComparingTSP batchCmp = new BatchHomoComparingTSP(); 
 		Batch batch = batchCmp.batch();
 		
 		PostProcJobTable p = new PostProcJobTable();

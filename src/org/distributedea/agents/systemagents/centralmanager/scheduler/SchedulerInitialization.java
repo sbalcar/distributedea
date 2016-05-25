@@ -47,14 +47,11 @@ public class SchedulerInitialization implements Scheduler {
 			AID createdAgentI = ManagerAgentService.sendCreateAgent(centralManager,
 					managerAgentOfEmptyCoreAIDI, agentConfigurationI, logger);
 			
-			ProblemStruct problemStruct = new ProblemStruct();
-			problemStruct.setJobID(job.getJobID());
-			problemStruct.setIndividualDistribution(job.getIndividualDistribution());
-			problemStruct.setProblem(job.getProblem());
-			problemStruct.setProblemToolClass(problemToolI.getName());
+			
+			ProblemStruct problemStructI = job.exportProblemStruct(problemToolI);
 			
 			ComputingAgentService.sendStartComputing(
-					centralManager, createdAgentI, problemStruct, logger);
+					centralManager, createdAgentI, problemStructI, logger);
 		}
 		
 	}

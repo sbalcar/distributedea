@@ -25,6 +25,7 @@ import org.distributedea.problems.exceptions.ProblemToolException;
 
 public class TestCO {
 
+	@SuppressWarnings("unused")
 	private void test1() throws ProblemToolException {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
@@ -42,6 +43,7 @@ public class TestCO {
 		tool.exit();
 	}
 	
+	@SuppressWarnings("unused")
 	private void test2() throws ProblemToolException {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
@@ -78,6 +80,7 @@ public class TestCO {
 		tool2.exit();
 	}
 
+	@SuppressWarnings("unused")
 	private void test3() throws BbobException, ProblemToolException {
 	    
 	    String inputFileName = "inputs" + File.separator + "f01.co";
@@ -138,6 +141,7 @@ public class TestCO {
 	    
 	}
 	
+	@SuppressWarnings("unused")
 	private void test4() {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
@@ -151,7 +155,6 @@ public class TestCO {
 		
 		ProblemToolRandomMove tool = new ProblemToolRandomMove();
 		
-		@SuppressWarnings("unused")
 		Individual individual = tool.readSolution(solutionFileName, problem, null);
 	}
 	

@@ -1,7 +1,11 @@
 package org.distributedea.agents.systemagents.centralmanager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +18,7 @@ import org.distributedea.ontology.job.noontology.JobWrapper;
 
 public class InputJobQueue {
 
-	public static List<Batch> getInputBatches() throws FileNotFoundException {
+	public static List<Batch> getInputBatches() throws IOException {
 		
 		File folder = new File(Configuration.getDirectoryOfInputBatches());
 		File[] listOfFiles = folder.listFiles();
@@ -31,13 +35,15 @@ public class InputJobQueue {
 		List<Batch> batches = new ArrayList<>();
 		
 		for (String batchIDI : batchIDs) {
-				
+			
+			String descriptionI = getInputBatchDescription(batchIDI);
 			List<JobWrapper> jobsI = getInputJobsWrappers(batchIDI);
 			
 			List<PostProcessing> postProcI = getInputPostProcessings(batchIDI);
 			
 			Batch batchI = new Batch();
 			batchI.setBatchID(batchIDI);
+			batchI.setDescription(descriptionI);
 			batchI.setJobWrappers(jobsI);
 			batchI.setPostProcessings(postProcI);
 			
@@ -48,7 +54,27 @@ public class InputJobQueue {
 		return batches;
 	}
 	
-	public static List<JobWrapper> getInputJobsWrappers(String batchID) throws FileNotFoundException {
+	private static String getInputBatchDescription(String batchID) throws IOException  {
+		
+		String descriptionFile = Configuration.getBatchDescriptionFile(batchID);
+		
+		BufferedReader br = new BufferedReader(new FileReader(descriptionFile));
+	    try {
+	        StringBuilder sb = new StringBuilder();
+	        String line = br.readLine();
+
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append("\n");
+	            line = br.readLine();
+	        }
+	        return sb.toString().trim();
+	    } finally {
+	        br.close();
+	    }
+	}
+	
+	private static List<JobWrapper> getInputJobsWrappers(String batchID) throws FileNotFoundException {
 		
 		List<JobWrapper> jobs = new ArrayList<>();
 				
@@ -66,7 +92,7 @@ public class InputJobQueue {
 		return jobs;
 	}
 	
-	public static List<PostProcessing> getInputPostProcessings(String batchID) throws FileNotFoundException {
+	private static List<PostProcessing> getInputPostProcessings(String batchID) throws FileNotFoundException {
 		
 		List<PostProcessing> postProcessings = new ArrayList<>();
 		
@@ -117,6 +143,8 @@ public class InputJobQueue {
 		
 		List<JobWrapper> jobWrappers = batch.getJobWrappers();
 		
+		expotBatchDescription(batch.getDescription(), batchID);
+		
 		// exporting jobs
 		for (JobWrapper jobWrpI : jobWrappers) {
 			
@@ -131,6 +159,15 @@ public class InputJobQueue {
 		}
 		
 	}
+	
+	private static void expotBatchDescription(String batchDescription, String batchID) throws FileNotFoundException {
+		
+		String descriptionFile = Configuration.getBatchDescriptionFile(batchID);
+		try(  PrintWriter out = new PrintWriter(descriptionFile)  ){
+		    out.print(batchDescription);
+		}
+	}
+	
 	
 	private static void exportJobToJobQueueDirectory(JobWrapper jobWrp, String batchID) throws FileNotFoundException, JAXBException {
 

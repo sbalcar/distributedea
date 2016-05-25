@@ -79,10 +79,10 @@ public class Configuration {
 	 * Provides way to set of Methods (Computing agents) for planning to slave nodes
 	 * @return name of the file with relative path
 	 */
-	public static String getMethodsFile() {
+	public static String getMethodsFile(String methodsFileName) {
 
 		return getDirectoryOfConfiguration() + File.separator +
-				"methods.xml";
+				methodsFileName;
 	}
 
 	/**
@@ -143,6 +143,12 @@ public class Configuration {
 				psID + "." + Configuration.POSTPROCESSING_SUFIX;
 	}
 
+	public static String getBatchDescriptionFile(String batchID) {
+
+		return getInputBatchDirectory(batchID) + File.separator +
+				"description.txt";
+	}
+	
 	/**
 	 * Provides name of directory for the centralized solution of whole Distributed Evolution
 	 * @return

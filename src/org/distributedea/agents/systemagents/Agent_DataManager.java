@@ -108,59 +108,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		
 		return null;
 	}
-	
-	/*
-	private Map<String, PartResult> partResultOfCA = new HashMap<String, PartResult>();
-	
-	protected ACLMessage respondToResultOfComputing(ACLMessage request, Action action) {
 		
-		PartResult result = (PartResult)action.getAction();
-		AID aid = request.getSender();
-		String senderName = aid.getName();
-
-		partResultOfCA.put(senderName, result);
-		int numberOfPartResult = partResultOfCA.size();
-		
-		AID [] aidComputingAgents = this.searchDF(
-				Agent_ComputingAgent.class.getName());
-		int numberOfCA = aidComputingAgents.length;
-		
-		if (numberOfPartResult > numberOfCA) {
-			
-			partResultOfCA.clear();
-			partResultOfCA.put(senderName, result);
-			
-		} else if (numberOfPartResult == numberOfCA) {
-			
-			writeResultToFile();
-		}
-		
-		return null;
-	}
-
-	private int number = Configuration.getUniqueResultFileNumber();
-	
-	private void writeResultToFile() {
-		
-		String rowResult = "";
-		String rowDescription = Configuration.COMMENT_CHAR + " ";
-		for (PartResult partResultI : partResultOfCA.values()) {
-			rowResult += partResultI.getFitnessResult() + " ";
-			rowDescription += partResultI.getAgentDescription() + " ";
-		}
-		
-		String fileName = Configuration.getResultFile(number);
-		try {
-			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
-			writer.append(rowDescription.trim() + "\n");
-			writer.append(rowResult.trim() + "\n");
-			writer.close();
-		} catch (IOException e) {
-			getLogger().logThrowable("Part result can't be logged", e);
-		}
-		
-	}
-*/	
 	/**
 	 * Removes all files in the Log directory
 	 */

@@ -13,7 +13,7 @@ import org.distributedea.Configuration;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.input.PostProcessing;
 import org.distributedea.input.Tool;
-import org.distributedea.input.batches.BatchHeteroComparing;
+import org.distributedea.input.batches.BatchHeteroComparingTSP;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.noontology.Batch;
 import org.distributedea.ontology.job.noontology.JobWrapper;
@@ -173,7 +173,7 @@ public class PostProcComparing extends PostProcessing {
 	
 	public static void main(String [] args) {
 		
-		BatchHeteroComparing batchCmp = new BatchHeteroComparing();
+		BatchHeteroComparingTSP batchCmp = new BatchHeteroComparingTSP();
 		Batch batch = batchCmp.batch();
 		
 		PostProcComparing p = new PostProcComparing();

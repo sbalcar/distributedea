@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.distributedea.input.PostProcessing;
 import org.distributedea.input.Tool;
-import org.distributedea.input.batches.BatchHeteroComparing;
+import org.distributedea.input.batches.BatchHeteroComparingTSP;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.noontology.Batch;
 import org.distributedea.ontology.job.noontology.JobWrapper;
@@ -54,8 +54,11 @@ public class PostProcBoxplot extends PostProcessing {
 		"ylabel('y: " + YLABEL + "', 'FontSize', 10);" + NL +
 		NL;
 		
-		matlabCode += "boxplot(" + matrixStr + "," + legendStr + ")" + NL;
-		matlabCode += "title('" + description + "')" + NL;
+		matlabCode += 
+		"M=" + matrixStr + NL +
+		"Mtrans = M.'" + NL +
+		"boxplot(Mtrans," + legendStr + ")" + NL +
+		"title('" + description + "')" + NL;
 		
 		matlabCode +=
 		"hold off" + NL +
@@ -112,7 +115,7 @@ public class PostProcBoxplot extends PostProcessing {
 	
 	public static void main(String [] args) {
 		
-		BatchHeteroComparing batchCmp = new BatchHeteroComparing(); 
+		BatchHeteroComparingTSP batchCmp = new BatchHeteroComparingTSP(); 
 		Batch batch = batchCmp.batch();
 		
 		PostProcBoxplot p = new PostProcBoxplot();

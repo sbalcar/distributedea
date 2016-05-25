@@ -2,6 +2,7 @@ package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 import java.util.List;
 
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.configuration.AgentConfigurations;
@@ -42,19 +43,20 @@ public class BatchComputingBehaviour extends OneShotBehaviour {
 			try {
 				processJobWrapper(jobWrpI, batchID);
 			} catch (SchedulerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.logThrowable("Can't execute Job", e);
 			}
 		}
 	
-		List<PostProcessing> postProcessings = batch.getPostProcessings();
-		for (PostProcessing postProcI : postProcessings) {
+		if (InputConfiguration.runPostProcessing) {
 			
-			try {
-				processPostProcessing(postProcI, batch);
-			} catch (SchedulerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			List<PostProcessing> postProcessings = batch.getPostProcessings();
+			for (PostProcessing postProcI : postProcessings) {
+				
+				try {
+					processPostProcessing(postProcI, batch);
+				} catch (SchedulerException e) {
+					logger.logThrowable("Can't execute PostProcessing", e);
+				}
 			}
 		}
 	}

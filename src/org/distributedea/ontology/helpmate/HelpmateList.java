@@ -12,8 +12,14 @@ public class HelpmateList implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Description of Computing Agent
+	 */
 	private AgentDescription description;
 	
+	/**
+	 * Descriptions of the helpers
+	 */
 	private List<AgentDescriptionWrapper> descriptions;
 
 	

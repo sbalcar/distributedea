@@ -72,15 +72,7 @@
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
-    <path id="run.BatchHomoComparing.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
     <path id="run.PostProcBoxplot.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.BatchHeteroComparing.classpath">
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
@@ -96,10 +88,19 @@
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
+    <path id="run.BatchHeteroComparingTSP.classpath">
+        <path refid="distributedea.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.BatchHomoComparingTSP.classpath">
+        <path refid="distributedea.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
     <target name="init">
         <mkdir dir="target/classes"/>
         <copy includeemptydirs="false" todir="target/classes">
             <fileset dir="src">
+                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -187,19 +188,9 @@
             <classpath refid="run.PostProcDumy.classpath"/>
         </java>
     </target>
-    <target name="BatchHomoComparing">
-        <java classname="org.distributedea.input.batches.BatchHomoComparing" failonerror="true" fork="yes">
-            <classpath refid="run.BatchHomoComparing.classpath"/>
-        </java>
-    </target>
     <target name="PostProcBoxplot">
         <java classname="org.distributedea.input.postprocessing.matlab.PostProcBoxplot" failonerror="true" fork="yes">
             <classpath refid="run.PostProcBoxplot.classpath"/>
-        </java>
-    </target>
-    <target name="BatchHeteroComparing">
-        <java classname="org.distributedea.input.batches.BatchHeteroComparing" failonerror="true" fork="yes">
-            <classpath refid="run.BatchHeteroComparing.classpath"/>
         </java>
     </target>
     <target name="PostProcComparing">
@@ -215,6 +206,16 @@
     <target name="Test">
         <java classname="org.distributedea.tests.jobqueue.Test" failonerror="true" fork="yes">
             <classpath refid="run.Test.classpath"/>
+        </java>
+    </target>
+    <target name="BatchHeteroComparingTSP">
+        <java classname="org.distributedea.input.batches.BatchHeteroComparingTSP" failonerror="true" fork="yes">
+            <classpath refid="run.BatchHeteroComparingTSP.classpath"/>
+        </java>
+    </target>
+    <target name="BatchHomoComparingTSP">
+        <java classname="org.distributedea.input.batches.BatchHomoComparingTSP" failonerror="true" fork="yes">
+            <classpath refid="run.BatchHomoComparingTSP.classpath"/>
         </java>
     </target>
 </project>

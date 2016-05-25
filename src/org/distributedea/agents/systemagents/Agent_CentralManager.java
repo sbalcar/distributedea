@@ -3,7 +3,7 @@ package org.distributedea.agents.systemagents;
 import jade.content.onto.Ontology;
 import jade.core.behaviours.Behaviour;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -55,7 +55,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		List<Batch> batches = null;
 		try {
 			batches = InputJobQueue.getInputBatches();
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			getLogger().log(Level.INFO, "Can not load input jobs");
 		}
 		

@@ -14,4 +14,5 @@ public class InputConfiguration {
 	 */
 	public static boolean automaticStart = true;
 	
+	public static boolean runPostProcessing = true;
 }

@@ -1,10 +1,11 @@
-package org.distributedea;
+package org.distributedea.input.batches.jobs;
 
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
+import org.distributedea.Configuration;
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitialization;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitializationRunEachMethodOnce;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitializationRunOneSeveralTimes;
 import org.distributedea.ontology.job.noontology.JobWrapper;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
@@ -16,7 +17,7 @@ import org.distributedea.problems.tsp.point.permutation.ProblemToolPoint2opt;
  * Defines a set of TSP inputs
  */
 public class InputTSP {
-
+	
 	public static JobWrapper test01() {
 		
 		InputConfiguration.automaticStart = true;
@@ -28,7 +29,7 @@ public class InputTSP {
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("simpleTest.tsp");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setScheduler(new SchedulerInitializationRunEachMethodOnce());
 		job.setProblemTools(
@@ -48,7 +49,7 @@ public class InputTSP {
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("wi29.tsp");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setScheduler(new SchedulerInitializationRunEachMethodOnce());
 		job.setProblemTools(
@@ -68,7 +69,7 @@ public class InputTSP {
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPPoint.class);
 		job.setProblemFileName("djb2036.tsp");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setScheduler(new SchedulerInitializationRunEachMethodOnce());
 		job.setProblemTools(
@@ -88,7 +89,7 @@ public class InputTSP {
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("xit1083.tsp");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setScheduler(new SchedulerFollowupHelpers());
 		job.setProblemTools(
@@ -97,27 +98,17 @@ public class InputTSP {
 		return job;
 	}
 
-	public static JobWrapper test05(int methodIndex) {
-		
-		/** index on the method(agent)*/
-		int METHOD_INDEX = methodIndex;
-		
-		/** index on the Problem Tool in the list of tolls */
-		int PROBLEM_TOOL_INDEX = 0;
-	
-		Scheduler scheduler = new SchedulerInitializationRunOneSeveralTimes(
-				METHOD_INDEX, PROBLEM_TOOL_INDEX);
-		
+	public static JobWrapper test05() {
+				
 		JobWrapper job = new JobWrapper();
-		job.setJobID("tsp05-Method" + METHOD_INDEX + "-Tool" + PROBLEM_TOOL_INDEX);
-		job.setNumberOfRuns(1);
+		job.setNumberOfRuns(3);
 		job.setCountOfReplaning(50);
-		job.setIndividualDistribution(false);
+		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("xit1083.tsp");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setScheduler(scheduler);
+		job.setScheduler(new SchedulerInitialization());
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
@@ -132,7 +123,7 @@ public class InputTSP {
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("xit1083.tsp");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));

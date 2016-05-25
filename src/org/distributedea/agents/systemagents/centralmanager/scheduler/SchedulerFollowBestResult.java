@@ -23,7 +23,7 @@ public class SchedulerFollowBestResult implements Scheduler {
 	public void agentInitialization(Agent_CentralManager centralManager, Job job,
 			AgentLogger logger) throws SchedulerException {
 		
-		SchedulerInitialization schedullerInit = new SchedulerInitialization();
+		Scheduler schedullerInit = new SchedulerInitialization();
 		schedullerInit.agentInitialization(centralManager, job,
 				logger);
 	}

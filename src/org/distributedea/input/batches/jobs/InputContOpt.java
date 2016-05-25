@@ -1,9 +1,11 @@
-package org.distributedea;
+package org.distributedea.input.batches.jobs;
 
 
+import org.distributedea.Configuration;
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerDummy;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitializationRunOneSeveralTimes;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitialization;
 import org.distributedea.ontology.job.noontology.JobWrapper;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
@@ -14,7 +16,7 @@ import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
  */
 public class InputContOpt {
 
-	public static JobWrapper test01(String batchID) {
+	public static JobWrapper test01() {
 		
 		InputConfiguration.automaticStart = true;
 		
@@ -25,7 +27,7 @@ public class InputContOpt {
 		job.setIndividualDistribution(false);
 		job.setProblemToSolve(ProblemContinousOpt.class);
 		job.setProblemFileName("f01.co");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setScheduler(new SchedulerDummy());
 		job.setProblemTools(
@@ -34,7 +36,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static JobWrapper test02(String batchID) {
+	public static JobWrapper test02() {
 		
 		InputConfiguration.automaticStart = true;
 		
@@ -45,7 +47,7 @@ public class InputContOpt {
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemContinousOpt.class);
 		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setScheduler(new SchedulerFollowupHelpers());
 		job.setProblemTools(
@@ -54,7 +56,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static JobWrapper test03(String batchID) {
+	public static JobWrapper test03() {
 		
 		InputConfiguration.automaticStart = true;
 		
@@ -65,9 +67,9 @@ public class InputContOpt {
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemContinousOpt.class);
 		job.setProblemFileName("f01.co");
-		job.setMethodsFileName(Configuration.getMethodsFile());
+		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setScheduler(new SchedulerInitializationRunOneSeveralTimes(0, 0));
+		job.setScheduler(new SchedulerInitialization());
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 

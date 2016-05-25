@@ -2,8 +2,10 @@ package org.distributedea.ontology.helpmate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
 import org.distributedea.ontology.agentdescription.AgentDescription;
@@ -26,8 +28,60 @@ public class HelpmatesWrapper {
 		}
 		this.helpers.add(helper);
 	}
+
+	public int exportNumberConcreteAgentDescription(AgentDescription description) {
+		
+		List<AgentDescription> allDescriptions = exportAgentDescription();
+		
+		int numberOfLelement = 0;
+		
+		for (AgentDescription descriptionI : allDescriptions) {
+			
+			if (descriptionI.equals(description)) {
+				numberOfLelement++;
+			}
+		}
+		
+		return numberOfLelement;
+	}
+	
+	/**
+	 * Returns number of Different Agent Description
+	 * @return
+	 */
+	public int exportNumberOfDifferentAgentDescription() {
+		
+		List<AgentDescription> descriptions = exportAgentDescription();
+		
+		// removing duplicates
+		Set<AgentDescription> hs = new HashSet<>();
+		hs.addAll(descriptions);
+
+		return hs.size();
+	}
+	
+	/**
+	 * Exports all Agent Description with duplicates
+	 * @return
+	 */
+	private List<AgentDescription> exportAgentDescription() {
+		
+		List<AgentDescription> descriptions = new ArrayList<>();
+		
+		for (HelpmateList helperI : helpers) {
+			
+			AgentDescription descriptionI = helperI.getDescription();
+			descriptions.add(descriptionI);
+		}
+		
+		return descriptions;
+	}
 	
 	
+	/**
+	 * Export the AgentDescription with the minimal priority
+	 * @return
+	 */
 	public Pair<AgentDescription, Integer> exportMinPrioritizedDescription() {
 		
 		// initialization of data structure
@@ -49,6 +103,10 @@ public class HelpmatesWrapper {
 		return new Pair<>(minPriorityDescription, minPriority);
 	}
 	
+	/**
+	 * Export the AgentDescription with the maximal priority
+	 * @return
+	 */
 	public Pair<AgentDescription, Integer> exportMaxPrioritizedDescription() {
 		
 		// initialization of data structure
