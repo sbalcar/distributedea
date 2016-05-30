@@ -52,7 +52,7 @@ public class BbobTools {
 	private String cFileNameWithPath;
 	
 	// generates ID of Instance
-	private static int counter = 0;
+	//private static int counter = 0;
 	// represents ID of Instance
 	private int numberI;
 
@@ -70,19 +70,15 @@ public class BbobTools {
 		this.cFileName = JAVA_CLASS.getSimpleName();
 		this.cFileNameWithPath = C_DIR + File.separator + cFileName + ".c";
 		
-		assignUniqueNumberToInstance();
+		this.numberI = BbobLock.getInstance().getID();
 	}
 
-	private synchronized void assignUniqueNumberToInstance() {
-		
-		this.numberI = counter++;
-	}
 	
 	public int getNumber() {
 		return this.numberI;
 	}
 	
-	protected void createJavaClassFile() throws IOException {
+	protected void createJavaClassFile(int number) throws IOException {
 		
 		final String fgenericJavaCodeI = readFile(javaFileNameWithPath);
 		
@@ -121,9 +117,9 @@ public class BbobTools {
 		String paramArgDefinition = JAVA_INTCLASS.getSimpleName() + " ";
 		String paramArgDefinitionNew = JAVA_CLASS.getSimpleName() + "." + JAVA_INTCLASS.getSimpleName() + " ";
 		
-		String codeReplaced = fgenericCode.replace(classDefinition, classDefinition + numberI);
-		codeReplaced = codeReplaced.replace(constructorDefinition, constructorDefinition + numberI);
-		codeReplaced = codeReplaced.replace(libraryDefinition, libraryDefinition + numberI);
+		String codeReplaced = fgenericCode.replace(classDefinition, classDefinition + number);
+		codeReplaced = codeReplaced.replace(constructorDefinition, constructorDefinition + number);
+		codeReplaced = codeReplaced.replace(libraryDefinition, libraryDefinition + number);
 		codeReplaced = codeReplaced.replace(paramArgDefinition, paramArgDefinitionNew);
 		
 		
@@ -131,15 +127,15 @@ public class BbobTools {
 		
 		// write new code to JNIfgenericI.java
 		String fgenericFileI = JAVA_DIR + File.separator + JAVA_CLASS.getName()
-				.replace(".", File.separator) + numberI + ".java";
+				.replace(".", File.separator) + number + ".java";
 		writeToFile(fgenericFileI, codeReplaced);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	protected Class<?> getJNIClass() throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	protected Class<?> getJNIClass(int number) throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
 		String fgenericFileI =  JAVA_DIR + File.separator + JAVA_CLASS.getName()
-				.replace(".", File.separator) + numberI + ".java";		
+				.replace(".", File.separator) + number + ".java";		
 		final String fgenericCodeI = readFile(fgenericFileI);
 		
 		
@@ -184,51 +180,51 @@ public class BbobTools {
 		final Unsafe unsafe = (Unsafe) field.get(null);
 
 		@SuppressWarnings("deprecation")
-		final Class aClass = unsafe.defineClass(JAVA_CLASS.getName() + numberI, bytes, 0, bytes.length);
+		final Class aClass = unsafe.defineClass(JAVA_CLASS.getName() + number, bytes, 0, bytes.length);
 	    
 	    
 	    return aClass;
 	}
 
-	protected void createCMakeFile() throws IOException {
+	protected void createCMakeFile(int number) throws IOException {
 		
 		String cMakefileCode = readFile("Makefile");
 		
 		String classJNIName = JAVA_CLASS.getSimpleName();
 		// correct name of the code files
-		String cMakefileCodeNew = cMakefileCode.replace(classJNIName, classJNIName + numberI);
+		String cMakefileCodeNew = cMakefileCode.replace(classJNIName, classJNIName + number);
 		// correct name of the library
-		cMakefileCodeNew = cMakefileCodeNew.replace(LIB_EXTNAME, LIB_EXTNAME + numberI);
+		cMakefileCodeNew = cMakefileCodeNew.replace(LIB_EXTNAME, LIB_EXTNAME + number);
 		
 		// original JNIfgeneric.o have to be compiled with new Class (internal Class Parameters)
-		String o_old = "-o " + LIB_DIR + File.separator + LIB_EXTNAME + numberI + ".so";
-		String o_new = "-o " + LIB_DIR + File.separator + LIB_EXTNAME + numberI + ".so "
+		String o_old = "-o " + LIB_DIR + File.separator + LIB_EXTNAME + number + ".so";
+		String o_new = "-o " + LIB_DIR + File.separator + LIB_EXTNAME + number + ".so "
 				+ C_DIR + File.separator + cFileName + ".o";
 		cMakefileCodeNew = cMakefileCodeNew.replace(o_old, o_new);
 		
 		// write new code to MakefileI
-		String MakefileNew = "Makefile" + numberI;		
+		String MakefileNew = "Makefile" + number;		
 		writeToFile(MakefileNew, cMakefileCodeNew);
 	}
 
-	protected void createCJNIFile() throws IOException {
+	protected void createCJNIFile(int number) throws IOException {
 		
 		String cJNICode = readFile(cFileNameWithPath);
 		
 		String prefix = JAVA_CLASS.getName().replace(".", "_");
 		// correct function names
-		String cJNICodeNew = cJNICode.replace(prefix, prefix + numberI);
+		String cJNICodeNew = cJNICode.replace(prefix, prefix + number);
 		// correct include file names
-		cJNICodeNew = cJNICodeNew.replace(cFileName + ".h", cFileName + numberI + ".h");
+		cJNICodeNew = cJNICodeNew.replace(cFileName + ".h", cFileName + number + ".h");
 		
-		String cFileNameWithPathNew = C_DIR + File.separator + cFileName + numberI + ".c";
+		String cFileNameWithPathNew = C_DIR + File.separator + cFileName + number + ".c";
 		writeToFile(cFileNameWithPathNew, cJNICodeNew);
 	}
 	
-	protected void compileC() throws IOException, InterruptedException{
+	protected void compileC(int number) throws IOException, InterruptedException{
 		
 		Runtime rt = Runtime.getRuntime();
-		Process pr = rt.exec("make -f Makefile" + numberI );
+		Process pr = rt.exec("make -f Makefile" + number );
 		pr.waitFor();
 		
 	}
@@ -290,17 +286,18 @@ public class BbobTools {
 	 */
 	public IJNIfgeneric getInstanceJNIfgeneric() throws BbobException {
 		
+		
 		Class<?> aClass = null;
 		
 		try {
-			createJavaClassFile();
+			createJavaClassFile(numberI);
 		} catch (IOException e) {
 			logger.logThrowable("JNI class for Bbob wasn't created from runtime", e);
 			throw new BbobException("JNI class for Bbob wasn't created from runtime");
 		}
 		
 		try {
-			aClass = getJNIClass();
+			aClass = getJNIClass(numberI);
 		} catch (NoSuchFieldException | SecurityException
 				| IllegalArgumentException | IllegalAccessException
 				| IOException e) {
@@ -309,21 +306,21 @@ public class BbobTools {
 		}
 		
 		try {
-			createCMakeFile();
+			createCMakeFile(numberI);
 		} catch (IOException e) {
 			logger.logThrowable("Makefile for Bbob wasn't created", e);
 			throw new BbobException("Makefile for Bbob wasn't created");
 		}
 		
 		try {
-			createCJNIFile();
+			createCJNIFile(numberI);
 		} catch (IOException e) {
 			logger.logThrowable("JNI C-part for Bbob wasn't created", e);
 			throw new BbobException("JNI C-part for Bbob wasn't created");
 		}
 		
 		try {
-			compileC();
+			compileC(numberI);
 		} catch (IOException | InterruptedException e) {
 			logger.logThrowable("Bbob wasn't compiled", e);
 			throw new BbobException("Bbob wasn't compiled");

@@ -48,13 +48,15 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 				
 				killCommand();
 				
-			} else if (line.equals("start")) {
-				logger.log(Level.INFO, "Starting everything");
+			} else if (line.startsWith("start")) {
+				logger.log(Level.INFO, "Starting");
 				
 				String batchID = line.substring("start".length());
 				batchID = batchID.trim();
 						
-				startCommand(batchID);
+				if (startCommand(batchID)) {
+					return;
+				}
 				
 			} else {
 				logger.log(Level.INFO, "I don't understand you \n" + 
@@ -65,7 +67,7 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 		}
 	}
 
-	protected void startCommand(String batchID) {
+	protected boolean startCommand(String batchID) {
 		
 		Batch batch = null;
 		
@@ -77,13 +79,17 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 		
 		if (batch == null) {
 			logger.log(Level.INFO, "Error JobID doesn't exist");
-			return;
+			return false;
 		}
 		
+		Behaviour behaviorNext = new ConsoleAutomatBehaviour(batches, logger);
+		
 		Behaviour behaviourCompI =
-					new BatchComputingBehaviour(batch, logger);
+					new ComputeBatchBehaviour(batch, behaviorNext, logger);
+		
 		myAgent.addBehaviour(behaviourCompI);
 		
+		return true;
 	}
 	
 	protected void killCommand() {

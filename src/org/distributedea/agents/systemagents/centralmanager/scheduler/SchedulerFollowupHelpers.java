@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import jade.core.AID;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.dumy.SchedulerInitializationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
@@ -12,7 +13,7 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.HelpmatesWrapper;
-import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class SchedulerFollowupHelpers implements Scheduler {
@@ -23,7 +24,7 @@ public class SchedulerFollowupHelpers implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws SchedulerException {
 		
 		Scheduler scheduler = new SchedulerInitializationRunEachMethodOnce();
 		scheduler.agentInitialization(centralManager, job, logger);
@@ -32,7 +33,7 @@ public class SchedulerFollowupHelpers implements Scheduler {
 
 	
 	@Override
-	public void replan(Agent_CentralManager centralManager, Job job,
+	public void replan(Agent_CentralManager centralManager, JobRun job,
 			AgentLogger logger) throws SchedulerException {
 		
 		HelpmatesWrapper helpmates = SchedulerTool.getHelpmates(

@@ -1,6 +1,7 @@
 package org.distributedea.ontology.agentdescription;
 
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.problems.ProblemTool;
 
 import jade.content.Concept;
 
@@ -40,10 +41,10 @@ public class AgentDescription implements Concept {
 			return null;
 		}
 	}
-	public void importProblemToolClass(Class<?> problemToolClass) {
-		this.problemToolClass = problemToolClass.getName();
-	}
 
+	public void importProblemTool(ProblemTool problemTool) {
+		this.problemToolClass = problemTool.getClass().getName();
+	}
 	
 	
 	@Override

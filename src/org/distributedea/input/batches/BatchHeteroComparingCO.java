@@ -2,14 +2,16 @@ package org.distributedea.input.batches;
 
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowBestResult;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitialization;
-import org.distributedea.input.InputBatch;
-import org.distributedea.input.PostProcessing;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
 import org.distributedea.input.batches.jobs.InputContOpt;
+import org.distributedea.input.postprocessing.PostProcessing;
+import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
+import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcComparing;
 import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.job.noontology.Job;
 
 public class BatchHeteroComparingCO extends InputBatch {
 
@@ -20,17 +22,18 @@ public class BatchHeteroComparingCO extends InputBatch {
 		batch.setBatchID("heteroComparingCO");
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : Cont.Opt. ");
 		
-		JobWrapper jobW0 = InputContOpt.test03();
+		Job jobW0 = InputContOpt.test03();
 		jobW0.setJobID("onlyInit");
 		jobW0.setDescription("Only Initialization");
-		jobW0.setScheduler(new SchedulerInitialization());
+		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		jobW0.setScheduler(new SchedulerInitialization(state, true));
 		
-		JobWrapper jobW1 = InputContOpt.test03();
+		Job jobW1 = InputContOpt.test03();
 		jobW1.setJobID("followBestResult");
 		jobW1.setDescription("Follow Best Result");
 		jobW1.setScheduler(new SchedulerFollowBestResult());
 		
-		JobWrapper jobW2 = InputContOpt.test03();
+		Job jobW2 = InputContOpt.test03();
 		jobW2.setJobID("followupHelpers");
 		jobW2.setDescription("Follow up Helpers");
 		jobW2.setScheduler(new SchedulerFollowupHelpers());
@@ -40,15 +43,19 @@ public class BatchHeteroComparingCO extends InputBatch {
 		batch.addJobWrapper(jobW2);
 		
 		
-		PostProcessing ps0 = new PostProcBoxplot();
-
-		PostProcessing ps1 = new PostProcComparing();
+		PostProcessing psMat0 = new PostProcBoxplot();
+		PostProcessing psMat1 = new PostProcComparing();
 		
+		batch.addPostProcessings(psMat0);
+		batch.addPostProcessings(psMat1);
 		
-		batch.addPostProcessings(ps0);
-		batch.addPostProcessings(ps1);
+		PostProcessing psLat0 = new PostProcBatchDiffTable();
+		PostProcessing psLat1 = new PostProcJobTable();
+		
+		batch.addPostProcessings(psLat0);
+		batch.addPostProcessings(psLat1);
 		
 		return batch;
 	}
-
+	
 }

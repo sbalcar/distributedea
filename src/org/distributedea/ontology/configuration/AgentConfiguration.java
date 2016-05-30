@@ -116,8 +116,9 @@ public class AgentConfiguration {
 		
 		String  agentChar = "";
 		if (numberOfAgent > 0) {
-			char aChar = (char) ('a' + numberOfAgent);
-			agentChar = "" + Configuration.AGENT_NUMBER_PREFIX + aChar;
+			//char aChar = (char) ('a' + numberOfAgent);
+			//agentChar = "" + Configuration.AGENT_NUMBER_PREFIX + aChar;
+			agentChar = "" + numberOfAgent;
 		}
 		
 		String  containerChar = "";

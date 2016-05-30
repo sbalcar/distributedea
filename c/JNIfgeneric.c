@@ -248,7 +248,3 @@ JNIEXPORT jdouble JNICALL Java_org_distributedea_problems_continuousoptimization
     (*jenv)->ReleaseDoubleArrayElements(jenv, X, cX, JNI_ABORT);
     return ret;
 }
-
-//int main() {
-//    return 0;
-//}

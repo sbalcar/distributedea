@@ -139,7 +139,7 @@ public class SchedulerTool {
 		}
 		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(60000);
 		} catch (InterruptedException e) {
 			logger.logThrowable("", e);
 		}

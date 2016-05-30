@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import jade.core.behaviours.Behaviour;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -35,12 +36,11 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass, JobID jobID,
+	protected void startComputing(Problem problem, ProblemTool problemTool, JobID jobID,
 			Behaviour behaviour) throws ProblemToolException {
 		
-		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
-
+		state = CompAgentState.COMPUTING;
         
 		long generationNumberI = -1;
 		
@@ -56,14 +56,14 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		processIndividualFromInitGeneration(individualI,
 				fitnessI, generationNumberI, problem, jobID);
 		
-		while (computingThread.continueInTheNextGeneration()) {
+		while (state == CompAgentState.COMPUTING) {
 			
 			// going through neighbors
 			Individual neighborJ = null;
 			double neighborFitnessJ = -1;
 			
 			long neighborIndex = 0;
-			while (computingThread.continueInTheNextGeneration()) {
+			while (state == CompAgentState.COMPUTING) {
 				// increment next number of generation
 				generationNumberI++;
 				

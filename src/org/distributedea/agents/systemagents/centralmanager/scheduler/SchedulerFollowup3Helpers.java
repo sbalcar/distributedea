@@ -5,6 +5,8 @@ import jade.core.AID;
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
@@ -12,7 +14,7 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.HelpmatesWrapper;
-import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class SchedulerFollowup3Helpers implements Scheduler {
@@ -24,16 +26,17 @@ public class SchedulerFollowup3Helpers implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws SchedulerException {
 
-		Scheduler schedullerInit = new SchedulerInitialization();
+		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		Scheduler schedullerInit = new SchedulerInitialization(state, true);
 		schedullerInit.agentInitialization(centralManager, job,
 				logger);
 		
 	}
 
 	@Override
-	public void replan(Agent_CentralManager centralManager, Job job,
+	public void replan(Agent_CentralManager centralManager, JobRun job,
 			AgentLogger logger) throws SchedulerException {
 		
 		HelpmatesWrapper helpmates = SchedulerTool.getHelpmates(
@@ -72,6 +75,7 @@ public class SchedulerFollowup3Helpers implements Scheduler {
 			}
 		}
 				
+		//rozsireni: pokud budu takto vybijet vicekrat tu samou stratgii -> prohod ji za nejakou ktera v systemu neni
 		
 		// agent configurations
 		AgentConfiguration bestConfiguration = maxPriorityDescription.getAgentConfiguration();

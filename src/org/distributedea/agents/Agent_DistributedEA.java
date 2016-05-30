@@ -138,7 +138,7 @@ public abstract class Agent_DistributedEA extends Agent {
         dfd.addServices(sd);
         
         SearchConstraints all = new SearchConstraints();
-        all.setMaxResults(new Long(10));
+        all.setMaxResults(new Long(10000));
 
         try {
             DFAgentDescription[] result = DFService.search(this, dfd, all);

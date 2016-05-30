@@ -118,7 +118,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * Directory with input Batches
+	 * Directory with input Batches (input queue)
 	 * @return
 	 */
 	public static String getDirectoryOfInputBatches() {
@@ -137,16 +137,65 @@ public class Configuration {
 				jobID + "." + Configuration.JOB_SUFIX;
 	}
 	
-	public static String getPostProcessingFile(String batchID, String psID) {
+	public static String getInputPostProcessingFile(String batchID, String psID) {
 
 		return getInputBatchDirectory(batchID) + File.separator +
 				psID + "." + Configuration.POSTPROCESSING_SUFIX;
 	}
 
-	public static String getBatchDescriptionFile(String batchID) {
+	public static String getInputBatchDescriptionFile(String batchID) {
 
 		return getInputBatchDirectory(batchID) + File.separator +
 				"description.txt";
+	}
+	
+	
+	/**
+	 * Directory with exported Batches
+	 * @return
+	 */
+	public static String getDirectoryOfBatches() {
+
+		return "batches";
+	}
+	
+	public static String getBatchDirectory(String batchID) {
+
+		return getDirectoryOfBatches() + File.separator + batchID;
+	}
+
+	public static String getJobFile(String batchID, String jobID) {
+
+		return getBatchDirectory(batchID) + File.separator +
+				jobID + "." + Configuration.JOB_SUFIX;
+	}
+	
+	public static String getPostProcessingFile(String batchID, String psID) {
+
+		return getBatchDirectory(batchID) + File.separator +
+				psID + "." + Configuration.POSTPROCESSING_SUFIX;
+	}
+
+	public static String getBatchDescriptionFile(String batchID) {
+
+		return getBatchDirectory(batchID) + File.separator +
+				"description.txt";
+	}
+	
+	/**
+	 * 
+	 * @param batchID
+	 * @return
+	 */
+	public static String getResultDirectoryWithCopyOfInputParameters(String batchID) {
+
+		return getResultDirectory(batchID) + File.separator +
+				"input";
+	}
+	public static String getResultDirectoryWithCopyOfInputBatch(String batchID) {
+
+		return getResultDirectoryWithCopyOfInputParameters(batchID) + File.separator +
+				batchID;
 	}
 	
 	/**
@@ -163,6 +212,11 @@ public class Configuration {
 		return getDirectoryofResults() + File.separator + batchID;
 	}
 	
+	public static String getResultDirectoryForMatlab(String batchID) {
+		
+		return getResultDirectory(batchID) + File.separator + "matlab";
+	}
+	
 	/**
 	 * Provides way to the centralized solution
 	 * @param fileName
@@ -173,6 +227,7 @@ public class Configuration {
 		return getResultDirectory(jobID.getBatchID()) + File.separator +
 				"result-" + jobID.getJobID() + "-" + jobID.getRunNumber() + ".txt";
 	}
+	
 	
 	
 	public static String getLogDirectory() {

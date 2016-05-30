@@ -46,6 +46,17 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		getLogger().log(Level.INFO, "Agent Intitator is starting - " + "AID: " + getAID().getName());
 
+		// check java version
+		String javaVersion = System.getProperty("java.version");
+		if (! javaVersion.startsWith("1.7")) {
+			System.out.println("The system requires java 1.7");
+			
+			try {
+				this.getContainerController().kill();
+			} catch (StaleProxyException e) {
+			}
+		}
+		
 		String fileName = null;
 		if (Agent_ManagerAgent.isAgentOnMainControler(this, getLogger())) {
 

@@ -5,6 +5,8 @@ import java.util.logging.Level;
 import jade.core.AID;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.logging.AgentLogger;
@@ -12,7 +14,7 @@ import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
@@ -20,10 +22,11 @@ import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 public class SchedulerFollowBestResult implements Scheduler {
 	
 	@Override
-	public void agentInitialization(Agent_CentralManager centralManager, Job job,
+	public void agentInitialization(Agent_CentralManager centralManager, JobRun job,
 			AgentLogger logger) throws SchedulerException {
 		
-		Scheduler schedullerInit = new SchedulerInitialization();
+		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		Scheduler schedullerInit = new SchedulerInitialization(state, true);
 		schedullerInit.agentInitialization(centralManager, job,
 				logger);
 	}
@@ -35,7 +38,7 @@ public class SchedulerFollowBestResult implements Scheduler {
 	 * @param logger
 	 */
 	@Override
-	public void replan(Agent_CentralManager centralManager, Job job,
+	public void replan(Agent_CentralManager centralManager, JobRun job,
 			AgentLogger logger) throws SchedulerException {		
 		
 		Problem problem = job.getProblem();

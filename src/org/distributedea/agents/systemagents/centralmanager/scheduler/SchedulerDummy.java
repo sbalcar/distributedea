@@ -13,7 +13,7 @@ import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.job.Job;
+import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 /**
@@ -33,7 +33,7 @@ public class SchedulerDummy implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			Job job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws SchedulerException {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
 				Agent_ManagerAgent.class.getName());
@@ -85,7 +85,7 @@ public class SchedulerDummy implements Scheduler {
 
 	
 	@Override
-	public void replan(Agent_CentralManager centralManager, Job job,
+	public void replan(Agent_CentralManager centralManager, JobRun job,
 			AgentLogger logger) throws SchedulerException {
 	}
 

@@ -1,0 +1,20 @@
+<org.distributedea.ontology.job.noontology.Job>
+  <jobID>homoSimulatedannealing</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Homo-SimulatedAnnealing</description>
+  <countOfReplaning>50</countOfReplaning>
+  <problemToSolve>org.distributedea.ontology.problem.ProblemTSPGPS</problemToSolve>
+  <problemFileName>xit1083.tsp</problemFileName>
+  <methodsFileName>configuration/methodsOnlySimulatedAnnealing.txt</methodsFileName>
+  <problemTools>
+    <problemTools>
+      <java-class>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</java-class>
+    </problemTools>
+  </problemTools>
+  <individualDistribution>true</individualDistribution>
+  <schedulers>
+    <org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization>
+      <state>RUN_ONE_AGENT_PER_CORE</state>
+    </org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization>
+  </schedulers>
+</org.distributedea.ontology.job.noontology.Job>

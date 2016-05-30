@@ -7,14 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import javax.xml.bind.JAXBException;
 
-import org.distributedea.input.PostProcessing;
+import org.distributedea.Configuration;
+import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.ontology.job.JobID;
 
-import com.thoughtworks.xstream.XStream;
 
 public class Batch implements Concept {
 
@@ -23,7 +22,7 @@ public class Batch implements Concept {
 	private String batchID;
 	private String description;
 	
-	private List<JobWrapper> jobWrappers;
+	private List<Job> jobs;
 
 	private List<PostProcessing> postProcessings;
 	
@@ -42,19 +41,19 @@ public class Batch implements Concept {
 		this.description = description;
 	}
 	
-	public List<JobWrapper> getJobWrappers() {
-		return jobWrappers;
+	public List<Job> getJobs() {
+		return jobs;
 	}
-	public void setJobWrappers(List<JobWrapper> jobWrappers) {
-		this.jobWrappers = jobWrappers;
+	public void setJobs(List<Job> jobs) {
+		this.jobs = jobs;
 	}
-	public void addJobWrapper(JobWrapper jobWrappers) {
+	public void addJobWrapper(Job jobWrappers) {
 		
-		if (this.jobWrappers == null) {
-			this.jobWrappers = new ArrayList<>();
+		if (this.jobs == null) {
+			this.jobs = new ArrayList<>();
 		}
 		
-		this.jobWrappers.add(jobWrappers);
+		this.jobs.add(jobWrappers);
 	}
 	
 	public List<PostProcessing> getPostProcessings() {
@@ -78,7 +77,7 @@ public class Batch implements Concept {
 		
 		List<JobID> list = new ArrayList<>();
 		
-		for (JobWrapper jobWrpI : jobWrappers) {
+		for (Job jobWrpI : jobs) {
 			
 			String jobIDStringI = jobWrpI.getJobID();
 			
@@ -96,7 +95,7 @@ public class Batch implements Concept {
 
 		List<String> list = new ArrayList<>();
 		
-		for (JobWrapper jobWrpI : jobWrappers) {
+		for (Job jobWrpI : jobs) {
 			
 			String descriptionI = jobWrpI.getDescription();
 			list.add(descriptionI);
@@ -106,59 +105,58 @@ public class Batch implements Concept {
 	}
 	
 	
-	/**
-	 * Exports structure as the XML String to the file
-	 * 
-	 * @throws FileNotFoundException
-	 * @throws JAXBException 
-	 */
-	public void exportXML(String fileName) throws FileNotFoundException, JAXBException {
 
-		String xml = exportXML();
-		System.out.println(xml);
-		PrintWriter file = new PrintWriter(fileName);
-		file.println(xml);
-		file.close();
+	
+	public void exportBatchToJobQueueDirectory() throws FileNotFoundException, JAXBException {
+		
+		String jobsDirectory = Configuration.getBatchDirectory(batchID);
+		
+		File dir = new File(jobsDirectory);
+		dir.mkdir();
+		
+		expotBatchDescription(description, batchID);
+		
+		// exporting jobs
+		for (Job jobWrpI : jobs) {
+			
+			exportJobToJobQueueDirectory(jobWrpI, batchID);
+		}
+
+		// exporting post-processings
+		for (PostProcessing postProcI : postProcessings) {
+			
+			exportPostProcessingToJobQueueDirectory(postProcI, batchID);
+		}
 		
 	}
 	
-	/**
-	 * Exports to the XML String
-	 */
-	public String exportXML() {
-
-		XStream xstream = new XStream();
-		xstream.setMode(XStream.NO_REFERENCES);
-
-		return xstream.toXML(this);
+	private void expotBatchDescription(String batchDescription, String batchID) throws FileNotFoundException {
+		
+		String descriptionFile = Configuration.getBatchDescriptionFile(batchID);
+		try(  PrintWriter out = new PrintWriter(descriptionFile)  ){
+		    out.print(batchDescription);
+		}
 	}
 	
-	/**
-	 * Import the {@link Batch} from the file
-	 * 
-	 * @throws FileNotFoundException
-	 */
-	public static JobWrapper importXML(File file)
-			throws FileNotFoundException {
+	
+	private void exportJobToJobQueueDirectory(Job jobWrp, String batchID) throws FileNotFoundException, JAXBException {
 
-		Scanner scanner = new Scanner(file);
-		String xml = scanner.useDelimiter("\\Z").next();
-		scanner.close();
-
-		return importXML(xml);
+		String jobID = jobWrp.getJobID();
+		
+		String jobsDirectory = Configuration.getJobFile(batchID, jobID);
+		
+		jobWrp.exportXML(jobsDirectory);
 		
 	}
+	
+	private void exportPostProcessingToJobQueueDirectory(PostProcessing postProc, String batchID) throws FileNotFoundException, JAXBException {
 
-	/**
-	 * Import the {@link Batch} from the String
-	 */
-	public static JobWrapper importXML(String xml) {
-
-		XStream xstream = new XStream();
-		xstream.setMode(XStream.NO_REFERENCES);
-
-		xstream.aliasAttribute("type", "class");
-
-		return (JobWrapper) xstream.fromXML(xml);
+		String psID = postProc.getClass().getSimpleName();
+		
+		String postProcsDirectory = Configuration.getPostProcessingFile(batchID, psID);
+		
+		postProc.exportXML(postProcsDirectory);
+		
 	}
+	
 }

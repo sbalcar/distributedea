@@ -3,6 +3,7 @@ package org.distributedea.agents.computingagents;
 import jade.core.behaviours.Behaviour;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -29,10 +30,10 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass, JobID jobID, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, ProblemTool problemTool, JobID jobID, Behaviour behaviour) throws ProblemToolException {
 				
-		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
+		state = CompAgentState.COMPUTING;
 		
 		long generationNumberI = -1;
 		
@@ -45,7 +46,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 		processIndividualFromInitGeneration(individualI,
 				fitnessI, generationNumberI, problem, jobID);
 		
-		while (individualI != null && computingThread.continueInTheNextGeneration()) {
+		while (individualI != null && state == CompAgentState.COMPUTING) {
 			
 			// increment next number of generation
 			generationNumberI++;

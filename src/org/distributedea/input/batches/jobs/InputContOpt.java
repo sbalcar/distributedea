@@ -5,8 +5,9 @@ import org.distributedea.Configuration;
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerDummy;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerInitialization;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
+import org.distributedea.ontology.job.noontology.Job;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
@@ -16,17 +17,17 @@ import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
  */
 public class InputContOpt {
 
-	public static JobWrapper test01() {
+	public static Job test01() {
 		
 		InputConfiguration.automaticStart = true;
 		
-		JobWrapper job = new JobWrapper();
+		Job job = new Job();
 		job.setJobID("co01");
 		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(false);
 		job.setProblemToSolve(ProblemContinousOpt.class);
-		job.setProblemFileName("f01.co");
+		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setScheduler(new SchedulerDummy());
@@ -36,11 +37,11 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static JobWrapper test02() {
+	public static Job test02() {
 		
 		InputConfiguration.automaticStart = true;
 		
-		JobWrapper job = new JobWrapper();
+		Job job = new Job();
 		job.setJobID("co02");
 		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
@@ -56,20 +57,21 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static JobWrapper test03() {
+	public static Job test03() {
 		
 		InputConfiguration.automaticStart = true;
 		
-		JobWrapper job = new JobWrapper();
+		Job job = new Job();
 		job.setJobID("co03");
 		job.setNumberOfRuns(1);
 		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemContinousOpt.class);
-		job.setProblemFileName("f01.co");
+		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setScheduler(new SchedulerInitialization());
+		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		job.setScheduler(new SchedulerInitialization(state, true));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 

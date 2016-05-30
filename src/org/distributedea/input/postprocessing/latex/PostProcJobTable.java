@@ -1,16 +1,16 @@
 package org.distributedea.input.postprocessing.latex;
 
-import org.distributedea.input.PostProcessing;
 import org.distributedea.input.batches.BatchHomoComparingTSP;
+import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.job.noontology.Job;
 
 public class PostProcJobTable extends PostProcessing {
 
 	@Override
 	public void run(Batch batch) {
 		
-		JobWrapper jobWrp = batch.getJobWrappers().get(0);
+		Job jobWrp = batch.getJobs().get(0);
 		
 		String NL = "\n";
 		

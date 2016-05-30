@@ -170,7 +170,6 @@ public class JNIfgeneric extends IJNIfgeneric {
     public native double evaluate(double[] X);
 
     /* Main method
-
     /**
      * Test Method.
      * @param args the command line arguments
@@ -183,10 +182,8 @@ public class JNIfgeneric extends IJNIfgeneric {
         int dim = 10;
         double[] X = new double[dim];
         Random rand = new Random();
-
         JNIfgeneric fgeneric = new JNIfgeneric();
         JNIfgeneric.Params params = new JNIfgeneric.Params();
-
         int minimum = 1;
         int maximum = 1000;
         int randomNum = minimum + (int)(Math.random() * maximum); 
@@ -197,7 +194,6 @@ public class JNIfgeneric extends IJNIfgeneric {
         } else {
             System.out.println("initBBOB returned error: " + ret);
         }
-
         System.out.println("target=" + fgeneric.getFtarget());
         System.out.println("doing some test evalations:");
         for (int t = 0; t < 10; t++) {
@@ -206,11 +202,9 @@ public class JNIfgeneric extends IJNIfgeneric {
             }
             System.out.print(fgeneric.evaluate(X) + " ");
         }
-
         System.out.println("\nbest=" + fgeneric.getBest());
         System.out.println("evaluations=" + fgeneric.getEvaluations());
         fgeneric.setNoiseSeed(1);
-
         ret = fgeneric.exitBBOB();
         if (ret == 0.) {
             System.out.println("exitBBOB finished OK.");

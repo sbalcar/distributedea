@@ -2,10 +2,10 @@ package org.distributedea.input.postprocessing.latex;
 
 import java.util.List;
 
-import org.distributedea.input.PostProcessing;
 import org.distributedea.input.batches.BatchHomoComparingTSP;
+import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.job.noontology.Job;
 
 public class PostProcBatchDiffTable extends PostProcessing {
 
@@ -13,7 +13,7 @@ public class PostProcBatchDiffTable extends PostProcessing {
 	public void run(Batch batch) {
 		
 		String NL = "\n";
-		List<JobWrapper> jobWrps = batch.getJobWrappers();
+		List<Job> jobWrps = batch.getJobs();
 		
 		String table =
 		"\\begin{center}" + NL;
@@ -31,7 +31,7 @@ public class PostProcBatchDiffTable extends PostProcessing {
 		String distributionStr = "";
 		String schedulerStr = "";
 		for (int i = 0; i < jobWrps.size(); i++) {
-			JobWrapper jobWrpI = jobWrps.get(i);
+			Job jobWrpI = jobWrps.get(i);
 			
 			jobIDStr += " " + jobWrpI.getJobID() + " ";
 			distributionStr += " " + jobWrpI.isIndividualDistribution() + " ";

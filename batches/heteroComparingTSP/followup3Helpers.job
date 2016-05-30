@@ -1,0 +1,21 @@
+<org.distributedea.ontology.job.noontology.Job>
+  <jobID>followup3Helpers</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Follow up three Helpers</description>
+  <countOfReplaning>50</countOfReplaning>
+  <problemToSolve>org.distributedea.ontology.problem.ProblemTSPGPS</problemToSolve>
+  <problemFileName>xit1083.tsp</problemFileName>
+  <methodsFileName>configuration/methodsAll.txt</methodsFileName>
+  <problemTools>
+    <problemTools>
+      <java-class>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</java-class>
+    </problemTools>
+  </problemTools>
+  <individualDistribution>true</individualDistribution>
+  <schedulers>
+    <org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowup3Helpers>
+      <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
+      <MIN__NUMER__OF__METHODS>3</MIN__NUMER__OF__METHODS>
+    </org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowup3Helpers>
+  </schedulers>
+</org.distributedea.ontology.job.noontology.Job>

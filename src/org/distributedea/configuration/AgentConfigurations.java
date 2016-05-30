@@ -27,6 +27,13 @@ public class AgentConfigurations {
 		}
 		agentConfigurations.add(agentConfiguration);
 	}
+	public AgentConfiguration exportAgentConfigurations(int index) {
+		
+		if (this.agentConfigurations == null) {
+			return null;
+		}
+		return agentConfigurations.get(index);
+	}
 	
 	public boolean valid(AgentLogger logger) {
 		

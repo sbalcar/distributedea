@@ -5,6 +5,7 @@ import jade.core.behaviours.Behaviour;
 import java.util.Vector;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.agents.computingagents.computingagent.evolution.Convertor;
 import org.distributedea.agents.computingagents.computingagent.evolution.EACrossoverWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolution.EAFitnessWrapper;
@@ -79,10 +80,10 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass, JobID jobID, Behaviour behaviour) throws ProblemToolException {
+	protected void startComputing(Problem problem, ProblemTool problemTool, JobID jobID, Behaviour behaviour) throws ProblemToolException {
 		
-		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
+		state = CompAgentState.COMPUTING;
 		
 		int popSize = 50;
 		double mutationRate = 0.9;
@@ -156,7 +157,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			processIndividualFromInitGeneration(individualI,
 					fitnessI, generationNumberI, problem, jobID);
 			
-			while (computingThread.continueInTheNextGeneration()) {
+			while (state == CompAgentState.COMPUTING) {
 				// increment next number of generation
 				generationNumberI++;
 				

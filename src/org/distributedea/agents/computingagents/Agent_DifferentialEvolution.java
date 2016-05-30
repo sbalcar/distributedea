@@ -6,6 +6,7 @@ import java.util.Vector;
 import jade.core.behaviours.Behaviour;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.individuals.Individual;
@@ -58,12 +59,11 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, Class<?> problemToolClass,
+	protected void startComputing(Problem problem, ProblemTool problemTool,
 			JobID jobID, Behaviour behaviour) throws ProblemToolException {
 	
-		ProblemTool problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		problemTool.initialization(problem, getLogger());
-		
+		state = CompAgentState.COMPUTING;
 		
 		Random random = new Random();
 		
@@ -91,7 +91,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 				fitnessI, generationNumberI, problem, jobID);
 		
 		
-		while (computingThread.continueInTheNextGeneration()) {
+		while (state == CompAgentState.COMPUTING) {
 			
 			// increment next number of generation
 			generationNumberI++;

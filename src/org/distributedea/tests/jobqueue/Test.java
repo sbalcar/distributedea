@@ -7,8 +7,8 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.distributedea.agents.systemagents.centralmanager.InputJobQueue;
-import org.distributedea.input.InputBatch;
 import org.distributedea.input.batches.BatchHeteroComparingTSP;
+import org.distributedea.input.batches.InputBatch;
 import org.distributedea.ontology.job.noontology.Batch;
 
 public class Test {
@@ -19,7 +19,7 @@ public class Test {
 		Batch batch = inputBatch.batch();
 		
 		try {
-			InputJobQueue.exportBatchToJobQueueDirectory(batch);
+			batch.exportBatchToJobQueueDirectory();
 		} catch (FileNotFoundException | JAXBException e) {
 			e.printStackTrace();
 		}

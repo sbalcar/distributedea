@@ -9,35 +9,28 @@
     <property name="target" value="1.7"/>
     <property name="source" value="1.7"/>
     <path id="Maven Dependencies.libraryclasspath">
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/net/sf/ingenias/jade/4.2/jade-4.2.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/net/sf/jgap/jgap/3.4.4/jgap-3.4.4.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/commons-lang/commons-lang/2.3/commons-lang-2.3.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/log4j/log4j/1.2.9/log4j-1.2.9.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/commons-codec/commons-codec/1.3/commons-codec-1.3.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/net/sf/trove4j/trove4j/2.0.2/trove4j-2.0.2.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/com/thoughtworks/xstream/xstream/1.2.2/xstream-1.2.2.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/xpp3/xpp3/1.1.3.4.O/xpp3-1.1.3.4.O.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/commons-cli/commons-cli/1.0/commons-cli-1.0.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/commons-logging/commons-logging/1.0/commons-logging-1.0.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/tablelayout/TableLayout/20050920/TableLayout-20050920.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/net/sf/jcgrid/jcgrid/0.05/jcgrid-0.05.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/junit-addons/junit-addons/1.4/junit-addons-1.4.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
-        <pathelement location="../../../../../../../ms/u/b/balcs7am/.m2/repository/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
+        <pathelement location="repository/net/sf/ingenias/jade/4.2/jade-4.2.jar"/>
+        <pathelement location="repository/net/sf/jgap/jgap/3.4.4/jgap-3.4.4.jar"/>
+        <pathelement location="repository/commons-lang/commons-lang/2.3/commons-lang-2.3.jar"/>
+        <pathelement location="repository/log4j/log4j/1.2.9/log4j-1.2.9.jar"/>
+        <pathelement location="repository/commons-codec/commons-codec/1.3/commons-codec-1.3.jar"/>
+        <pathelement location="repository/net/sf/trove4j/trove4j/2.0.2/trove4j-2.0.2.jar"/>
+        <pathelement location="repository/com/thoughtworks/xstream/xstream/1.2.2/xstream-1.2.2.jar"/>
+        <pathelement location="repository/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O.jar"/>
+        <pathelement location="repository/xpp3/xpp3/1.1.3.4.O/xpp3-1.1.3.4.O.jar"/>
+        <pathelement location="repository/commons-cli/commons-cli/1.0/commons-cli-1.0.jar"/>
+        <pathelement location="repository/commons-logging/commons-logging/1.0/commons-logging-1.0.jar"/>
+        <pathelement location="repository/tablelayout/TableLayout/20050920/TableLayout-20050920.jar"/>
+        <pathelement location="repository/net/sf/jcgrid/jcgrid/0.05/jcgrid-0.05.jar"/>
+        <pathelement location="repository/junit-addons/junit-addons/1.4/junit-addons-1.4.jar"/>
+        <pathelement location="repository/junit/junit/3.8.1/junit-3.8.1.jar"/>
+        <pathelement location="repository/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
+        <pathelement location="repository/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
+        <pathelement location="repository/commons-io/commons-io/2.4/commons-io-2.4.jar"/>
+        <pathelement location="repository/org/mvel/mvel2/2.2.0.Final/mvel2-2.2.0.Final.jar"/>
     </path>
     <path id="distributedea.classpath">
         <pathelement location="target/classes"/>
-        <pathelement location="lib/jade-4.3.2/lib/commons-codec/commons-codec-1.3.jar"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.TestCO.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.TestTSP.classpath">
-        <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
     <path id="run.distributedea.classpath">
@@ -48,51 +41,11 @@
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
-    <path id="run.TestCompare.classpath">
+    <path id="run.JNIfgeneric1.classpath">
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
-    <path id="run.ExampleTiming.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.InputJobQueue.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.JNIfgeneric (1).classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.TestCO (1).classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.PostProcDumy.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.PostProcBoxplot.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.PostProcComparing.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.PostProcJobTable.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.Test.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.BatchHeteroComparingTSP.classpath">
-        <path refid="distributedea.classpath"/>
-        <path refid="Maven Dependencies.libraryclasspath"/>
-    </path>
-    <path id="run.BatchHomoComparingTSP.classpath">
+    <path id="run.BatchExporter.classpath">
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
@@ -132,17 +85,6 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
-    <target name="TestCO">
-        <java classname="org.distributedea.tests.continousoptimalization.TestCO" failonerror="true" fork="yes">
-            <jvmarg line="-Djava.library.path=lib"/>
-            <classpath refid="run.TestCO.classpath"/>
-        </java>
-    </target>
-    <target name="TestTSP">
-        <java classname="org.distributedea.tests.tsp.TestTSP" failonerror="true" fork="yes">
-            <classpath refid="run.TestTSP.classpath"/>
-        </java>
-    </target>
     <target name="distributedea">
         <java classname="jade.Boot" failonerror="true" fork="yes">
             <jvmarg line="-Djava.library.path=lib"/>
@@ -156,66 +98,14 @@
             <classpath refid="run.distributedea-slave.classpath"/>
         </java>
     </target>
-    <target name="TestCompare">
-        <java classname="org.distributedea.tests.individual.TestCompare" failonerror="true" fork="yes">
-            <classpath refid="run.TestCompare.classpath"/>
+    <target name="JNIfgeneric1">
+        <java classname="org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric1" failonerror="true" fork="yes">
+            <classpath refid="run.JNIfgeneric1.classpath"/>
         </java>
     </target>
-    <target name="ExampleTiming">
-        <java classname="org.distributedea.tests.optimalization.ExampleExperiment" failonerror="true" fork="yes">
-            <jvmarg line="-Djava.library.path=/afs/ms/u/b/balcs7am/BIG/workspace/distributedea"/>
-            <classpath refid="run.ExampleTiming.classpath"/>
-        </java>
-    </target>
-    <target name="InputJobQueue">
-        <java classname="org.distributedea.agents.systemagents.centralmanager.InputJobQueue" failonerror="true" fork="yes">
-            <classpath refid="run.InputJobQueue.classpath"/>
-        </java>
-    </target>
-    <target name="JNIfgeneric (1)">
-        <java classname="org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric" failonerror="true" fork="yes">
-            <jvmarg line="-Djava.library.path=lib"/>
-            <classpath refid="run.JNIfgeneric (1).classpath"/>
-        </java>
-    </target>
-    <target name="TestCO (1)">
-        <java classname="org.distributedea.tests.continousoptimalization.TestCO" failonerror="true" fork="yes">
-            <classpath refid="run.TestCO (1).classpath"/>
-        </java>
-    </target>
-    <target name="PostProcDumy">
-        <java classname="org.distributedea.input.postprocessing.matlab.PostProcDumy" failonerror="true" fork="yes">
-            <classpath refid="run.PostProcDumy.classpath"/>
-        </java>
-    </target>
-    <target name="PostProcBoxplot">
-        <java classname="org.distributedea.input.postprocessing.matlab.PostProcBoxplot" failonerror="true" fork="yes">
-            <classpath refid="run.PostProcBoxplot.classpath"/>
-        </java>
-    </target>
-    <target name="PostProcComparing">
-        <java classname="org.distributedea.input.postprocessing.matlab.PostProcComparing" failonerror="true" fork="yes">
-            <classpath refid="run.PostProcComparing.classpath"/>
-        </java>
-    </target>
-    <target name="PostProcJobTable">
-        <java classname="org.distributedea.input.postprocessing.latex.PostProcJobTable" failonerror="true" fork="yes">
-            <classpath refid="run.PostProcJobTable.classpath"/>
-        </java>
-    </target>
-    <target name="Test">
-        <java classname="org.distributedea.tests.jobqueue.Test" failonerror="true" fork="yes">
-            <classpath refid="run.Test.classpath"/>
-        </java>
-    </target>
-    <target name="BatchHeteroComparingTSP">
-        <java classname="org.distributedea.input.batches.BatchHeteroComparingTSP" failonerror="true" fork="yes">
-            <classpath refid="run.BatchHeteroComparingTSP.classpath"/>
-        </java>
-    </target>
-    <target name="BatchHomoComparingTSP">
-        <java classname="org.distributedea.input.batches.BatchHomoComparingTSP" failonerror="true" fork="yes">
-            <classpath refid="run.BatchHomoComparingTSP.classpath"/>
+    <target name="BatchExporter">
+        <java classname="org.distributedea.input.BatchExporter" failonerror="true" fork="yes">
+            <classpath refid="run.BatchExporter.classpath"/>
         </java>
     </target>
 </project>

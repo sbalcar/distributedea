@@ -5,6 +5,8 @@ import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
 public class ComputingThread extends Thread {
@@ -14,8 +16,9 @@ public class ComputingThread extends Thread {
 	private JobID jobID;
 	private boolean individualDistribution;
 	private Class<?> problemToolClass;
+	private ProblemTool problemTool;
 	private Problem problem;
-	private boolean isComputing;
+	
 	
 	/** best result of computing (Individual and fitness) **/
 	private ResultOfComputing bestResultOfComputing = null;
@@ -26,7 +29,6 @@ public class ComputingThread extends Thread {
 		this.jobID = problemStruct.getJobID();
 		this.problemToolClass = problemStruct.exportProblemToolClass(agent.getLogger());
 		this.problem = problemStruct.getProblem();
-		this.isComputing = true;
 	}
 	
 	public JobID getJobID() {
@@ -35,46 +37,41 @@ public class ComputingThread extends Thread {
 	public boolean isIndividualDistribution() {
 		return this.individualDistribution;
 	}
-	public Class<?> getProblemTool() {
-		return this.problemToolClass;
+	public ProblemTool getProblemTool() {
+		return this.problemTool;
 	}
 	public Problem getProblem() {
 		return this.problem;
 	}
-	
-	public boolean continueInTheNextGeneration() {
-		return this.isComputing;
-	}
 
-	public void stopComputing() {
-		this.isComputing = false;
-	}
-	
 	public ResultOfComputing getBestresultOfComputing() {
 		
 		return bestResultOfComputing;
 	}
 	public void setBestresultOfComputing(ResultOfComputing resultOfComputing) {
 		
-		this.bestResultOfComputing = resultOfComputing;
-		
-		if (resultOfComputing != null) {
-						
-			AgentDescription agentDescription = new AgentDescription();
-			agentDescription.importProblemToolClass(problemToolClass);
-			agentDescription.setAgentConfiguration(agent.requiredAgentConfiguration);
-			
-			resultOfComputing.setAgentDescription(agentDescription);
-			resultOfComputing.setJobID(jobID);
+		if (resultOfComputing == null) {
+			return;
 		}
+		
+		AgentDescription agentDescription = new AgentDescription();
+		agentDescription.importProblemTool(problemTool);
+		agentDescription.setAgentConfiguration(agent.requiredAgentConfiguration);
+		
+		resultOfComputing.setAgentDescription(agentDescription);
+		resultOfComputing.setJobID(jobID);
+		
+		this.bestResultOfComputing = resultOfComputing;
 	}
 	
 	
 	@Override
 	public void run() {
 		
+		problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
+		
 		try {
-			agent.startComputing(problem, problemToolClass, jobID, null);
+			agent.startComputing(problem, problemTool, jobID, null);
 		} catch (ProblemToolException e) {
 			this.agent.getLogger().logThrowable("Error in the ProblemTool", e);
 			this.agent.commitSuicide();

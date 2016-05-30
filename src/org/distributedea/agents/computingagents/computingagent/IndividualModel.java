@@ -7,6 +7,7 @@ import java.util.List;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 
 /**
@@ -26,9 +27,10 @@ public class IndividualModel {
 	 * @param individualW
 	 * @param logger
 	 */
-	public synchronized void addIndividual(IndividualWrapper individualW, Problem problem, AgentLogger logger) {
-					
-		if (individualW == null || (! individualW.validation(problem, logger))) {
+	public synchronized void addIndividual(IndividualWrapper individualW,
+			Problem problem, ProblemTool problemTool, AgentLogger logger) {
+		
+		if (individualW == null || (! individualW.validation(problem, problemTool, logger))) {
 			Exception exception = new IllegalStateException("Recieved Individual is not valid");
 			logger.logThrowable("", exception);
 			return;

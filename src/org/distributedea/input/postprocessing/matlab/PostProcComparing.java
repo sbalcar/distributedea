@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.distributedea.Configuration;
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.FitnessTool;
-import org.distributedea.input.PostProcessing;
 import org.distributedea.input.Tool;
 import org.distributedea.input.batches.BatchHeteroComparingTSP;
+import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.job.noontology.Job;
 import org.distributedea.ontology.problem.Problem;
 
 public class PostProcComparing extends PostProcessing {
@@ -44,10 +45,10 @@ public class PostProcComparing extends PostProcessing {
 		List<String> lineTypes = Arrays.asList("-", "--", ":", "-.");
 		
 		String batchID = batch.getBatchID();
-		List<JobWrapper> jobWrappers = batch.getJobWrappers();
+		List<Job> jobWrappers = batch.getJobs();
 		for (int i = 0; i < jobWrappers.size(); i++) {
 			
-			JobWrapper jobWrpI = jobWrappers.get(i);
+			Job jobWrpI = jobWrappers.get(i);
 			
 			JobID jobIDI = processJobWrapper(jobWrpI, batchID);
 			
@@ -92,6 +93,13 @@ public class PostProcComparing extends PostProcessing {
 			e.printStackTrace();
 		}
 		
+		if (InputConfiguration.runPostProcessing) {
+			executeMatlabScript(bashScriptFileName);
+		}
+	}
+	
+	public void executeMatlabScript(String bashScriptFileName) {
+		
 		Runtime rt = Runtime.getRuntime();
 		try {
 			Process pr0 = rt.exec("chmod +x " + bashScriptFileName);
@@ -107,7 +115,7 @@ public class PostProcComparing extends PostProcessing {
 		System.out.println("Export OK");
 	}
 
-	public JobID processJobWrapper(JobWrapper jobWrp, String batchID) {
+	public JobID processJobWrapper(Job jobWrp, String batchID) {
 		
 		String jobID = jobWrp.getJobID();
 		int numberOfRuns = jobWrp.getNumberOfRuns();

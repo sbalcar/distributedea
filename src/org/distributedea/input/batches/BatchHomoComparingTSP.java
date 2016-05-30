@@ -1,19 +1,15 @@
 package org.distributedea.input.batches;
 
-import java.io.FileNotFoundException;
-
-import javax.xml.bind.JAXBException;
-
 import org.distributedea.Configuration;
-import org.distributedea.agents.systemagents.centralmanager.InputJobQueue;
-import org.distributedea.input.InputBatch;
-import org.distributedea.input.PostProcessing;
 import org.distributedea.input.batches.jobs.InputTSP;
 import org.distributedea.input.batches.jobs.MethodConstants;
+import org.distributedea.input.postprocessing.PostProcessing;
+import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
+import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcComparing;
 import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.JobWrapper;
+import org.distributedea.ontology.job.noontology.Job;
 
 public class BatchHomoComparingTSP extends InputBatch {
 
@@ -23,43 +19,43 @@ public class BatchHomoComparingTSP extends InputBatch {
 		batch.setBatchID("homoComparingTSP");
 		batch.setDescription("Porovnání homogeních modelů : TSP / Planovani = incializace");
 		
-		JobWrapper jobW0 = InputTSP.test05();
+		Job jobW0 = InputTSP.test05();
 		jobW0.setJobID("homoHillclimbing");
 		jobW0.setDescription("Homo-HillClimbing");
 		jobW0.setMethodsFileName(Configuration.getMethodsFile(
 				MethodConstants.METHODS_ONLY_HILLCLIMBING));
 		
-		JobWrapper jobW1 = InputTSP.test05();
+		Job jobW1 = InputTSP.test05();
 		jobW1.setJobID("homoRandomsearch");
 		jobW1.setDescription("Homo-RandomSearch");
 		jobW1.setMethodsFileName(Configuration.getMethodsFile(
 				MethodConstants.METHODS_ONLY_RANDOMSEARCH));
 		
-		JobWrapper jobW2 = InputTSP.test05();
+		Job jobW2 = InputTSP.test05();
 		jobW2.setJobID("homoEvolution");
 		jobW2.setDescription("Homo-Evolution");
 		jobW2.setMethodsFileName(Configuration.getMethodsFile(
 				MethodConstants.METHODS_ONLY_EVOLUTION));
 		
-		JobWrapper jobW3 = InputTSP.test05();
+		Job jobW3 = InputTSP.test05();
 		jobW3.setJobID("homoBruteforce");
 		jobW3.setDescription("Homo-BruteForce");
 		jobW3.setMethodsFileName(Configuration.getMethodsFile(
 				MethodConstants.METHODS_ONLY_BRUTEFORCE));
 		
-		JobWrapper jobW4 = InputTSP.test05();
+		Job jobW4 = InputTSP.test05();
 		jobW4.setJobID("homoTabusearch");
 		jobW4.setDescription("Homo-TabuSearch");
 		jobW4.setMethodsFileName(Configuration.getMethodsFile(
 				MethodConstants.METHODS_ONLY_TABUSEARCH));
 		
-		JobWrapper jobW5 = InputTSP.test05();
+		Job jobW5 = InputTSP.test05();
 		jobW5.setJobID("homoSimulatedannealing");
 		jobW5.setDescription("Homo-SimulatedAnnealing");
 		jobW5.setMethodsFileName(Configuration.getMethodsFile(
 				MethodConstants.METHODS_ONLY_SIMULATEDANNEALING));
 		
-		JobWrapper jobW6 = InputTSP.test05();
+		Job jobW6 = InputTSP.test05();
 		jobW6.setJobID("homoDifferentialevolution");
 		jobW6.setDescription("Homo-DifferentialEvolution");
 		jobW6.setMethodsFileName(Configuration.getMethodsFile(
@@ -74,21 +70,19 @@ public class BatchHomoComparingTSP extends InputBatch {
 		batch.addJobWrapper(jobW6);
 		
 		
-		PostProcessing ps0 = new PostProcBoxplot();
-
-		PostProcessing ps1 = new PostProcComparing();
+		PostProcessing psMat0 = new PostProcBoxplot();
+		PostProcessing psMat1 = new PostProcComparing();
 		
-		batch.addPostProcessings(ps0);
-		batch.addPostProcessings(ps1);
+		batch.addPostProcessings(psMat0);
+		batch.addPostProcessings(psMat1);
+		
+		PostProcessing psLat0 = new PostProcBatchDiffTable();
+		PostProcessing psLat1 = new PostProcJobTable();
+		
+		batch.addPostProcessings(psLat0);
+		batch.addPostProcessings(psLat1);
 		
 		return batch;
 	}
 	
-	public static void main(String [] args) throws FileNotFoundException, JAXBException {
-		
-		BatchHomoComparingTSP batchCmp = new BatchHomoComparingTSP(); 
-		Batch batch = batchCmp.batch();
-		
-		InputJobQueue.exportBatchToJobQueueDirectory(batch);
-	}
 }

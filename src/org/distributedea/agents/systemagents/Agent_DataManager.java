@@ -10,7 +10,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -21,7 +20,6 @@ import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
-import org.distributedea.ontology.job.JobID;
 
 /**
  * System-agent who manage data resources multi-agent framework
@@ -47,13 +45,6 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		
 		initAgent();
 		registrDF();
-		
-
-		// cleans old logs of Computing Agents
-		cleanLogDirectory();
-		
-		// cleans old improvement of distribution for each Computing Agent
-		cleanLogImprovementOfDistributionDirectory();
 		
 		
 		MessageTemplate mesTemplate =
@@ -107,95 +98,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		}
 		
 		return null;
-	}
-		
-	/**
-	 * Removes all files in the Log directory
-	 */
-	protected void cleanLogDirectory() {
-		
-		//String logDirectoryName = Configuration.getComputingAgentLogDirectory();
+	}	
 
-		//cleanDirectory(logDirectoryName);
-	}
-	
-	/**
-	 * Removes all files in the Log of Distribution Improvement directory
-	 */
-	protected void cleanLogImprovementOfDistributionDirectory() {
-		
-		//String logDirectoryName = Configuration.getComputingAgentLogImprovementOfDistributionDirectory();
-		
-		//cleanDirectory(logDirectoryName);
-	}
-
-	/**
-	 * Removes all files in the given directory
-	 */
-	private void cleanDirectory(String logDirectoryName) {
-		
-		File logDirectory = new File(logDirectoryName);
-		
-		File[] files = logDirectory.listFiles();
-	    if (files != null) { //some JVMs return null for empty directories
-	        for(File fileI: files) {
-	            if(! fileI.isDirectory()) {
-	            	fileI.delete();
-	            }
-	        }
-	    }
-	}
-
-	public static void createLogSpaceForJob(JobID jobID) {
-		
-		String logDirectoryName = Configuration.getLogBatchDirectory(jobID.getBatchID());
-		File logDirectory = new File(logDirectoryName);
-		if (! logDirectory.isDirectory()) {
-			logDirectory.mkdir();
-		}
-		
-		String logBatchDirectoryName = Configuration.getInputBatchDirectory(jobID.getBatchID());
-		File logBatchDirectory = new File(logBatchDirectoryName);
-		if (! logBatchDirectory.isDirectory()) {
-			logBatchDirectory.mkdir();
-		}	
-		
-		String logCADirectoryName = Configuration.getComputingAgentLogDirectory(jobID);
-		File logCADirectory = new File(logCADirectoryName);
-		if (! logCADirectory.isDirectory()) {
-			logCADirectory.mkdir();
-		}
-		
-		String logCARunDirectoryName = Configuration.getComputingAgentRunLogDirectory(jobID);
-		File logCARunDirectory = new File(logCARunDirectoryName);
-		if (! logCARunDirectory.isDirectory()) {
-			logCARunDirectory.mkdir();
-		}
-		
-		String logCAResultDirectoryName = Configuration.getComputingAgentLogSolutionDirectory(jobID);
-		File logCAResultDirectory = new File(logCAResultDirectoryName);
-		if (! logCAResultDirectory.isDirectory()) {
-			logCAResultDirectory.mkdir();
-		}
-		
-		String logCAImprovementDirectoryName = Configuration.getComputingAgentLogImprovementOfDistributionDirectory(jobID);
-		File logCAImprovementDirectory = new File(logCAImprovementDirectoryName);
-		if (! logCAImprovementDirectory.isDirectory()) {
-			logCAImprovementDirectory.mkdir();
-		}
-		
-	}
-	
-	public static void createResultSpaceForJob(JobID jobID) {
-		
-		String batchID = jobID.getBatchID();
-		String resultBatchDirName = Configuration.getResultDirectory(batchID);
-		
-		File resultBatchDirectory = new File(resultBatchDirName);
-		if (! resultBatchDirectory.isDirectory()) {
-			resultBatchDirectory.mkdir();
-		}
-		
-	}
 	
 }

@@ -14,5 +14,11 @@ public class InputConfiguration {
 	 */
 	public static boolean automaticStart = true;
 	
+	/**
+	 * Allows to kill all containers after finishing the last input Batch
+	 */
+	public static boolean automaticExit = true;
+	
+	
 	public static boolean runPostProcessing = true;
 }

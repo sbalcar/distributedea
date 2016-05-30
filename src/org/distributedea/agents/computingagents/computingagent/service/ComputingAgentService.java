@@ -3,6 +3,7 @@ package org.distributedea.agents.computingagents.computingagent.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
@@ -342,7 +343,8 @@ public class ComputingAgentService {
 		AID [] aidOfComputingAgents = agent.searchDF(
 				Agent_ComputingAgent.class.getName());
 		if (aidOfComputingAgents == null) {
-			throw new IllegalStateException("Computing agent can't find any neighbour " + agent.getAID().getLocalName());
+			logger.log(Level.INFO, "Computing agent can't find any neighbour " + agent.getAID().getLocalName());
+			return;
 		}
 		List<AID> aidOfComputingAgentsWithoutSender = new ArrayList<AID>(Arrays.asList(aidOfComputingAgents));
 		aidOfComputingAgentsWithoutSender.remove(agent.getAID());

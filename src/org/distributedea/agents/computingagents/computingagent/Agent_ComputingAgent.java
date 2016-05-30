@@ -49,6 +49,7 @@ import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
+import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
@@ -61,6 +62,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
 
+	protected CompAgentState state = CompAgentState.INITIALIZATION;
+	
 	// logger for Computing Agent
 	private AgentLogger logger = null;
 	
@@ -87,7 +90,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param problem
 	 * @param behaviour
 	 */
-	protected abstract void startComputing(Problem problem, Class<?> problemTool, JobID jobID, Behaviour behaviour) throws ProblemToolException;
+	protected abstract void startComputing(Problem problem, ProblemTool problemTool, JobID jobID, Behaviour behaviour) throws ProblemToolException;
 	
 	
 	@Override
@@ -286,13 +289,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		IndividualWrapper individualWrapper = (IndividualWrapper)action.getAction();
 		
-		if (computingThread == null || (! computingThread.isAlive())) {
+		if (state != CompAgentState.COMPUTING) {
 			return;
 		}
 		
 		Problem problem = computingThread.getProblem();
+		ProblemTool problemTool = computingThread.getProblemTool();
 		
-		receivedIndividuals.addIndividual(individualWrapper, problem, getLogger());
+		receivedIndividuals.addIndividual(individualWrapper, problem, problemTool, getLogger());
 	}
 	
 	
@@ -374,7 +378,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 	private ACLMessage respondToPrepareYourselfToKill(ACLMessage request, Action action) {
 		
-		computingThread.stopComputing();
+		state = CompAgentState.STOP;
 		
 		try {
 			computingThread.join();
@@ -511,14 +515,10 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	
 	private AgentDescription getAgentDescription(Problem problem) {
-/*
-		AgentConfiguration agentConfiguration = new AgentConfiguration();
-		agentConfiguration.setAgentType(this.getClass().getName());
-		agentConfiguration.setAgentName(this.getLocalName());
-*/	
+
 		AgentDescription description = new AgentDescription();
 		description.setAgentConfiguration(requiredAgentConfiguration);
-		description.importProblemToolClass(computingThread.getProblemTool());
+		description.importProblemTool(computingThread.getProblemTool());
 		
 		return description;
 	}

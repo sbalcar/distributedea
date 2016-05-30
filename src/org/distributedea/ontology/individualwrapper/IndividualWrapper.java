@@ -43,26 +43,12 @@ public class IndividualWrapper implements Concept {
 		this.jobID = jobID;
 	}
 
-	public boolean validation(Problem problem, AgentLogger logger) {
+	public boolean validation(Problem problem, ProblemTool problemTool, AgentLogger logger) {
 		
 		if (problem == null) {
 			return false;
 		}
 		
-		try {
-			return validEvaluatedIndividual(problem, logger);
-		} catch (InstantiationException | IllegalAccessException e) {
-			logger.logThrowable("", e);
-			return false;
-		}
-		
-	}
-	
-	private boolean validEvaluatedIndividual(Problem problem, AgentLogger logger) throws InstantiationException, IllegalAccessException {
-		
-		Class<?> problemToolClass = agentDescription.exportProblemToolClass();
-		ProblemTool problemTool = (ProblemTool) problemToolClass.newInstance();
-		
-		return individualEvaluated.validation(problem, problemTool, logger);
+		return individualEvaluated.validation(problem, problemTool, logger);	
 	}
 }

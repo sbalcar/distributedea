@@ -41,4 +41,19 @@ public class NodeInfosWrapper {
 		return aids;
 	}
 	
+	public List<AID> exportManagerAIDOfEachEmptyCore() {
+		
+		List<AID> aids = new ArrayList<>();
+		
+		for (NodeInfo nodeInfoI : nodeInfos) {
+			
+			int freeNodesI = nodeInfoI.getFreeCPUnumber();
+			for (int freeCoreIndex = 0; freeCoreIndex < freeNodesI; freeCoreIndex++) {
+				AID managerOfEmptyCore = nodeInfoI.getManagerAgentAID();
+				aids.add(managerOfEmptyCore);
+			}
+		}
+		
+		return aids;
+	}
 }
