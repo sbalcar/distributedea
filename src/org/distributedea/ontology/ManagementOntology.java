@@ -16,6 +16,9 @@ import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
+import org.distributedea.ontology.methoddescription.GetMethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptionwrapper.MethodDescriptionWrapper;
 
 public class ManagementOntology extends BeanOntology {
 
@@ -27,6 +30,11 @@ public class ManagementOntology extends BeanOntology {
         try {
         	add(DescribeNode.class);
         	add(NodeInfo.class);
+        	
+        	add(GetMethodDescription.class);
+            add(MethodDescription.class);
+            add(MethodDescriptionWrapper.class);
+            
             add(CreateAgent.class);
             add(CreatedAgent.class);
             add(PrepareYourselfToKill.class);

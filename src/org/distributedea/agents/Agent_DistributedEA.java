@@ -77,7 +77,7 @@ public abstract class Agent_DistributedEA extends Agent {
 	 * 
 	 * @return
 	 */
-	public final String getNumberOfContainer() {
+	public final int getNumberOfContainer() {
 
 		String localName = getAID().getLocalName();
 		
@@ -91,9 +91,17 @@ public abstract class Agent_DistributedEA extends Agent {
 		
 		assert(charIndex > 0);
 		
-		String numberString = localName.substring(charIndex +1);
+		String numbericendOfLocalName = localName.substring(charIndex +1);
 
-		return numberString;
+		String numberString = "";
+		for (int i = 0; i < numbericendOfLocalName.length(); i++) {
+			char charI = numbericendOfLocalName.charAt(i);
+			if ('0' <= charI && charI <= '9') {
+				numberString += charI;
+			}
+		}
+		
+		return Integer.parseInt(numberString);
 	}
 	
 	/**

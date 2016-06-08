@@ -19,11 +19,21 @@ public class ProblemTools {
 	
 	public ProblemTools() {
 	}
+	
 	public ProblemTools(Class<?> problemTool) {
 		this.problemTools = new ArrayList<>();
 		this.problemTools.add(problemTool);
 	}
-
+	
+	public ProblemTools(ProblemTools problemToolsStruct) {
+		
+		List<Class<?>> problemTools = problemToolsStruct.getProblemTools();
+		
+		for (Class<?> problemTollI : problemTools) {
+			addProblemTool(problemTollI);
+		}
+	}
+	
 	public List<Class<?>> getProblemTools() {
 		return problemTools;
 	}
@@ -87,6 +97,10 @@ public class ProblemTools {
 		}
 		
 		return true;
+	}
+	
+	public ProblemTools deepClone() {
+		return new ProblemTools(this);
 	}
 	
 }

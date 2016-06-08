@@ -1,5 +1,6 @@
 package org.distributedea.ontology.problem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.AgentLogger;
@@ -25,6 +26,24 @@ public class ProblemContinousOpt extends Problem {
 
 	private String problemFileName;
 	
+	
+	public ProblemContinousOpt() {
+	}
+	
+	public ProblemContinousOpt(ProblemContinousOpt problem) {
+		
+		setFunctionID(problem.getFunctionID());
+		setDimension(problem.getDimension());
+		
+		List<Interval> intervalsClone = new ArrayList<>();
+		for (Interval intervalI : intervals) {
+			Interval intervalCloneI = new Interval(intervalI);
+			intervalsClone.add(intervalCloneI);
+		}
+		
+		setIntervals(intervalsClone);
+		setProblemFileName(problem.getProblemFileName());
+	}
 	
 	public String getFunctionID() {
 		return functionID;
@@ -87,5 +106,11 @@ public class ProblemContinousOpt extends Problem {
 		
 		return true;
 	}
+	
+	@Override
+	public Problem deepClone() {
+		return new ProblemContinousOpt(this);
+	}
+	
 	
 }

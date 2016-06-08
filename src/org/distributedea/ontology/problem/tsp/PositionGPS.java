@@ -9,6 +9,15 @@ public class PositionGPS extends Position {
 	private double latitude;
 	private double longitude;
 	
+	public PositionGPS() {}
+	
+	public PositionGPS(PositionGPS position) {
+		
+		setNumber(position.getNumber());
+		setLatitude(position.getLatitude());
+		setLongitude(position.getLongitude());
+	}
+	
 	public int getNumber() {
 		return number;
 	}
@@ -30,4 +39,7 @@ public class PositionGPS extends Position {
 		this.longitude = longitude;
 	}
 	
+	public PositionGPS deepClone() {
+		return new PositionGPS(this);
+	}
 }

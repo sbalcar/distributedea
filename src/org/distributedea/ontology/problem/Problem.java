@@ -11,7 +11,7 @@ import jade.content.Concept;
 public abstract class Problem implements Concept {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	public abstract String getProblemFileName();
 	public abstract void setProblemFileName(String fileName);
 	
@@ -29,4 +29,6 @@ public abstract class Problem implements Concept {
 	 */
 	public abstract boolean testIsValid(Individual individual, AgentLogger logger);
 	
+	
+	public abstract Problem deepClone();
 }

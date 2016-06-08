@@ -3,18 +3,18 @@ package org.distributedea.agents.computingagents;
 import java.util.Random;
 import java.util.Vector;
 
-import jade.core.behaviours.Behaviour;
-
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -29,6 +29,8 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
 
+	private int popSize = 50;
+	
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 
@@ -59,16 +61,25 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, ProblemTool problemTool,
-			JobID jobID, Behaviour behaviour) throws ProblemToolException {
+	protected MethodDescription getMethodDescription() {
+		
+		MethodDescription description = new MethodDescription();
+		description.importComputingAgentClassName(this.getClass());
+		description.setNumberOfIndividuals(popSize);
+		description.setExploitation(true);
+		description.setExploration(true);
+		
+		return description;
+	}
 	
-		problemTool.initialization(problem, getLogger());
+	@Override
+	protected void startComputing(Problem problem, ProblemTool problemTool,
+			JobID jobID, AgentConfiguration agentConf) throws ProblemToolException {
+	
+		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
 		
 		Random random = new Random();
-		
-		int popSize = 50;
-		
 		
 		long generationNumberI = -1;
 		

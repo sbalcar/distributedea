@@ -9,15 +9,21 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class SchedulerRandom implements Scheduler {
+	
+	private SchedulerInitialization schedullerInit = null;
 	
 	Random ran = new Random();
 	
@@ -26,14 +32,18 @@ public class SchedulerRandom implements Scheduler {
 			AgentLogger logger) throws SchedulerException {
 		
 		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		Scheduler schedullerInit = new SchedulerInitialization(state, true);
-		schedullerInit.agentInitialization(centralManager, job,
-				logger);
+		
+		schedullerInit = new SchedulerInitialization(state, true);
+		schedullerInit.agentInitialization(centralManager, job, logger);
 	}
 
 	@Override
 	public void replan(Agent_CentralManager centralManager, JobRun job,
-			AgentLogger logger) throws SchedulerException {		
+			 Iteration iteration, ReceivedData receivedData, AgentLogger logger
+			 ) throws SchedulerException {		
+		
+		// initialization of Methods on the new containers
+		schedullerInit.replan(centralManager, job, iteration, receivedData, logger);
 		
 		//random select agent to kill
 		AID [] aidComputingAgents = centralManager.searchDF(
@@ -45,23 +55,41 @@ public class SchedulerRandom implements Scheduler {
 		
 		//random select configuration for creating the new agent
 		AgentConfigurations configurations = job.getAgentConfigurations();
-		
-		int indexAC = ran.nextInt(configurations.getAgentConfigurations().size());
-		AgentConfiguration agentToCreate = configurations.exportAgentConfigurations(indexAC);
-		
-		
+				
 		//random select problem tool for the new computation
 		List<Class<?>> problemTools = job.getProblemTools().getProblemTools();
-		
-		int indexPT = ran.nextInt(problemTools.size());
-		Class<?> problemToolClass = problemTools.get(indexPT);
-		
 
 		
+		Pair<AgentConfiguration, Class<?>> newMethod =
+				cooseNewMethod(configurations, problemTools);
+		AgentConfiguration agentToCreate = newMethod.first;
+		Class<?> problemToolClass = newMethod.second;
+				
 		ProblemStruct problemStruct = job.exportProblemStruct(problemToolClass);
 				
 		SchedulerTool.killAndCreateAgent(centralManager, agentToKillAID,
 				agentToCreate, problemStruct, logger);
+	}
+	
+	private Pair<AgentConfiguration, Class<?>> cooseNewMethod(AgentConfigurations configurations, List<Class<?>> problemTools) {
+		
+		AgentDescription candidateDescription = schedullerInit.removeNextCandidate();
+		
+		if (candidateDescription != null) {
+			
+			return new Pair<AgentConfiguration, Class<?>>(
+					candidateDescription.getAgentConfiguration(),
+					candidateDescription.exportProblemToolClass());
+		}
+		
+		int indexAC = ran.nextInt(configurations.getAgentConfigurations().size());
+		AgentConfiguration agentToCreate = configurations.exportAgentConfigurations(indexAC);
+		
+		int indexPT = ran.nextInt(problemTools.size());
+		Class<?> problemToolClass = problemTools.get(indexPT);
+		
+		return new Pair<AgentConfiguration, Class<?>>(
+				agentToCreate, problemToolClass);
 	}
 	
 	@Override

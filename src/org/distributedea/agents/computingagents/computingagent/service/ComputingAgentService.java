@@ -36,11 +36,108 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
+import org.distributedea.ontology.methoddescription.GetMethodDescription;
+import org.distributedea.ontology.methoddescriptionwrapper.MethodDescriptionWrapper;
+import org.distributedea.ontology.methoddescriptionwrapper.MethodDescriptionsWrapper;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class ComputingAgentService {
 
+	
+	public static MethodDescriptionsWrapper sendGetMethodDescriptions(Agent_DistributedEA centralManager,
+			AgentLogger logger) {
+	
+		// Get Result of Computing
+		AID [] aidOfComputingAgents = centralManager.searchDF(
+				Agent_ComputingAgent.class.getName());
+
+		MethodDescriptionsWrapper description = new MethodDescriptionsWrapper();
+		for (AID computingAgentI : aidOfComputingAgents) {
+			
+			MethodDescriptionWrapper methodDescriptionI =
+					sendGetMethodDescription(centralManager, computingAgentI, logger);
+			
+			description.addMethodDescriptionWrapper(methodDescriptionI);
+		}
+
+		return description;
+	}
+	
+	/**
+	 * Obtains MethodDescription from the specified computing Agent
+	 * @param agent
+	 * @param computingAgent
+	 * @param problemStruct
+	 * @param logger
+	 * @return
+	 */
+	public static MethodDescriptionWrapper sendGetMethodDescription(Agent_DistributedEA agent, AID computingAgent,
+			AgentLogger logger) {
+		
+		if (agent == null) {
+			throw new IllegalArgumentException(
+					"Argument agent can't be null");
+		}
+
+		Ontology ontology = ManagementOntology.getInstance();
+
+		ACLMessage msgGetMethodDescription = new ACLMessage(ACLMessage.REQUEST);
+		msgGetMethodDescription.addReceiver(computingAgent);
+		msgGetMethodDescription.setSender(agent.getAID());
+		msgGetMethodDescription.setLanguage(agent.getCodec().getName());
+		msgGetMethodDescription.setOntology(ontology.getName());
+
+		
+		GetMethodDescription description = new GetMethodDescription();
+		
+		Action action = new Action(agent.getAID(), description);
+		
+		try {
+			agent.getContentManager().fillContent(msgGetMethodDescription, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending StartComputing", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending StartComputing", e);
+		}
+		
+		
+		ACLMessage msgMethodDescription = null;
+		try {
+			msgMethodDescription = FIPAService
+					.doFipaRequestClient(agent, msgGetMethodDescription);
+		} catch (FIPAException e) {
+			logger.logThrowable("FIPAException by receiving MethodDescription", e);
+			return null;
+		}
+		
+		MethodDescriptionWrapper methodDescription = null;
+		try {
+			Result result = (Result)
+					agent.getContentManager().extractContent(msgMethodDescription);
+
+			methodDescription = (MethodDescriptionWrapper) result.getValue();
+
+		} catch (UngroundedException e) {
+			logger.logThrowable("UngroundedException by receiving MethodDescription", e);
+		} catch (CodecException e) {
+			logger.logThrowable("CodecException by receiving MethodDescription", e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by receiving MethodDescription", e);
+		}
+		
+		return methodDescription;
+
+	}
+	
+	/**
+	 * Obtains AgentConfiguration required for ManagerAgent
+	 * @param agent
+	 * @param computingAgent
+	 * @param agentConfiguration
+	 * @param logger
+	 */
 	public static void sendRequiredAgent(Agent_DistributedEA agent, AID computingAgent,
 			AgentConfiguration agentConfiguration, AgentLogger logger) {
 		
@@ -201,6 +298,12 @@ public class ComputingAgentService {
 		return everythingPreparedToBeKilled;
 	}
 	
+	/**
+	 * Obtains the current results from all computing Agents
+	 * @param centralManager
+	 * @param logger
+	 * @return
+	 */
 	public static ResultOfComputingWrapper sendAccessesResult(Agent_CentralManager centralManager,
 			AgentLogger logger) {
 		
@@ -219,6 +322,13 @@ public class ComputingAgentService {
 		return resultOfComputingAgents;
 	}
 
+	/**
+	 * Obtains the current results from computing Agent
+	 * @param agent
+	 * @param computingAgent
+	 * @param logger
+	 * @return
+	 */
 	public static ResultOfComputing sendAccessesResult(Agent_DistributedEA agent,
 			AID computingAgent, AgentLogger logger) {
 		
@@ -275,6 +385,14 @@ public class ComputingAgentService {
 		return resultOfComputing;
 	}
 	
+	/**
+	 * Obtains List of computation-helpmate of one Computing Agent
+	 * @param agent
+	 * @param computingAgent
+	 * @param newStatisticsForEachQuery
+	 * @param logger
+	 * @return
+	 */
 	public static HelpmateList sendReportHelpmate(Agent_DistributedEA agent,
 			AID computingAgent, boolean newStatisticsForEachQuery, AgentLogger logger) {
 		
@@ -332,6 +450,12 @@ public class ComputingAgentService {
 		return helpmateList;
 	}
 	
+	/**
+	 * Sends Computed Solution to neighbors (all another Computing Agents)
+	 * @param agent
+	 * @param individual
+	 * @param logger
+	 */
 	public static void sendIndividualToNeighbours(Agent_DistributedEA agent,
 			IndividualWrapper individual, AgentLogger logger) {
 		

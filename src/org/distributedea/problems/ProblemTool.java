@@ -1,6 +1,7 @@
 package org.distributedea.problems;
 
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.exceptions.ProblemToolException;
@@ -10,7 +11,8 @@ public interface ProblemTool {
 	public Class<?> problemWhichSolves();
 	public Class<?> reprezentationWhichUses();
 	
-	public void initialization(Problem problem, AgentLogger logger) throws ProblemToolException;
+	public void initialization(Problem problem, AgentConfiguration agentConf,
+			AgentLogger logger) throws ProblemToolException;
 	public void exit() throws ProblemToolException;
 	
 	/**

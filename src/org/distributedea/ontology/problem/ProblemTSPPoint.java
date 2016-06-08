@@ -15,6 +15,28 @@ public class ProblemTSPPoint extends ProblemTSP {
 	private List<PositionPoint> positions;
 	private String problemFileName;
 	
+	public ProblemTSPPoint() {}
+	
+	public ProblemTSPPoint(ProblemTSPPoint problem) {
+		
+		List<PositionPoint> positionsClone = new ArrayList<>();
+		for (PositionPoint positionI : positions) {
+			PositionPoint positionCloneI =
+					new PositionPoint(positionI);
+			positionsClone.add(positionCloneI);
+		}
+		
+		setPositions(positionsClone);
+		setProblemFileName(problem.getProblemFileName());
+	}
+	
+	public List<PositionPoint> getPositions() {
+		return positions;
+	}
+	public void setPositions(List<PositionPoint> positions) {
+		this.positions = positions;
+	}
+
 	@Override
 	public List<Position> exportPositions() {
 		
@@ -26,14 +48,6 @@ public class ProblemTSPPoint extends ProblemTSP {
 		return positionsList;
 	}
 	
-	public List<PositionPoint> getPositions() {
-		return positions;
-	}
-
-	public void setPositions(List<PositionPoint> positions) {
-		this.positions = positions;
-	}
-
 	@Override
 	public Position exportPosition(int itemNumber) {
 		
@@ -64,6 +78,12 @@ public class ProblemTSPPoint extends ProblemTSP {
 	@Override
 	public boolean testIsValid(Individual individual, AgentLogger logger) {
 		return true;
+	}
+
+	@Override
+	public Problem deepClone() {
+		
+		return new ProblemTSPPoint(this);
 	}
 	
 }

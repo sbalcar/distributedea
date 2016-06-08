@@ -1,5 +1,6 @@
 package org.distributedea.ontology.problem.tsp;
 
+
 public class PositionPoint extends Position {
 
 	private static final long serialVersionUID = 1L;
@@ -7,6 +8,14 @@ public class PositionPoint extends Position {
 	private int number;
 	private double coordinateX;
 	private double coordinateY;
+	
+	public PositionPoint() {}
+	
+	public PositionPoint(PositionPoint point) {
+		setNumber(point.getNumber());
+		setCoordinateX(point.getCoordinateX());
+		setCoordinateY(point.getCoordinateY());
+	}
 	
 	public int getNumber() {
 		return number;
@@ -29,4 +38,8 @@ public class PositionPoint extends Position {
 		this.coordinateY = coordinateY;
 	}	
 	
+	public PositionPoint deepClone() {
+		
+		return new PositionPoint(this);
+	}
 }

@@ -38,6 +38,28 @@ public class JobRun implements Concept {
 	private Problem problem;
 
 	
+	public JobRun() {}
+	
+	public JobRun(JobRun jobRun) {
+		
+		JobID jobIDClone = new JobID(jobRun.getJobID());
+		boolean individualDistributionClone =
+				jobRun.getIndividualDistribution();
+		AgentConfigurations agentConfigurationsClone =
+				new AgentConfigurations(jobRun.getAgentConfigurations());
+		ProblemTools problemToolsClone =
+				new ProblemTools(jobRun.getProblemTools());
+		Problem problemClone =
+				jobRun.getProblem().deepClone();
+		
+		setJobID(jobIDClone);
+		setIndividualDistribution(individualDistributionClone);
+		setAgentConfigurations(agentConfigurationsClone);
+		setProblemTools(problemToolsClone);
+		setProblem(problemClone);
+		
+	}
+	
 	public JobID getJobID() {
 		return jobID;
 	}

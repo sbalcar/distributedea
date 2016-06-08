@@ -3,6 +3,8 @@ package org.distributedea.input.batches;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowBestResult;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowup3Helpers;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerMethodDescription;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerRandom;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
 import org.distributedea.input.batches.jobs.InputTSP;
@@ -43,11 +45,23 @@ public class BatchHeteroComparingTSP extends InputBatch {
 		jobW3.setJobID("followup3Helpers");
 		jobW3.setDescription("Follow up three Helpers");
 		jobW3.setScheduler(new SchedulerFollowup3Helpers());
+
+		Job jobW4 = InputTSP.test06();
+		jobW4.setJobID("random");
+		jobW4.setDescription("Random Kill & Random Run");
+		jobW4.setScheduler(new SchedulerRandom());
+
+		Job jobW5 = InputTSP.test06();
+		jobW5.setJobID("methodDescription");
+		jobW5.setDescription("Method Description");
+		jobW5.setScheduler(new SchedulerMethodDescription());
 		
 		batch.addJobWrapper(jobW0);
 		batch.addJobWrapper(jobW1);
 		batch.addJobWrapper(jobW2);
 		batch.addJobWrapper(jobW3);
+		batch.addJobWrapper(jobW4);
+		batch.addJobWrapper(jobW5);
 		
 		PostProcessing psMat0 = new PostProcBoxplot();
 		PostProcessing psMat1 = new PostProcComparing();

@@ -51,15 +51,13 @@ public class BbobTools {
 	private String cFileName;
 	private String cFileNameWithPath;
 	
-	// generates ID of Instance
-	//private static int counter = 0;
-	// represents ID of Instance
-	private int numberI;
+
+	private String numberI;
 
 	private AgentLogger logger;
 	
 	
-	public BbobTools(AgentLogger logger) {
+	public BbobTools(String containerNumber, AgentLogger logger) {
 		
 		this.logger = logger;
 		
@@ -70,15 +68,15 @@ public class BbobTools {
 		this.cFileName = JAVA_CLASS.getSimpleName();
 		this.cFileNameWithPath = C_DIR + File.separator + cFileName + ".c";
 		
-		this.numberI = BbobLock.getInstance().getID();
+		this.numberI = containerNumber + BbobLock.getInstance().getID();
 	}
 
 	
-	public int getNumber() {
+	public String getNumber() {
 		return this.numberI;
 	}
 	
-	protected void createJavaClassFile(int number) throws IOException {
+	protected void createJavaClassFile(String number) throws IOException {
 		
 		final String fgenericJavaCodeI = readFile(javaFileNameWithPath);
 		
@@ -132,7 +130,7 @@ public class BbobTools {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	protected Class<?> getJNIClass(int number) throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	protected Class<?> getJNIClass(String number) throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
 		String fgenericFileI =  JAVA_DIR + File.separator + JAVA_CLASS.getName()
 				.replace(".", File.separator) + number + ".java";		
@@ -186,7 +184,7 @@ public class BbobTools {
 	    return aClass;
 	}
 
-	protected void createCMakeFile(int number) throws IOException {
+	protected void createCMakeFile(String number) throws IOException {
 		
 		String cMakefileCode = readFile("Makefile");
 		
@@ -207,7 +205,7 @@ public class BbobTools {
 		writeToFile(MakefileNew, cMakefileCodeNew);
 	}
 
-	protected void createCJNIFile(int number) throws IOException {
+	protected void createCJNIFile(String number) throws IOException {
 		
 		String cJNICode = readFile(cFileNameWithPath);
 		
@@ -221,7 +219,7 @@ public class BbobTools {
 		writeToFile(cFileNameWithPathNew, cJNICodeNew);
 	}
 	
-	protected void compileC(int number) throws IOException, InterruptedException{
+	protected void compileC(String number) throws IOException, InterruptedException{
 		
 		Runtime rt = Runtime.getRuntime();
 		Process pr = rt.exec("make -f Makefile" + number );

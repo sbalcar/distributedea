@@ -7,6 +7,8 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
@@ -86,7 +88,8 @@ public class SchedulerDummy implements Scheduler {
 	
 	@Override
 	public void replan(Agent_CentralManager centralManager, JobRun job,
-			AgentLogger logger) throws SchedulerException {
+			 Iteration iteration, ReceivedData receivedData, AgentLogger logger
+			 ) throws SchedulerException {
 	}
 
 	@Override

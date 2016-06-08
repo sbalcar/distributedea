@@ -1,17 +1,17 @@
 package org.distributedea.agents.computingagents;
 
-import jade.core.behaviours.Behaviour;
-
 import java.util.logging.Level;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -57,21 +57,26 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			}			
 		}
 		
-		
-		if (! isAble) {
-			getCALogger().logThrowable(
-					"Agent is not able to solve this type of Problem by using "
-					+ "this reperesentation",
-					new IllegalStateException());
-		}
-		
 		return isAble;
 	}
 
 	@Override
-	protected void startComputing(Problem problem, ProblemTool problemTool, JobID jobID, Behaviour behaviour) throws ProblemToolException {
+	protected MethodDescription getMethodDescription() {
 		
-		problemTool.initialization(problem, getLogger());
+		MethodDescription description = new MethodDescription();
+		description.importComputingAgentClassName(this.getClass());
+		description.setNumberOfIndividuals(1);
+		description.setExploitation(false);
+		description.setExploration(true);
+		
+		return description;
+	}
+	
+	@Override
+	protected void startComputing(Problem problem, ProblemTool problemTool,
+			JobID jobID, AgentConfiguration agentConf) throws ProblemToolException {
+		
+		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
 		
 		long generationNumberI = -1;

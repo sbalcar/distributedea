@@ -33,7 +33,7 @@ public class TestCO {
 		ProblemTool tool = new ProblemToolRandomMove();
 		
 		Problem problem = tool.readProblem(inputFileName, null);
-		tool.initialization(problem, null);
+		tool.initialization(problem, null, null);
 		
 		Individual individual = tool.generateIndividual(problem, null);
 		
@@ -51,7 +51,7 @@ public class TestCO {
 		ProblemTool tool1 = new ProblemToolRandomMove();
 		
 		Problem problem1 = tool1.readProblem(inputFileName, null);
-		tool1.initialization(problem1, null);
+		tool1.initialization(problem1, null, null);
 
 		try {
 			Thread.sleep(1000);
@@ -61,7 +61,7 @@ public class TestCO {
 		ProblemTool tool2 = new ProblemToolRandomMove();
 		
 		Problem problem2 = tool2.readProblem(inputFileName, null);
-		tool2.initialization(problem2, null);
+		tool2.initialization(problem2, null, null);
 		
 		
 		for (int i = 0; i < 10; i++) {
@@ -87,7 +87,7 @@ public class TestCO {
 	    
 	    ProblemTool tool = new ProblemToolRandomMove();
 		Problem problem = tool.readProblem(inputFileName, null);
-		tool.initialization(problem, null);
+		tool.initialization(problem, null, null);
 		
 		Individual individual1 = tool.generateIndividual(problem, null);
 		
@@ -112,7 +112,7 @@ public class TestCO {
 		
 		int number1 = 1;
 		
-		BbobTools bbobTool1 = new BbobTools(null);
+		BbobTools bbobTool1 = new BbobTools("1", null);
 		IJNIfgeneric fgeneric1 = bbobTool1.getInstanceJNIfgeneric();
 
 	    JNIfgeneric.Params params1 = new JNIfgeneric.Params();
@@ -124,7 +124,7 @@ public class TestCO {
 		
 		int number2 = 2;
 		
-		BbobTools bbobTool2 = new BbobTools(null);
+		BbobTools bbobTool2 = new BbobTools("1", null);
 		IJNIfgeneric fgeneric2 = bbobTool2.getInstanceJNIfgeneric();
 
 	    JNIfgeneric.Params params2 = new JNIfgeneric.Params();

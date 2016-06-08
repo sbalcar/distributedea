@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import org.distributedea.Configuration;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.tsp.Position;
@@ -23,7 +24,7 @@ import org.distributedea.problems.ProblemTool;
 public abstract class ProblemTSPTool implements ProblemTool {
 	
 	@Override
-	public void initialization(Problem problem, AgentLogger logger) {
+	public void initialization(Problem problem, AgentConfiguration agentConf, AgentLogger logger) {
 	}
 
 	@Override

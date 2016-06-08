@@ -5,7 +5,6 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -46,6 +45,9 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
+import org.distributedea.ontology.methoddescription.GetMethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptionwrapper.MethodDescriptionWrapper;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
@@ -86,12 +88,17 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected abstract boolean isAbleToSolve(ProblemStruct problemStruct);
 	
 	/**
-	 * Starts computing a given Problem
+	 * Starts computing a given Problem by useing given ProblemTool
 	 * @param problem
 	 * @param behaviour
 	 */
-	protected abstract void startComputing(Problem problem, ProblemTool problemTool, JobID jobID, Behaviour behaviour) throws ProblemToolException;
+	protected abstract void startComputing(Problem problem, ProblemTool problemTool, JobID jobID, AgentConfiguration requiredAgentConfiguration) throws ProblemToolException;
 	
+	/**
+	 * Returns basic method description
+	 * @return
+	 */
+	protected abstract MethodDescription getMethodDescription();
 	
 	@Override
 	public List<Ontology> getOntologies() {
@@ -158,7 +165,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(msgRequest);
 					
-					if (action.getAction() instanceof AccessesResult) {
+					if (action.getAction() instanceof GetMethodDescription) {
+						getLogger().log(Level.INFO, "Request for GetMethodDescription");
+						return respondToGetMethodDescription(msgRequest, action);
+						
+					}	else if (action.getAction() instanceof AccessesResult) {
 						getLogger().log(Level.INFO, "Request for AccessesResult");
 						return respondToAccessesResult(msgRequest, action);
 						
@@ -277,6 +288,35 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	
+	protected ACLMessage respondToGetMethodDescription(ACLMessage msgRequest,
+			Action action) {
+		
+		@SuppressWarnings("unused")
+		GetMethodDescription getMethodDescription = (GetMethodDescription) action.getAction();
+		
+		ACLMessage reply = msgRequest.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+		reply.setLanguage(codec.getName());
+		reply.setOntology(ManagementOntology.getInstance().getName());
+		
+		//active waiting for some result
+		MethodDescriptionWrapper methodDescriptionWrp = new MethodDescriptionWrapper();
+		methodDescriptionWrp.setAgentConfiguration(requiredAgentConfiguration);
+		methodDescriptionWrp.setMethodDescription(getMethodDescription());
+		
+		Result result = new Result(action.getAction(), methodDescriptionWrp);
+
+		try {
+			getContentManager().fillContent(reply, result);
+		} catch (CodecException e) {
+			getLogger().logThrowable("CodecException by sending MethodDescription", e);
+		} catch (OntologyException e) {
+			getLogger().logThrowable("OntologyException by sending MethodDescription", e);
+		}
+
+		return reply;
+	}
+
 	protected void processRequiredAgent(ACLMessage msgInform, Action action) {
 
 		RequiredAgent requiredAgent = (RequiredAgent)action.getAction();
@@ -340,9 +380,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
 		
-		boolean isComputing = (computingThread != null) && computingThread.isAlive();
-		if ((! isAbleToSolveProblem(problemStruct)) || isComputing) {
+		//boolean isComputing = (computingThread != null) && computingThread.isAlive();
+		if ((! isAbleToSolveProblem(problemStruct)) || state == CompAgentState.COMPUTING) {
 
+			getCALogger().logThrowable(
+					"Agent is not able to solve this type of Problem by using "
+					+ "this reperesentation",
+					new IllegalStateException("Can't solve problem"));
+			
 			ACLMessage reply = request.createReply();
 			reply.setPerformative(ACLMessage.REFUSE);
 			reply.setContent("KO");
@@ -350,7 +395,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return reply;
 		}
 		
-		this.computingThread = new ComputingThread(this, problemStruct);	
+		this.computingThread = new ComputingThread(this, problemStruct, requiredAgentConfiguration);	
 		this.computingThread.start();
 
 			
@@ -380,12 +425,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		state = CompAgentState.STOP;
 		
-		try {
-			computingThread.join();
-		} catch (InterruptedException e) {
-			getLogger().logThrowable("Error by waiting to end of computing Thread", e);
+		if (computingThread != null && computingThread.isAlive()) {
+			try {
+				computingThread.join();
+			} catch (InterruptedException e) {
+				getLogger().logThrowable("Error by waiting to end of computing Thread", e);
+			}
 		}
-		
 		// deregistres agent from DF
 		//  before derestration have to be stop computing(after deregistration
 		//  agent can no communicate wit another agents)
@@ -427,7 +473,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		reply.setOntology(ResultOntology.getInstance().getName());
 		
 
-		AgentDescription description = getAgentDescription(this.computingThread.getProblem());
+		AgentDescription description = getAgentDescription();
 		
 		HelpmateList helpmateList = getHelpmateList(newStatisticsForEachQuery);
 		helpmateList.setDescription(description);
@@ -497,7 +543,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 				Configuration.INDIVIDUAL_BROADCAST_PERIOD_MS < nowMs) {
 			
 			// set description of agent (part of description)
-			AgentDescription description = getAgentDescription(problem);
+			AgentDescription description = getAgentDescription();
 			
 			IndividualEvaluated individualEval = new IndividualEvaluated();
 			individualEval.setIndividual(individual);
@@ -514,7 +560,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 	}
 	
-	private AgentDescription getAgentDescription(Problem problem) {
+	private AgentDescription getAgentDescription() {
 
 		AgentDescription description = new AgentDescription();
 		description.setAgentConfiguration(requiredAgentConfiguration);

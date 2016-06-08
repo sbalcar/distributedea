@@ -5,6 +5,8 @@ import jade.content.Concept;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemToolEvaluation;
 
@@ -74,6 +76,72 @@ public class ResultOfComputingWrapper implements Concept {
 		}
 		
 		return worstResult;
+	}
+	
+	public ResultOfComputingWrapper exportResultsOfGivenAgentType(List<Class<?>> agentType) {
+		
+		ResultOfComputingWrapper resultWrp = new ResultOfComputingWrapper();
+		
+		for (ResultOfComputing resultI : resultOfComputing) {
+			
+			AgentDescription agentDescriptionI = resultI.getAgentDescription();
+			AgentConfiguration agentConfigurationI = agentDescriptionI.getAgentConfiguration();
+			Class<?> agentTypeI = agentConfigurationI.exportAgentType();
+			
+			if (agentType.contains(agentTypeI)) {
+				resultWrp.addResultOfComputing(resultI);
+			}
+		}
+		
+		return resultWrp;
+	}
+	
+	public int exportAgentNumberOfType(List<Class<?>> agentType) {
+	
+		int counter = 0;
+		for (ResultOfComputing resultI : resultOfComputing) {
+			
+			AgentDescription agentDescriptionI = resultI.getAgentDescription();
+			AgentConfiguration agentConfigurationI = agentDescriptionI.getAgentConfiguration();
+			Class<?> agentTypeI = agentConfigurationI.exportAgentType();
+			
+			if (agentType.contains(agentTypeI)) {
+				counter++;
+			}
+		}
+		
+		return counter;
+	}
+
+	public boolean containsAgentTypes(Class<?> agentType) {
+		
+		for (ResultOfComputing resultI : resultOfComputing) {
+			
+			AgentDescription agentDescriptionI = resultI.getAgentDescription();
+			AgentConfiguration agentConfigurationI = agentDescriptionI.getAgentConfiguration();
+			Class<?> agentTypeI = agentConfigurationI.exportAgentType();
+			
+			if (agentType == agentTypeI) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public List<Class<?>> exportAgentTypesWhichDontContains(List<Class<?>> agentTypes) {
+		
+		List<Class<?>> agentTypesSupplement = new ArrayList<>();
+		
+		for (Class<?> agentTypeI : agentTypes) {
+			
+			if (! containsAgentTypes(agentTypeI)) {
+				if (! agentTypesSupplement.contains(agentTypeI)) {
+					
+					agentTypesSupplement.add(agentTypeI);
+				}
+			}
+		}
+		return agentTypesSupplement;
 	}
 	
 }

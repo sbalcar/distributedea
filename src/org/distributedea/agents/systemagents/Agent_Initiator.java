@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.distributedea.AgentNames;
-import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
@@ -126,13 +124,8 @@ public class Agent_Initiator extends Agent_DistributedEA {
 				+ this.getAID().getLocalName());
 
 
-		String managerAgentname =
-				AgentNames.MANAGER_AGENT.getName() +
-				Configuration.CONTAINER_NUMBER_PREFIX +
-				cutFromHosntameContainerID();
-
-		AID aManagerAgentAID = new AID(managerAgentname, false);
-
+		AID aManagerAgentAID = aManagerAgent.exportAgentAID();
+		
 		for (AgentConfiguration configurationI : noManagerAgentConfigurations) {
 
 			AID result = ManagerAgentService.sendCreateAgent(this,
@@ -172,7 +165,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 	 *  
 	 * @return Number as possible suffix for container
 	 */
-	public String cutFromHosntameContainerID() {
+	public int cutFromHosntameContainerID() {
 
 		String containerNumber = "";
 
@@ -181,7 +174,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			hosname = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
 			getLogger().logThrowable("df", e);
-			return null;
+			return -1;
 		}
 
 		for (int charIndex = 0; charIndex < hosname.length(); charIndex++) {
@@ -191,7 +184,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			}
 		}
 
-		return containerNumber;
+		return Integer.parseInt(containerNumber);
 	}
 
 }

@@ -8,6 +8,8 @@ import org.distributedea.agents.computingagents.computingagent.service.Computing
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
@@ -76,7 +78,7 @@ public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 	
 	@Override
 	public void replan(Agent_CentralManager centralManager, JobRun job,
-			AgentLogger logger) {
+			Iteration iteration, ReceivedData receivedData, AgentLogger logger) {
 	}
 
 	

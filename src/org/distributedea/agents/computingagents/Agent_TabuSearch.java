@@ -4,14 +4,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 
-import jade.core.behaviours.Behaviour;
-
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
@@ -36,10 +36,22 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void startComputing(Problem problem, ProblemTool problemTool, JobID jobID,
-			Behaviour behaviour) throws ProblemToolException {
+	protected MethodDescription getMethodDescription() {
 		
-		problemTool.initialization(problem, getLogger());
+		MethodDescription description = new MethodDescription();
+		description.importComputingAgentClassName(this.getClass());
+		description.setNumberOfIndividuals(1);
+		description.setExploitation(false);
+		description.setExploration(true);
+		
+		return description;
+	}
+	
+	@Override
+	protected void startComputing(Problem problem, ProblemTool problemTool, JobID jobID,
+			AgentConfiguration agentConf) throws ProblemToolException {
+		
+		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
         
 		long generationNumberI = -1;

@@ -15,6 +15,31 @@ public class ProblemTSPGPS extends ProblemTSP {
 	private List<PositionGPS> positions;
 	private String problemFileName;
 
+	
+	public ProblemTSPGPS() {
+		this.positions = new ArrayList<PositionGPS>();
+	}
+	
+	public ProblemTSPGPS(ProblemTSPGPS problem) {
+		
+		List<PositionGPS> positionsClone = new ArrayList<>();
+		for (PositionGPS positionI : problem.getPositions()) {
+			PositionGPS positionCloneI =
+					new PositionGPS(positionI);
+			positionsClone.add(positionCloneI);
+		}
+		setPositions(positionsClone);
+		
+		setProblemFileName(problem.getProblemFileName());
+	}
+	
+	public List<PositionGPS> getPositions() {
+		return positions;
+	}
+	public void setPositions(List<PositionGPS> positions) {
+		this.positions = positions;
+	}
+
 	@Override
 	public List<Position> exportPositions() {
 		
@@ -26,18 +51,6 @@ public class ProblemTSPGPS extends ProblemTSP {
 		return positionsList;
 	}
 	
-	public ProblemTSPGPS() {
-		this.positions = new ArrayList<PositionGPS>();
-	}
-	
-	public List<PositionGPS> getPositions() {
-		return positions;
-	}
-
-	public void setPositions(List<PositionGPS> positions) {
-		this.positions = positions;
-	}
-
 	public PositionGPS exportPosition(int itemNumber) {
 		
 		for (PositionGPS positionI : positions) {
@@ -69,4 +82,8 @@ public class ProblemTSPGPS extends ProblemTSP {
 		return true;
 	}
 	
+	@Override
+	public Problem deepClone() {
+		return new ProblemTSPGPS(this);
+	}
 }

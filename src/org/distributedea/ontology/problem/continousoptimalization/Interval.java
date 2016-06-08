@@ -9,6 +9,13 @@ public class Interval implements Concept {
 	private double min;
 	private double max;
 	
+	public Interval() {
+	}
+	public Interval(Interval interval) {
+		setMin(interval.getMin());
+		setMax(interval.getMax());
+	}
+	
 	public double getMin() {
 		return min;
 	}
@@ -25,5 +32,9 @@ public class Interval implements Concept {
 	
 	public double size() {
 		return getMax() - getMin();
+	}
+	
+	public Interval deepClone() {
+		return new Interval(this);
 	}
 }

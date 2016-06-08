@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.ArrayUtils;
 import org.distributedea.Configuration;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
@@ -41,6 +42,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	protected IJNIfgeneric fgeneric;
 	protected BbobTools bbobTools;
 	
+	
 	@Override
 	public Class<?> problemWhichSolves() {
 		return ProblemContinousOpt.class;
@@ -52,7 +54,8 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	}
 
 	@Override
-	public void initialization(Problem problem, AgentLogger logger) throws ProblemToolException {
+	public void initialization(Problem problem, AgentConfiguration agentConf,
+			AgentLogger logger) throws ProblemToolException {
 		
     	System.setProperty("java.library.path", "." + File.separator + "lib");
     	
@@ -63,7 +66,9 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
     	String functionIDString = problemContinousOpt.getFunctionID();
     	int functionID = Integer.parseInt(functionIDString.substring(1));
     	
-    	bbobTools = new BbobTools(logger);
+    	String containerSuffix = agentConf.exportContainerSuffix();
+    	
+    	bbobTools = new BbobTools(containerSuffix, logger);
     	
     	try {
 			fgeneric = bbobTools.getInstanceJNIfgeneric();
@@ -337,5 +342,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 		return indvidualPoint;
 	}
 
-	
+	public ProblemContinuousOptTool deepClone() {
+		return this;
+	}
 }

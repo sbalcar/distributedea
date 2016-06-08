@@ -7,6 +7,9 @@ import jade.core.AID;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
 import org.distributedea.logging.AgentLogger;
@@ -21,14 +24,18 @@ import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class SchedulerFollowBestResult implements Scheduler {
 	
+	private SchedulerInitialization schedullerInit = null; 
+	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager, JobRun job,
 			AgentLogger logger) throws SchedulerException {
 		
+		logger.log(Level.INFO, "Scheduler " + getClass().getSimpleName() + " initialization");
+		
 		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		Scheduler schedullerInit = new SchedulerInitialization(state, true);
-		schedullerInit.agentInitialization(centralManager, job,
-				logger);
+		
+		schedullerInit = new SchedulerInitialization(state, true);
+		schedullerInit.agentInitialization(centralManager, job, logger);
 	}
 
 	/**
@@ -39,7 +46,11 @@ public class SchedulerFollowBestResult implements Scheduler {
 	 */
 	@Override
 	public void replan(Agent_CentralManager centralManager, JobRun job,
-			AgentLogger logger) throws SchedulerException {		
+			 Iteration iteration, ReceivedData receivedData, AgentLogger logger
+			 ) throws SchedulerException {
+		
+		// initialization of Methods on the new containers
+		schedullerInit.replan(centralManager, job, iteration, receivedData, logger);
 		
 		Problem problem = job.getProblem();
 		
@@ -66,10 +77,32 @@ public class SchedulerFollowBestResult implements Scheduler {
 		AgentDescription bestDescription = bestResult.getAgentDescription();
 		Class<?> bestProblemToolClass = bestDescription.exportProblemToolClass();
 
-		ProblemStruct problemStruct = job.exportProblemStruct(bestProblemToolClass);
+		
+		Pair<AgentConfiguration, Class<?>> newMethod =
+				cooseNewMethod(bestConfiguration, bestProblemToolClass);
+		AgentConfiguration newAgentConfiguration = newMethod.first;
+		Class<?> newProblemToolClass = newMethod.second;
+		
+		ProblemStruct problemStruct = job.exportProblemStruct(newProblemToolClass);
 				
 		SchedulerTool.killAndCreateAgent(centralManager, worstAID,
-				bestConfiguration, problemStruct, logger);
+				newAgentConfiguration, problemStruct, logger);
+	}
+	
+	private Pair<AgentConfiguration, Class<?>> cooseNewMethod(
+			AgentConfiguration bestConfiguration, Class<?> bestProblemToolClass) {
+		
+		AgentDescription candidateDescription = schedullerInit.removeNextCandidate();
+		
+		if (candidateDescription != null) {
+			
+			return new Pair<AgentConfiguration, Class<?>>(
+					candidateDescription.getAgentConfiguration(),
+					candidateDescription.exportProblemToolClass());
+		}
+		
+		return new Pair<AgentConfiguration, Class<?>>(
+				bestConfiguration, bestProblemToolClass);
 	}
 	
 	@Override

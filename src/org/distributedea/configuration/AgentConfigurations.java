@@ -17,6 +17,16 @@ public class AgentConfigurations {
 	public AgentConfigurations(List<AgentConfiguration> agentConfigurations) {
 		this.agentConfigurations = agentConfigurations;
 	}
+	public AgentConfigurations(AgentConfigurations agentConfigurationsStruct) {
+		
+		for (AgentConfiguration agentConfI : agentConfigurationsStruct.getAgentConfigurations()) {
+			
+			AgentConfiguration agentConfCloneI = new AgentConfiguration(agentConfI);
+			
+			addAgentConfigurations(agentConfCloneI);
+		}
+	}
+
 	public List<AgentConfiguration> getAgentConfigurations() {
 		return agentConfigurations;
 	}
@@ -43,5 +53,9 @@ public class AgentConfigurations {
 		}
 		
 		return true;
+	}
+	
+	public AgentConfigurations deepClone() {
+		return new AgentConfigurations(this);
 	}
 }

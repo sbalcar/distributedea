@@ -6,8 +6,8 @@ public class JobID implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
-	private String jobID;
 	private String batchID;
+	private String jobID;
 	private int runNumber;
 	
 	public JobID() {}
@@ -16,6 +16,13 @@ public class JobID implements Concept {
 		this.batchID = batchName;
 		this.jobID = jobName;
 		this.runNumber = runNumber;
+	}
+
+	public JobID(JobID jobIDStruct) {
+		
+		setBatchID(jobIDStruct.getBatchID());
+		setJobID(jobIDStruct.getJobID());
+		setRunNumber(jobIDStruct.getRunNumber());
 	}
 
 	public String getBatchID() {
@@ -39,6 +46,9 @@ public class JobID implements Concept {
 		this.runNumber = runNumber;
 	}
 	
+	public JobID deepClone() {
+		return new JobID(this);
+	}
 	
 	@Override
 	public boolean equals(Object other) {

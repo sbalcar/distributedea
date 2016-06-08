@@ -8,6 +8,8 @@ import java.util.List;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
 import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
@@ -19,13 +21,13 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
 public class SchedulerInitialization implements Scheduler {
 
 	private SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
 	private boolean methodRepetition = true;
 	
+
 	private List<AgentDescription> nextCandidates = null;
 	
 	public SchedulerInitialization() {
@@ -33,95 +35,136 @@ public class SchedulerInitialization implements Scheduler {
 	
 	public SchedulerInitialization(SchedulerInitializationState state, boolean methodRepetition) {
 		this.state = state;
+		this.methodRepetition = methodRepetition;
 	}
+	
+
+	/**
+	 * Agent state
+	 * @return
+	 */
+	public SchedulerInitializationState getState() {
+		return state;
+	}
+	
+	/**
+	 * Method repetition
+	 * @return
+	 */
+	public boolean isMethodRepetition() {
+		return this.methodRepetition;
+	}
+
+	
+	/**
+	 * Returns candidates for next re-planing
+	 * @return
+	 */
+	public List<AgentDescription> getNextCandidates() {
+		return this.nextCandidates;
+	}
+	
+	/**
+	 * removes ant returns next candidate
+	 * @return
+	 */
+	public AgentDescription removeNextCandidate() {
+		
+		if (nextCandidates == null || nextCandidates.isEmpty()) {
+			return null;
+		}
+		return nextCandidates.remove(0);
+	}
+	
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
 			JobRun job, AgentLogger logger) throws SchedulerException {
+		
+		NodeInfosWrapper availableNodes =
+				SchedulerTool.getAvailableNodes(centralManager, logger);
+		
+		Plan plan = createPlanForEmptyCores(availableNodes, job, logger);
 				
-		NodeInfosWrapper availableNodes = SchedulerTool.getAvailableNodes(centralManager, logger);
-		List<AID> managersAID = availableNodes.exportManagerAIDOfEachEmptyCore();
+		List<Pair<AID,AgentDescription>> planPairing = plan.getPlan();
+		nextCandidates = plan.getNextCandidates();
+		
+		createAndRunAgents(centralManager, job, planPairing, logger);
+		
+	}
+
+	public Plan createPlanForEmptyCores(NodeInfosWrapper availableNodes,
+			JobRun job, AgentLogger logger) throws SchedulerException {
+	
+		List<AID> managersAID =
+				availableNodes.exportManagerAIDOfEachEmptyCore();
 		
 		AgentConfigurations configurations = job.getAgentConfigurations();
 		List<AgentDescription> descriptions =
-				getCartesianProductOfConfigurationsAndTools(configurations, job.getProblemTools());
-	
-		List<Pair<AID,AgentDescription>> plan = createPlan(managersAID, descriptions);
+				InitializationTool.getCartesianProductOfConfigurationsAndTools(
+						configurations,job.getProblemTools());
 		
-		initializeAndRunAgents(centralManager, job, plan, logger);
+		return InitializationTool.createPlan(this, managersAID, descriptions);
 	}
-	
-	
-	private List<Pair<AID,AgentDescription>> createPlan(List<AID> managersAID, List<AgentDescription> descriptions) {
-	
-		if (managersAID.size() == 0) {
-			return new ArrayList<Pair<AID,AgentDescription>>();
-		}
-		
-		List<Pair<AID,AgentDescription>> plan = new ArrayList<>();
-		
-		int numberOfAgents = 0;
-		if (state == SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE) {
-	
-			int numOfConfiguration = descriptions.size();
-			int numberOfFreeCores = managersAID.size();
-			
-			numberOfAgents = Math.min(numberOfFreeCores, numOfConfiguration);
-			
-			plan = createPairing(managersAID, descriptions, numberOfAgents);
-			
-			nextCandidates = descriptions.subList(numberOfAgents-1, descriptions.size()-1);
-			
-			if (methodRepetition) {
 
-				List<AID> managersSupplementAID = 
-						managersAID.subList(plan.size()-1, managersAID.size()-1);
-				List<Pair<AID,AgentDescription>> planFromRecursion =
-						createPlan(managersSupplementAID, descriptions);
+	public void agentInitializationOnlyCreateAgents(Agent_CentralManager centralManager,
+			JobRun job, AgentLogger logger) throws SchedulerException {
+		
+		NodeInfosWrapper availableNodes =
+				SchedulerTool.getAvailableNodes(centralManager, logger);
+	
+		Plan plan = createPlanForEmptyCores(availableNodes, job, logger);
 				
-				List<Pair<AID,AgentDescription>> planRecursive = new ArrayList<>();
-				planRecursive.addAll(plan);
-				planRecursive.addAll(planFromRecursion);
-				return planRecursive;
-				
-			} else {
-				
-				return plan;
-			}
-			
-		} else if (state == SchedulerInitializationState.RUN_ALL_COMBINATIONS) {
-			
-			numberOfAgents = descriptions.size();
-			
-			plan = createPairing(managersAID, descriptions, numberOfAgents);
-			
-			return plan;
-			
-		} else {
-			
-			return null;
-		}
+		List<Pair<AID,AgentDescription>> planPairing = plan.getPlan();
+		nextCandidates = plan.getNextCandidates();
+		
+		createAgents(centralManager, job, planPairing, logger);
+		
 	}
 	
-	private List<Pair<AID,AgentDescription>> createPairing(List<AID> managersAID,
-			List<AgentDescription> descriptions, int numberOfAgents) {
+	@Override
+	public void replan(Agent_CentralManager centralManager, JobRun job,
+			Iteration iteration, ReceivedData receivedData, AgentLogger logger
+			) throws SchedulerException {
 		
-		List<Pair<AID,AgentDescription>> plan = new ArrayList<>();
-		
-		// create plan
-		for (int agentIndex = 0; agentIndex < numberOfAgents; agentIndex++) {
-			
-			AID aidI = managersAID.get(agentIndex % managersAID.size());
-			AgentDescription descriptionI = descriptions.get(agentIndex % descriptions.size());
-			
-			Pair<AID,AgentDescription> pairI = new Pair<>(aidI, descriptionI);
-			plan.add(pairI);
-		}
-		
-		return plan;
-	}
+		// init free core by using candidate
+		NodeInfosWrapper availableNodes = SchedulerTool.getAvailableNodes(centralManager, logger);
+		List<AID> managersAID = availableNodes.exportManagerAIDOfEachEmptyCore();
 	
-	private void initializeAndRunAgents(Agent_CentralManager centralManager, JobRun job,
+		Plan plan =  InitializationTool.createPlan(this, managersAID, nextCandidates);
+				
+		List<Pair<AID,AgentDescription>> planPairing = plan.getPlan();
+		nextCandidates = plan.getNextCandidates();
+		
+		createAndRunAgents(centralManager, job, planPairing, logger);
+		
+		
+		// init free cores by using all methods
+		NodeInfosWrapper availableNodes2 = SchedulerTool.getAvailableNodes(centralManager, logger);
+		if (! availableNodes2.exportManagersAID().isEmpty()) {
+			
+			Plan plan2 = createPlanForEmptyCores(availableNodes2, job, logger);
+			createAgents(centralManager, job, plan2.getPlan(), logger);
+		}
+	}
+
+	
+	@Override
+	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
+		
+		SchedulerTool.killAllComputingAgent(centralManager, logger);
+	
+	}
+
+	private void createAndRunAgents(Agent_CentralManager centralManager, JobRun job,
+			List<Pair<AID,AgentDescription>> plan, AgentLogger logger) {
+		
+		List<AID> createdAgents =
+				createAgents(centralManager, job, plan, logger);
+		runAgents(centralManager, job, plan, createdAgents, logger);
+	}
+
+	private List<AID> createAgents(Agent_CentralManager centralManager, JobRun job,
 			List<Pair<AID,AgentDescription>> plan, AgentLogger logger) {
 		
 		int numberOfDescriotion = plan.size();
@@ -143,6 +186,14 @@ public class SchedulerInitialization implements Scheduler {
 			createdAgents.add(createdAgentI);
 		}
 		
+		return createdAgents;
+	}
+	
+	private void runAgents(Agent_CentralManager centralManager, JobRun job,
+			List<Pair<AID,AgentDescription>> plan, List<AID> createdAgents, AgentLogger logger) {
+		
+		int numberOfDescriotion = plan.size();
+		
 		//start computing agent
 		for (int cpuIndex = 0; cpuIndex < numberOfDescriotion; cpuIndex++) {
 
@@ -159,48 +210,6 @@ public class SchedulerInitialization implements Scheduler {
 					centralManager, createdAgentI, problemStructI, logger);
 		}
 		
-	}
-	
-	/**
-	 * Returns candidates for next re-planing
-	 * @return
-	 */
-	public List<AgentDescription> getNextCandidates() {
-		return this.nextCandidates;
-	}
-	
-	@Override
-	public void replan(Agent_CentralManager centralManager, JobRun job,
-			AgentLogger logger) throws SchedulerException {
-	}
-
-	
-	@Override
-	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
-		
-		SchedulerTool.killAllComputingAgent(centralManager, logger);
-	
-	}
-
-	
-	public static List<AgentDescription> getCartesianProductOfConfigurationsAndTools(
-			AgentConfigurations configurations, ProblemTools problemTools) {
-		
-		List<AgentDescription> descriptions = new ArrayList<AgentDescription>();
-		
-		for (AgentConfiguration configurationI : configurations.getAgentConfigurations()) {
-			
-			for (Class<?> problemToolsI : problemTools.getProblemTools()) {
-				
-				AgentDescription descriptionI = new AgentDescription();
-				descriptionI.setAgentConfiguration(configurationI);
-				descriptionI.setProblemToolClass(problemToolsI.getName());
-				
-				descriptions.add(descriptionI);
-			}
-		}
-		
-		return descriptions;
 	}
 	
 }

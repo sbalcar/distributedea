@@ -2,6 +2,7 @@ package org.distributedea.ontology.configuration;
 
 import jade.core.AID;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.Configuration;
@@ -14,7 +15,7 @@ public class AgentConfiguration {
 	private String agentType;
 	private List<Argument> arguments;
 
-	private String containerID;
+	private int containerID;
 	private int numberOfContainer = 0;
 	private int numberOfAgent = 0;
 	
@@ -26,6 +27,32 @@ public class AgentConfiguration {
 		this.agentName = agentName;
 		this.agentType = agentType;
 		this.arguments = arguments;
+	}
+
+	public AgentConfiguration(Class<?> agentType,
+			List<Argument> arguments) {
+		
+		this.agentName = agentType.getSimpleName();
+		this.agentType = agentType.getName();
+		this.arguments = arguments;
+	}
+	
+	public AgentConfiguration(AgentConfiguration agentConfI) {
+		
+		setAgentName(agentConfI.getAgentName());
+		setAgentType(agentConfI.getAgentType());
+		
+		List<Argument> argumentsClone = new ArrayList<>();
+		for (Argument argumentI : agentConfI.getArguments()) {
+			
+			Argument argumentCloneI = new Argument(argumentI);
+			argumentsClone.add(argumentCloneI);
+		}
+		setArguments(argumentsClone);
+		
+		setContainerID(agentConfI.getContainerID());
+		setNumberOfContainer(agentConfI.getNumberOfContainer());
+		setNumberOfAgent(agentConfI.getNumberOfAgent());
 	}
 
 	public String getAgentName() {
@@ -57,10 +84,10 @@ public class AgentConfiguration {
 	}	
 	
 	
-	public String getContainerID() {
+	public int getContainerID() {
 		return containerID;
 	}
-	public void setContainerID(String containerID) {
+	public void setContainerID(int containerID) {
 		this.containerID = containerID;
 	}
 
@@ -115,20 +142,12 @@ public class AgentConfiguration {
 		}
 		
 		String  agentChar = "";
-		if (numberOfAgent > 0) {
-			//char aChar = (char) ('a' + numberOfAgent);
-			//agentChar = "" + Configuration.AGENT_NUMBER_PREFIX + aChar;
+		if (numberOfAgent >= 0) {
 			agentChar = "" + numberOfAgent;
 		}
 		
-		String  containerChar = "";
-		if (numberOfContainer > 0) {
-			char cChar = (char) ('a' + numberOfContainer);
-			containerChar = "" + cChar;
-		}
-		
 		String agentNameWitID = agentName + agentChar;
-		String containerNameWitID = containerID + containerChar;
+		String containerNameWitID = exportContainerSuffix();
 		
 		String agentFullName = agentNameWitID +
 				Configuration.CONTAINER_NUMBER_PREFIX +
@@ -137,10 +156,25 @@ public class AgentConfiguration {
 		return agentFullName;
 	}
 	
+	public String exportContainerSuffix() {
+		
+		String  containerChar = "";
+		if (numberOfContainer >= 0) {
+			char cChar = (char) ('a' + numberOfContainer);
+			containerChar = "" + cChar;
+		}
+		
+		return containerID + containerChar;
+	}
+	
 	public AID exportAgentAID() {
 		
 		String agentName = exportAgentname();
 		return new AID(agentName, false);
+	}
+	
+	public AgentConfiguration deepClone() {
+		return new AgentConfiguration(this);
 	}
 	
 	@Override

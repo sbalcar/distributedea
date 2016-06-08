@@ -11,18 +11,24 @@ public class Argument implements Concept {
 	private String value;
 	private Boolean sendOnlyValue = false;
 	
+	public Argument() {
+	}
+	
 	public Argument(String name, String value) {
 		this.value = value;
 		this.name = name;
 	}
-	
-	public Argument() {
+
+	public Argument(Argument argument) {
+		
+		setName(argument.getName());
+		setValue(argument.getValue());
+		setSendOnlyValue(argument.getSendOnlyValue());
 	}
 
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -30,7 +36,6 @@ public class Argument implements Concept {
 	public String getValue() {
 		return value;
 	}
-
 	public void setValue(String value) {
 		this.value = value;
 	}
@@ -38,12 +43,13 @@ public class Argument implements Concept {
 	public Boolean getSendOnlyValue() {
 		return sendOnlyValue;
 	}
-
 	public void setSendOnlyValue(Boolean sendOnlyValue) {
 		this.sendOnlyValue = sendOnlyValue;
 	}
 
-	
+	public Argument deepClone() {
+		return new Argument(this);
+	}
 	
 	@Override
 	public boolean equals(Object other) {

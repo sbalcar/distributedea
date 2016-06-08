@@ -318,7 +318,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			AgentConfiguration configuration, AgentLogger logger) {
 	
 		// starts another agents
-		String containerID = "";
+		int containerID;
 		if (agent instanceof Agent_Initiator) {
 			Agent_Initiator aIntitiator = (Agent_Initiator) agent;
 			containerID = aIntitiator.cutFromHosntameContainerID();
@@ -332,11 +332,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		configurationI.setAgentType(configuration.getAgentType());
 		configurationI.setArguments(configuration.getArguments());
 		configurationI.setContainerID(containerID);
-		configurationI.setNumberOfAgent(-1);
-		configurationI.setNumberOfContainer(-1);
+		configurationI.setNumberOfAgent(0);
+		configurationI.setNumberOfContainer(0);
 		
-		AgentConfiguration controller = null;
-		do {
+		AgentConfiguration controller = tryCreateAgent(agent, configurationI, logger);
+		while (controller == null) {
+			
 			if (agent instanceof Agent_Initiator) {
 				configurationI.incrementNumberOfContainer();
 			} else if (agent instanceof Agent_ManagerAgent){
@@ -344,7 +345,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			}
 			
 			controller = tryCreateAgent(agent, configurationI, logger);
-		} while (controller == null);
+		}
 		
 		return controller;
 	}
