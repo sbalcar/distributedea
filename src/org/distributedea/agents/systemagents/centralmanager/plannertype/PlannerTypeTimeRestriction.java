@@ -1,14 +1,14 @@
-package org.distributedea.agents.systemagents.centralmanager.schedulertype;
+package org.distributedea.agents.systemagents.centralmanager.plannertype;
 
 import java.util.logging.Level;
 
 import org.distributedea.Configuration;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
 import org.distributedea.agents.systemagents.datamanager.DataManagerService;
 import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
 import org.distributedea.logging.AgentLogger;
@@ -18,20 +18,20 @@ import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problem.Problem;
 
-public class SchedulerTypeTimeRestriction implements SchedulerType {
+public class PlannerTypeTimeRestriction implements PlannerType {
 	
 	private Agent_CentralManager centralManager;
 	private long countOfReplaning;
 	private AgentLogger logger;
 	
-	public SchedulerTypeTimeRestriction(Agent_CentralManager agent,
+	public PlannerTypeTimeRestriction(Agent_CentralManager agent,
 			long countOfReplaning, AgentLogger logger) {
 		this.centralManager = agent;
 		this.countOfReplaning = countOfReplaning;
 		this.logger = logger;
 	}
 	
-	public void run(Scheduler scheduler, JobRun jobRun) throws SchedulerException {
+	public void run(Planner scheduler, JobRun jobRun) throws PlannerException {
 		
 		JobID jobID = jobRun.getJobID();
 		

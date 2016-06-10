@@ -1,11 +1,11 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler.initialization;
+package org.distributedea.agents.systemagents.centralmanager.planner.initialization;
 
 import jade.core.AID;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
@@ -13,7 +13,7 @@ import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
 public class InitializationTool {
 
-	public static Plan createPlan(SchedulerInitialization scheduler, List<AID> managersAID, List<AgentDescription> descriptions) {
+	public static Plan createPlan(PlannerInitialization scheduler, List<AID> managersAID, List<AgentDescription> descriptions) {
 	
 		if (managersAID == null || managersAID.isEmpty() ||
 				descriptions == null || descriptions.isEmpty()) {
@@ -26,7 +26,7 @@ public class InitializationTool {
 		}
 		
 		int numberOfAgents = 0;
-		if (scheduler.getState() == SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE) {
+		if (scheduler.getState() == PlannerInitializationState.RUN_ONE_AGENT_PER_CORE) {
 	
 			int numOfConfiguration = descriptions.size();
 			int numberOfFreeCores = managersAID.size();
@@ -57,7 +57,7 @@ public class InitializationTool {
 				return new Plan(planParing, nextCandidates);
 			}
 			
-		} else if (scheduler.getState() == SchedulerInitializationState.RUN_ALL_COMBINATIONS) {
+		} else if (scheduler.getState() == PlannerInitializationState.RUN_ALL_COMBINATIONS) {
 			
 			numberOfAgents = descriptions.size();
 			

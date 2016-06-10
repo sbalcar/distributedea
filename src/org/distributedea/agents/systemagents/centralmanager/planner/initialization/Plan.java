@@ -1,10 +1,10 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler.initialization;
+package org.distributedea.agents.systemagents.centralmanager.planner.initialization;
 
 import jade.core.AID;
 
 import java.util.List;
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 
 public class Plan {

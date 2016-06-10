@@ -4,9 +4,9 @@ package org.distributedea.agents.systemagents.centralmanager.behaviours;
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
-import org.distributedea.agents.systemagents.centralmanager.schedulertype.SchedulerTypeTimeRestriction;
+import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
+import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.job.JobRun;
 
@@ -16,15 +16,15 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 1L;
 	private JobRun jobRun;
-	private Scheduler scheduler;
+	private Planner planner;
 	private long countOfReplaning;
 	private AgentLogger logger;
 	
-	public ComputeJobRunBehaviour(JobRun jobRun, Scheduler scheduler,
+	public ComputeJobRunBehaviour(JobRun jobRun, Planner scheduler,
 			long countOfReplaning, AgentLogger logger) {
 
 		this.jobRun = jobRun;
-		this.scheduler = scheduler;
+		this.planner = scheduler;
 		this.countOfReplaning = countOfReplaning;
 		this.logger = logger;
 	}
@@ -37,8 +37,8 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 			return;
 		}
 		
-		if (scheduler == null) {
-			logger.log(Level.WARNING, "scheduler can not be null");
+		if (planner == null) {
+			logger.log(Level.WARNING, "Planner can not be null");
 			return;
 		}
 
@@ -52,21 +52,21 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		
 		try {
 			startComputing();
-		} catch (SchedulerException e) {
+		} catch (PlannerException e) {
 			logger.logThrowable("Computing was stoped", e);
 		}
 		
 	}
 
 	
-	protected void startComputing() throws SchedulerException {			
+	protected void startComputing() throws PlannerException {			
 		
 		Agent_CentralManager centralManager = (Agent_CentralManager) myAgent;
 		
-		SchedulerTypeTimeRestriction schedulerType =
-				new SchedulerTypeTimeRestriction(centralManager, countOfReplaning, logger);
+		PlannerTypeTimeRestriction plannerType =
+				new PlannerTypeTimeRestriction(centralManager, countOfReplaning, logger);
 		
-		schedulerType.run(scheduler, jobRun);
+		plannerType.run(planner, jobRun);
 	}
 
 }

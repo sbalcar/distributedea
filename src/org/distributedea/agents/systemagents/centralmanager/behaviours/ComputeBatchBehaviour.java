@@ -2,8 +2,8 @@ package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 import java.util.List;
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
 import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.job.JobRun;
@@ -58,18 +58,18 @@ public class ComputeBatchBehaviour extends OneShotBehaviour {
 			
 			try {
 				processJob(jobI, batchID);
-			} catch (SchedulerException e) {
+			} catch (PlannerException e) {
 				logger.logThrowable("Can't execute Job", e);
 			}
 		}
 	}
 	
-	private void processJob(Job job, String batchID) throws SchedulerException {
+	private void processJob(Job job, String batchID) throws PlannerException {
 		
 
 		int numberOfRuns = job.getNumberOfRuns();
 		long countOfReplaning = job.getCountOfReplaning();
-		Scheduler scheduler = job.getScheduler();
+		Planner scheduler = job.getPlanner();
 		
 
 		for (int runNumberI = 0; runNumberI < numberOfRuns; runNumberI++) {

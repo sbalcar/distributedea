@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.dumy;
+package org.distributedea.agents.systemagents.centralmanager.planner.initialization.dumy;
 
 
 import jade.core.AID;
@@ -7,11 +7,11 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
+import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
@@ -19,7 +19,7 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
-public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
+public class PlannerInitializationRunEachMethodOnce implements Planner {
 
 	int NODE_INDEX = 0;
 	
@@ -28,7 +28,7 @@ public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws PlannerException {
 
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
@@ -39,7 +39,7 @@ public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 		try {
 			managerAidI = aidManagerAgents[NODE_INDEX];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new SchedulerException("Manager agent to create Computing Agent not available");
+			throw new PlannerException("Manager agent to create Computing Agent not available");
 		}
 		
 
@@ -85,7 +85,7 @@ public class SchedulerInitializationRunEachMethodOnce implements Scheduler {
 	@Override
 	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		
-		SchedulerTool.killAllComputingAgent(centralManager, logger);
+		PlannerTool.killAllComputingAgent(centralManager, logger);
 		
 	}
 	

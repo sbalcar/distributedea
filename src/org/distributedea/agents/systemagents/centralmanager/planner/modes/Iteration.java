@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler.models;
+package org.distributedea.agents.systemagents.centralmanager.planner.modes;
 
 public class Iteration {
 	

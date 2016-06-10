@@ -12,9 +12,10 @@
     </problemTools>
   </problemTools>
   <individualDistribution>true</individualDistribution>
-  <schedulers>
-    <org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization>
+  <planners>
+    <org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization>
       <state>RUN_ONE_AGENT_PER_CORE</state>
-    </org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization>
-  </schedulers>
+      <methodRepetition>true</methodRepetition>
+    </org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization>
+  </planners>
 </org.distributedea.ontology.job.noontology.Job>

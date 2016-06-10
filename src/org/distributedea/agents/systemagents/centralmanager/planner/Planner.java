@@ -1,10 +1,10 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler;
+package org.distributedea.agents.systemagents.centralmanager.planner;
 
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.job.JobRun;
 
@@ -13,7 +13,7 @@ import org.distributedea.ontology.job.JobRun;
  * @author stepan
  *
  */
-public interface Scheduler {
+public interface Planner {
 	
 	/**
 	 * Initialize computing agents on distributed nodes
@@ -22,7 +22,7 @@ public interface Scheduler {
 	 * @param logger
 	 */
 	public abstract void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws SchedulerException;
+			JobRun job, AgentLogger logger) throws PlannerException;
 	
 	
 	/**
@@ -33,7 +33,7 @@ public interface Scheduler {
 	 */
 	public abstract void replan(Agent_CentralManager centralManager,
 			JobRun job, Iteration iteration, ReceivedData receivedData,
-			AgentLogger logger) throws SchedulerException;
+			AgentLogger logger) throws PlannerException;
 	
 	/**
 	 * Exit

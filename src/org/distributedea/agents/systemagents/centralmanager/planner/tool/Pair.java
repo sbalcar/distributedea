@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler.tool;
+package org.distributedea.agents.systemagents.centralmanager.planner.tool;
 
 public class Pair<T, U> {         
     public final T first;

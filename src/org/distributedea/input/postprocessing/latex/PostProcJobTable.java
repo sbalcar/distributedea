@@ -18,7 +18,7 @@ public class PostProcJobTable extends PostProcessing {
 		String problemToSolve = jobWrp.getProblemToSolve().getSimpleName();
 		String isIndividualDistribution = jobWrp.isIndividualDistribution() ? "ano" : "ne" ;
 		String problemFileName = jobWrp.getProblemFileName();
-		String scheduler = jobWrp.getScheduler().getClass().getSimpleName();
+		String scheduler = jobWrp.getPlanner().getClass().getSimpleName();
 		String description = jobWrp.getDescription();
 		String jobID = jobWrp.getJobID();
 		String methodsFileName = jobWrp.getMethodsFileName().endsWith("methods.xml") ? "všechny" : jobWrp.getMethodsFileName();

@@ -35,7 +35,7 @@ public class PostProcBatchDiffTable extends PostProcessing {
 			
 			jobIDStr += " " + jobWrpI.getJobID() + " ";
 			distributionStr += " " + jobWrpI.isIndividualDistribution() + " ";
-			schedulerStr += " " + jobWrpI.getScheduler().getClass().getSimpleName() + " ";
+			schedulerStr += " " + jobWrpI.getPlanner().getClass().getSimpleName() + " ";
 			
 			if (i < jobWrps.size() -1) {
 				jobIDStr += "&";

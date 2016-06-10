@@ -1,7 +1,7 @@
 <org.distributedea.ontology.job.noontology.Job>
-  <jobID>followupHelpers</jobID>
+  <jobID>methodDescription</jobID>
   <numberOfRuns>3</numberOfRuns>
-  <description>Follow up Helpers</description>
+  <description>Method Description</description>
   <countOfReplaning>50</countOfReplaning>
   <problemToSolve>org.distributedea.ontology.problem.ProblemTSPGPS</problemToSolve>
   <problemFileName>xit1083.tsp</problemFileName>
@@ -13,8 +13,16 @@
   </problemTools>
   <individualDistribution>true</individualDistribution>
   <planners>
-    <org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers>
-      <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
-    </org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers>
+    <org.distributedea.agents.systemagents.centralmanager.planner.PlannerMethodDescription>
+      <ran serialization="custom">
+        <java.util.Random>
+          <default>
+            <seed>45774472897820</seed>
+            <nextNextGaussian>0.0</nextNextGaussian>
+            <haveNextNextGaussian>false</haveNextNextGaussian>
+          </default>
+        </java.util.Random>
+      </ran>
+    </org.distributedea.agents.systemagents.centralmanager.planner.PlannerMethodDescription>
   </planners>
 </org.distributedea.ontology.job.noontology.Job>

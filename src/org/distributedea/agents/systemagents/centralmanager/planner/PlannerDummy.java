@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler;
+package org.distributedea.agents.systemagents.centralmanager.planner;
 
 
 import jade.core.AID;
@@ -7,10 +7,10 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
@@ -23,7 +23,7 @@ import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
  * one Computing Agent with one ProblemTool
  *
  */
-public class SchedulerDummy implements Scheduler {
+public class PlannerDummy implements Planner {
 	
 	int NODE_INDEX = 0;
 	
@@ -35,7 +35,7 @@ public class SchedulerDummy implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws PlannerException {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
 				Agent_ManagerAgent.class.getName());
@@ -45,7 +45,7 @@ public class SchedulerDummy implements Scheduler {
 		try {
 			managerAidI = aidManagerAgents[NODE_INDEX];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new SchedulerException("Manager agent to create Computing Agent not available");
+			throw new PlannerException("Manager agent to create Computing Agent not available");
 		}
 		
 
@@ -56,7 +56,7 @@ public class SchedulerDummy implements Scheduler {
 		try {
 			agentConfiguration = configurations.getAgentConfigurations().get(COMPUTING_AGENT_INDEX);
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new SchedulerException("Computing agent Configuration not available");
+			throw new PlannerException("Computing agent Configuration not available");
 		}
 		
 		ManagerAgentService.sendCreateAgent(centralManager,
@@ -89,13 +89,13 @@ public class SchedulerDummy implements Scheduler {
 	@Override
 	public void replan(Agent_CentralManager centralManager, JobRun job,
 			 Iteration iteration, ReceivedData receivedData, AgentLogger logger
-			 ) throws SchedulerException {
+			 ) throws PlannerException {
 	}
 
 	@Override
 	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		
-		SchedulerTool.killAllComputingAgent(centralManager, logger);
+		PlannerTool.killAllComputingAgent(centralManager, logger);
 		
 	}
 

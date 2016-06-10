@@ -12,10 +12,10 @@
     </problemTools>
   </problemTools>
   <individualDistribution>true</individualDistribution>
-  <schedulers>
-    <org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowup3Helpers>
+  <planners>
+    <org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowup3Helpers>
       <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
       <MIN__NUMER__OF__METHODS>3</MIN__NUMER__OF__METHODS>
-    </org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowup3Helpers>
-  </schedulers>
+    </org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowup3Helpers>
+  </planners>
 </org.distributedea.ontology.job.noontology.Job>

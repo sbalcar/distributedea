@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler.initialization;
+package org.distributedea.agents.systemagents.centralmanager.planner.initialization;
 
 import jade.core.AID;
 
@@ -7,12 +7,12 @@ import java.util.List;
 
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.Pair;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
+import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
@@ -22,18 +22,18 @@ import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
-public class SchedulerInitialization implements Scheduler {
+public class PlannerInitialization implements Planner {
 
-	private SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
+	private PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
 	private boolean methodRepetition = true;
 	
 
 	private List<AgentDescription> nextCandidates = null;
 	
-	public SchedulerInitialization() {
+	public PlannerInitialization() {
 	}
 	
-	public SchedulerInitialization(SchedulerInitializationState state, boolean methodRepetition) {
+	public PlannerInitialization(PlannerInitializationState state, boolean methodRepetition) {
 		this.state = state;
 		this.methodRepetition = methodRepetition;
 	}
@@ -43,7 +43,7 @@ public class SchedulerInitialization implements Scheduler {
 	 * Agent state
 	 * @return
 	 */
-	public SchedulerInitializationState getState() {
+	public PlannerInitializationState getState() {
 		return state;
 	}
 	
@@ -79,10 +79,10 @@ public class SchedulerInitialization implements Scheduler {
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws PlannerException {
 		
 		NodeInfosWrapper availableNodes =
-				SchedulerTool.getAvailableNodes(centralManager, logger);
+				PlannerTool.getAvailableNodes(centralManager, logger);
 		
 		Plan plan = createPlanForEmptyCores(availableNodes, job, logger);
 				
@@ -94,7 +94,7 @@ public class SchedulerInitialization implements Scheduler {
 	}
 
 	public Plan createPlanForEmptyCores(NodeInfosWrapper availableNodes,
-			JobRun job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws PlannerException {
 	
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
@@ -108,10 +108,10 @@ public class SchedulerInitialization implements Scheduler {
 	}
 
 	public void agentInitializationOnlyCreateAgents(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws PlannerException {
 		
 		NodeInfosWrapper availableNodes =
-				SchedulerTool.getAvailableNodes(centralManager, logger);
+				PlannerTool.getAvailableNodes(centralManager, logger);
 	
 		Plan plan = createPlanForEmptyCores(availableNodes, job, logger);
 				
@@ -125,10 +125,10 @@ public class SchedulerInitialization implements Scheduler {
 	@Override
 	public void replan(Agent_CentralManager centralManager, JobRun job,
 			Iteration iteration, ReceivedData receivedData, AgentLogger logger
-			) throws SchedulerException {
+			) throws PlannerException {
 		
 		// init free core by using candidate
-		NodeInfosWrapper availableNodes = SchedulerTool.getAvailableNodes(centralManager, logger);
+		NodeInfosWrapper availableNodes = PlannerTool.getAvailableNodes(centralManager, logger);
 		List<AID> managersAID = availableNodes.exportManagerAIDOfEachEmptyCore();
 	
 		Plan plan =  InitializationTool.createPlan(this, managersAID, nextCandidates);
@@ -140,7 +140,7 @@ public class SchedulerInitialization implements Scheduler {
 		
 		
 		// init free cores by using all methods
-		NodeInfosWrapper availableNodes2 = SchedulerTool.getAvailableNodes(centralManager, logger);
+		NodeInfosWrapper availableNodes2 = PlannerTool.getAvailableNodes(centralManager, logger);
 		if (! availableNodes2.exportManagersAID().isEmpty()) {
 			
 			Plan plan2 = createPlanForEmptyCores(availableNodes2, job, logger);
@@ -152,7 +152,7 @@ public class SchedulerInitialization implements Scheduler {
 	@Override
 	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		
-		SchedulerTool.killAllComputingAgent(centralManager, logger);
+		PlannerTool.killAllComputingAgent(centralManager, logger);
 	
 	}
 

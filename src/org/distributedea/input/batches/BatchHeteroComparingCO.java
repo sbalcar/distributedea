@@ -1,9 +1,9 @@
 package org.distributedea.input.batches;
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowBestResult;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowBestResult;
+import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
 import org.distributedea.input.batches.jobs.InputContOpt;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
@@ -25,18 +25,18 @@ public class BatchHeteroComparingCO extends InputBatch {
 		Job jobW0 = InputContOpt.test03();
 		jobW0.setJobID("onlyInit");
 		jobW0.setDescription("Only Initialization");
-		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		jobW0.setScheduler(new SchedulerInitialization(state, true));
+		PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		jobW0.setPlanner(new PlannerInitialization(state, true));
 		
 		Job jobW1 = InputContOpt.test03();
 		jobW1.setJobID("followBestResult");
 		jobW1.setDescription("Follow Best Result");
-		jobW1.setScheduler(new SchedulerFollowBestResult());
+		jobW1.setPlanner(new PlannerFollowBestResult());
 		
 		Job jobW2 = InputContOpt.test03();
 		jobW2.setJobID("followupHelpers");
 		jobW2.setDescription("Follow up Helpers");
-		jobW2.setScheduler(new SchedulerFollowupHelpers());
+		jobW2.setPlanner(new PlannerFollowupHelpers());
 		
 		batch.addJobWrapper(jobW0);
 		batch.addJobWrapper(jobW1);

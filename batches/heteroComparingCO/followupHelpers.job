@@ -12,9 +12,9 @@
     </problemTools>
   </problemTools>
   <individualDistribution>true</individualDistribution>
-  <schedulers>
-    <org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers>
+  <planners>
+    <org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers>
       <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
-    </org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers>
-  </schedulers>
+    </org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers>
+  </planners>
 </org.distributedea.ontology.job.noontology.Job>

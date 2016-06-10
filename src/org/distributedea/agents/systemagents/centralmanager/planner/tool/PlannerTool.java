@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler.tool;
+package org.distributedea.agents.systemagents.centralmanager.planner.tool;
 
 import jade.core.AID;
 
@@ -21,7 +21,7 @@ import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 
-public class SchedulerTool {
+public class PlannerTool {
 
 	/**
 	 * Returns information about best computing helpers at all nodes
@@ -107,10 +107,10 @@ public class SchedulerTool {
 	 * @param bestConfiguration
 	 * @param problemStruct
 	 * @param logger
-	 * @throws SchedulerException
+	 * @throws PlannerException
 	 */
 	public static void killAndCreateAgent(Agent_CentralManager centralManager, AID agentTokillAID,
-			AgentConfiguration bestConfiguration, ProblemStruct problemStruct, AgentLogger logger) throws SchedulerException {
+			AgentConfiguration bestConfiguration, ProblemStruct problemStruct, AgentLogger logger) throws PlannerException {
 
 		
 		// kill worst agent

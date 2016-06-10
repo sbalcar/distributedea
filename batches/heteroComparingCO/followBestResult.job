@@ -12,7 +12,7 @@
     </problemTools>
   </problemTools>
   <individualDistribution>true</individualDistribution>
-  <schedulers>
-    <org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowBestResult/>
-  </schedulers>
+  <planners>
+    <org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowBestResult/>
+  </planners>
 </org.distributedea.ontology.job.noontology.Job>

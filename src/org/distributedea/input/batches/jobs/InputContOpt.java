@@ -3,10 +3,10 @@ package org.distributedea.input.batches.jobs;
 
 import org.distributedea.Configuration;
 import org.distributedea.InputConfiguration;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerDummy;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.SchedulerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.PlannerDummy;
+import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
 import org.distributedea.ontology.job.noontology.Job;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
@@ -30,7 +30,7 @@ public class InputContOpt {
 		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setScheduler(new SchedulerDummy());
+		job.setPlanner(new PlannerDummy());
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 		
@@ -50,7 +50,7 @@ public class InputContOpt {
 		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setScheduler(new SchedulerFollowupHelpers());
+		job.setPlanner(new PlannerFollowupHelpers());
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 		
@@ -70,8 +70,8 @@ public class InputContOpt {
 		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		SchedulerInitializationState state = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		job.setScheduler(new SchedulerInitialization(state, true));
+		PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		job.setPlanner(new PlannerInitialization(state, true));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 

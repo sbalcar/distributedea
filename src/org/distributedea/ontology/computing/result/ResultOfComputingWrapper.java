@@ -32,7 +32,16 @@ public class ResultOfComputingWrapper implements Concept {
 		
 		this.resultOfComputing.add(resultOfComputing);
 	}
+
+	public boolean exportContainsMoreThanOneMethod() {
 		
+		if (this.resultOfComputing == null ||
+				this.resultOfComputing.size() <= 1) {
+			return false;
+		}
+		return true;
+	}
+	
 	public ResultOfComputing exportBestResultOfComputing(Problem problem) {
 		
 		if (resultOfComputing == null || resultOfComputing.isEmpty()) {

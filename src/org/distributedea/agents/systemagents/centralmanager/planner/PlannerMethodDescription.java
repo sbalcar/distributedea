@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.scheduler;
+package org.distributedea.agents.systemagents.centralmanager.planner;
 
 import java.util.List;
 import java.util.Random;
@@ -8,12 +8,12 @@ import jade.core.AID;
 
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.initialization.SchedulerInitializationState;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.models.ReceivedData;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerTool;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerTool;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
@@ -25,35 +25,35 @@ import org.distributedea.ontology.methoddescriptionwrapper.MethodDescriptionsWra
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
-public class SchedulerMethodDescription implements Scheduler {
+public class PlannerMethodDescription implements Planner {
 
-	private SchedulerInitialization schedullerInit = null;
+	private PlannerInitialization plannerInit = null;
 	
 	private MethodDescriptionsWrapper knownMethods;
 	
 	private Random ran = new Random();
 	
 	
-	public SchedulerMethodDescription() {} // for serialization
+	public PlannerMethodDescription() {} // for serialization
 	
 	@Override
 	public void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws SchedulerException {
+			JobRun job, AgentLogger logger) throws PlannerException {
 		
-		logger.log(Level.INFO, "Scheduler " + getClass().getSimpleName() + " initialization");
+		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 
 		// get all available Agent Description
-		SchedulerInitializationState state = SchedulerInitializationState.RUN_ALL_COMBINATIONS;
+		PlannerInitializationState state = PlannerInitializationState.RUN_ALL_COMBINATIONS;
 		
-		SchedulerInitialization scheduller = new SchedulerInitialization(state, true);
-		scheduller.agentInitializationOnlyCreateAgents(centralManager, job, logger);
+		PlannerInitialization planner = new PlannerInitialization(state, true);
+		planner.agentInitializationOnlyCreateAgents(centralManager, job, logger);
 		
 		knownMethods = ComputingAgentService.sendGetMethodDescriptions(centralManager, logger);
-		scheduller.exit(centralManager, logger);
+		planner.exit(centralManager, logger);
 		
 		
 		// initialize one agent per core
-		SchedulerInitializationState stateInit = SchedulerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		PlannerInitializationState stateInit = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
 		
 		MethodDescriptionsWrapper exploitationMethodDescriptionsWrapper =
 				knownMethods.exportExploitationMethodDescriptionsWrapper();
@@ -65,22 +65,27 @@ public class SchedulerMethodDescription implements Scheduler {
 		JobRun exploitationJobRun = new JobRun(job);
 		exploitationJobRun.setAgentConfigurations(agentConfigurations);
 		
-		schedullerInit = new SchedulerInitialization(stateInit, true);
-		schedullerInit.agentInitialization(centralManager, exploitationJobRun, logger);
+		plannerInit = new PlannerInitialization(stateInit, true);
+		plannerInit.agentInitialization(centralManager, exploitationJobRun, logger);
 	}
 
 	@Override
 	public void replan(Agent_CentralManager centralManager, JobRun job,
 			 Iteration iteration, ReceivedData receivedData, AgentLogger logger
-			 ) throws SchedulerException {
+			 ) throws PlannerException {
 		
-		schedullerInit.replan(centralManager, job, iteration, receivedData, logger);
+		plannerInit.replan(centralManager, job, iteration, receivedData, logger);
 
 		// get ratio of exploration and exploatation
 		ResultOfComputingWrapper resultOfComputingWrapper =
 				receivedData.getResultOfComputingWrapper();
 		
-		AgentDescription candidate = schedullerInit.removeNextCandidate();
+		// skip killing during first iteration
+		if (iteration.getIterationNumber() < 5) {
+			return;
+		}
+		
+		AgentDescription candidate = plannerInit.removeNextCandidate();
 		if (candidate != null) {
 			// remove worst and replace by new candidate
 			logger.log(Level.INFO, "Trying next candidate");
@@ -116,7 +121,7 @@ public class SchedulerMethodDescription implements Scheduler {
 	
 	private void replaceWorstByCandidate(Agent_CentralManager centralManager, JobRun job,
 			ResultOfComputingWrapper resultOfComputingWrapper, AgentDescription candidate,
-			AgentLogger logger) throws SchedulerException {
+			AgentLogger logger) throws PlannerException {
 		
 		Problem problem = job.getProblem();
 		
@@ -131,13 +136,13 @@ public class SchedulerMethodDescription implements Scheduler {
 		
 		ProblemStruct problemStruct = job.exportProblemStruct(newProblemToolClass);
 		
-		SchedulerTool.killAndCreateAgent(centralManager, aidToKill,
+		PlannerTool.killAndCreateAgent(centralManager, aidToKill,
 				newAgentConfiguration, problemStruct, logger);
 	}
 	
 	public void replaceWorstExploitationMethods(Agent_CentralManager centralManager,
 			JobRun job, ResultOfComputingWrapper resultOfComputingWrapper,
-			AgentLogger logger) throws SchedulerException {
+			AgentLogger logger) throws PlannerException {
 			
 		Problem problem = job.getProblem();
 		List<Class<?>> problemTools = job.getProblemTools().getProblemTools();
@@ -204,14 +209,14 @@ public class SchedulerMethodDescription implements Scheduler {
 		
 		ProblemStruct problemStruct = job.exportProblemStruct(newProblemToolClass);
 		
-		SchedulerTool.killAndCreateAgent(centralManager, aidToKill,
+		PlannerTool.killAndCreateAgent(centralManager, aidToKill,
 				newAgentConfiguration, problemStruct, logger);
 	}
 	
 	@Override
 	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
 		
-		SchedulerTool.killAllComputingAgent(centralManager, logger);
+		PlannerTool.killAllComputingAgent(centralManager, logger);
 		
 	}
 

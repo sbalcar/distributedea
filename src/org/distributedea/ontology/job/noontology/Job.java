@@ -11,8 +11,8 @@ import java.util.Scanner;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.distributedea.agents.systemagents.centralmanager.scheduler.Scheduler;
-import org.distributedea.agents.systemagents.centralmanager.scheduler.tool.SchedulerException;
+import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.configuration.XmlConfigurationProvider;
 import org.distributedea.logging.AgentLogger;
@@ -85,7 +85,7 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Declares the Scheduler Class which will be used to direction of the evolution
 	 */
-	private List<Scheduler> schedulers;	// warning scheduler is wrapped in list because it is necessary for XML serialization
+	private List<Planner> planners;	// warning planner is wrapped in list because it is necessary for XML serialization
 
 
 	
@@ -152,18 +152,18 @@ public class Job implements Concept, Serializable {
 		this.individualDistribution = individualDistribution;
 	}
 	
-	public Scheduler getScheduler() {
-		if (this.schedulers == null || this.schedulers.isEmpty()) {
+	public Planner getPlanner() {
+		if (this.planners == null || this.planners.isEmpty()) {
 			return null;
 		}
-		return this.schedulers.get(0);
+		return this.planners.get(0);
 	}
-	public void setScheduler(Scheduler scheduler) {
-		if (this.schedulers == null) {
-			this.schedulers = new ArrayList<Scheduler>();
+	public void setPlanner(Planner scheduler) {
+		if (this.planners == null) {
+			this.planners = new ArrayList<Planner>();
 		}
-		this.schedulers.clear();
-		this.schedulers.add(scheduler);
+		this.planners.clear();
+		this.planners.add(scheduler);
 	}
 
 	
@@ -173,14 +173,14 @@ public class Job implements Concept, Serializable {
 		AgentConfigurations agentConfigurations =
 				XmlConfigurationProvider.getConfiguration(methodsFileName, logger);
 		if (agentConfigurations == null) {
-			Exception throwable = new SchedulerException("Can not read AgetConfigurations");
+			Exception throwable = new PlannerException("Can not read AgetConfigurations");
 			logger.logThrowable("Error by exporting JobRun", throwable);
 			return null;
 		}
 		
 		boolean areAgentConfigurationsValid = agentConfigurations.valid(logger);
 		if (! areAgentConfigurationsValid) {
-			Exception throwable = new SchedulerException("AgentConfiguration aren't valid");
+			Exception throwable = new PlannerException("AgentConfiguration aren't valid");
 			logger.logThrowable("Error by exporting JobRun", throwable);
 			return null;
 		}
