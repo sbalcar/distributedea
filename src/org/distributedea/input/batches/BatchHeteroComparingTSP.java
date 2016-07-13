@@ -5,8 +5,9 @@ import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollo
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers;
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerMethodDescription;
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerRandom;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowTheGreatestQuantityOfImprovement;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisationState;
 import org.distributedea.input.batches.jobs.InputTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
@@ -28,8 +29,8 @@ public class BatchHeteroComparingTSP extends InputBatch {
 		Job jobW0 = InputTSP.test06();
 		jobW0.setJobID("onlyInit");
 		jobW0.setDescription("Only Initialization");
-		PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		jobW0.setPlanner(new PlannerInitialization(state, true));
+		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
+		jobW0.setPlanner(new PlannerInitialisation(state, true));
 		
 		Job jobW1 = InputTSP.test06();
 		jobW1.setJobID("followBestResult");
@@ -55,6 +56,11 @@ public class BatchHeteroComparingTSP extends InputBatch {
 		jobW5.setJobID("methodDescription");
 		jobW5.setDescription("Method Description");
 		jobW5.setPlanner(new PlannerMethodDescription());
+
+		Job jobW6 = InputTSP.test06();
+		jobW6.setJobID("theGreatestQuantityOfImprovement");
+		jobW6.setDescription("The Greatest Quantity Of Improvement Statistic");
+		jobW6.setPlanner(new PlannerFollowTheGreatestQuantityOfImprovement());
 		
 		batch.addJobWrapper(jobW0);
 		batch.addJobWrapper(jobW1);
@@ -62,6 +68,7 @@ public class BatchHeteroComparingTSP extends InputBatch {
 		batch.addJobWrapper(jobW3);
 		batch.addJobWrapper(jobW4);
 		batch.addJobWrapper(jobW5);
+		batch.addJobWrapper(jobW6);
 		
 		PostProcessing psMat0 = new PostProcBoxplot();
 		PostProcessing psMat1 = new PostProcComparing();

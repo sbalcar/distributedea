@@ -13,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.distributedea.Configuration;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
@@ -55,7 +55,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 
 	@Override
 	public void initialization(Problem problem, AgentConfiguration agentConf,
-			AgentLogger logger) throws ProblemToolException {
+			IAgentLogger logger) throws ProblemToolException {
 		
     	System.setProperty("java.library.path", "." + File.separator + "lib");
     	
@@ -108,7 +108,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	
 	@Override
 	public double fitness(Individual individual, Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		if (individual == null || (! problem.testIsValid(individual, logger)) ) {
 			if (problem.isMaximizationProblem()) {
@@ -131,7 +131,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	}
 	
 	@Override
-	public Problem readProblem(String inputFileName, AgentLogger logger) {
+	public Problem readProblem(String inputFileName, IAgentLogger logger) {
 		
 		File fXmlFile = new File(inputFileName);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -267,7 +267,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	}
 	
 	@Override
-	public Individual generateIndividual(Problem problem, AgentLogger logger) {
+	public Individual generateIndividual(Problem problem, IAgentLogger logger) {
 
 		ProblemContinousOpt problemContinousOpt = (ProblemContinousOpt) problem;
 		
@@ -288,7 +288,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	
 	@Override
 	public Individual readSolution(String fileName, Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 
 		String solutionString;
 		try {

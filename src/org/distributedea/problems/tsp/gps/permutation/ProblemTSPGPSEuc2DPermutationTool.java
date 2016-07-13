@@ -9,7 +9,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import org.distributedea.Configuration;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
@@ -36,7 +36,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	
 	@Override
 	public Individual generateIndividual(Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		ProblemTSPGPS problemTSP = (ProblemTSPGPS) problem;
 		
@@ -49,7 +49,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	
 	@Override
 	public Individual readSolution(String fileName, Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 
 		String tspFileName = Configuration.getSolutionFile(fileName);
 		return readSolutionTSP(tspFileName, logger);
@@ -57,7 +57,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	
 	@Override
 	public double fitness(Individual individual, Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		ProblemTSPGPS problemTSP = (ProblemTSPGPS) problem;
@@ -67,7 +67,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, AgentLogger logger)
+			Individual individual2, Problem problem, IAgentLogger logger)
 			throws ProblemToolException {
 
 		throw new ProblemToolException("Not possible to implement in this context");
@@ -110,7 +110,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	 * @return
 	 */
 	private IndividualPermutation readSolutionTSP(String tspFileName,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		List<Integer> permutation = new ArrayList<Integer>();
 		
@@ -177,7 +177,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	 */
 	public static double fitnessPermutation(IndividualPermutation individual,
 			ProblemTSP problem, IProblemTSPPermutationTool tool,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		if (individual == null) {
 			return Double.NaN;
@@ -222,7 +222,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	 * @return
 	 */
 	public double distanceBetween(Position position1,
-			Position position2, AgentLogger logger)  {
+			Position position2, IAgentLogger logger)  {
 		
 		PositionGPS positionGPS1 = (PositionGPS) position1;
 		PositionGPS positionGPS2 = (PositionGPS) position2;
@@ -247,7 +247,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	 * @return
 	 */
 	private double distanceBetween(double latitude1, double longitude1,
-			double latitude2, double longitude2, AgentLogger logger)  {
+			double latitude2, double longitude2, IAgentLogger logger)  {
 		
 		if (latitude1 == latitude2 &&
 				longitude1 == longitude2) {

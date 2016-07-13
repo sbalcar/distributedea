@@ -2,77 +2,93 @@ package org.distributedea.agents.systemagents.centralmanager.planner;
 
 import java.util.logging.Level;
 
-import jade.core.AID;
-
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.history.History;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisationState;
 import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.Plan;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.RePlan;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerTool;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.HelpmatesWrapper;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class PlannerFollowupHelpers implements Planner {
 
-	private PlannerInitialization plannerInit = null;
+	private Agent_CentralManager centralManager;
+	private JobRun jobRun;
+	private IAgentLogger logger;
+	
+	private PlannerInitialisation plannerInit = null;
 	
 	private boolean NEW_STATISTICS_FOR_EACH_QUERY = true;
 	
 	public PlannerFollowupHelpers() {} // for serialization
 	
 	@Override
-	public void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws PlannerException {
+	public Plan agentInitialisation(Agent_CentralManager centralManager,
+			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws PlannerException {
 		
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 		
-		PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		this.centralManager = centralManager;
+		this.jobRun = jobRun;
+		this.logger = logger;
 		
-		plannerInit = new PlannerInitialization(state, true);
-		plannerInit.agentInitialization(centralManager, job, logger);
+		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
+		
+		plannerInit = new PlannerInitialisation(state, true);
+		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
 		
 	}
 
 	
 	@Override
-	public void replan(Agent_CentralManager centralManager, JobRun job,
-			 Iteration iteration, ReceivedData receivedData, AgentLogger logger
+	public Pair<Plan, RePlan> replan(Iteration iteration, History history
 			 ) throws PlannerException {
 		
 		// initialization of Methods on the new containers
-		plannerInit.replan(centralManager, job, iteration, receivedData, logger);
+		Pair<Plan, RePlan> rePlanInit = plannerInit.replan(iteration, history);
 		
+		// process RePlan
+		RePlan rePlan = replanning(iteration, history);
+		PlannerTool.processReplanning(centralManager, rePlan, jobRun, logger);
+		
+		return new Pair<Plan, RePlan>(rePlanInit.first, rePlan);
+	}
+	
+	private RePlan replanning(Iteration iteration, History history
+			 ) throws PlannerException {
+			
 		HelpmatesWrapper helpmates = PlannerTool.getHelpmates(
 				centralManager, NEW_STATISTICS_FOR_EACH_QUERY, logger);
 		
 		// pring info
-		printLog(centralManager, helpmates,logger);
+		printLog(centralManager, helpmates, logger);
 		
 		// skip killing during first iteration
 		if (iteration.getIterationNumber() < 5) {
-			return;
+			return new RePlan(iteration);
 		}
 		
 		AgentDescription candidateDescription = plannerInit.removeNextCandidate();
 		if (candidateDescription != null) {
 			
-			killWorstAndReplaceByNewMethod(centralManager, job,
-					helpmates, candidateDescription, logger);
+			return killWorstAndReplaceByNewMethod(jobRun,
+					iteration, helpmates, candidateDescription);
 		}
 		
-		killWorstAndDuplicateBestHelpmate(centralManager, job, helpmates, logger);
+		return killWorstAndDuplicateBestHelpmate(jobRun,
+				iteration, helpmates);
 
 	}
 	
 	static void printLog(Agent_CentralManager centralManager,
-			HelpmatesWrapper helpmates, AgentLogger logger) throws PlannerException {
+			HelpmatesWrapper helpmates, IAgentLogger logger) throws PlannerException {
 		
 		Pair<AgentDescription, Integer> minPriorityPair =
 				helpmates.exportMinPrioritizedDescription();
@@ -92,60 +108,33 @@ public class PlannerFollowupHelpers implements Planner {
 		
 	}
 	
-	static void killWorstAndReplaceByNewMethod(
-			Agent_CentralManager centralManager, JobRun job,
-			HelpmatesWrapper helpmates,
-			AgentDescription newMethod, AgentLogger logger) throws PlannerException {
+	static RePlan killWorstAndReplaceByNewMethod(JobRun job,
+			Iteration iteration, HelpmatesWrapper helpmates,
+			AgentDescription newMethod) throws PlannerException {
 		
 		Pair<AgentDescription, Integer> minPriorityPair =
 				helpmates.exportMinPrioritizedDescription();
-		AgentDescription minPriorityDescription = minPriorityPair.first;
+		AgentDescription methodToKill = minPriorityPair.first;
 		
-		AID worstAID = minPriorityDescription.getAgentConfiguration().exportAgentAID();
-		
-		AgentConfiguration newAgentConfiguration = newMethod.getAgentConfiguration();
-		Class<?> newProblemToolClass = newMethod.exportProblemToolClass();
-		
-		ProblemStruct problemStruct = job.exportProblemStruct(newProblemToolClass);
-		
-		PlannerTool.killAndCreateAgent(centralManager, worstAID,
-				newAgentConfiguration, problemStruct, logger);
+		return new RePlan(iteration, methodToKill, newMethod);
 	}
 	
-	static void killWorstAndDuplicateBestHelpmate(Agent_CentralManager centralManager,
-			JobRun job, HelpmatesWrapper helpmates, AgentLogger logger) throws PlannerException {
+	static RePlan killWorstAndDuplicateBestHelpmate(
+			JobRun job, Iteration iteration, HelpmatesWrapper helpmates) throws PlannerException {
 
 		Pair<AgentDescription, Integer> minPriorityPair =
 				helpmates.exportMinPrioritizedDescription();
-		AgentDescription minPriorityDescription = minPriorityPair.first;
+		AgentDescription methodToKill = minPriorityPair.first;
 		
 		Pair<AgentDescription, Integer> maxPriorityPair =
 				helpmates.exportMaxPrioritizedDescription();
-		AgentDescription maxPriorityDescription = maxPriorityPair.first;
-		
-		// agent configurations
-		AgentConfiguration worstConfiguration =
-				minPriorityDescription.getAgentConfiguration();
-
-		// aid of the worst agent (agent to kill)
-		AID worstAID = worstConfiguration.exportAgentAID();
-		
-		
-		
-		AgentConfiguration newAgentConfiguration =
-				maxPriorityDescription.getAgentConfiguration();
-		Class<?> newProblemToolClass =
-				maxPriorityDescription.exportProblemToolClass();
-		
-		ProblemStruct problemStruct = job.exportProblemStruct(newProblemToolClass);
-		
-		// kill agent with the smallest priority and run the agent with the highest priority
-		PlannerTool.killAndCreateAgent(centralManager, worstAID,
-				newAgentConfiguration, problemStruct, logger);
+		AgentDescription methodToCreate = maxPriorityPair.first;
+				
+		return new RePlan(iteration, methodToKill, methodToCreate);
 	}
 	
 	@Override
-	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
+	public void exit(Agent_CentralManager centralManager, IAgentLogger logger) {
 		
 		PlannerTool.killAllComputingAgent(centralManager, logger);
 	}

@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.planner.initialization;
+package org.distributedea.agents.systemagents.centralmanager.planner.initialisation;
 
 import jade.core.AID;
 
@@ -11,14 +11,14 @@ import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
 
-public class InitializationTool {
+public class InitialisationTool {
 
-	public static Plan createPlan(PlannerInitialization scheduler, List<AID> managersAID, List<AgentDescription> descriptions) {
+	public static Schedule createPlan(PlannerInitialisation scheduler, List<AID> managersAID, List<AgentDescription> descriptions) {
 	
 		if (managersAID == null || managersAID.isEmpty() ||
 				descriptions == null || descriptions.isEmpty()) {
 			
-			Plan plan = new Plan();
+			Schedule plan = new Schedule();
 			plan.setPlan(new ArrayList<Pair<AID,AgentDescription>>());
 			plan.setNextCandidates(descriptions);
 			
@@ -26,7 +26,7 @@ public class InitializationTool {
 		}
 		
 		int numberOfAgents = 0;
-		if (scheduler.getState() == PlannerInitializationState.RUN_ONE_AGENT_PER_CORE) {
+		if (scheduler.getState() == PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE) {
 	
 			int numOfConfiguration = descriptions.size();
 			int numberOfFreeCores = managersAID.size();
@@ -37,34 +37,34 @@ public class InitializationTool {
 					createPairing(managersAID, descriptions, numberOfAgents);
 			
 			List<AgentDescription>  nextCandidates = 
-					descriptions.subList(numberOfAgents-1, descriptions.size()-1);
+					descriptions.subList(numberOfAgents, descriptions.size());
 			
 			if (scheduler.isMethodRepetition()) {
 
 				List<AID> managersSupplementAID = 
-						managersAID.subList(planParing.size()-1, managersAID.size()-1);
-				Plan planFromRecursion =
+						managersAID.subList(planParing.size(), managersAID.size());
+				Schedule planFromRecursion =
 						createPlan(scheduler, managersSupplementAID, descriptions);
 				
 				List<Pair<AID,AgentDescription>> planRecursive = new ArrayList<>();
 				planRecursive.addAll(planParing);
-				planRecursive.addAll(planFromRecursion.getPlan());
+				planRecursive.addAll(planFromRecursion.getSchedule());
 				
-				return new Plan(planRecursive, nextCandidates);
+				return new Schedule(planRecursive, nextCandidates);
 				
 			} else {
 				
-				return new Plan(planParing, nextCandidates);
+				return new Schedule(planParing, nextCandidates);
 			}
 			
-		} else if (scheduler.getState() == PlannerInitializationState.RUN_ALL_COMBINATIONS) {
+		} else if (scheduler.getState() == PlannerInitialisationState.RUN_ALL_COMBINATIONS) {
 			
 			numberOfAgents = descriptions.size();
 			
 			List<Pair<AID,AgentDescription>> planParing =
 					createPairing(managersAID, descriptions, numberOfAgents);
 			
-			return new Plan(planParing, null);
+			return new Schedule(planParing, null);
 			
 		} else {
 			

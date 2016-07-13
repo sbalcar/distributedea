@@ -1,5 +1,6 @@
 package org.distributedea.ontology.configuration;
 
+import jade.content.Concept;
 import jade.core.AID;
 
 import java.util.ArrayList;
@@ -9,13 +10,16 @@ import org.distributedea.Configuration;
 import org.distributedea.agents.computingagents.Agent_BruteForce;
 
 
-public class AgentConfiguration {
+public class AgentConfiguration implements Concept {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String agentName;
 	private String agentType;
 	private List<Argument> arguments;
 
-	private int containerID;
+	private String containerID;
+	
 	private int numberOfContainer = 0;
 	private int numberOfAgent = 0;
 	
@@ -84,10 +88,10 @@ public class AgentConfiguration {
 	}	
 	
 	
-	public int getContainerID() {
+	public String getContainerID() {
 		return containerID;
 	}
-	public void setContainerID(int containerID) {
+	public void setContainerID(String containerID) {
 		this.containerID = containerID;
 	}
 
@@ -141,15 +145,9 @@ public class AgentConfiguration {
 			return getAgentName();
 		}
 		
-		String  agentChar = "";
-		if (numberOfAgent >= 0) {
-			agentChar = "" + numberOfAgent;
-		}
-		
-		String agentNameWitID = agentName + agentChar;
 		String containerNameWitID = exportContainerSuffix();
 		
-		String agentFullName = agentNameWitID +
+		String agentFullName = agentName + numberOfAgent +
 				Configuration.CONTAINER_NUMBER_PREFIX +
 				containerNameWitID;
 		
@@ -164,7 +162,11 @@ public class AgentConfiguration {
 			containerChar = "" + cChar;
 		}
 		
-		return containerID + containerChar;
+		if (containerID == null) {
+			return containerChar;
+		} else {
+			return containerID + containerChar;
+		}
 	}
 	
 	public AID exportAgentAID() {

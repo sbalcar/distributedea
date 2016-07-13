@@ -7,6 +7,7 @@ import java.util.List;
 import org.distributedea.agents.systemagents.Agent_CentralLoger;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_DataManager;
+import org.distributedea.agents.systemagents.Agent_Monitor;
 import org.distributedea.ontology.job.JobID;
 
 import jade.core.AID;
@@ -212,11 +213,26 @@ public class Configuration {
 		return getDirectoryofResults() + File.separator + batchID;
 	}
 	
+	public static String getResultDirectoryMonitoringDirectory(JobID jobID) {
+		
+		return getResultDirectory(jobID.getBatchID()) + File.separator + jobID.getJobID() + File.separator +
+				jobID.getRunNumber() + File.separator + "monitoring";
+	}
+
+
+	
+	
 	public static String getResultDirectoryForMatlab(String batchID) {
 		
 		return getResultDirectory(batchID) + File.separator + "matlab";
 	}
 	
+	public static String getResultDirectoryForMatlab(JobID jobID, String name) {
+		
+		return getResultDirectoryForMatlab(jobID.getBatchID()) + File.separator +
+				name + "-" + jobID.getJobID() + "-" + jobID.getRunNumber();
+	}
+
 	/**
 	 * Provides way to the centralized solution
 	 * @param fileName
@@ -226,9 +242,7 @@ public class Configuration {
 		
 		return getResultDirectory(jobID.getBatchID()) + File.separator +
 				"result-" + jobID.getJobID() + "-" + jobID.getRunNumber() + ".txt";
-	}
-	
-	
+	}	
 	
 	public static String getLogDirectory() {
 		
@@ -306,7 +320,8 @@ public class Configuration {
 		return getComputingAgentRunLogDirectory(jobID) + File.separator
 				+ computingAgentAID.getLocalName() + ".rslt";
 	}
-
+	
+	
 	/**
 	 * Provides log file with a path for the Best Result(Individual)
 	 * @param computingAgentAID - name of file contains on their AID
@@ -333,7 +348,8 @@ public class Configuration {
 		Class<?>[] classes = new Class[] {
 				Agent_CentralManager.class,
 				Agent_DataManager.class,
-				Agent_CentralLoger.class
+				Agent_CentralLoger.class,
+				Agent_Monitor.class
 			};
 		
 		return Arrays.asList(classes);

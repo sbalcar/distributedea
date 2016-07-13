@@ -4,56 +4,63 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-import jade.core.AID;
-
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.history.History;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisationState;
 import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.Plan;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.RePlan;
+import org.distributedea.agents.systemagents.centralmanager.planner.resultsmodel.ResultsOfComputing;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerTool;
 import org.distributedea.configuration.AgentConfigurations;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
-import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescriptionwrapper.MethodDescriptionsWrapper;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
 public class PlannerMethodDescription implements Planner {
 
-	private PlannerInitialization plannerInit = null;
+	private Agent_CentralManager centralManager;
+	private JobRun jobRun;
+	private IAgentLogger logger;
+	
+	private PlannerInitialisation plannerInit = null;
 	
 	private MethodDescriptionsWrapper knownMethods;
 	
 	private Random ran = new Random();
 	
-	
 	public PlannerMethodDescription() {} // for serialization
 	
 	@Override
-	public void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws PlannerException {
+	public Plan agentInitialisation(Agent_CentralManager centralManager,
+			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws PlannerException {
 		
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 
-		// get all available Agent Description
-		PlannerInitializationState state = PlannerInitializationState.RUN_ALL_COMBINATIONS;
+		this.centralManager = centralManager;
+		this.jobRun = jobRun;
+		this.logger = logger;
 		
-		PlannerInitialization planner = new PlannerInitialization(state, true);
-		planner.agentInitializationOnlyCreateAgents(centralManager, job, logger);
+		// get all available Agent Description
+		PlannerInitialisationState state = PlannerInitialisationState.RUN_ALL_COMBINATIONS;
+		
+		PlannerInitialisation planner = new PlannerInitialisation(state, true);
+		planner.agentInitialisationOnlyCreateAgents(centralManager, jobRun, logger);
 		
 		knownMethods = ComputingAgentService.sendGetMethodDescriptions(centralManager, logger);
 		planner.exit(centralManager, logger);
 		
 		
 		// initialize one agent per core
-		PlannerInitializationState stateInit = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
+		PlannerInitialisationState stateInit = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
 		
 		MethodDescriptionsWrapper exploitationMethodDescriptionsWrapper =
 				knownMethods.exportExploitationMethodDescriptionsWrapper();
@@ -62,36 +69,46 @@ public class PlannerMethodDescription implements Planner {
 		AgentConfigurations agentConfigurations =
 				new AgentConfigurations(exploitationAgentConfigurations);
 		
-		JobRun exploitationJobRun = new JobRun(job);
+		JobRun exploitationJobRun = new JobRun(jobRun);
 		exploitationJobRun.setAgentConfigurations(agentConfigurations);
 		
-		plannerInit = new PlannerInitialization(stateInit, true);
-		plannerInit.agentInitialization(centralManager, exploitationJobRun, logger);
+		plannerInit = new PlannerInitialisation(stateInit, true);
+		return plannerInit.agentInitialisation(centralManager, iteration,
+				exploitationJobRun, logger);
 	}
 
 	@Override
-	public void replan(Agent_CentralManager centralManager, JobRun job,
-			 Iteration iteration, ReceivedData receivedData, AgentLogger logger
+	public Pair<Plan, RePlan> replan(Iteration iteration, History history
 			 ) throws PlannerException {
 		
-		plannerInit.replan(centralManager, job, iteration, receivedData, logger);
+		// initialization of Methods on the new containers
+		Pair<Plan, RePlan> rePlanInit = plannerInit.replan(iteration, history);
+		
+		// process RePlan
+		RePlan rePlan = replanning(iteration, history);
+		PlannerTool.processReplanning(centralManager, rePlan, jobRun, logger);
+		
+		return new Pair<Plan, RePlan>(rePlanInit.first, rePlan);
+	}
+	
+	private RePlan replanning(Iteration iteration, History history
+			 ) throws PlannerException {
 
 		// get ratio of exploration and exploatation
-		ResultOfComputingWrapper resultOfComputingWrapper =
-				receivedData.getResultOfComputingWrapper();
+		ResultsOfComputing resultOfComputingWrapper =
+				ComputingAgentService.sendAccessesResult_(centralManager, logger);
 		
 		// skip killing during first iteration
 		if (iteration.getIterationNumber() < 5) {
-			return;
+			return new RePlan(iteration);
 		}
 		
 		AgentDescription candidate = plannerInit.removeNextCandidate();
 		if (candidate != null) {
 			// remove worst and replace by new candidate
 			logger.log(Level.INFO, "Trying next candidate");
-			replaceWorstByCandidate(centralManager, job,
-					resultOfComputingWrapper, candidate, logger);
-			return;
+			return replaceWorstByCandidate(jobRun,	iteration,
+					resultOfComputingWrapper, candidate);
 		}
 		
 		MethodDescriptionsWrapper exploitationMethodDescriptions =
@@ -114,35 +131,30 @@ public class PlannerMethodDescription implements Planner {
 		if (ratioExplorationDivSize + 0.1 < ratioIteration) {
 
 			logger.log(Level.INFO, "Less Exploitation, more Exploration methods");
-			replaceWorstExploitationMethods(centralManager, job,
-					resultOfComputingWrapper, logger);
+			return replaceWorstExploitationMethods(jobRun, iteration,
+					resultOfComputingWrapper);
 		}
+		
+		return new RePlan(iteration);
 	}
 	
-	private void replaceWorstByCandidate(Agent_CentralManager centralManager, JobRun job,
-			ResultOfComputingWrapper resultOfComputingWrapper, AgentDescription candidate,
-			AgentLogger logger) throws PlannerException {
+	private RePlan replaceWorstByCandidate(
+			JobRun job, Iteration iteration, ResultsOfComputing resultOfComputingWrapper,
+			AgentDescription candidateMethod) throws PlannerException {
 		
 		Problem problem = job.getProblem();
 		
-		ResultOfComputing worstResultOfComputing =
+		IndividualWrapper worstResultOfComputing =
 				resultOfComputingWrapper.exportWorstResultOfComputing(problem);
-		AgentConfiguration worstAgentConfiguration =
-				worstResultOfComputing.getAgentDescription().getAgentConfiguration();
-		AID aidToKill = worstAgentConfiguration.exportAgentAID();
-		
-		AgentConfiguration newAgentConfiguration = candidate.getAgentConfiguration();
-		Class<?> newProblemToolClass = candidate.exportProblemToolClass();
-		
-		ProblemStruct problemStruct = job.exportProblemStruct(newProblemToolClass);
-		
-		PlannerTool.killAndCreateAgent(centralManager, aidToKill,
-				newAgentConfiguration, problemStruct, logger);
+		AgentDescription methodToKill =
+				worstResultOfComputing.getAgentDescription();
+						
+		return new RePlan(iteration, methodToKill, candidateMethod);
 	}
 	
-	public void replaceWorstExploitationMethods(Agent_CentralManager centralManager,
-			JobRun job, ResultOfComputingWrapper resultOfComputingWrapper,
-			AgentLogger logger) throws PlannerException {
+	public RePlan replaceWorstExploitationMethods(JobRun job,
+			Iteration iteration, ResultsOfComputing resultOfComputingWrapper
+			) throws PlannerException {
 			
 		Problem problem = job.getProblem();
 		List<Class<?>> problemTools = job.getProblemTools().getProblemTools();
@@ -153,17 +165,18 @@ public class PlannerMethodDescription implements Planner {
 				knownMethods.exportExploitationMethodDescriptionsWrapper();
 		List<Class<?>> availableExploitationAgentTypes =
 				availableExploitationMethods.exportAgentTypes();
+		
 		// choosing agent exploitation Configuration to kill		
-		ResultOfComputingWrapper exploitationResults =
+		ResultsOfComputing exploitationResults =
 				resultOfComputingWrapper.exportResultsOfGivenAgentType(availableExploitationAgentTypes);
-		ResultOfComputing worst =
+		IndividualWrapper worst =
 				exploitationResults.exportWorstResultOfComputing(problem);
 		//if system don't contain any exploitation method
 		if (worst == null) {
 			worst = resultOfComputingWrapper.exportWorstResultOfComputing(problem);
 		}
 		
-		AID aidToKill = worst.exportAgentConfiguration().exportAgentAID();
+		AgentDescription methodToKill = worst.getAgentDescription();
 		
 		
 
@@ -176,8 +189,7 @@ public class PlannerMethodDescription implements Planner {
 		List<Class<?>> notRunningExplorationAgentTypes = resultOfComputingWrapper.
 				exportAgentTypesWhichDontContains(availableExplorationAgentTypes);
 		
-		AgentConfiguration newAgentConfiguration;
-		Class<?> newProblemToolClass;
+		AgentDescription newMethod;
 		
 		// if exists some exploration type of agent which is not running -> start random of that 
 		if (! notRunningExplorationAgentTypes.isEmpty()) {
@@ -188,33 +200,29 @@ public class PlannerMethodDescription implements Planner {
 			Class<?> selectedAgentType = notRunningExplorationAgentTypes.get(agentTypeIndex);
 			Class<?> selectedProblemTool = problemTools.get(problemToolIndex);
 			
-			newAgentConfiguration = new AgentConfiguration(selectedAgentType, null);
-			newProblemToolClass = selectedProblemTool;
+			AgentConfiguration newAgentConfiguration = new AgentConfiguration(selectedAgentType, null);
+			Class<?> newProblemToolClass = selectedProblemTool;
 			
+			newMethod = new AgentDescription();
+			newMethod.setAgentConfiguration(newAgentConfiguration);
+			newMethod.importProblemToolClass(newProblemToolClass);
 		} else {
 			
 			// duplicate the best exploration agent
-			ResultOfComputingWrapper explorationResultOfComputingWrp =
+			ResultsOfComputing explorationResultOfComputingWrp =
 					resultOfComputingWrapper.exportResultsOfGivenAgentType(availableExplorationAgentTypes);
-			ResultOfComputing bestExplorationResultOfComputingWrp =
+			IndividualWrapper bestExplorationResultOfComputingWrp =
 					explorationResultOfComputingWrp.exportBestResultOfComputing(problem);
 			
-			AgentDescription agentDescription =
+			newMethod =
 					bestExplorationResultOfComputingWrp.getAgentDescription();
-			
-			newAgentConfiguration = agentDescription.getAgentConfiguration();
-			newProblemToolClass = agentDescription.exportProblemToolClass();
 		}
 		
-		
-		ProblemStruct problemStruct = job.exportProblemStruct(newProblemToolClass);
-		
-		PlannerTool.killAndCreateAgent(centralManager, aidToKill,
-				newAgentConfiguration, problemStruct, logger);
+		return new RePlan(iteration, methodToKill, newMethod);
 	}
 	
 	@Override
-	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
+	public void exit(Agent_CentralManager centralManager, IAgentLogger logger) {
 		
 		PlannerTool.killAllComputingAgent(centralManager, logger);
 		

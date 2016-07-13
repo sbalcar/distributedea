@@ -10,16 +10,24 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
+import org.distributedea.ontology.individuals.SaveBestIndividual;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.saveresult.ResultOfIteration;
+import org.distributedea.ontology.saveresult.SaveResults;
+
 
 /**
  * System-agent who manage data resources multi-agent framework
@@ -48,7 +56,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		
 		
 		MessageTemplate mesTemplate =
-				MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+				MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 
 		addBehaviour(new AchieveREResponder(this, mesTemplate) {
 
@@ -61,10 +69,12 @@ public class Agent_DataManager extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(request);
 
-					if (action.getAction() instanceof ResultOfComputing) {
+					if (action.getAction() instanceof SaveBestIndividual) {
 						return respondToResultOfComputing(request, action);
+					
+					} else if (action.getAction() instanceof SaveResults) {
+						return respondToSaveResults(request, action);
 					}
-
 
 				} catch (OntologyException e) {
 					getLogger().logThrowable("Problem extracting content", e);
@@ -83,15 +93,18 @@ public class Agent_DataManager extends Agent_DistributedEA {
 
 	}
 	
+
 	protected ACLMessage respondToResultOfComputing(ACLMessage request,
 			Action action) {
 		
-		ResultOfComputing result = (ResultOfComputing)action.getAction();
+		SaveBestIndividual saveResultOfComputing = (SaveBestIndividual)action.getAction();
+		
+		IndividualWrapper result = saveResultOfComputing.getResult();
 		
 		String fileName = Configuration.getResultFile(result.getJobID());
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
-			writer.append(result.getFitnessValue() + "\n");
+			writer.append(result.getIndividualEvaluated().getFitness() + "\n");
 			writer.close();
 		} catch (IOException e) {
 			getLogger().logThrowable("Part result can't be logged", e);
@@ -100,5 +113,21 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		return null;
 	}	
 
+	protected ACLMessage respondToSaveResults(ACLMessage request, Action action) {
+		
+		SaveResults saveResults = (SaveResults)action.getAction();
+		ResultOfIteration results = saveResults.getResults();
+		
+		String monitoringDirName = Configuration.
+				getResultDirectoryMonitoringDirectory(results.getJobID());
+		
+		try {
+			results.exportXML(new File(monitoringDirName));
+		} catch (FileNotFoundException | JAXBException e) {
+			getLogger().logThrowable("", e);
+		}
+		
+		return null;
+	}
 	
 }

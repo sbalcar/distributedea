@@ -8,8 +8,8 @@ package org.distributedea;
 public enum AgentNames {
 
 	INITIATOR("Initiator"), CENTRAL_LOGER("CentralLoger"),
-	MANAGER_AGENT("ManagerAgent"), DATA_MANAGER("DataManager");
-	
+	MANAGER_AGENT("ManagerAgent"), DATA_MANAGER("DataManager"),
+	MONITOR("Monitor");
 
 	private final String name;
 

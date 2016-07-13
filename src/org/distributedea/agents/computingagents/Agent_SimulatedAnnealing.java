@@ -123,7 +123,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
             
 			//saves data in Agent DataManager
             processComputedIndividual(individualI,
-        			fitnessI, generationNumberI, problem);
+        			fitnessI, generationNumberI, problem, jobID);
             
 			// send new Individual to distributed neighbors
 			if (computingThread.isIndividualDistribution()) {

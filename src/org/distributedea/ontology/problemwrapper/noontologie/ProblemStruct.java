@@ -60,6 +60,18 @@ public class ProblemStruct {
 		}
 		return null;
 	}
+	public ProblemTool exportProblemTool(AgentLogger logger) {
+		
+		Class<?> probToolclass = exportProblemToolClass(logger);
+		ProblemTool problemTool = null;
+		try {
+			problemTool = (ProblemTool) probToolclass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			logger.logThrowable("Can't create ProblemTool", e);
+		}
+		
+		return problemTool;
+	}
 	public void importProblemToolClass(Class<?> problemToolClass) {
 		if (problemToolClass == null) {
 			return;

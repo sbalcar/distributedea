@@ -1,6 +1,6 @@
 package org.distributedea.problems.tsp.point.permutation;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
@@ -11,7 +11,7 @@ public class ProblemToolPoint2opt extends ProblemTSPPointPermutationTool {
 
 	@Override
 	public Individual improveIndividual(Individual individual, Problem problem,
-			AgentLogger logger) throws ProblemToolException {
+			IAgentLogger logger) throws ProblemToolException {
 		
 		Class<?> individualClass = IndividualPermutation.class;
 		Class<?> problemClass = problemWhichSolves();

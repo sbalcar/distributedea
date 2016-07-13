@@ -1,4 +1,4 @@
-package org.distributedea.ontology.computing.result;
+package org.distributedea.agents.systemagents.centralmanager.planner.resultsmodel;
 
 import jade.content.Concept;
 
@@ -7,24 +7,26 @@ import java.util.List;
 
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemToolEvaluation;
 
-public class ResultOfComputingWrapper implements Concept {
+public class ResultsOfComputing implements Concept {
 
 	private static final long serialVersionUID = 1L;
 	
-	private List<ResultOfComputing> resultOfComputing;
+	private List<IndividualWrapper> resultOfComputing;
 
 	
-	public List<ResultOfComputing> getResultOfComputing() {
+	public List<IndividualWrapper> getResultOfComputing() {
 		return resultOfComputing;
 	}
-	public void setResultOfComputing(List<ResultOfComputing> resultOfComputing) {
+	public void setResultOfComputing(List<IndividualWrapper> resultOfComputing) {
 		this.resultOfComputing = resultOfComputing;
 	}
 	
-	public void addResultOfComputing(ResultOfComputing resultOfComputing) {
+	public void addResultOfComputing(IndividualWrapper resultOfComputing) {
 		
 		if (this.resultOfComputing == null) {
 			this.resultOfComputing = new ArrayList<>();
@@ -42,20 +44,23 @@ public class ResultOfComputingWrapper implements Concept {
 		return true;
 	}
 	
-	public ResultOfComputing exportBestResultOfComputing(Problem problem) {
+	public IndividualWrapper exportBestResultOfComputing(Problem problem) {
 		
 		if (resultOfComputing == null || resultOfComputing.isEmpty()) {
 			return null;
 		}
 		
-		ResultOfComputing bestResult = resultOfComputing.get(0);
+		IndividualWrapper bestResult = resultOfComputing.get(0);
 		
-		for (ResultOfComputing resultOfComputingI : resultOfComputing) {
+		for (IndividualWrapper resultOfComputingI : resultOfComputing) {
 			
-			double fitnessValueI = resultOfComputingI.getFitnessValue();
+			IndividualEvaluated individualEvalI =
+					resultOfComputingI.getIndividualEvaluated();
 			
-			boolean isNewIndividualBetter = ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-					fitnessValueI, bestResult.getFitnessValue(), problem);
+			boolean isNewIndividualBetter = ProblemToolEvaluation.
+					isFistIndividualWBetterThanSecond(individualEvalI,
+							bestResult.getIndividualEvaluated(), problem);
+			
 			if (isNewIndividualBetter) {
 				bestResult = resultOfComputingI;
 			}
@@ -64,21 +69,22 @@ public class ResultOfComputingWrapper implements Concept {
 		return bestResult;
 	}
 
-	public ResultOfComputing exportWorstResultOfComputing(Problem problem) {
+	public IndividualWrapper exportWorstResultOfComputing(Problem problem) {
 		
 		if (resultOfComputing == null || resultOfComputing.isEmpty()) {
 			return null;
 		}
 		
-		ResultOfComputing worstResult = resultOfComputing.get(0);
+		IndividualWrapper worstResult = resultOfComputing.get(0);
 		
-		for (ResultOfComputing resultOfComputingI : resultOfComputing) {
+		for (IndividualWrapper resultOfComputingI : resultOfComputing) {
 			
-			double fitnessValueI = resultOfComputingI.getFitnessValue();
+			IndividualEvaluated individualEvalI =
+					resultOfComputingI.getIndividualEvaluated();
 			
-			boolean isNewIndividualWorse =
-					ProblemToolEvaluation.isFistFitnessWorseThanSecond(
-							fitnessValueI, worstResult.getFitnessValue(), problem);
+			boolean isNewIndividualWorse = ProblemToolEvaluation.
+					isFistIndividualWWorseThanSecond(individualEvalI,
+							worstResult.getIndividualEvaluated(), problem);
 			if (isNewIndividualWorse) {
 				worstResult = resultOfComputingI;
 			}
@@ -87,11 +93,11 @@ public class ResultOfComputingWrapper implements Concept {
 		return worstResult;
 	}
 	
-	public ResultOfComputingWrapper exportResultsOfGivenAgentType(List<Class<?>> agentType) {
+	public ResultsOfComputing exportResultsOfGivenAgentType(List<Class<?>> agentType) {
 		
-		ResultOfComputingWrapper resultWrp = new ResultOfComputingWrapper();
+		ResultsOfComputing resultWrp = new ResultsOfComputing();
 		
-		for (ResultOfComputing resultI : resultOfComputing) {
+		for (IndividualWrapper resultI : resultOfComputing) {
 			
 			AgentDescription agentDescriptionI = resultI.getAgentDescription();
 			AgentConfiguration agentConfigurationI = agentDescriptionI.getAgentConfiguration();
@@ -108,7 +114,7 @@ public class ResultOfComputingWrapper implements Concept {
 	public int exportAgentNumberOfType(List<Class<?>> agentType) {
 	
 		int counter = 0;
-		for (ResultOfComputing resultI : resultOfComputing) {
+		for (IndividualWrapper resultI : resultOfComputing) {
 			
 			AgentDescription agentDescriptionI = resultI.getAgentDescription();
 			AgentConfiguration agentConfigurationI = agentDescriptionI.getAgentConfiguration();
@@ -124,7 +130,7 @@ public class ResultOfComputingWrapper implements Concept {
 
 	public boolean containsAgentTypes(Class<?> agentType) {
 		
-		for (ResultOfComputing resultI : resultOfComputing) {
+		for (IndividualWrapper resultI : resultOfComputing) {
 			
 			AgentDescription agentDescriptionI = resultI.getAgentDescription();
 			AgentConfiguration agentConfigurationI = agentDescriptionI.getAgentConfiguration();

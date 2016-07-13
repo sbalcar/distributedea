@@ -2,7 +2,6 @@
   <jobID>followupHelpers</jobID>
   <numberOfRuns>3</numberOfRuns>
   <description>Follow up Helpers</description>
-  <countOfReplaning>50</countOfReplaning>
   <problemToSolve>org.distributedea.ontology.problem.ProblemTSPGPS</problemToSolve>
   <problemFileName>xit1083.tsp</problemFileName>
   <methodsFileName>configuration/methodsAll.txt</methodsFileName>
@@ -17,4 +16,10 @@
       <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
     </org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers>
   </planners>
+  <plannerTypes>
+    <org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction>
+      <countOfReplaning>50</countOfReplaning>
+      <iterationNumI>0</iterationNumI>
+    </org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction>
+  </plannerTypes>
 </org.distributedea.ontology.job.noontology.Job>

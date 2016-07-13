@@ -1,5 +1,8 @@
-package org.distributedea.agents.systemagents.centralmanager.planner.initialization.dumy;
+package org.distributedea.agents.systemagents.centralmanager.planner.initialisation.dumy;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jade.core.AID;
 
@@ -8,18 +11,22 @@ import org.distributedea.agents.computingagents.computingagent.service.Computing
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planner.history.History;
 import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.Plan;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.RePlan;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerTool;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
 import org.distributedea.configuration.AgentConfigurations;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 
-public class PlannerInitializationRunEachMethodOnce implements Planner {
+public class PlannerInitialisationRunEachMethodOnce implements Planner {
 
 	int NODE_INDEX = 0;
 	
@@ -27,8 +34,8 @@ public class PlannerInitializationRunEachMethodOnce implements Planner {
 	int PROBLEM_TOOL_INDEX = 0;
 	
 	@Override
-	public void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws PlannerException {
+	public Plan agentInitialisation(Agent_CentralManager centralManager,
+			Iteration iteration, JobRun job, IAgentLogger logger) throws PlannerException {
 
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
@@ -42,18 +49,25 @@ public class PlannerInitializationRunEachMethodOnce implements Planner {
 			throw new PlannerException("Manager agent to create Computing Agent not available");
 		}
 		
-
+		// chooses ProblemTool by index
+		Class<?> problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
+		
+		List<AgentDescription> createdDescriptions = new ArrayList<>();
+		
 		// create one agent for each configuration
 		AgentConfigurations configurations = job.getAgentConfigurations();
 		for (AgentConfiguration agentConfigurationI : configurations.getAgentConfigurations()) {
-						
-			ManagerAgentService.sendCreateAgent(centralManager,
-					managerAidI, agentConfigurationI, logger);
-
+			
+			AgentConfiguration createdAgentI = ManagerAgentService.sendCreateAgent(
+					centralManager, managerAidI, agentConfigurationI, logger);
+			
+			AgentDescription descriptionI = new AgentDescription();
+			descriptionI.setAgentConfiguration(createdAgentI);
+			descriptionI.importProblemToolClass(problemToolI);
+			
+			createdDescriptions.add(descriptionI);
 		}
-		
-		// chooses ProblemTool by index
-		Class<?> problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
+				
 		
 		// search all Computing Agents
 		AID [] aidComputingAgents = centralManager.searchDF(
@@ -62,28 +76,28 @@ public class PlannerInitializationRunEachMethodOnce implements Planner {
 		// start computing in all created computing agents
 		for (AID aidComputingAgentI : aidComputingAgents) {
 			
-			ProblemStruct problemStruct = new ProblemStruct();
-			problemStruct.setJobID(job.getJobID());
-			problemStruct.setIndividualDistribution(job.getIndividualDistribution());
-			problemStruct.setProblem(job.getProblem());
-			problemStruct.setProblemToolClass(problemToolI.getName());
-			
+			ProblemStruct problemStructI = job.exportProblemStruct(problemToolI);
+						
 			ComputingAgentService.sendStartComputing(
-					centralManager, aidComputingAgentI, problemStruct, logger);
+					centralManager, aidComputingAgentI, problemStructI, logger);
 
 		}
 		
+		return new Plan(iteration, createdDescriptions);
 	}
 
 	
 	@Override
-	public void replan(Agent_CentralManager centralManager, JobRun job,
-			Iteration iteration, ReceivedData receivedData, AgentLogger logger) {
+	public Pair<Plan, RePlan> replan(Iteration iteration, History history) {
+		
+		Plan plan = new Plan(iteration, new ArrayList<AgentDescription>());
+		RePlan rePlan = new RePlan(iteration);
+		return new Pair<>(plan, rePlan);
 	}
 
 	
 	@Override
-	public void exit(Agent_CentralManager centralManager, AgentLogger logger) {
+	public void exit(Agent_CentralManager centralManager, IAgentLogger logger) {
 		
 		PlannerTool.killAllComputingAgent(centralManager, logger);
 		

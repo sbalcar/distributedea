@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
+import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerType;
 import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.job.noontology.Batch;
 import org.distributedea.ontology.job.noontology.Job;
@@ -19,9 +20,9 @@ public class ComputeBatchBehaviour extends OneShotBehaviour {
 
 	private Batch batch;
 	private Behaviour nextBehavior;
-	private AgentLogger logger;
+	private IAgentLogger logger;
 	
-	public ComputeBatchBehaviour(Batch batch, Behaviour nextBehavior, AgentLogger logger) {
+	public ComputeBatchBehaviour(Batch batch, Behaviour nextBehavior, IAgentLogger logger) {
 		this.batch = batch;
 		this.nextBehavior = nextBehavior;
 		this.logger = logger;
@@ -68,16 +69,15 @@ public class ComputeBatchBehaviour extends OneShotBehaviour {
 		
 
 		int numberOfRuns = job.getNumberOfRuns();
-		long countOfReplaning = job.getCountOfReplaning();
-		Planner scheduler = job.getPlanner();
-		
+		Planner planner = job.getPlanner();
+		PlannerType plannerType = job.getPlannerType();
 
 		for (int runNumberI = 0; runNumberI < numberOfRuns; runNumberI++) {
 			
 			JobRun jobRunI = job.exportJobRun(batchID, runNumberI, logger);
 
 			ComputeJobRunBehaviour jobBehaviour =
-					new ComputeJobRunBehaviour(jobRunI, scheduler, countOfReplaning, logger);
+					new ComputeJobRunBehaviour(jobRunI, planner, plannerType, logger);
 			this.myAgent.addBehaviour(jobBehaviour);
 		}
 		

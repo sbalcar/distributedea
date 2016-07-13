@@ -21,11 +21,12 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric.Params;
 
 import sun.misc.Unsafe;
 
-@SuppressWarnings({ "restriction", "unused" })
+@SuppressWarnings({"unused" })
 
 /**
  * Bbob Tool which solve problem, that java is not able to link
@@ -54,10 +55,10 @@ public class BbobTools {
 
 	private String numberI;
 
-	private AgentLogger logger;
+	private IAgentLogger logger;
 	
 	
-	public BbobTools(String containerNumber, AgentLogger logger) {
+	public BbobTools(String containerNumber, IAgentLogger logger) {
 		
 		this.logger = logger;
 		

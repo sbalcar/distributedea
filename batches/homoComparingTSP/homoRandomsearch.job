@@ -2,7 +2,6 @@
   <jobID>homoRandomsearch</jobID>
   <numberOfRuns>3</numberOfRuns>
   <description>Homo-RandomSearch</description>
-  <countOfReplaning>50</countOfReplaning>
   <problemToSolve>org.distributedea.ontology.problem.ProblemTSPGPS</problemToSolve>
   <problemFileName>xit1083.tsp</problemFileName>
   <methodsFileName>configuration/methodsOnlyRandomSearch.txt</methodsFileName>
@@ -13,9 +12,15 @@
   </problemTools>
   <individualDistribution>true</individualDistribution>
   <planners>
-    <org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization>
+    <org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation>
       <state>RUN_ONE_AGENT_PER_CORE</state>
       <methodRepetition>true</methodRepetition>
-    </org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization>
+    </org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation>
   </planners>
+  <plannerTypes>
+    <org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction>
+      <countOfReplaning>50</countOfReplaning>
+      <iterationNumI>0</iterationNumI>
+    </org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction>
+  </plannerTypes>
 </org.distributedea.ontology.job.noontology.Job>

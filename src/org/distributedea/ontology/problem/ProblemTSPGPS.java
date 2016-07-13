@@ -3,7 +3,7 @@ package org.distributedea.ontology.problem;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
@@ -78,7 +78,7 @@ public class ProblemTSPGPS extends ProblemTSP {
 	}
 
 	@Override
-	public boolean testIsValid(Individual individual, AgentLogger logger) {
+	public boolean testIsValid(Individual individual, IAgentLogger logger) {
 		return true;
 	}
 	

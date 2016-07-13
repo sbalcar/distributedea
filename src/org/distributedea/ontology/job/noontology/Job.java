@@ -13,9 +13,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
+import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerType;
 import org.distributedea.configuration.AgentConfigurations;
 import org.distributedea.configuration.XmlConfigurationProvider;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.problem.Problem;
@@ -51,11 +52,6 @@ public class Job implements Concept, Serializable {
 	private String description;
 	
 	/**
-	 * Define number of replaning of Scheduler
-	 */
-	private long countOfReplaning;
-	
-	/**
 	 * Inform about type of Problem to solve
 	 */
 	private Class<?> problemToSolve;
@@ -83,11 +79,16 @@ public class Job implements Concept, Serializable {
 	
 	
 	/**
-	 * Declares the Scheduler Class which will be used to direction of the evolution
+	 * Declares the Planner Class which will be used to direction of the evolution
 	 */
 	private List<Planner> planners;	// warning planner is wrapped in list because it is necessary for XML serialization
 
+	/**
+	 * Declares the PlannerType Class which will be used to direction of the evolution
+	 */
+	private List<PlannerType> plannerTypes;	// warning plannerType is wrapped in list because it is necessary for XML serialization
 
+	
 	
 	public String getJobID() {
 		return jobID;
@@ -108,13 +109,6 @@ public class Job implements Concept, Serializable {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	
-	public long getCountOfReplaning() {
-		return countOfReplaning;
-	}
-	public void setCountOfReplaning(long countOfReplaning) {
-		this.countOfReplaning = countOfReplaning;
 	}
 	
 	public Class<?> getProblemToSolve() {
@@ -158,16 +152,30 @@ public class Job implements Concept, Serializable {
 		}
 		return this.planners.get(0);
 	}
-	public void setPlanner(Planner scheduler) {
+	public void setPlanner(Planner planner) {
 		if (this.planners == null) {
-			this.planners = new ArrayList<Planner>();
+			this.planners = new ArrayList<>();
 		}
 		this.planners.clear();
-		this.planners.add(scheduler);
+		this.planners.add(planner);
 	}
 
+	public PlannerType getPlannerType() {
+		if (this.plannerTypes == null || this.plannerTypes.isEmpty()) {
+			return null;
+		}
+		return this.plannerTypes.get(0);
+	}
 	
-	public JobRun exportJobRun(String batchID, int runNumber, AgentLogger logger) {
+	public void setPlannerType(PlannerType plannerType) {
+		if (this.plannerTypes == null) {
+			this.plannerTypes = new ArrayList<>();
+		}
+		this.plannerTypes.clear();
+		this.plannerTypes.add(plannerType);
+	}
+	
+	public JobRun exportJobRun(String batchID, int runNumber, IAgentLogger logger) {
 				
 		// AgentConfigurations - Methods reading
 		AgentConfigurations agentConfigurations =
@@ -213,7 +221,7 @@ public class Job implements Concept, Serializable {
 	public void exportXML(String fileName) throws FileNotFoundException, JAXBException {
 
 		String xml = exportXML();
-		System.out.println(xml);
+
 		PrintWriter file = new PrintWriter(fileName);
 		file.println(xml);
 		file.close();
@@ -254,8 +262,6 @@ public class Job implements Concept, Serializable {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
-
-		xstream.aliasAttribute("type", "class");
 
 		return (Job) xstream.fromXML(xml);
 	}

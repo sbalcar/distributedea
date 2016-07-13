@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.Configuration;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -24,7 +24,7 @@ import org.distributedea.problems.ProblemTool;
 public abstract class ProblemTSPTool implements ProblemTool {
 	
 	@Override
-	public void initialization(Problem problem, AgentConfiguration agentConf, AgentLogger logger) {
+	public void initialization(Problem problem, AgentConfiguration agentConf, IAgentLogger logger) {
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public abstract class ProblemTSPTool implements ProblemTool {
 	}
 	
 	@Override
-	public Problem readProblem(String inputProblemFileName, AgentLogger logger) {
+	public Problem readProblem(String inputProblemFileName, IAgentLogger logger) {
 
 		String inputFileName = Configuration.getInputProblemFile(inputProblemFileName);
 		
@@ -55,7 +55,7 @@ public abstract class ProblemTSPTool implements ProblemTool {
 	 * @return
 	 */
 	protected List<Position> readProblemTSP(String tspFileName,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		List<Position> positions = new ArrayList<Position>();
 		

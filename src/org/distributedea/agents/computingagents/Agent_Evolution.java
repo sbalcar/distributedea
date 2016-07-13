@@ -161,7 +161,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			// save, log and distribute computed Individual
 			processIndividualFromInitGeneration(individualI,
 					fitnessI, generationNumberI, problem, jobID);
-			
+
 			while (state == CompAgentState.COMPUTING) {
 				// increment next number of generation
 				generationNumberI++;
@@ -185,7 +185,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 				
 				// save, log and distribute computed Individual
 				processComputedIndividual(individualI,
-						fitnessI, generationNumberI, problem);
+						fitnessI, generationNumberI, problem, jobID);
 				
 				// send new Individual to distributed neighbors
 				if (computingThread.isIndividualDistribution()) {

@@ -2,7 +2,7 @@ package org.distributedea.problems;
 
 import java.util.logging.Level;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.Problem;
 
@@ -21,7 +21,7 @@ public class ProblemToolValidation {
 	 * @return
 	 */
 	public static boolean isIndividualTypeOf(Individual individual,
-			Class<?> individualClass, AgentLogger logger) {
+			Class<?> individualClass, IAgentLogger logger) {
 		
 		if (individual.getClass() != individualClass) {
 			logger.log(Level.SEVERE,
@@ -40,7 +40,7 @@ public class ProblemToolValidation {
 	 * @return
 	 */
 	public static boolean isProblemTypeOf(Problem problem,
-			Class<?> problemClass, AgentLogger logger) {
+			Class<?> problemClass, IAgentLogger logger) {
 		
 		if (problem.getClass() != problemClass) {
 			logger.log(Level.SEVERE,
@@ -59,7 +59,7 @@ public class ProblemToolValidation {
 	 * @return
 	 */
 	public static boolean isProblemToolTypeOf(ProblemTool problemTool,
-			Class<?> problemToolClass, AgentLogger logger) {
+			Class<?> problemToolClass, IAgentLogger logger) {
 		
 		boolean isProblemToolOK =
 				problemTool.getClass().isAssignableFrom(problemToolClass);
@@ -80,7 +80,7 @@ public class ProblemToolValidation {
 	 * @return
 	 */
 	public static ProblemTool instanceProblemTool(String className,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		Class<?> toolClass = null;
 		try {

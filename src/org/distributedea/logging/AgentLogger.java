@@ -5,7 +5,7 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
 
-public class AgentLogger {
+public class AgentLogger implements IAgentLogger {
 	
 	protected Agent_DistributedEA agent;
 	

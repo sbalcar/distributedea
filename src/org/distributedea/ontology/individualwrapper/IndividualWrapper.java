@@ -2,6 +2,7 @@ package org.distributedea.ontology.individualwrapper;
 
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.ProblemTool;
@@ -51,4 +52,9 @@ public class IndividualWrapper implements Concept {
 		
 		return individualEvaluated.validation(problem, problemTool, logger);	
 	}
+	
+	public AgentConfiguration exportAgentConfiguration() {
+		return agentDescription.getAgentConfiguration();
+	}
+	
 }

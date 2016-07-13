@@ -1,11 +1,14 @@
 package org.distributedea.agents;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.Configuration;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -29,7 +32,7 @@ public abstract class Agent_DistributedEA extends Agent {
 	
 	protected Codec codec = null;
 	
-	private AgentLogger logger = null;
+	protected IAgentLogger logger = null;
 
 	
 	/**
@@ -48,7 +51,7 @@ public abstract class Agent_DistributedEA extends Agent {
 	 * Get Logger
 	 * @return
 	 */
-	public AgentLogger getLogger() {
+	public IAgentLogger getLogger() {
 		
 		if (logger == null) {
 			this.logger = new AgentLogger(this);
@@ -77,31 +80,31 @@ public abstract class Agent_DistributedEA extends Agent {
 	 * 
 	 * @return
 	 */
-	public final int getNumberOfContainer() {
+	public static final String getNumberOfContainer() {
 
-		String localName = getAID().getLocalName();
-		
-		int charIndex;
-		for (charIndex = localName.length() -1; charIndex >= 0; charIndex--) {
-			char charI = localName.charAt(charIndex);
-			if (charI == Configuration.CONTAINER_NUMBER_PREFIX) {
-				break;
-			}
+		String containerNumber = "";
+
+		String hosname;
+		try {
+			hosname = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			//getLogger().logThrowable("df", e);
+			return null;
 		}
-		
-		assert(charIndex > 0);
-		
-		String numbericendOfLocalName = localName.substring(charIndex +1);
 
-		String numberString = "";
-		for (int i = 0; i < numbericendOfLocalName.length(); i++) {
-			char charI = numbericendOfLocalName.charAt(i);
+		for (int charIndex = 0; charIndex < hosname.length(); charIndex++) {
+			char charI = hosname.charAt(charIndex);
 			if ('0' <= charI && charI <= '9') {
-				numberString += charI;
+				containerNumber += charI;
 			}
 		}
-		
-		return Integer.parseInt(numberString);
+
+		try {
+			int numb = Integer.parseInt(containerNumber);
+			return "" + numb;
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 	
 	/**

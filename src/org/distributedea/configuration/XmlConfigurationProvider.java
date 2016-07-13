@@ -1,6 +1,6 @@
 package org.distributedea.configuration;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.w3c.dom.Document;
@@ -34,7 +34,7 @@ public class XmlConfigurationProvider {
 	 * @param filePath
 	 * @return
 	 */
-	public static AgentConfigurations getConfiguration(String filePath, AgentLogger logger) {
+	public static AgentConfigurations getConfiguration(String filePath, IAgentLogger logger) {
 		
 		List<AgentConfiguration> agentConfigurations =
 				new ArrayList<AgentConfiguration>();

@@ -1,13 +1,13 @@
 package org.distributedea.agents.computingagents.computingagent;
 
 import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.ProblemToolEvaluation;
 import org.distributedea.problems.exceptions.ProblemToolException;
 
 public class ComputingThread extends Thread {
@@ -16,22 +16,23 @@ public class ComputingThread extends Thread {
 	
 	private JobID jobID;
 	private boolean individualDistribution;
-	private Class<?> problemToolClass;
 	private ProblemTool problemTool;
 	private Problem problem;
 	private AgentConfiguration requiredAgentConfiguration;
 	
 	/** best result of computing (Individual and fitness) **/
-	private ResultOfComputing bestResultOfComputing = null;
+	private IndividualWrapper bestResultOfComputing = null;
 	
 	public ComputingThread(Agent_ComputingAgent agent, ProblemStruct problemStruct,
 			AgentConfiguration requiredAgentConfiguration) {
 		this.agent = agent;
 		this.individualDistribution = problemStruct.getIndividualDistribution();
 		this.jobID = problemStruct.getJobID();
-		this.problemToolClass = problemStruct.exportProblemToolClass(agent.getLogger());
+		this.problemTool = problemStruct.exportProblemTool(agent.getLogger());
 		this.problem = problemStruct.getProblem();
 		this.requiredAgentConfiguration = requiredAgentConfiguration;
+		
+		setBestresultOfComputing(null);
 	}
 	
 	public JobID getJobID() {
@@ -47,22 +48,20 @@ public class ComputingThread extends Thread {
 		return this.problem;
 	}
 
-	public ResultOfComputing getBestresultOfComputing() {
+	public IndividualWrapper getBestresultOfComputing() {
 		
 		return bestResultOfComputing;
 	}
-	public void setBestresultOfComputing(ResultOfComputing resultOfComputing) {
-		
-		if (resultOfComputing == null) {
-			return;
-		}
+	public void setBestresultOfComputing(IndividualEvaluated individualEvaluated) {
 		
 		AgentDescription agentDescription = new AgentDescription();
 		agentDescription.importProblemTool(problemTool);
 		agentDescription.setAgentConfiguration(agent.requiredAgentConfiguration);
 		
-		resultOfComputing.setAgentDescription(agentDescription);
+		IndividualWrapper resultOfComputing = new IndividualWrapper();
 		resultOfComputing.setJobID(jobID);
+		resultOfComputing.setAgentDescription(agentDescription);
+		resultOfComputing.setIndividualEvaluated(individualEvaluated);
 		
 		this.bestResultOfComputing = resultOfComputing;
 	}
@@ -70,8 +69,6 @@ public class ComputingThread extends Thread {
 	
 	@Override
 	public void run() {
-		
-		problemTool = ProblemToolEvaluation.getProblemToolFromClass(problemToolClass);
 		
 		try {
 			agent.startComputing(problem, problemTool, jobID, requiredAgentConfiguration);

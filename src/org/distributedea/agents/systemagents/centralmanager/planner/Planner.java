@@ -2,10 +2,13 @@ package org.distributedea.agents.systemagents.centralmanager.planner;
 
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
+import org.distributedea.agents.systemagents.centralmanager.planner.history.History;
 import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
-import org.distributedea.agents.systemagents.centralmanager.planner.modes.ReceivedData;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.Plan;
+import org.distributedea.agents.systemagents.centralmanager.planner.plan.RePlan;
+import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobRun;
 
 /**
@@ -16,13 +19,13 @@ import org.distributedea.ontology.job.JobRun;
 public interface Planner {
 	
 	/**
-	 * Initialize computing agents on distributed nodes
+	 * Initialise computing agents on distributed nodes
 	 * @param centralManager
 	 * @param configurations
 	 * @param logger
 	 */
-	public abstract void agentInitialization(Agent_CentralManager centralManager,
-			JobRun job, AgentLogger logger) throws PlannerException;
+	public abstract Plan agentInitialisation(Agent_CentralManager centralManager,
+			Iteration iteration, JobRun job, IAgentLogger logger) throws PlannerException;
 	
 	
 	/**
@@ -31,13 +34,12 @@ public interface Planner {
 	 * @param problemTool
 	 * @param logger
 	 */
-	public abstract void replan(Agent_CentralManager centralManager,
-			JobRun job, Iteration iteration, ReceivedData receivedData,
-			AgentLogger logger) throws PlannerException;
+	public abstract Pair<Plan,RePlan> replan(Iteration iteration, History history
+			) throws PlannerException;
 	
 	/**
-	 * Exit
+	 * Exit with planning
 	 */
-	public abstract void exit(Agent_CentralManager centralManager, AgentLogger logger);
+	public abstract void exit(Agent_CentralManager centralManager, IAgentLogger logger);
 	
 }

@@ -4,9 +4,10 @@ package org.distributedea.input.batches.jobs;
 import org.distributedea.Configuration;
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.dumy.PlannerInitializationRunEachMethodOnce;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.dumy.PlannerInitialisationRunEachMethodOnce;
+import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
 import org.distributedea.ontology.job.noontology.Job;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
@@ -26,13 +27,13 @@ public class InputTSP {
 		Job job = new Job();
 		job.setJobID("tsp01");
 		job.setNumberOfRuns(1);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("simpleTest.tsp");
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setPlanner(new PlannerInitializationRunEachMethodOnce());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
@@ -46,13 +47,13 @@ public class InputTSP {
 		Job job = new Job();
 		job.setJobID("tsp02");
 		job.setNumberOfRuns(1);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("wi29.tsp");
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setPlanner(new PlannerInitializationRunEachMethodOnce());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
@@ -66,13 +67,13 @@ public class InputTSP {
 		Job job = new Job();
 		job.setJobID("tsp03");
 		job.setNumberOfRuns(1);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPPoint.class);
 		job.setProblemFileName("djb2036.tsp");
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		job.setPlanner(new PlannerInitializationRunEachMethodOnce());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolPoint2opt.class));
 		
@@ -86,13 +87,13 @@ public class InputTSP {
 		Job job = new Job();
 		job.setJobID("tsp04");
 		job.setNumberOfRuns(1);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("xit1083.tsp");
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setPlanner(new PlannerFollowupHelpers());
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
@@ -103,14 +104,14 @@ public class InputTSP {
 				
 		Job job = new Job();
 		job.setNumberOfRuns(3);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("xit1083.tsp");
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		job.setPlanner(new PlannerInitialization(state, true));
+		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
+		job.setPlanner(new PlannerInitialisation(state, true));
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
@@ -121,12 +122,14 @@ public class InputTSP {
 				
 		Job job = new Job();
 		job.setNumberOfRuns(3);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemTSPGPS.class);
 		job.setProblemFileName("xit1083.tsp");
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
-		
+
+		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
+		job.setPlanner(new PlannerInitialisation(state, true));
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		

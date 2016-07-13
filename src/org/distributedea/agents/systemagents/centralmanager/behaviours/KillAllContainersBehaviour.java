@@ -3,7 +3,7 @@ package org.distributedea.agents.systemagents.centralmanager.behaviours;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
@@ -12,9 +12,9 @@ public class KillAllContainersBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
-	private AgentLogger logger;
+	private IAgentLogger logger;
 	
-	public KillAllContainersBehaviour(AgentLogger logger) {
+	public KillAllContainersBehaviour(IAgentLogger logger) {
 		this.logger = logger;
 	}
 	

@@ -3,7 +3,7 @@ package org.distributedea.problems.continuousoptimization;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
@@ -17,14 +17,14 @@ public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 	
 	@Override
 	public Individual generateFirstIndividual(Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		return generateIndividual(problem, logger);
 	}
 
 	@Override
 	public Individual generateNextIndividual(Problem problem,
-			Individual individual, AgentLogger logger) {
+			Individual individual, IAgentLogger logger) {
 		
 		ProblemContinousOpt problemCO = (ProblemContinousOpt) problem;
 		IndividualPoint individualP = (IndividualPoint) individual;
@@ -65,7 +65,7 @@ public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 
 	@Override
 	public Individual improveIndividual(Individual individual, Problem problem,
-			AgentLogger logger) throws ProblemToolException {
+			IAgentLogger logger) throws ProblemToolException {
 		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
 		
@@ -83,14 +83,14 @@ public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 
 	@Override
 	public Individual getNeighbor(Individual individual, Problem problem,
-			long neighborIndex, AgentLogger logger) throws ProblemToolException {
+			long neighborIndex, IAgentLogger logger) throws ProblemToolException {
 
 		return improveIndividual(individual, problem, logger);
 	}
 
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, AgentLogger logger)
+			Individual individual2, Problem problem, IAgentLogger logger)
 			throws ProblemToolException {
 		
 		IndividualPoint individualP1 = (IndividualPoint) individual1;
@@ -127,7 +127,7 @@ public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			Problem problem, AgentLogger logger)
+			Problem problem, IAgentLogger logger)
 			throws ProblemToolException {
 		
 		double F = 1.0;

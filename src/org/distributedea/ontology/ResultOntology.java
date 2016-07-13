@@ -1,14 +1,19 @@
 package org.distributedea.ontology;
 
+import org.distributedea.agents.systemagents.centralmanager.planner.history.MethodInstanceDescription;
+import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.AccessesResult;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individuals.SaveBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.saveresult.SaveResultOfComputing;
+import org.distributedea.ontology.monitor.MethodStatisticResult;
+import org.distributedea.ontology.saveresult.ResultOfIteration;
+import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
+import org.distributedea.ontology.saveresult.SaveResults;
 
 import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
@@ -25,9 +30,17 @@ public class ResultOntology extends BeanOntology {
         String agentDescriptionPackage = AgentDescription.class.getPackage().getName();
         
         try {
-        	add(SaveResultOfComputing.class);
+        	add(SaveBestIndividual.class);
         	add(AccessesResult.class);
-        	add(ResultOfComputing.class);
+        	
+        	add(Iteration.class);
+        	
+        	add(SaveResults.class);
+        	add(ResultOfIteration.class);
+        	add(ResultOfMethodInstanceIteration.class);
+        	add(MethodStatisticResult.class);
+        	
+        	add(MethodInstanceDescription.class);
         	
         	add(helpmatePackage);
         	
@@ -40,6 +53,7 @@ public class ResultOntology extends BeanOntology {
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);
         }
+
     }
 
     static ResultOntology theInstance = new ResultOntology();

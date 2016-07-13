@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.noontology.Batch;
 
 import jade.core.AID;
@@ -21,9 +21,9 @@ public class ConsoleAutomatBehaviour extends OneShotBehaviour {
 	private static final long serialVersionUID = 1L;
 
 	private List<Batch> batches;
-	private AgentLogger logger;
+	private IAgentLogger logger;
 	
-	public ConsoleAutomatBehaviour(List<Batch> batches, AgentLogger logger) {
+	public ConsoleAutomatBehaviour(List<Batch> batches, IAgentLogger logger) {
 		this.batches = batches;
 		this.logger = logger;
 	}

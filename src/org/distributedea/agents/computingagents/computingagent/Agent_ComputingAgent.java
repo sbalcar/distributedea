@@ -34,7 +34,6 @@ import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.AgentDescriptionWrapper;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.helpmate.HelpmateList;
@@ -92,7 +91,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param problem
 	 * @param behaviour
 	 */
-	protected abstract void startComputing(Problem problem, ProblemTool problemTool, JobID jobID, AgentConfiguration requiredAgentConfiguration) throws ProblemToolException;
+	protected abstract void startComputing(Problem problem, ProblemTool problemTool,
+			JobID jobID, AgentConfiguration requiredAgentConfiguration) throws ProblemToolException;
 	
 	/**
 	 * Returns basic method description
@@ -352,10 +352,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		reply.setOntology(ResultOntology.getInstance().getName());
 		
 		//active waiting for some result
-		ResultOfComputing resultOfComputing = computingThread.getBestresultOfComputing();
-		
-		while (resultOfComputing == null) {
-			getLogger().log(Level.INFO, "resultOfComputing is null");
+		IndividualWrapper resultOfComputing = null;
+		if (computingThread != null) {
 			resultOfComputing = computingThread.getBestresultOfComputing();
 		}
 		
@@ -582,13 +580,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 				fitness;
 		getLogger().log(Level.INFO, resultLog);
 		
-		// update saved best result of computing
-		ResultOfComputing resultOfComputingNew = new ResultOfComputing();
-		resultOfComputingNew.setJobID(jobID);
-		resultOfComputingNew.setBestIndividual(individual);
-		resultOfComputingNew.setFitnessValue(fitness);
-		
-		computingThread.setBestresultOfComputing(resultOfComputingNew);
+		// update saved best result of computing		
+		IndividualEvaluated individualEval = new IndividualEvaluated();
+		individualEval.setFitness(fitness);
+		individualEval.setIndividual(individual);
+
+		computingThread.setBestresultOfComputing(individualEval);
 		
 		
 		// send individual description to Agent DataManager
@@ -596,33 +593,33 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		
 		// log individual as best result
-		getCALogger().logBestSolution(individual, fitness, computingThread.getJobID());
+		getCALogger().logBestSolution(individual, fitness, jobID);
 	}
 
 	protected void processComputedIndividual(Individual individual,
-			double fitness, long generationNumber, Problem problem) {
+			double fitness, long generationNumber, Problem problem, JobID jobID) {
 
 		if (generationNumber == -1) {
 			throw new IllegalStateException();
 		}
 		
 		//log finess as result
-		getCALogger().logComputedResult(fitness, generationNumber, computingThread.getJobID());
+		getCALogger().logComputedResult(fitness, generationNumber, jobID);
 		
+		IndividualEvaluated individualEval = new IndividualEvaluated();
+		individualEval.setFitness(fitness);
+		individualEval.setIndividual(individual);
 		
 		// update saved best result of computing
-		double fitnessSavedAsBest = computingThread.getBestresultOfComputing().getFitnessValue();
-		boolean isNewIndividualBetter =
-				ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							fitness, fitnessSavedAsBest, problem);
-
-		if (isNewIndividualBetter) {
+		IndividualEvaluated individalEvalSavedAsBest =
+				computingThread.getBestresultOfComputing().getIndividualEvaluated();
 		
-			ResultOfComputing resultOfComputingNew = new ResultOfComputing();
-			resultOfComputingNew.setBestIndividual(individual);
-			resultOfComputingNew.setFitnessValue(fitness);
+		boolean isNewIndividualBetter =
+				ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
+						individualEval, individalEvalSavedAsBest, problem);
+		if (isNewIndividualBetter) {
 			
-			computingThread.setBestresultOfComputing(resultOfComputingNew);
+			computingThread.setBestresultOfComputing(individualEval);
 			
 			
 			// send individual description to Agent DataManager
@@ -630,7 +627,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 			
 			// log individual as best solution
-			getCALogger().logBestSolution(individual, fitness, computingThread.getJobID());
+			getCALogger().logBestSolution(individual, fitness, jobID);
 			
 		}
 		
@@ -649,16 +646,17 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected void processRecievedIndividual(IndividualWrapper receivedIndividualW,
 			long generationNumber, Problem problem) {
 		
-		ResultOfComputing resultOfComputing = computingThread.getBestresultOfComputing();
-		double bestFitness = resultOfComputing.getFitnessValue();
+		IndividualWrapper bestResultOfComputing =
+				computingThread.getBestresultOfComputing();
+		IndividualEvaluated bestIndividualEvaluated =
+				bestResultOfComputing.getIndividualEvaluated();
 		
-		IndividualEvaluated receivedIndividual = receivedIndividualW.getIndividualEvaluated();
-		AgentDescription description = receivedIndividualW.getAgentDescription();
+		IndividualEvaluated receivedIndividual =
+				receivedIndividualW.getIndividualEvaluated();
+		AgentDescription description =
+				receivedIndividualW.getAgentDescription();
 		
-		boolean isReceivedIndividualBetter =
-				ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-						receivedIndividual.getFitness(), bestFitness, problem);
-		
+
 		// put description to the map
 		if (helpers.containsKey(description)) {
 			int frequency = helpers.get(description);
@@ -666,20 +664,22 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		} else  {
 			helpers.put(description, 1);
 		}
-		
+
+		boolean isReceivedIndividualBetter =
+				ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
+						receivedIndividual, bestIndividualEvaluated, problem);
 		if (isReceivedIndividualBetter) {
 			
-			ResultOfComputing resultOfComputingNew = new ResultOfComputing();
-			resultOfComputingNew.setBestIndividual(receivedIndividual.getIndividual());
-			resultOfComputingNew.setFitnessValue(receivedIndividual.getFitness());
-			
-			computingThread.setBestresultOfComputing(resultOfComputingNew);
+			computingThread.setBestresultOfComputing(receivedIndividual);
 			
 			JobID jobID = receivedIndividualW.getJobID();
-			double fitnessImprovement = Math.abs(receivedIndividual.getFitness() -bestFitness);
+			double fitnessImprovement = Math.abs(
+					receivedIndividual.getFitness() -
+					bestIndividualEvaluated.getFitness());
 			
-			getCALogger().logDiffImprovementOfDistribution(fitnessImprovement, generationNumber,
-					receivedIndividual.getIndividual(), description, jobID);
+			getCALogger().logDiffImprovementOfDistribution(fitnessImprovement,
+					generationNumber, receivedIndividual.getIndividual(),
+					description, jobID);
 		}
 
 	}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
@@ -25,7 +25,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 	
 	@Override
 	public Individual generateFirstIndividual(Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 
 		ProblemTSP problemTSPGPS = (ProblemTSP) problem;
 		
@@ -52,7 +52,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 	 */
 	@Override
 	public Individual improveIndividual(Individual individual, Problem problem,
-			AgentLogger logger) throws ProblemToolException {
+			IAgentLogger logger) throws ProblemToolException {
 				
 		Class<?> individualClass = IndividualPermutation.class;
 		Class<?> problemClass = problemWhichSolves();
@@ -61,7 +61,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 	}
 	
 	public Individual improveIndividual(Individual individual, Problem problem,
-			Class<?> individualClass, Class<?> problemClass, AgentLogger logger
+			Class<?> individualClass, Class<?> problemClass, IAgentLogger logger
 			) throws ProblemToolException {
 		
 		boolean areParametersValid = 
@@ -114,7 +114,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 	
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, AgentLogger logger)
+			Individual individual2, Problem problem, IAgentLogger logger)
 			throws ProblemToolException {
 
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
@@ -126,7 +126,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3, Problem problem,
-			AgentLogger logger) throws ProblemToolException {
+			IAgentLogger logger) throws ProblemToolException {
 		
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
 		IndividualPermutation ind2 = (IndividualPermutation) individual2;
@@ -141,7 +141,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 
 	@Override
 	public Individual generateNextIndividual(Problem problem,
-			Individual individual, AgentLogger logger) {
+			Individual individual, IAgentLogger logger) {
 		
 		ProblemTSPPointPermutationTool tool = new ProblemToolPointSimpleSwap();
 		return tool.generateNextIndividual(problem, individual, logger);
@@ -149,7 +149,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 
 	@Override
 	public Individual getNeighbor(Individual individual, Problem problem,
-			long neighborIndex, AgentLogger logger) throws ProblemToolException {
+			long neighborIndex, IAgentLogger logger) throws ProblemToolException {
 
 		return generateIndividual(problem, logger);
 	}

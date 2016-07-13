@@ -3,7 +3,7 @@ package org.distributedea.problems.tsp.point.permutation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
@@ -28,14 +28,14 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public Individual generateFirstIndividual(Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
 		return tool.generateFirstIndividual(problem, logger);
 	}
 	
 	@Override
-	public Individual generateIndividual(Problem problem, AgentLogger logger) {
+	public Individual generateIndividual(Problem problem, IAgentLogger logger) {
 		
 		ProblemTSPPoint problemTSP = (ProblemTSPPoint) problem;
 		
@@ -50,7 +50,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public Individual generateNextIndividual(Problem problem,
-			Individual individual, AgentLogger logger) {
+			Individual individual, IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		List<Integer> perm = individualPerm.getPermutation();
@@ -65,7 +65,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public double fitness(Individual individual, Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		IndividualPermutation individualPermutation =
 				(IndividualPermutation) individual;
@@ -79,7 +79,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public double distanceBetween(Position position1, Position position2,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		PositionPoint positionPoint1 = (PositionPoint) position1;
 		PositionPoint positionPoint2 = (PositionPoint) position2;
@@ -97,7 +97,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public Individual readSolution(String fileName, Problem problem,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
 		return tool.readSolution(fileName, problem, logger);
@@ -105,7 +105,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, AgentLogger logger)
+			Individual individual2, Problem problem, IAgentLogger logger)
 			throws ProblemToolException {
 		
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
@@ -117,7 +117,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3, Problem problem,
-			AgentLogger logger) throws ProblemToolException {
+			IAgentLogger logger) throws ProblemToolException {
 		
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
 		IndividualPermutation ind2 = (IndividualPermutation) individual2;
@@ -127,7 +127,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	
 	@Override
 	public Individual getNeighbor(Individual individual, Problem problem,
-			long neighborIndex, AgentLogger logger) throws ProblemToolException {
+			long neighborIndex, IAgentLogger logger) throws ProblemToolException {
 		
 		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
 		return tool.generateIndividual(problem, logger);

@@ -17,6 +17,7 @@ import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
@@ -42,7 +43,7 @@ public class ManagerAgentService {
 	 * @return
 	 */
 	public static NodeInfo requestForNodeInfo(Agent_DistributedEA agentSender,
-			AID agentReciever, AgentLogger logger) {
+			AID agentReciever, IAgentLogger logger) {
 		
 		if (agentSender == null) {
 			throw new IllegalArgumentException(
@@ -115,9 +116,9 @@ public class ManagerAgentService {
 	 * @param arguments
 	 * @return
 	 */
-	public static AID sendCreateAgent(Agent_DistributedEA agentSender,
+	public static AgentConfiguration sendCreateAgent(Agent_DistributedEA agentSender,
 			AID agentReciever, AgentConfiguration agentConfiguration,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		if (agentSender == null) {
 			throw new IllegalArgumentException(
@@ -186,7 +187,7 @@ public class ManagerAgentService {
 			logger.logThrowable("OntologyException by receiving CreatedAgent", e);
 		}
 		
-		return createdAgent.exportCreatedAgentName();
+		return createdAgent.getCreatedAgent();
 		
 	}
 	
@@ -199,7 +200,7 @@ public class ManagerAgentService {
 	 * @return
 	 */
 	public static boolean sendKillAgent(Agent_DistributedEA agentSender, AID agentAID,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		if (agentSender == null) {
 			throw new IllegalArgumentException(
@@ -296,7 +297,7 @@ public class ManagerAgentService {
 	 * @return
 	 */
 	public static boolean sendKillContainer(Agent_DistributedEA agentSender,
-			AID agentReciever, AgentLogger logger) {
+			AID agentReciever, IAgentLogger logger) {
 		
 		if (agentSender == null) {
 			throw new IllegalArgumentException(

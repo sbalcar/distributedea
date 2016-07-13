@@ -24,7 +24,8 @@ import java.util.logging.Level;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.FileLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
@@ -52,6 +53,14 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		ontologies.add(ManagementOntology.getInstance());
 		
 		return ontologies;
+	}
+	
+	public IAgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new FileLogger(this);
+		}
+		return logger;
 	}
 	
 	@Override
@@ -181,12 +190,10 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		
 		AgentConfiguration createdAgentConfiguration = createAgent(this, configuration, getLogger());
 		
-		AID createdAgentAID = new AID(createdAgentConfiguration.exportAgentname(), false);
-
 		// to Computing Agent sends required Agent Configuration
 		if (configuration.exportIsComputingAgent()) {
 		
-			ComputingAgentService.sendRequiredAgent(this, createdAgentAID,
+			ComputingAgentService.sendRequiredAgent(this, createdAgentConfiguration.exportAgentAID(),
 					createdAgentConfiguration, getLogger());
 		}
 				
@@ -196,7 +203,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		reply.setOntology(ManagementOntology.getInstance().getName());
 
 		CreatedAgent createdAgent = new CreatedAgent();
-		createdAgent.importCreatedAgentName(createdAgentAID);
+		createdAgent.setCreatedAgent(createdAgentConfiguration);
 		
 		Result result = new Result(action.getAction(), createdAgent);
 
@@ -223,6 +230,9 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		KillAgent killAgent = (KillAgent) action.getAction();
 		String agentNameToKill = killAgent.getAgentName();
 
+		String s = "Killing agentName " + agentNameToKill;
+		getLogger().log(Level.INFO, s);
+		
 		AgentController agentController = null;
 		try {
 			agentController =
@@ -244,6 +254,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			getLogger().log(Level.INFO, "Agent had already killed himself");
 		}
 		
+ 		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
@@ -270,7 +286,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		
 		Runnable myRunnable = new Runnable(){
 			
-		     public void run(){
+		     public void run() {
 
 		    	int seconds = 0;
 		    	if (isAgentOnMainControler) {
@@ -315,16 +331,10 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return - confirms creation
 	 */
 	public static AgentConfiguration createAgent(Agent_DistributedEA agent,
-			AgentConfiguration configuration, AgentLogger logger) {
+			AgentConfiguration configuration, IAgentLogger logger) {
 	
 		// starts another agents
-		int containerID;
-		if (agent instanceof Agent_Initiator) {
-			Agent_Initiator aIntitiator = (Agent_Initiator) agent;
-			containerID = aIntitiator.cutFromHosntameContainerID();
-		} else {
-			containerID = agent.getNumberOfContainer();
-		}
+		String containerID = getNumberOfContainer();
 
 		
 		AgentConfiguration configurationI = new AgentConfiguration();
@@ -363,7 +373,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return
 	 */
 	private static AgentConfiguration tryCreateAgent(Agent_DistributedEA agent,
-			AgentConfiguration configuration, AgentLogger logger) {
+			AgentConfiguration configuration, IAgentLogger logger) {
 		
 		try {
 			return createAndStartAgent(agent, configuration);
@@ -420,7 +430,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return
 	 */
 	public static boolean isAgentOnMainControler(Agent_DistributedEA agent,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		String containerName = null;
 		try {

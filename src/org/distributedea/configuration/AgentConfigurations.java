@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 
 public class AgentConfigurations {
@@ -45,7 +45,7 @@ public class AgentConfigurations {
 		return agentConfigurations.get(index);
 	}
 	
-	public boolean valid(AgentLogger logger) {
+	public boolean valid(IAgentLogger logger) {
 		
 		if (agentConfigurations.isEmpty()) {
 			logger.log(Level.INFO, "Any agent-method available");

@@ -6,8 +6,8 @@ import java.util.logging.Level;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.planner.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.PlannerException;
-import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerType;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobRun;
 
 import jade.core.behaviours.OneShotBehaviour;
@@ -17,15 +17,15 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 	private static final long serialVersionUID = 1L;
 	private JobRun jobRun;
 	private Planner planner;
-	private long countOfReplaning;
-	private AgentLogger logger;
+	private PlannerType plannerType;
+	private IAgentLogger logger;
 	
-	public ComputeJobRunBehaviour(JobRun jobRun, Planner scheduler,
-			long countOfReplaning, AgentLogger logger) {
+	public ComputeJobRunBehaviour(JobRun jobRun, Planner planner,
+			PlannerType plannerType, IAgentLogger logger) {
 
 		this.jobRun = jobRun;
-		this.planner = scheduler;
-		this.countOfReplaning = countOfReplaning;
+		this.planner = planner;
+		this.plannerType = plannerType;
 		this.logger = logger;
 	}
 	
@@ -41,7 +41,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 			logger.log(Level.WARNING, "Planner can not be null");
 			return;
 		}
-
+		
 		if ((jobRun == null) || (! jobRun.validation())) {
 			logger.log(Level.WARNING, "job can not be null");
 			return;
@@ -63,8 +63,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		
 		Agent_CentralManager centralManager = (Agent_CentralManager) myAgent;
 		
-		PlannerTypeTimeRestriction plannerType =
-				new PlannerTypeTimeRestriction(centralManager, countOfReplaning, logger);
+		plannerType.initialization(centralManager, jobRun.getJobID(), logger);
 		
 		plannerType.run(planner, jobRun);
 	}

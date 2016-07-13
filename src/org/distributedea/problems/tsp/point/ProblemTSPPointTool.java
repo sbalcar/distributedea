@@ -3,7 +3,7 @@ package org.distributedea.problems.tsp.point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.tsp.Position;
@@ -18,7 +18,7 @@ public abstract class ProblemTSPPointTool extends ProblemTSPTool {
 	}
 	
 	@Override
-	public Problem readProblem(String inputFileName, AgentLogger logger) {
+	public Problem readProblem(String inputFileName, IAgentLogger logger) {
 
 		List<PositionPoint> positions = new ArrayList<PositionPoint>();
 		for (Position positionI : readProblemTSP(inputFileName, logger)) {

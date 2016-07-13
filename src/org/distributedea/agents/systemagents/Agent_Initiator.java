@@ -128,8 +128,9 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		
 		for (AgentConfiguration configurationI : noManagerAgentConfigurations) {
 
-			AID result = ManagerAgentService.sendCreateAgent(this,
-					aManagerAgentAID, configurationI, getLogger());
+			AgentConfiguration result =
+					ManagerAgentService.sendCreateAgent(this, aManagerAgentAID,
+					configurationI, getLogger());
 
 			if (result == null) {
 				getLogger().log(Level.SEVERE, "Error by creating agent");
@@ -165,7 +166,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 	 *  
 	 * @return Number as possible suffix for container
 	 */
-	public int cutFromHosntameContainerID() {
+	public double cutFromHosntameContainerID() {
 
 		String containerNumber = "";
 
@@ -184,7 +185,11 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			}
 		}
 
-		return Integer.parseInt(containerNumber);
+		try {
+			return Integer.parseInt(containerNumber);
+		} catch (NumberFormatException e) {
+			return Double.NaN;
+		}
 	}
 
 }

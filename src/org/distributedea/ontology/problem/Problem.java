@@ -1,6 +1,6 @@
 package org.distributedea.ontology.problem;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 
 import jade.content.Concept;
@@ -27,7 +27,7 @@ public abstract class Problem implements Concept {
 	 * @param logger
 	 * @return
 	 */
-	public abstract boolean testIsValid(Individual individual, AgentLogger logger);
+	public abstract boolean testIsValid(Individual individual, IAgentLogger logger);
 	
 	
 	public abstract Problem deepClone();

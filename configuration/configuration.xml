@@ -4,8 +4,10 @@
         <agent type="org.distributedea.agents.systemagents.Agent_ManagerAgent" name="ManagerAgent">
         </agent>
 
-
         <agent type="org.distributedea.agents.systemagents.Agent_CentralManager" name="CentralManager">
+        </agent>
+
+        <agent type="org.distributedea.agents.systemagents.Agent_Monitor" name="Monitor">
         </agent>
 
         <agent type="org.distributedea.agents.systemagents.Agent_CentralLoger" name="CentralLoger">
@@ -13,7 +15,7 @@
 
         <agent type="org.distributedea.agents.systemagents.Agent_DataManager" name="DataManager">
         </agent>
-	
+
         <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
             <arguments>
                <argument key="sniffed-1" value="CentralManager" sendOnlyValue="true" />

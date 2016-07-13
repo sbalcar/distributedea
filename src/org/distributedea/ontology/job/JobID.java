@@ -1,5 +1,16 @@
 package org.distributedea.ontology.job;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+import javax.xml.bind.JAXBException;
+
+import org.distributedea.ontology.job.noontology.Job;
+
+import com.thoughtworks.xstream.XStream;
+
 import jade.content.Concept;
 
 public class JobID implements Concept {
@@ -66,11 +77,8 @@ public class JobID implements Concept {
 	    boolean aregRunNumbersEqual =
 	    		this.getRunNumber() == jobIDOuther.getRunNumber();
 	    
-	    if (aregBatchIDsEqual && aregJobIDsEqual && aregRunNumbersEqual) {
-	    	return true;
-	    }
 	    
-	    return false;
+	    return aregBatchIDsEqual && aregJobIDsEqual && aregRunNumbersEqual;
 	}
 	
     @Override
@@ -82,5 +90,66 @@ public class JobID implements Concept {
 	public String toString() {
 		
 		return batchID + jobID + runNumber;
+	}
+	
+	/**
+	 * Exports structure as the XML String to the file
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws JAXBException 
+	 */
+	public void exportXML(File dir) throws FileNotFoundException, JAXBException {
+
+		if (dir == null) {
+			return;
+		}
+		
+		String jobIDFile = dir.getAbsolutePath() + File.separator + "jobID.txt";
+		File file = new File(jobIDFile);
+		file.getParentFile().mkdirs(); 
+		
+		String xml = exportXML();
+		
+		PrintWriter fileWr = new PrintWriter(jobIDFile);
+		fileWr.println(xml);
+		fileWr.close();
+	}
+	
+	/**
+	 * Exports to the XML String
+	 */
+	public String exportXML() {
+
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.NO_REFERENCES);
+
+		return xstream.toXML(this);
+	}
+	
+	/**
+	 * Import the {@link Job} from the file
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	public static JobID importXML(File file)
+			throws FileNotFoundException {
+
+		Scanner scanner = new Scanner(file);
+		String xml = scanner.useDelimiter("\\Z").next();
+		scanner.close();
+
+		return importXML(xml);
+		
+	}
+
+	/**
+	 * Import the {@link JobID} from the String
+	 */
+	public static JobID importXML(String xml) {
+
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.NO_REFERENCES);
+
+		return (JobID) xstream.fromXML(xml);
 	}
 }

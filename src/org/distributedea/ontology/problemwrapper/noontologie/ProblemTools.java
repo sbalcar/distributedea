@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.problems.ProblemTool;
 
 /**
@@ -49,7 +50,7 @@ public class ProblemTools {
 		this.problemTools.add(problemTool);
 	}	
 	
-	public ProblemTool exportProblemTool(int index, AgentLogger logger) {
+	public ProblemTool exportProblemTool(int index, IAgentLogger logger) {
 		
 		if (problemTools == null || problemTools.size() <= index) {
 			return null;

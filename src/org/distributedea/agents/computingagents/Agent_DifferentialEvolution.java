@@ -6,7 +6,6 @@ import java.util.Vector;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.logging.AgentLogger;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
@@ -91,11 +90,12 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			population.add(individualI);
 		}
 		
-		ResultOfComputing bestGeneratedIndividual =
+		IndividualWrapper bestGeneratedIndividual =
 				getBestIndividual(population, problem, problemTool, getLogger());
 		
-		Individual individualI = bestGeneratedIndividual.getIndividual();
-		double fitnessI = bestGeneratedIndividual.getFitnessValue();
+		IndividualEvaluated bestGeneratedIndEval = bestGeneratedIndividual.getIndividualEvaluated();
+		Individual individualI = bestGeneratedIndEval.getIndividual();
+		double fitnessI = bestGeneratedIndEval.getFitness();
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualI,
@@ -152,7 +152,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualNew,
-					fitnessNew, generationNumberI, problem);
+					fitnessNew, generationNumberI, problem, jobID);
 			
 			// send new Individual to distributed neighbors
 			if (computingThread.isIndividualDistribution()) {
@@ -180,7 +180,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		
 	}
 
-	private ResultOfComputing getBestIndividual(Vector<Individual> individuals, Problem problem,
+	private IndividualWrapper getBestIndividual(Vector<Individual> individuals, Problem problem,
 			ProblemTool problemTool, AgentLogger logger) {
 		
 		if (individuals == null || individuals.size() == 0) {
@@ -204,9 +204,12 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 		}
 		
-		ResultOfComputing result = new ResultOfComputing();
-		result.setFitnessValue(bestFitness);
-		result.setBestIndividual(bestIndividual);
+		IndividualEvaluated indEval = new IndividualEvaluated();
+		indEval.setFitness(bestFitness);
+		indEval.setIndividual(bestIndividual);
+		
+		IndividualWrapper result = new IndividualWrapper();
+		result.setIndividualEvaluated(indEval);
 		
 		return result;
 	}

@@ -121,7 +121,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualI,
-					fitnessI, generationNumberI, problem);
+					fitnessI, generationNumberI, problem, jobID);
 			
 			// send new Individual to distributed neighbors
 			if (computingThread.isIndividualDistribution()) {

@@ -7,6 +7,44 @@ import org.distributedea.ontology.problem.Problem;
 
 public class ProblemToolEvaluation {
 
+	public static boolean isFistIndividualWBetterThanSecond(IndividualEvaluated individualEval1,
+			IndividualEvaluated individualEval2, Class<?> problemClass) {
+
+		Problem problem = null;
+		try {
+			problem = (Problem)problemClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (individualEval1 == null) {
+			return false;
+			
+		} else if (individualEval2 == null) {
+			return true;
+		}
+
+		return isFistIndividualWBetterThanSecond(individualEval1,
+				individualEval2, problem);
+	}
+	
+	public static boolean isFistIndividualWBetterThanSecond(IndividualEvaluated individualEval1,
+			IndividualEvaluated individualEval2, Problem problem) {
+		
+		double fitness1 = individualEval1.getFitness();
+		double fitness2 = individualEval2.getFitness();
+		return isFistFitnessBetterThanSecond(fitness1,
+				fitness2, problem);
+	}
+	public static boolean isFistIndividualWWorseThanSecond(IndividualEvaluated individualEval1,
+			IndividualEvaluated individualEval2, Problem problem) {
+		
+		double fitness1 = individualEval1.getFitness();
+		double fitness2 = individualEval2.getFitness();
+		return isFistFitnessWorseThanSecond(fitness1,
+				fitness2, problem);
+	}
 	public static boolean isFistIndividualWBetterThanSecond(IndividualWrapper individual1,
 			double fitness2, Problem problem) {
 		
@@ -67,15 +105,17 @@ public class ProblemToolEvaluation {
 		return (fintess1 == fitness2);
 	}
 	
-	public static ProblemTool getProblemToolFromClass(Class<?> problemToolClass) {
+	public static Class<?> getProblemClassFromProblemTool(Class<?> problemToolClass) {
 		
-		ProblemTool problemTool = null;
+		ProblemTool tool = null;
 		try {
-			problemTool = (ProblemTool) problemToolClass.newInstance();
+			tool = (ProblemTool) problemToolClass.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		return problemTool;
+		return tool.problemWhichSolves();
 	}
 	
 }

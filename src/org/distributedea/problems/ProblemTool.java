@@ -1,6 +1,6 @@
 package org.distributedea.problems;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.Problem;
@@ -12,7 +12,7 @@ public interface ProblemTool {
 	public Class<?> reprezentationWhichUses();
 	
 	public void initialization(Problem problem, AgentConfiguration agentConf,
-			AgentLogger logger) throws ProblemToolException;
+			IAgentLogger logger) throws ProblemToolException;
 	public void exit() throws ProblemToolException;
 	
 	/**
@@ -22,7 +22,7 @@ public interface ProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public Problem readProblem(String inputFileName, AgentLogger logger);
+	public Problem readProblem(String inputFileName, IAgentLogger logger);
 	
 	/**
 	 * Reads instance of the Solution(Individual) from the file,
@@ -33,27 +33,27 @@ public interface ProblemTool {
 	 * @return
 	 */
 	public Individual readSolution(String fileName, Problem problem,
-			AgentLogger logger);
+			IAgentLogger logger);
 	
-	public Individual generateIndividual(Problem problem, AgentLogger logger);
-	public Individual generateFirstIndividual(Problem problem, AgentLogger logger);
+	public Individual generateIndividual(Problem problem, IAgentLogger logger);
+	public Individual generateFirstIndividual(Problem problem, IAgentLogger logger);
 	public Individual generateNextIndividual(Problem problem,
-			Individual individual, AgentLogger logger);
+			Individual individual, IAgentLogger logger);
 	
 	public double fitness(Individual individual, Problem problem,
-			AgentLogger logger);
+			IAgentLogger logger);
 	public Individual improveIndividual(Individual individual, Problem problem,
-			AgentLogger logger) throws ProblemToolException;
+			IAgentLogger logger) throws ProblemToolException;
     
 	public Individual getNeighbor(Individual individual, Problem problem,
-			long neighborIndex, AgentLogger logger) throws ProblemToolException;
+			long neighborIndex, IAgentLogger logger) throws ProblemToolException;
 	
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, AgentLogger logger)
+			Individual individual2, Problem problem, IAgentLogger logger)
 			throws ProblemToolException;
 	public Individual[] createNewIndividual(Individual individual1, 
 			Individual individual2, Individual individual3,
-			Problem problem, AgentLogger logger)
+			Problem problem, IAgentLogger logger)
 			throws ProblemToolException;
 	
 }

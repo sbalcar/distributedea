@@ -17,17 +17,17 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 
+import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
-import org.distributedea.agents.systemagents.Agent_CentralManager;
+import org.distributedea.agents.systemagents.centralmanager.planner.resultsmodel.ResultsOfComputing;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
-import org.distributedea.ontology.computing.result.ResultOfComputing;
-import org.distributedea.ontology.computing.result.ResultOfComputingWrapper;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.helpmate.HelpmateList;
@@ -46,7 +46,7 @@ public class ComputingAgentService {
 
 	
 	public static MethodDescriptionsWrapper sendGetMethodDescriptions(Agent_DistributedEA centralManager,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 	
 		// Get Result of Computing
 		AID [] aidOfComputingAgents = centralManager.searchDF(
@@ -73,7 +73,7 @@ public class ComputingAgentService {
 	 * @return
 	 */
 	public static MethodDescriptionWrapper sendGetMethodDescription(Agent_DistributedEA agent, AID computingAgent,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -139,7 +139,7 @@ public class ComputingAgentService {
 	 * @param logger
 	 */
 	public static void sendRequiredAgent(Agent_DistributedEA agent, AID computingAgent,
-			AgentConfiguration agentConfiguration, AgentLogger logger) {
+			AgentConfiguration agentConfiguration, IAgentLogger logger) {
 		
 		RequiredAgent requiredAgent = new RequiredAgent();
 		requiredAgent.setAgentConfiguration(agentConfiguration);
@@ -183,7 +183,7 @@ public class ComputingAgentService {
 	 * @return
 	 */
 	public static boolean sendStartComputing(Agent_DistributedEA agent, AID computingAgent,
-			ProblemStruct problemStruct, AgentLogger logger) {
+			ProblemStruct problemStruct, IAgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -241,7 +241,7 @@ public class ComputingAgentService {
 	
 	
 	public static EverythingPreparedToBeKilled sendPrepareYourselfToKill(Agent_DistributedEA agent, AID computingAgent,
-			AgentLogger logger) {
+			IAgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -304,24 +304,34 @@ public class ComputingAgentService {
 	 * @param logger
 	 * @return
 	 */
-	public static ResultOfComputingWrapper sendAccessesResult(Agent_CentralManager centralManager,
-			AgentLogger logger) {
+	public static List<IndividualWrapper> sendAccessesResult(Agent_DistributedEA centralManager,
+			IAgentLogger logger) {
 		
 		// Get Result of Computing
 		AID [] aidOfComputingAgents = centralManager.searchDF(
 				Agent_ComputingAgent.class.getName());
 		
-		ResultOfComputingWrapper resultOfComputingAgents = new ResultOfComputingWrapper();
+		List<IndividualWrapper> resultOfComputing = new ArrayList<>();
 		for (AID computingAgentI : aidOfComputingAgents) {
 						
-			ResultOfComputing resultOfComputingI =
+			IndividualWrapper resultOfComputingI =
 					ComputingAgentService.sendAccessesResult(centralManager, computingAgentI, logger);
-			resultOfComputingAgents.addResultOfComputing(resultOfComputingI);
+			resultOfComputing.add(resultOfComputingI);
 		}
+		
+		return resultOfComputing;
+	}
+
+	public static ResultsOfComputing sendAccessesResult_(Agent_DistributedEA centralManager,
+			IAgentLogger logger) {
+
+		List<IndividualWrapper> results = sendAccessesResult(centralManager, logger);
+		
+		ResultsOfComputing resultOfComputingAgents = new ResultsOfComputing();
+		resultOfComputingAgents.setResultOfComputing(results);
 		
 		return resultOfComputingAgents;
 	}
-
 	/**
 	 * Obtains the current results from computing Agent
 	 * @param agent
@@ -329,8 +339,8 @@ public class ComputingAgentService {
 	 * @param logger
 	 * @return
 	 */
-	public static ResultOfComputing sendAccessesResult(Agent_DistributedEA agent,
-			AID computingAgent, AgentLogger logger) {
+	public static IndividualWrapper sendAccessesResult(Agent_DistributedEA agent,
+			AID computingAgent, IAgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -367,12 +377,12 @@ public class ComputingAgentService {
 			return null;
 		}
 		
-		ResultOfComputing resultOfComputing = null;
+		IndividualWrapper resultOfComputing = null;
 		try {
 			Result result = (Result)
 					agent.getContentManager().extractContent(msgRetursName);
 
-			resultOfComputing = (ResultOfComputing) result.getValue();
+			resultOfComputing = (IndividualWrapper) result.getValue();
 
 		} catch (UngroundedException e) {
 			logger.logThrowable("UngroundedException by receiving ResultOfComputing", e);
@@ -394,7 +404,7 @@ public class ComputingAgentService {
 	 * @return
 	 */
 	public static HelpmateList sendReportHelpmate(Agent_DistributedEA agent,
-			AID computingAgent, boolean newStatisticsForEachQuery, AgentLogger logger) {
+			AID computingAgent, boolean newStatisticsForEachQuery, IAgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException(
@@ -472,6 +482,9 @@ public class ComputingAgentService {
 		}
 		List<AID> aidOfComputingAgentsWithoutSender = new ArrayList<AID>(Arrays.asList(aidOfComputingAgents));
 		aidOfComputingAgentsWithoutSender.remove(agent.getAID());
+		
+		AID monitorAID = new AID(AgentNames.MONITOR.getName(), false);
+		aidOfComputingAgentsWithoutSender.add(monitorAID);
 		
 		Ontology ontology = ResultOntology.getInstance();
 

@@ -14,7 +14,6 @@ public class PostProcJobTable extends PostProcessing {
 		
 		String NL = "\n";
 		
-		long countOfReplaning = jobWrp.getCountOfReplaning();
 		String problemToSolve = jobWrp.getProblemToSolve().getSimpleName();
 		String isIndividualDistribution = jobWrp.isIndividualDistribution() ? "ano" : "ne" ;
 		String problemFileName = jobWrp.getProblemFileName();
@@ -34,7 +33,6 @@ public class PostProcJobTable extends PostProcessing {
 		"Planovac:           & " + scheduler + " \\\\" + NL +
 		"Problem:            & " + problemToSolve + " \\\\" + NL +
 		"Distribuce jedincu: & " + isIndividualDistribution + " \\\\" + NL +
-		"Pocet preplanovani: & " + countOfReplaning + " \\\\" + NL +
 		"Dataset:            & " + problemFileName + " \\\\" + NL +
 		"Metody:             & " + methodsFileName + " \\\\" + NL +
 		"ProblemTool:        & 2-OPT \\\\" + NL +

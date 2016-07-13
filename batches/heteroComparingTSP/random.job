@@ -2,7 +2,6 @@
   <jobID>random</jobID>
   <numberOfRuns>3</numberOfRuns>
   <description>Random Kill &amp; Random Run</description>
-  <countOfReplaning>50</countOfReplaning>
   <problemToSolve>org.distributedea.ontology.problem.ProblemTSPGPS</problemToSolve>
   <problemFileName>xit1083.tsp</problemFileName>
   <methodsFileName>configuration/methodsAll.txt</methodsFileName>
@@ -17,7 +16,7 @@
       <ran serialization="custom">
         <java.util.Random>
           <default>
-            <seed>164147543943346</seed>
+            <seed>45574155583687</seed>
             <nextNextGaussian>0.0</nextNextGaussian>
             <haveNextNextGaussian>false</haveNextNextGaussian>
           </default>
@@ -25,4 +24,10 @@
       </ran>
     </org.distributedea.agents.systemagents.centralmanager.planner.PlannerRandom>
   </planners>
+  <plannerTypes>
+    <org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction>
+      <countOfReplaning>50</countOfReplaning>
+      <iterationNumI>0</iterationNumI>
+    </org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction>
+  </plannerTypes>
 </org.distributedea.ontology.job.noontology.Job>

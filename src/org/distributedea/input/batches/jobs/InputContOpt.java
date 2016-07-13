@@ -5,8 +5,9 @@ import org.distributedea.Configuration;
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerDummy;
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
 import org.distributedea.ontology.job.noontology.Job;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
@@ -24,13 +25,13 @@ public class InputContOpt {
 		Job job = new Job();
 		job.setJobID("co01");
 		job.setNumberOfRuns(1);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(false);
 		job.setProblemToSolve(ProblemContinousOpt.class);
 		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setPlanner(new PlannerDummy());
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 		
@@ -44,13 +45,13 @@ public class InputContOpt {
 		Job job = new Job();
 		job.setJobID("co02");
 		job.setNumberOfRuns(1);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemContinousOpt.class);
 		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
 		job.setPlanner(new PlannerFollowupHelpers());
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 		
@@ -64,14 +65,14 @@ public class InputContOpt {
 		Job job = new Job();
 		job.setJobID("co03");
 		job.setNumberOfRuns(1);
-		job.setCountOfReplaning(50);
 		job.setIndividualDistribution(true);
 		job.setProblemToSolve(ProblemContinousOpt.class);
 		job.setProblemFileName(Configuration.getInputProblemFile("f01.co"));
 		job.setMethodsFileName(Configuration.getMethodsFile(MethodConstants.METHODS_ALL));
 		
-		PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		job.setPlanner(new PlannerInitialization(state, true));
+		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
+		job.setPlanner(new PlannerInitialisation(state, true));
+		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));
 

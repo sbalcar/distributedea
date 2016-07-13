@@ -71,7 +71,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 			
 			// save, log and distribute new computed Individual
 			processComputedIndividual(individualI,
-					fitnessI, generationNumberI, problem);
+					fitnessI, generationNumberI, problem, jobID);
 			
 			// send new Individual to distributed neighbors
 			if (computingThread.isIndividualDistribution()) {

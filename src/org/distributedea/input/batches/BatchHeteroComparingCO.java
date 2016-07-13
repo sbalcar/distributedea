@@ -2,8 +2,8 @@ package org.distributedea.input.batches;
 
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowBestResult;
 import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitialization;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialization.PlannerInitializationState;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation;
+import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisationState;
 import org.distributedea.input.batches.jobs.InputContOpt;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
@@ -25,8 +25,8 @@ public class BatchHeteroComparingCO extends InputBatch {
 		Job jobW0 = InputContOpt.test03();
 		jobW0.setJobID("onlyInit");
 		jobW0.setDescription("Only Initialization");
-		PlannerInitializationState state = PlannerInitializationState.RUN_ONE_AGENT_PER_CORE;
-		jobW0.setPlanner(new PlannerInitialization(state, true));
+		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
+		jobW0.setPlanner(new PlannerInitialisation(state, true));
 		
 		Job jobW1 = InputContOpt.test03();
 		jobW1.setJobID("followBestResult");

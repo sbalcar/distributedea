@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.planner.initialization;
+package org.distributedea.agents.systemagents.centralmanager.planner.initialisation;
 
 import jade.core.AID;
 
@@ -7,25 +7,25 @@ import java.util.List;
 import org.distributedea.agents.systemagents.centralmanager.planner.tool.Pair;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 
-public class Plan {
+public class Schedule {
 	
-	private List<Pair<AID,AgentDescription>> plan;
+	private List<Pair<AID,AgentDescription>> schedule;
 	
 	private List<AgentDescription> nextCandidates;
 
-	public Plan() {
+	public Schedule() {
 	}
 
-	public Plan (List<Pair<AID,AgentDescription>> plan, List<AgentDescription> nextCandidates) {
-		this.plan = plan;
+	public Schedule (List<Pair<AID,AgentDescription>> schedule, List<AgentDescription> nextCandidates) {
+		this.schedule = schedule;
 		this.nextCandidates = nextCandidates;
 	}
 
-	public List<Pair<AID, AgentDescription>> getPlan() {
-		return plan;
+	public List<Pair<AID, AgentDescription>> getSchedule() {
+		return schedule;
 	}
 	public void setPlan(List<Pair<AID, AgentDescription>> plan) {
-		this.plan = plan;
+		this.schedule = plan;
 	}
 
 	public List<AgentDescription> getNextCandidates() {

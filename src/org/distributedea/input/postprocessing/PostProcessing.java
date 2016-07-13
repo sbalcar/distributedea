@@ -25,7 +25,7 @@ public abstract class PostProcessing {
 	public void exportXML(String fileName) throws FileNotFoundException, JAXBException {
 
 		String xml = exportXML();
-		System.out.println(xml);
+		
 		PrintWriter file = new PrintWriter(fileName);
 		file.println(xml);
 		file.close();
@@ -39,7 +39,7 @@ public abstract class PostProcessing {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
-
+		
 		return xstream.toXML(this);
 	}
 	

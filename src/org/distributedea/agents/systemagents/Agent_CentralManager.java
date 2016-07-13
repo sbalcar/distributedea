@@ -17,6 +17,7 @@ import org.distributedea.agents.systemagents.centralmanager.behaviours.KillAllCo
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
+import org.distributedea.ontology.MonitorOntology;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.job.noontology.Batch;
 
@@ -35,6 +36,7 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		ontologies.add(ManagementOntology.getInstance());
 		ontologies.add(ComputingOntology.getInstance());
 		ontologies.add(ResultOntology.getInstance());
+		ontologies.add(MonitorOntology.getInstance());
 		
 		return ontologies;
 	}
