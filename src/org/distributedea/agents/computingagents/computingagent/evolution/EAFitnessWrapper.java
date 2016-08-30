@@ -3,7 +3,7 @@ package org.distributedea.agents.computingagents.computingagent.evolution;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.IProblemTool;
 import org.jgap.Configuration;
 import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;
@@ -20,11 +20,11 @@ public class EAFitnessWrapper extends FitnessFunction {
 	
 	private Configuration conf;
 	private Problem problem;
-	private ProblemTool problemTool;
+	private IProblemTool problemTool;
 	private AgentLogger logger;
 	
 	public EAFitnessWrapper(Configuration conf, Problem problem,
-			ProblemTool problemTool, AgentLogger logger) {
+			IProblemTool problemTool, AgentLogger logger) {
 		this.conf = conf;
 		this.problem = problem;
 		this.problemTool = problemTool;

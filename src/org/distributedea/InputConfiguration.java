@@ -1,8 +1,11 @@
 package org.distributedea;
 
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
+import org.distributedea.input.postprocessing.PostProcessing;
+
 
 /**
- * Contains parameters settings for the current way of solving 
+ * Contains parameters settings for the current way of solving.
  * @author stepan
  *
  */
@@ -15,10 +18,12 @@ public class InputConfiguration {
 	public static boolean automaticStart = true;
 	
 	/**
-	 * Allows to kill all containers after finishing the last input Batch
+	 * Allows to kill all containers after finishing the last input {@link Batch}
 	 */
 	public static boolean automaticExit = true;
 	
-	
+	/**
+	 * Allows the {@link Batch} run available {@link PostProcessing}
+	 */
 	public static boolean runPostProcessing = true;
 }

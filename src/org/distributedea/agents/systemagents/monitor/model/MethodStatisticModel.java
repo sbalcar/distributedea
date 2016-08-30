@@ -3,13 +3,21 @@ package org.distributedea.agents.systemagents.monitor.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.agents.FitnessTool;
+import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.problems.ProblemToolEvaluation;
+import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.ProblemTool;
 
+/**
+ * Structure represents model for one Method
+ * @author stepan
+ *
+ */
 public class MethodStatisticModel {
 	
 	private final AgentDescription agentDescription;
@@ -28,14 +36,25 @@ public class MethodStatisticModel {
 	private List<IndividualDescription> individuals = new ArrayList<>();
 	
 
-	
+	/**
+	 * Constructor
+	 * @param agentDescription
+	 */
 	public MethodStatisticModel(AgentDescription agentDescription) {
+		if (agentDescription == null ||
+				! agentDescription.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AgentDescription.class.getSimpleName() + " is not valid");
+		}
+		
 		this.agentDescription = agentDescription;
 		
 		Class<?> problemToolClass =
 				agentDescription.exportProblemToolClass();
-		Class<?> problemClass = ProblemToolEvaluation.
-				getProblemClassFromProblemTool(problemToolClass);
+		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
+				problemToolClass, new TrashLogger());	
+		Class<?> problemClass = problemTool.problemWhichSolves();
+		
 		this.problemToSolveClass = problemClass;
 	}
 	
@@ -71,7 +90,8 @@ public class MethodStatisticModel {
 	}
 	
 
-	void addBestIndividualEvaluatedFromLastIteration(IndividualEvaluated individualEval) {
+	void addBestIndividualEvaluatedFromLastIteration(
+			IndividualEvaluated individualEval) {
 		
 		if (bestIndividual == null) {
 			addIndividualEvaluated(individualEval);
@@ -127,15 +147,15 @@ public class MethodStatisticModel {
 		return fitnessAverage;
 	}
 	
-	private boolean isFistIndividualWBetterThanSecond(IndividualEvaluated individual1,
-			IndividualEvaluated individual2) {
+	private boolean isFistIndividualWBetterThanSecond(
+			IndividualEvaluated individual1, IndividualEvaluated individual2) {
 		
-		return ProblemToolEvaluation
-				.isFistIndividualWBetterThanSecond(individual1,
+		return FitnessTool
+				.isFistIndividualEBetterThanSecond(individual1,
 						individual2, problemToSolveClass);
 	}
 	
-	public MethodStatistic exportStatisticMethod() {
+	public MethodStatistic exportMethodStatistic() {
 		
 		MethodStatisticResult methodStatisticResult = new MethodStatisticResult();
 		methodStatisticResult.setNumberOfIndividuals(
@@ -154,9 +174,8 @@ public class MethodStatisticModel {
 		methodStatisticResult.setNumberOfTypeIndividuals(
 				typeOfIndividualsEstimate);
 		
-		MethodStatistic methodStatistic = new MethodStatistic();
-		methodStatistic.setAgentDescription(getAgentDescription());
-		methodStatistic.setMethodStatisticResult(methodStatisticResult);
+		MethodStatistic methodStatistic = new MethodStatistic(
+				getAgentDescription(), methodStatisticResult);
 		
 		return methodStatistic;
 	}

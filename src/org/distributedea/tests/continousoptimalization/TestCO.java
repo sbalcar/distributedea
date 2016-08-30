@@ -11,16 +11,18 @@ import org.apache.commons.lang.ArrayUtils;
 import org.distributedea.agents.computingagents.Agent_Evolution;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Argument;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
 import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
-import org.distributedea.problems.exceptions.ProblemToolException;
 
 
 public class TestCO {
@@ -29,10 +31,11 @@ public class TestCO {
 	private void test1() throws ProblemToolException {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
+		File fileOfInput = new File(inputFileName);
 		
-		ProblemTool tool = new ProblemToolRandomMove();
+		IProblemTool tool = new ProblemToolRandomMove();
 		
-		Problem problem = tool.readProblem(inputFileName, null);
+		Problem problem = tool.readProblem(fileOfInput, null);
 		tool.initialization(problem, null, null);
 		
 		Individual individual = tool.generateIndividual(problem, null);
@@ -47,10 +50,11 @@ public class TestCO {
 	private void test2() throws ProblemToolException {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
+		File fileOfInput = new File(inputFileName);
 		
-		ProblemTool tool1 = new ProblemToolRandomMove();
+		IProblemTool tool1 = new ProblemToolRandomMove();
 		
-		Problem problem1 = tool1.readProblem(inputFileName, null);
+		Problem problem1 = tool1.readProblem(fileOfInput, null);
 		tool1.initialization(problem1, null, null);
 
 		try {
@@ -58,9 +62,9 @@ public class TestCO {
 		} catch (InterruptedException e) {
 		}
 		
-		ProblemTool tool2 = new ProblemToolRandomMove();
+		IProblemTool tool2 = new ProblemToolRandomMove();
 		
-		Problem problem2 = tool2.readProblem(inputFileName, null);
+		Problem problem2 = tool2.readProblem(fileOfInput, null);
 		tool2.initialization(problem2, null, null);
 		
 		
@@ -84,9 +88,10 @@ public class TestCO {
 	private void test3() throws BbobException, ProblemToolException {
 	    
 	    String inputFileName = "inputs" + File.separator + "f01.co";
+	    File fileOfInput = new File(inputFileName);
 	    
-	    ProblemTool tool = new ProblemToolRandomMove();
-		Problem problem = tool.readProblem(inputFileName, null);
+	    IProblemTool tool = new ProblemToolRandomMove();
+		Problem problem = tool.readProblem(fileOfInput, null);
 		tool.initialization(problem, null, null);
 		
 		Individual individual1 = tool.generateIndividual(problem, null);
@@ -145,17 +150,19 @@ public class TestCO {
 	private void test4() {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
+		File fileOfInput = new File(inputFileName);
 		
-		ProblemTool problemTool = new ProblemToolRandomMove();
-		Problem problem = problemTool.readProblem(inputFileName, null);
+		IProblemTool problemTool = new ProblemToolRandomMove();
+		Problem problem = problemTool.readProblem(fileOfInput, null);
 		
 		
 		String solutionFileName = "log" + File.separator + "result" +
 				File.separator + "Agent_Evolution_14.rslt";
+		File fileOfSolution = new File(solutionFileName);
 		
 		ProblemToolRandomMove tool = new ProblemToolRandomMove();
 		
-		Individual individual = tool.readSolution(solutionFileName, problem, null);
+		Individual individual = tool.readSolution(fileOfSolution, problem, null);
 	}
 	
 	
@@ -163,19 +170,15 @@ public class TestCO {
 		
 		Map<AgentDescription, Integer> map = new HashMap<AgentDescription, Integer>();
 			
-		AgentConfiguration ac1 = new AgentConfiguration();
-		ac1.setAgentType(Agent_Evolution.class.getName());
-		ac1.setAgentName("Agent_Evolution-17");
-		AgentDescription a1 = new AgentDescription();
-		a1.setAgentConfiguration(ac1);
-		a1.setProblemToolClass(ProblemToolRandomMove.class.getName());
+		AgentConfiguration ac1 = new AgentConfiguration("Agent_Evolution-17",
+				Agent_Evolution.class, new Arguments(new ArrayList<Argument>()));
+		AgentDescription a1 =
+				new AgentDescription(ac1, ProblemToolRandomMove.class);
 		
-		AgentConfiguration ac2 = new AgentConfiguration();
-		ac2.setAgentType(Agent_Evolution.class.getName());
-		ac2.setAgentName("Agent_Evolution-17");
-		AgentDescription a2 = new AgentDescription();
-		a2.setAgentConfiguration(ac2);
-		a2.setProblemToolClass(ProblemToolRandomMove.class.getName());
+		AgentConfiguration ac2 = new AgentConfiguration("Agent_Evolution-17",
+				Agent_Evolution.class, new Arguments(new ArrayList<Argument>()));
+		AgentDescription a2 =
+				new AgentDescription(ac2, ProblemToolRandomMove.class);
 		
 		map.put(a1, 1);
 		map.put(a2, 2);

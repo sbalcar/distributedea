@@ -2,17 +2,25 @@ package org.distributedea.ontology.job;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import javax.xml.bind.JAXBException;
-
-import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
 
 import com.thoughtworks.xstream.XStream;
 
 import jade.content.Concept;
 
+/**
+ * Ontology represents identification of {@link Batch}, {@link Job}
+ * and {@link JobRun}
+ * @author stepan
+ *
+ */
 public class JobID implements Concept {
 
 	private static final long serialVersionUID = 1L;
@@ -21,28 +29,52 @@ public class JobID implements Concept {
 	private String jobID;
 	private int runNumber;
 	
-	public JobID() {}
+	@Deprecated
+	public JobID() {} // only for Jade
 	
+	/**
+	 * Constructor
+	 * @param batchName
+	 * @param jobName
+	 * @param runNumber
+	 */
 	public JobID(String batchName, String jobName, int runNumber) {
+		if (batchName == null || jobName == null || runNumber < 0) {
+			throw new IllegalArgumentException();
+		}
 		this.batchID = batchName;
 		this.jobID = jobName;
 		this.runNumber = runNumber;
 	}
 
+	/**
+	 * Copy Constructor
+	 */
 	public JobID(JobID jobIDStruct) {
-		
-		setBatchID(jobIDStruct.getBatchID());
-		setJobID(jobIDStruct.getJobID());
-		setRunNumber(jobIDStruct.getRunNumber());
+		if (jobIDStruct == null || ! jobIDStruct.valid(new TrashLogger())) {
+			throw new IllegalArgumentException();
+		}
+		this.batchID = jobIDStruct.getBatchID();
+		this.jobID = jobIDStruct.getJobID();
+		this.runNumber = jobIDStruct.getRunNumber();
 	}
 
+	/**
+	 * Returns {@link Batch} identification
+	 * @return
+	 */
 	public String getBatchID() {
 		return batchID;
 	}
+	@Deprecated
 	public void setBatchID(String batchName) {
 		this.batchID = batchName;
 	}
 	
+	/**
+	 * Returns {@link Job} identification
+	 * @return
+	 */
 	public String getJobID() {
 		return jobID;
 	}
@@ -50,13 +82,39 @@ public class JobID implements Concept {
 		this.jobID = jobName;
 	}
 
+	/**
+	 * Returns {@link JobRun} identification
+	 * @return
+	 */
 	public int getRunNumber() {
 		return runNumber;
 	}
+	@Deprecated
 	public void setRunNumber(int runNumber) {
 		this.runNumber = runNumber;
 	}
 	
+	/**
+	 * Validation
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		if (batchID == null) {
+			return false;
+		}
+		if (jobID == null) {
+			return false;
+		}
+		if (runNumber < -1) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns clone
+	 * @return
+	 */
 	public JobID deepClone() {
 		return new JobID(this);
 	}
@@ -95,13 +153,13 @@ public class JobID implements Concept {
 	/**
 	 * Exports structure as the XML String to the file
 	 * 
-	 * @throws FileNotFoundException
-	 * @throws JAXBException 
+	 * @throws IOException 
 	 */
-	public void exportXML(File dir) throws FileNotFoundException, JAXBException {
+	public void exportXML(File dir) throws IOException {
 
-		if (dir == null) {
-			return;
+		if (dir == null || ! dir.isDirectory()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
 		}
 		
 		String jobIDFile = dir.getAbsolutePath() + File.separator + "jobID.txt";
@@ -132,7 +190,12 @@ public class JobID implements Concept {
 	 * @throws FileNotFoundException
 	 */
 	public static JobID importXML(File file)
-			throws FileNotFoundException {
+			throws IOException {
+
+		if (file == null || ! file.isFile()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
+		}
 
 		Scanner scanner = new Scanner(file);
 		String xml = scanner.useDelimiter("\\Z").next();

@@ -1,59 +1,103 @@
 package org.distributedea.problems;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.exceptions.ProblemToolException;
 
-public interface ProblemTool {
+/**
+ * Abstract class for {@link ProblemTool}
+ * @author stepan
+ *
+ */
+public abstract class ProblemTool implements IProblemTool {
 
-	public Class<?> problemWhichSolves();
-	public Class<?> reprezentationWhichUses();
+	public IndividualEvaluated generateIndividualEval(Problem problem, IAgentLogger logger) {
+		
+		Individual individualNew = generateIndividual(problem, logger);
+		double fitness = fitness(individualNew, problem, logger);
+		
+		return new IndividualEvaluated(individualNew, fitness);
+	}
 	
-	public void initialization(Problem problem, AgentConfiguration agentConf,
-			IAgentLogger logger) throws ProblemToolException;
-	public void exit() throws ProblemToolException;
+	public IndividualEvaluated generateFirstIndividualEval(Problem problem, IAgentLogger logger) {
+		
+		Individual individualNew = generateFirstIndividual(problem, logger);
+		double fitness = fitness(individualNew, problem, logger);
+		
+		return new IndividualEvaluated(individualNew, fitness);
+	}
 	
-	/**
-	 * Reads instance of the Problem from the file,
-	 * for the illegal input file name returns null
-	 * @param inputFileName
-	 * @param logger
-	 * @return
-	 */
-	public Problem readProblem(String inputFileName, IAgentLogger logger);
+	public IndividualEvaluated generateNextIndividualEval(Problem problem,
+			Individual individual, IAgentLogger logger) {
+		
+		Individual individualNew = generateNextIndividual(problem, individual, logger);
+		double fitness = fitness(individualNew, problem, logger);
+		
+		return new IndividualEvaluated(individualNew, fitness);
+	}
 	
-	/**
-	 * Reads instance of the Solution(Individual) from the file,
-	 * for the illegal input file name returns null
-	 * @param fileName
-	 * @param problem
-	 * @param logger
-	 * @return
-	 */
-	public Individual readSolution(String fileName, Problem problem,
-			IAgentLogger logger);
+	public IndividualEvaluated getNeighborEval(Individual individual, Problem problem,
+			long neighborIndex, IAgentLogger logger) throws ProblemToolException {
+		
+		Individual individualNew = getNeighbor(individual, problem,
+				neighborIndex, logger);
+		double fitness = fitness(individualNew, problem, logger);
+		
+		return new IndividualEvaluated(individualNew, fitness);
+	}
 	
-	public Individual generateIndividual(Problem problem, IAgentLogger logger);
-	public Individual generateFirstIndividual(Problem problem, IAgentLogger logger);
-	public Individual generateNextIndividual(Problem problem,
-			Individual individual, IAgentLogger logger);
 	
-	public double fitness(Individual individual, Problem problem,
-			IAgentLogger logger);
-	public Individual improveIndividual(Individual individual, Problem problem,
-			IAgentLogger logger) throws ProblemToolException;
-    
-	public Individual getNeighbor(Individual individual, Problem problem,
-			long neighborIndex, IAgentLogger logger) throws ProblemToolException;
-	
-	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, IAgentLogger logger)
-			throws ProblemToolException;
-	public Individual[] createNewIndividual(Individual individual1, 
+	public IndividualEvaluated[] createNewIndividualEval(Individual individual1, 
 			Individual individual2, Individual individual3,
 			Problem problem, IAgentLogger logger)
-			throws ProblemToolException;
+			throws ProblemToolException {
+		
+		Individual[] individualNew = createNewIndividual(individual1, 
+				individual2, individual3, problem, logger);
+		
+		IndividualEvaluated[] list = new IndividualEvaluated[individualNew.length];
+		for (int i = 0; i < individualNew.length; i++) {
+			
+			Individual individualNewI = individualNew[i];
+			double fitnessI = fitness(individualNewI, problem, logger);
+			list[i] = new IndividualEvaluated(individualNewI, fitnessI);
+		}
+		return list;
+	}
 	
+	
+	public IndividualEvaluated improveIndividualEval(Individual individual, Problem problem,
+			IAgentLogger logger) throws ProblemToolException {
+		
+		Individual individualNew = improveIndividual(individual, problem, logger);
+		double fitness = fitness(individualNew, problem, logger);
+		
+		return new IndividualEvaluated(individualNew, fitness);
+	}
+	
+	/**
+	 * Creates instance of {@link ProblemTool} from class
+	 * @param className
+	 * @param logger
+	 * @return
+	 */
+	public static IProblemTool createInstanceOfProblemTool(Class<?> toolClass,
+			IAgentLogger logger) {
+		
+		IProblemTool problemTool = null;
+		try {
+			problemTool = (IProblemTool) toolClass.newInstance();
+		} catch (InstantiationException e) {
+			logger.logThrowable("Class of " +
+					ProblemTool.class.getSimpleName() +
+					" can't be instanced", e);
+		} catch (IllegalAccessException e) {
+			logger.logThrowable("Class of " +
+					ProblemTool.class.getSimpleName() +
+					" can't be instanced", e);
+		}
+
+		return problemTool;
+	}
 }

@@ -1,7 +1,6 @@
 package org.distributedea.ontology;
 
-import org.distributedea.agents.systemagents.centralmanager.planner.history.MethodInstanceDescription;
-import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodInstanceDescription;
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.AccessesResult;
@@ -9,11 +8,14 @@ import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.SaveBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
+import org.distributedea.ontology.plan.Plan;
+import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
-import org.distributedea.ontology.saveresult.SaveResults;
+import org.distributedea.ontology.saveresult.SaveResultOfIteration;
 
 import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
@@ -35,10 +37,12 @@ public class ResultOntology extends BeanOntology {
         	
         	add(Iteration.class);
         	
-        	add(SaveResults.class);
+        	add(SaveResultOfIteration.class);
         	add(ResultOfIteration.class);
         	add(ResultOfMethodInstanceIteration.class);
         	add(MethodStatisticResult.class);
+        	add(Plan.class);
+        	add(RePlan.class);
         	
         	add(MethodInstanceDescription.class);
         	

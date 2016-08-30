@@ -7,6 +7,11 @@ import java.util.Random;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 
+/**
+ * Operator containing functionality of Single Point Crossover
+ * @author stepan
+ *
+ */
 public class SinglePointCrossover {
 
 	public static Individual[] crossover(IndividualPermutation individual1,
@@ -38,8 +43,8 @@ public class SinglePointCrossover {
 		permNew1.addAll(permNewStart);
 		permNew1.addAll(remainder);
 		
-		IndividualPermutation individualNew = new IndividualPermutation();
-		individualNew.setPermutation(permNew1);
+		IndividualPermutation individualNew = new IndividualPermutation(
+			permNew1);
 		
 		Individual[] result = new Individual[2];
 		result[0] = individualNew;

@@ -1,6 +1,7 @@
 package org.distributedea.problems.tsp.gps.permutation;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,21 +9,23 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-import org.distributedea.Configuration;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionGPS;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.tsp.gps.ProblemTSPGPSTool;
 import org.jgap.impl.StockRandomGenerator;
 
 /**
- * Abstract Problem Tool for TSP Problem for Permutation based representation
+ * Abstract {@link ProblemTool} for {@link ProblemTSPPoint} using permutation
+ * representation of {@link Individual}s
  * @author stepan
  *
  */
@@ -48,11 +51,10 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	}
 	
 	@Override
-	public Individual readSolution(String fileName, Problem problem,
+	public Individual readSolution(File fileOfSolution, Problem problem,
 			IAgentLogger logger) {
 
-		String tspFileName = Configuration.getSolutionFile(fileName);
-		return readSolutionTSP(tspFileName, logger);
+		return readSolutionTSP(fileOfSolution, logger);
 	}
 	
 	@Override
@@ -96,10 +98,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 			permutation.add(valueI);
 		}
 		
-		IndividualPermutation individual = new IndividualPermutation();
-		individual.setPermutation(permutation);
-		
-		return individual;
+		return new IndividualPermutation(permutation);
 	}
 
 
@@ -109,7 +108,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 	 * @param logger
 	 * @return
 	 */
-	private IndividualPermutation readSolutionTSP(String tspFileName,
+	private IndividualPermutation readSolutionTSP(File fileOfSolution,
 			IAgentLogger logger) {
 		
 		List<Integer> permutation = new ArrayList<Integer>();
@@ -120,7 +119,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
  
 			String sCurrentLine;
  
-			br = new BufferedReader(new FileReader(tspFileName));
+			br = new BufferedReader(new FileReader(fileOfSolution.getAbsolutePath()));
  
 			while ((sCurrentLine = br.readLine()) != null) {
 				
@@ -145,7 +144,7 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 			}
  
 		} catch (IOException exception) {
-			logger.logThrowable("Problem with reading " + tspFileName + " file", exception);
+			logger.logThrowable("Problem with reading " + fileOfSolution.getName() + " file", exception);
 			return null;
 			
 		} finally {
@@ -154,17 +153,14 @@ public abstract class ProblemTSPGPSEuc2DPermutationTool extends ProblemTSPGPSToo
 					br.close();
 				}
 			} catch (IOException ex) {
-				logger.logThrowable("Problem with closing the file: " + tspFileName, ex);
+				logger.logThrowable("Problem with closing the file: " + fileOfSolution.getName(), ex);
 			}
 		}
 		
 		//remove -1
 		permutation.remove(permutation.size() -1);
-		
-		IndividualPermutation individual = new IndividualPermutation();
-		individual.setPermutation(permutation);
-		
-		return individual;
+				
+		return new IndividualPermutation(permutation);
 	}
 	
 	

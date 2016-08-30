@@ -1,5 +1,6 @@
 package org.distributedea.agents.systemagents;
 
+import jade.content.Concept;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
@@ -15,23 +16,35 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
-import org.distributedea.agents.systemagents.centralmanager.planner.resultsmodel.ResultsOfComputing;
+import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.monitor.model.MonitorStatisticModel;
+import org.distributedea.logging.FileLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.MonitorOntology;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.monitor.GetStatistic;
+import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
 
+/**
+ * Agent which used to monitor computation of all running instances
+ * of {@link Agent_ComputingAgent}. Agent is receiving the results and analyzes
+ * them by using statistical tools
+ * @author stepan
+ *
+ */
 public class Agent_Monitor extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
-
-	private MonitorStatisticModel model = new MonitorStatisticModel(new ResultsOfComputing());
+	
+	private MonitorStatisticModel model;
+	
+	private AgentDescriptions agentsToMonitor;
 
 	@Override
 	public List<Ontology> getOntologies() {
@@ -41,6 +54,14 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		ontologies.add(ResultOntology.getInstance());
 		ontologies.add(MonitorOntology.getInstance());
 		return ontologies;
+	}
+
+	public IAgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new FileLogger(this);
+		}
+		return logger;
 	}
 
 	@Override
@@ -65,11 +86,18 @@ public class Agent_Monitor extends Agent_DistributedEA {
 				try {
 					Action action = (Action)
 							getContentManager().extractContent(msgRequest);
+
+					Concept concept = action.getAction();
 					
-					if (action.getAction() instanceof GetStatistic) {
-						getLogger().log(Level.INFO, "Request for GetStatistics");
-						return respondToGetStatistic(msgRequest, action);
+					getLogger().log(Level.INFO, "Request for " +
+							concept.getClass().getSimpleName());
+					
+					if (concept instanceof GetStatistic) {
+
+						return respondToGetStatistic(msgRequest, action);	
+					} else if (concept instanceof StartMonitoring) {
 						
+						return respondToStartMonitoring(msgRequest, action);
 					}
 
 				} catch (OntologyException e) {
@@ -109,9 +137,14 @@ public class Agent_Monitor extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(msgInform);
 					
-					if (action.getAction() instanceof IndividualWrapper) {
-						//getLogger().log(Level.INFO, "Received Individual" );
-						processIndividual(msgInform, action);
+					Concept concept = action.getAction();
+					
+					getLogger().log(Level.INFO, "Receivedd " +
+							concept.getClass().getSimpleName());
+					
+					if (concept instanceof IndividualWrapper) {
+						
+						processIndividualWrapper(msgInform, (IndividualWrapper) concept);
 						
 					}
 
@@ -134,57 +167,102 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		
 	}
 
-	protected void processIndividual(ACLMessage msgInform, Action action) {
+	/**
+	 * Process received {@link IndividualWrapper}. Adds the new individual
+	 * to {@link MonitorStatisticModel}
+	 * @param msgInform
+	 * @param action
+	 */
+	protected void processIndividualWrapper(ACLMessage msgInform, IndividualWrapper individualWrp) {
 		
-		IndividualWrapper individualWrp = (IndividualWrapper) action.getAction();
-		JobID jobID = individualWrp.getJobID();
-		
-		if (model.getJobID() == null) {
-			model.setJobID(jobID);
+		if (individualWrp == null || ! individualWrp.valid(getLogger())) {
+			getLogger().log(Level.INFO, "Received wrong " + IndividualWrapper.class.getSimpleName());
+			return;
 		}
+/*	
+		JobID jobID = individualWrp.getJobID().deepClone();
 		
 		// if received Indindividual from another Job
-		if (! model.getJobID().equals(jobID)) {
-			ResultsOfComputing resultOfComputingAgents =
+		if (model == null || ! model.getJobID().equals(jobID)) {
+			IndividualsWrappers resultOfComputingAgents =
 					ComputingAgentService.sendAccessesResult_(this, getLogger());
-		    model = new MonitorStatisticModel(resultOfComputingAgents);
+			Class<?> problemToSolveClass =
+					resultOfComputingAgents.exportProblemToSolveClass();
+			
+			if (problemToSolveClass != null) {
+				model = new MonitorStatisticModel(jobID, problemToSolveClass,
+		    		resultOfComputingAgents);
+			}
 		}
+*/
+		if (model != null) 	{
+			model.addIndividualWrp(individualWrp);
+		}
+	}
+
+	protected ACLMessage respondToStartMonitoring(ACLMessage request, Action action) {
 		
-		model.addIndividualWrp(individualWrp);
+		StartMonitoring startMonitoring = (StartMonitoring) action.getAction();
+		JobID jobID = startMonitoring.getJobID();
+		Class<?> problemToSolveClass = startMonitoring.exportProblemToSolveClass();
+		AgentDescriptions agentsToMonitor = startMonitoring.getAgentsToMonitor();	
+		
+		this.model = new MonitorStatisticModel(jobID, problemToSolveClass);
+		this.agentsToMonitor = agentsToMonitor;
+		
+		return null;
 	}
 	
+	/**
+	 * Process received {@link GetStatistic}. Exports {@link Statistic} from
+	 * current {@link MonitorStatisticModel}.
+	 * @param request
+	 * @param action
+	 * @return
+	 */
 	protected ACLMessage respondToGetStatistic(ACLMessage request, Action action) {
 		
-		@SuppressWarnings("unused")
 		GetStatistic getStatistic = (GetStatistic) action.getAction();
+		JobID jobID = getStatistic.getJobID();
 		
-
-		ResultsOfComputing resultOfComputingAgents =
-				ComputingAgentService.sendAccessesResult_(this, getLogger());
-		MonitorStatisticModel model2 = new MonitorStatisticModel(resultOfComputingAgents);
-		Statistic statistic2 = model2.exportStatistic();
-		IndividualEvaluated best2 = statistic2.exportBestIndividual();
+		Statistic statistic = null;
+		if (model != null && model.getJobID().equals(jobID)) {
+			
+			statistic = model.exportStatistic();
+			model = null;
+		} else {
+			
+			statistic = new Statistic(jobID);
+		}
 		
-		Statistic statistic = model.exportStatistic();
-		IndividualEvaluated best1 = statistic.exportBestIndividual();
-		model = model2;
-
-		if (best2.getFitness() > best1.getFitness()) {
-			System.out.println(".................Chyba");
-			statistic2.exportBestIndividual();
+		if (! statistic.valid(getLogger())) {
+			throw new IllegalStateException();
+		}
+		
+		AgentDescriptions monitoredAgents = statistic.exportAgentDescriptions();
+		AgentDescriptions agentsToMonitorClone = this.agentsToMonitor.deepClone();
+		
+		agentsToMonitorClone.removeAll(monitoredAgents);
+		if (! agentsToMonitorClone.isEmpty()) {
+			System.out.println("Metody co nic neposlaly:");
+			for (AgentDescription agentDescriptionI :
+				agentsToMonitorClone.getAgentDescriptions()) {
+				System.out.println(agentDescriptionI.exportMethodName());
+			}
 		}
 		
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 		reply.setLanguage(codec.getName());
 		reply.setOntology(MonitorOntology.getInstance().getName());
-
+		
 		Result result = new Result(action.getAction(), statistic);
-
+		
 		try {
 		    getContentManager().fillContent(reply, result);
 		} catch (CodecException e) {
-		    getLogger().logThrowable("CodecException by sending Statistic", e);
+		    getLogger().logThrowable("CodecException by sending " +
+		    		Statistic.class.getSimpleName(), e);
 		} catch (OntologyException e) {
 		    getLogger().logThrowable(e.getMessage(), e);
 		}

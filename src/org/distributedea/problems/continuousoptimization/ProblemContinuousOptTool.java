@@ -21,11 +21,11 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
 import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
 import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
-import org.distributedea.problems.exceptions.ProblemToolException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,11 +33,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Abstract Problem Tool for Continuous Optimization Problem for general Individual representation
+ * Abstract {@link ProblemTool} for Continuous Optimization {@link Problem}
+ * for general {@link Individual} representation
  * @author stepan
  *
  */
-public abstract class ProblemContinuousOptTool implements ProblemTool {
+public abstract class ProblemContinuousOptTool extends ProblemTool {
 
 	protected IJNIfgeneric fgeneric;
 	protected BbobTools bbobTools;
@@ -110,7 +111,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	public double fitness(Individual individual, Problem problem,
 			IAgentLogger logger) {
 		
-		if (individual == null || (! problem.testIsValid(individual, logger)) ) {
+		if (individual == null || (! problem.testIsIGivenIndividualSolutionOfTheProblem(individual, logger)) ) {
 			if (problem.isMaximizationProblem()) {
 				return Double.MIN_VALUE;
 			} else {
@@ -131,9 +132,17 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	}
 	
 	@Override
-	public Problem readProblem(String inputFileName, IAgentLogger logger) {
+	public Problem readProblem(File fileOfProblem, IAgentLogger logger) {
 		
-		File fXmlFile = new File(inputFileName);
+		if (fileOfProblem == null || ! fileOfProblem.isFile()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
+		}
+		if (logger == null) {
+			throw new IllegalArgumentException("Argument " +
+					IAgentLogger.class.getSimpleName() + " is not valid");
+		}
+		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
 		try {
@@ -144,7 +153,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 		}
 		Document doc;
 		try {
-			doc = dBuilder.parse(fXmlFile);
+			doc = dBuilder.parse(fileOfProblem);
 		} catch (SAXException | IOException e) {
 			logger.logThrowable("DocumentBuilder faild by input XML reading", e);
 			return null;
@@ -206,7 +215,7 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 		}
 		
 		ProblemContinousOpt problem = new ProblemContinousOpt();
-		problem.setProblemFileName(inputFileName);
+		problem.importProblemFile(fileOfProblem);
 		problem.setFunctionID(functionID);
 		problem.setDimension(dimension);
 		problem.setIntervals(intervals);
@@ -287,14 +296,14 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 	}
 	
 	@Override
-	public Individual readSolution(String fileName, Problem problem,
+	public Individual readSolution(File fileOfSolution, Problem problem,
 			IAgentLogger logger) {
 
 		String solutionString;
 		try {
-			solutionString = BbobTools.readFile(fileName);
+			solutionString = BbobTools.readFile(fileOfSolution.getAbsolutePath());
 		} catch (IOException e) {
-			logger.logThrowable("Can't read solution from file " + fileName, e);
+			logger.logThrowable("Can't read solution from file " + fileOfSolution.getName(), e);
 			return null;
 		}
 		
@@ -334,12 +343,8 @@ public abstract class ProblemContinuousOptTool implements ProblemTool {
 				return null;
 			}
 		}
-
 		
-		IndividualPoint indvidualPoint = new IndividualPoint();
-		indvidualPoint.setCoordinates(coordinates);
-		
-		return indvidualPoint;
+		return new IndividualPoint(coordinates);
 	}
 
 	public ProblemContinuousOptTool deepClone() {

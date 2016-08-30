@@ -4,9 +4,16 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 
+/**
+ * Represents {@link ProblemTool} for TSP {@link Problem} for permutation based
+ * {@link Individual} representation. Operator implements 2opt algorithm. 
+ * @author stepan
+ *
+ */
 public class ProblemToolPoint2opt extends ProblemTSPPointPermutationTool {
 
 	@Override

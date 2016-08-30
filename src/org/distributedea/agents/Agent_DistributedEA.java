@@ -22,7 +22,7 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 /**
- * Abstract class of Agent which is inherited by all Agents in system
+ * Abstract Class of Agent which is inherited by all Agents in system
  * @author stepan
  *
  */

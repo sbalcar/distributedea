@@ -1,23 +1,74 @@
 package org.distributedea.ontology.management.computingnode;
 
+import jade.content.Concept;
 import jade.core.AID;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodeInfosWrapper {
+/**
+ * Ontology represents list of {@link NodeInfo}.
+ * @author stepan
+ *
+ */
+public class NodeInfosWrapper implements Concept {
 
+	private static final long serialVersionUID = 1L;
+	
 	private List<NodeInfo> nodeInfos;
 	
+	/**
+	 * Constructor
+	 */
+	public NodeInfosWrapper() {
+		this.nodeInfos = new ArrayList<>();
+	}
+
+	/**
+	 * Constructor
+	 */
+	public NodeInfosWrapper(List<NodeInfo> nodeInfos) {
+		importNodeInfos(nodeInfos); 
+	}
+	/**
+	 * Copy constructor
+	 * @param nodeInfosWrp
+	 */
+	public NodeInfosWrapper(NodeInfosWrapper nodeInfosWrp) {
+		if (nodeInfosWrp == null || ! nodeInfosWrp.valid()) {
+			throw new IllegalArgumentException();
+		}
+		importNodeInfos(nodeInfosWrp.deepClone().getNodeInfos());
+	}
+	
+	/**
+	 * Returns list of {@link NodeInfo}
+	 * @return
+	 */
 	public List<NodeInfo> getNodeInfos() {
 		return nodeInfos;
 	}
+	@Deprecated
 	public void setNodeInfos(List<NodeInfo> nodeInfos) {
+		importNodeInfos(nodeInfos);
+	}
+	private void importNodeInfos(List<NodeInfo> nodeInfos) {
+		if (nodeInfos == null) {
+			throw new IllegalArgumentException();
+		}
+		for (NodeInfo nodeInfoI : nodeInfos) {
+			if (! nodeInfoI.valid()) {
+				throw new IllegalArgumentException();
+			}
+		}
 		this.nodeInfos = nodeInfos;
 	}
-
 	
-	public int exportNumberOfCores() {
+	/**
+	 * Export number of cores
+	 * @return
+	 */
+	public int exportNumberOfAllCores() {
 		
 		int numberOfCPU = 0;
 		for (NodeInfo nodeInfoI : nodeInfos) {
@@ -55,5 +106,21 @@ public class NodeInfosWrapper {
 		}
 		
 		return aids;
+	}
+	
+	/**
+	 * Tests validity
+	 * @return
+	 */
+	public boolean valid() {
+		return true;
+	}
+	
+	/**
+	 * Returns clone
+	 * @return
+	 */
+	public NodeInfosWrapper deepClone() {
+		return new NodeInfosWrapper(this);
 	}
 }

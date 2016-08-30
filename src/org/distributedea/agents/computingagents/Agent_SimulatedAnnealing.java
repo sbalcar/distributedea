@@ -1,20 +1,16 @@
 package org.distributedea.agents.computingagents;
 
-import java.util.logging.Level;
-
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
-import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.ProblemToolEvaluation;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.problems.IProblemTool;
 
 /**
  * Agent represents Simulated Annealing Algorithm Method
@@ -38,11 +34,11 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 
 		return true;
 	}
-
+	
 	@Override
-	protected MethodDescription getMethodDescription() {
+	protected AgentInfo getAgentInfo() {
 		
-		MethodDescription description = new MethodDescription();
+		AgentInfo description = new AgentInfo();
 		description.importComputingAgentClassName(this.getClass());
 		description.setNumberOfIndividuals(1);
 		description.setExploitation(true);
@@ -51,43 +47,32 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		return description;
 	}
 	
-	
-	/**
-	 * calculate the acceptance probability
-	 * @param energy
-	 * @param newEnergy
-	 * @param temperature
-	 * @return
-	 */
-    private double acceptanceProbability(double energy, double newEnergy,
-    		double temperature, Problem problem) {
-    	
-        // accept the new better solution
-        if (ProblemToolEvaluation.isFistFitnessBetterThanSecond(newEnergy, energy, problem)) {
-            return 1.0;
-        }
-        // for worse solution calculates an acceptance probability
-        return Math.exp(-1 * Math.abs(energy - newEnergy) / temperature);
-    }
-    
    	@Override
-   	protected void startComputing(Problem problem, ProblemTool problemTool,
-   			JobID jobID, AgentConfiguration agentConf) throws ProblemToolException {
+	protected void startComputing(ProblemStruct problemStruct,
+			AgentConfiguration agentConf) throws Exception {
+		
+		if (problemStruct == null || ! problemStruct.valid(getCALogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemStruct.class.getSimpleName() + " is not valid");
+		}
+		
+		JobID jobID = problemStruct.getJobID();
+		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
+		Problem problem = problemStruct.getProblem();
+		boolean individualDistribution = problemStruct.getIndividualDistribution();
+		
 				
 		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
 		
 		long generationNumberI = -1;
-		
-		Individual individualI =
-				problemTool.generateIndividual(problem, getCALogger());
-		
-		double fitnessI =
-				problemTool.fitness(individualI, problem, getCALogger());
+
+		IndividualEvaluated individualEvalI =
+				problemTool.generateIndividualEval(problem, getCALogger());
 		
 		//saves data in Agent DataManager
-		processIndividualFromInitGeneration(individualI,
-    			fitnessI, generationNumberI, problem, jobID);
+		processIndividualFromInitGeneration(individualEvalI,
+    			generationNumberI, problem, jobID);
 		
 		double temperatureI = TEMPERATURE;
         double coolingRateI = COOLING_RATE;
@@ -101,47 +86,34 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 				temperatureI = TEMPERATURE;
 			}
 			
-			Individual individualNewI = null;
-			try {
-				individualNewI =
-						problemTool.improveIndividual(individualI, problem, getCALogger());
-			} catch (ProblemToolException e) {
-				getCALogger().log(Level.INFO, "Problem to improve the individual");
-				commitSuicide();
-			}
-            
-			double fitnessNewI =
-					problemTool.fitness(individualNewI, problem, getCALogger());
-			
+			IndividualEvaluated individualEvalNewI = 
+					problemTool.improveIndividualEval(individualEvalI.getIndividual(), problem, getCALogger());
+	
             // decide on the acceptance the neighbour
-			double acceptanceProbability =
-					acceptanceProbability(fitnessI, fitnessNewI, temperatureI, problem);
+			double acceptanceProbability = acceptanceProbability(individualEvalI,
+					individualEvalNewI, temperatureI, problem);
             if (acceptanceProbability > Math.random()) {
-            	individualI = individualNewI;
-            	fitnessI = fitnessNewI;
+            	individualEvalI = individualEvalNewI;
             }
             
 			//saves data in Agent DataManager
-            processComputedIndividual(individualI,
-        			fitnessI, generationNumberI, problem, jobID);
+            processComputedIndividual(individualEvalI,
+        			generationNumberI, problem, jobID);
             
 			// send new Individual to distributed neighbors
-			if (computingThread.isIndividualDistribution()) {
-				distributeIndividualToNeighours(individualI, fitnessI, problem, jobID);
+			if (individualDistribution) {
+				distributeIndividualToNeighours(individualEvalI, problem, jobID);
 			}
             
 			//take received individual to new generation
 			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
 			
-			if (computingThread.isIndividualDistribution() &&
-					ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, fitnessI, problem)) {
-				
-				IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
-				
+			if (individualDistribution &&
+					FitnessTool.isFistIndividualWBetterThanSecond(
+							recievedIndividualW, individualEvalI, problem)) {
+								
 				// update if better that actual
-				individualI = recievedIndividual.getIndividual();
-				fitnessI = recievedIndividual.getFitness();
+				individualEvalI = recievedIndividualW.getIndividualEvaluated();
 				
 				// save and log received Individual
 				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
@@ -154,4 +126,32 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		problemTool.exit();
 	}
 
+   	
+	private double acceptanceProbability(IndividualEvaluated individual, IndividualEvaluated individualNew,
+    		double temperature, Problem problem) {
+		
+		double energy = individual.getFitness();
+		double newEnergy = individualNew.getFitness();
+		
+		return acceptanceProbability(energy, newEnergy, temperature, problem);
+	}
+	
+	/**
+	 * calculate the acceptance probability
+	 * @param energy
+	 * @param newEnergy
+	 * @param temperature
+	 * @return
+	 */
+    private double acceptanceProbability(double energy, double newEnergy,
+    		double temperature, Problem problem) {
+    	
+        // accept the new better solution
+        if (FitnessTool.isFistFitnessBetterThanSecond(newEnergy, energy, problem)) {
+            return 1.0;
+        }
+        // for worse solution calculates an acceptance probability
+        return Math.exp(-1 * Math.abs(energy - newEnergy) / temperature);
+    }
+    
 }

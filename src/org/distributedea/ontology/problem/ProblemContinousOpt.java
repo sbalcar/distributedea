@@ -1,5 +1,6 @@
 package org.distributedea.ontology.problem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,9 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
 
 /**
- * Ontology for representation Continuous Optimization Problem
+ * Ontology represents Continuous Optimization Problem
+ * @author stepan
+ * 
  */
 public class ProblemContinousOpt extends Problem {
 
@@ -24,12 +27,18 @@ public class ProblemContinousOpt extends Problem {
 	/** Limiting the space intervals */
 	private List<Interval> intervals;
 
+	/** Problem File name */
 	private String problemFileName;
 	
 	
 	public ProblemContinousOpt() {
+		this.intervals = new ArrayList<>();
 	}
 	
+	/**
+	 * Copy Constructor
+	 * @param problem
+	 */
 	public ProblemContinousOpt(ProblemContinousOpt problem) {
 		
 		setFunctionID(problem.getFunctionID());
@@ -66,14 +75,44 @@ public class ProblemContinousOpt extends Problem {
 		this.intervals = intervals;
 	}
 	
-	@Override
+	@Deprecated
 	public String getProblemFileName() {
-		return problemFileName;
+		File file = exportProblemFile();
+		if (file == null) {
+			return null;
+		}
+		return file.getAbsolutePath();
 	}
-	@Override
+	@Deprecated
 	public void setProblemFileName(String fileName) {
-		this.problemFileName = fileName;
-		
+		try {
+			importProblemFile(new File(fileName));
+		} catch(Exception e) {
+			throw new IllegalArgumentException();
+		}
+	}
+	/**
+	 * Exports File with {@link Problem} assignment
+	 */
+	@Override
+	public File exportProblemFile() {
+		if (problemFileName == null) {
+			return null;
+		}
+		return new File(problemFileName);
+	}
+	/**
+	 * Imports File with {@link Problem} assignment
+	 */
+	@Override
+	public void importProblemFile(File problemFile) {
+		if (problemFile == null) {
+			throw new IllegalArgumentException();
+		}
+		if (! problemFile.exists() || ! problemFile.isFile()) {
+			throw new IllegalArgumentException();
+		}
+		this.problemFileName = problemFile.getAbsolutePath();
 	}
 	
 	@Override
@@ -82,7 +121,8 @@ public class ProblemContinousOpt extends Problem {
 	}
 	
 	@Override
-	public boolean testIsValid(Individual individual, IAgentLogger logger) {
+	public boolean testIsIGivenIndividualSolutionOfTheProblem(
+			Individual individual, IAgentLogger logger) {
 		
 		if (! (individual instanceof IndividualPoint)) {
 			return false;
@@ -107,10 +147,26 @@ public class ProblemContinousOpt extends Problem {
 		return true;
 	}
 	
+	/**
+	 * Tests validity
+	 */
+	public boolean valid(IAgentLogger logger) {
+		
+		if (functionID == null) {
+			return false;
+		}
+		if (dimension < 1) {
+			return false;
+		}
+		if (intervals == null || intervals.size() != dimension) {
+			return false;
+		}
+		return true;
+	}
+	
 	@Override
 	public Problem deepClone() {
 		return new ProblemContinousOpt(this);
 	}
-	
 	
 }

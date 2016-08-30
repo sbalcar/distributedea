@@ -10,8 +10,10 @@ public class TestCompare {
 	
 	public static boolean testBothNull() {
 
-		IndividualPermutation p1 = new IndividualPermutation();
-		IndividualPermutation p2 = new IndividualPermutation();
+		IndividualPermutation p1 =
+				new IndividualPermutation(new ArrayList<Integer>());
+		IndividualPermutation p2 =
+				new IndividualPermutation(new ArrayList<Integer>());
 
 		if (p1 == p2) {
 			return false;
@@ -26,10 +28,10 @@ public class TestCompare {
 	
 	public static boolean testOneNull() {
 
-		IndividualPermutation p1 = new IndividualPermutation();
+		IndividualPermutation p1 = new IndividualPermutation(
+				new ArrayList<Integer>());
 
-		IndividualPermutation p2 = new IndividualPermutation();
-        p2.setPermutation(
+		IndividualPermutation p2 = new IndividualPermutation(
         		new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3)));
         
 		if (p1 == p2) {
@@ -45,11 +47,9 @@ public class TestCompare {
 	
 	public static boolean testBouthValues() {
 
-		IndividualPermutation p1 = new IndividualPermutation();
-        p1.setPermutation(
+		IndividualPermutation p1 = new IndividualPermutation(
         		new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3)));
-		IndividualPermutation p2 = new IndividualPermutation();
-        p2.setPermutation(
+		IndividualPermutation p2 = new IndividualPermutation(
         		new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3)));
         
 		if (p1 == p2) {

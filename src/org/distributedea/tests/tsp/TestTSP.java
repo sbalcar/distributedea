@@ -1,11 +1,14 @@
 package org.distributedea.tests.tsp;
 
+import java.io.File;
+
+import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
 import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSwap;
 
@@ -14,7 +17,7 @@ public class TestTSP {
 	public static void main(String [] args) {
 			
 		// Euclidean 2D distance
-		ProblemTool problemToolGPS = new ProblemToolGPSEuc2DSimpleSwap();
+		IProblemTool problemToolGPS = new ProblemToolGPSEuc2DSimpleSwap();
 		
 		boolean fitnessGPSNaNResult = false;
 		double fitnessGPSNaN = problemToolGPS.fitness(null, null, null);
@@ -35,7 +38,7 @@ public class TestTSP {
 		boolean resultGPS_E = fitnessGPSNaNResult && italyResult && pbnResult;
 		
 		
-		ProblemTool problemToolPoint = new ProblemToolPointSimpleSwap();
+		IProblemTool problemToolPoint = new ProblemToolPointSimpleSwap();
 		
 		boolean fitnessPointNaNResult = false;
 		double fitnessPointNaN = problemToolGPS.fitness(null, null, null);
@@ -98,21 +101,24 @@ public class TestTSP {
 	}
 
 	private static boolean genericTSPTest(String inputFileName,
-			ProblemTool problemTool, double expectedFitness, double permissibleError) {
+			IProblemTool problemTool, double expectedFitness, double permissibleError) {
 		
 		AgentLogger logger = new AgentLogger(null);
 		
-		String problemFileName = 
-				org.distributedea.Configuration.getInputProblemFile(inputFileName + ".tsp");
 		
-		Problem problem = problemTool.readProblem(problemFileName, logger);
+		String problemFileName = FileNames.getDirectoryOfInputs() +
+				File.separator + inputFileName + ".tsp";
+		File fileOfProblem = new File(problemFileName);
+		
+		Problem problem = problemTool.readProblem(fileOfProblem, logger);
 		ProblemWrapper problemWrapper = new ProblemWrapper();
-		problemWrapper.setProblemToolClass(problemTool.getClass().getName());
+		problemWrapper.importProblemToolClass(problemTool.getClass());
 
 		
+		File fileOfSolution = new File(inputFileName + ".tour");
 		
 		Individual individual = (IndividualPermutation)
-				problemTool.readSolution(inputFileName + ".tour", null, logger);
+				problemTool.readSolution(fileOfSolution, null, logger);
 		
 		double value = problemTool.fitness(individual, problem, logger);
 		System.out.println("Expected Fitness: " + expectedFitness);

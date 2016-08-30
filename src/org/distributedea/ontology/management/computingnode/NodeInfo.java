@@ -33,4 +33,11 @@ public class NodeInfo implements Concept {
 		this.freeCPUnumber = freeCPUnumber;
 	}
 	
+	/**
+	 * Tests validity
+	 * @return
+	 */
+	public boolean valid() {
+		return true;
+	}
 }

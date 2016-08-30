@@ -1,9 +1,9 @@
 package org.distributedea.agents.computingagents;
 
-import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.agentinfo.AgentInfo;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.IProblemTool;
 
 /**
  * Agent represents Random Search Algorithm Method
@@ -15,9 +15,9 @@ public class Agent_RandomSearch extends Agent_HillClimbing {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected MethodDescription getMethodDescription() {
+	protected AgentInfo getAgentInfo() {
 		
-		MethodDescription description = new MethodDescription();
+		AgentInfo description = new AgentInfo();
 		description.importComputingAgentClassName(this.getClass());
 		description.setNumberOfIndividuals(1);
 		description.setExploitation(true);
@@ -27,10 +27,10 @@ public class Agent_RandomSearch extends Agent_HillClimbing {
 	}
 	
 	@Override
-	protected Individual getNewIndividual(Individual individual,
-			Problem problem, ProblemTool problemTool) {
+	protected IndividualEvaluated getNewIndividual(IndividualEvaluated individual,
+			Problem problem, IProblemTool problemTool) {
 
-		return problemTool.generateIndividual(problem, getLogger());
+		return problemTool.generateIndividualEval(problem, getLogger());
 	}
 	
 }

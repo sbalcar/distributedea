@@ -1,19 +1,33 @@
 package org.distributedea.ontology.job;
 
+import java.util.logging.Level;
 
 import jade.content.Concept;
 
-import org.distributedea.configuration.AgentConfigurations;
+import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
+import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.AgentConfigurations;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemTools;
+import org.distributedea.ontology.problemwrapper.ProblemStruct;
 
+/**
+ * Ontology represents one run of {@link Job}
+ * @author stepan
+ *
+ */
 public class JobRun implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Job identification
+	 * JobRun identification
 	 */
 	private JobID jobID;
 	
@@ -25,7 +39,7 @@ public class JobRun implements Concept {
 	/**
 	 * Agent configurations - available for problem solving
 	 */
-	private AgentConfigurations agentConfigurations;
+	private InputAgentConfigurations agentConfigurations;
 	
 	/**
 	 * Problem Tools to use for solving Problem 
@@ -33,22 +47,34 @@ public class JobRun implements Concept {
 	private ProblemTools problemTools;
 	
 	/**
-	 * File with problem
+	 * Problem to solve
 	 */
 	private Problem problem;
 
-	
+
+	/**
+	 * Constructor
+	 */
 	public JobRun() {}
 	
+	/**
+	 * Copy Constructor
+	 * @param jobRun
+	 */
 	public JobRun(JobRun jobRun) {
 		
-		JobID jobIDClone = new JobID(jobRun.getJobID());
+		if(jobRun == null || ! jobRun.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Given " +
+					JobRun.class.getSimpleName() + " is null or invalid");
+		}
+		
+		JobID jobIDClone = jobRun.getJobID().deepClone();
 		boolean individualDistributionClone =
 				jobRun.getIndividualDistribution();
-		AgentConfigurations agentConfigurationsClone =
-				new AgentConfigurations(jobRun.getAgentConfigurations());
+		InputAgentConfigurations agentConfigurationsClone =
+				jobRun.getAgentConfigurations().deepClone();
 		ProblemTools problemToolsClone =
-				new ProblemTools(jobRun.getProblemTools());
+				jobRun.getProblemTools().deepClone();
 		Problem problemClone =
 				jobRun.getProblem().deepClone();
 		
@@ -60,6 +86,10 @@ public class JobRun implements Concept {
 		
 	}
 	
+	/**
+	 * Returns {@link JobID} identification
+	 * @return
+	 */
 	public JobID getJobID() {
 		return jobID;
 	}
@@ -67,15 +97,21 @@ public class JobRun implements Concept {
 		this.jobID = jobID;
 	}
 	
-	
-	public AgentConfigurations getAgentConfigurations() {
+	/**
+	 * Returns {@link AgentConfiguration} as agent identification
+	 * @return
+	 */
+	public InputAgentConfigurations getAgentConfigurations() {
 		return agentConfigurations;
 	}
-	public void setAgentConfigurations(AgentConfigurations agentConfigurations) {
+	public void setAgentConfigurations(InputAgentConfigurations agentConfigurations) {
 		this.agentConfigurations = agentConfigurations;
 	}
 	
-	
+	/**
+	 * Returns flag decides about distribution of {@link IndividualWrapper}s
+	 * @return
+	 */
 	public boolean getIndividualDistribution() {
 		return individualDistribution;
 	}
@@ -83,7 +119,10 @@ public class JobRun implements Concept {
 		this.individualDistribution = individualDistribution;
 	}
 	
-	
+	/**
+	 * Returns {@link ProblemTools} available to solve {@link Problem} 
+	 * @return
+	 */
 	public ProblemTools getProblemTools() {
 		return problemTools;
 	}
@@ -91,7 +130,10 @@ public class JobRun implements Concept {
 		this.problemTools = problemTools;
 	}
 
-	
+	/**
+	 * Returns {@link Problem} to solve
+	 * @return
+	 */
 	public Problem getProblem() {
 		return problem;
 	}
@@ -100,27 +142,87 @@ public class JobRun implements Concept {
 	}
 	
 	/**
-	 * Exports the Job as ProblemStruct which contains ProblemTool in argument
+	 * Exports the {@link JobRun} as {@link ProblemStruct} which
+	 * contains ProblemTool in argument
 	 * @param problemToolClass
 	 * @return
 	 */
 	public ProblemStruct exportProblemStruct(Class<?> problemToolClass) {
 		
-		JobID jobIDCopy = new JobID();
-		jobIDCopy.setBatchID(getJobID().getBatchID());
-		jobIDCopy.setJobID(getJobID().getJobID());
-		jobIDCopy.setRunNumber(getJobID().getRunNumber());
+		JobID jobIDClone = getJobID().deepClone();
+		
+		Problem problemClone = getProblem().deepClone();
 		
 		ProblemStruct problemStruct = new ProblemStruct();
-		problemStruct.setJobID(jobIDCopy);
+		problemStruct.setJobID(jobIDClone);
 		problemStruct.setIndividualDistribution(getIndividualDistribution());
-		problemStruct.setProblem(getProblem());
+		problemStruct.setProblem(problemClone);
 		problemStruct.importProblemToolClass(problemToolClass);
 		
 		return problemStruct;
 	}
 	
-	public boolean validation() {
+	/**
+	 * Export random selected {@link AgentDescription}
+	 * @return
+	 */
+	public InputAgentDescription exportRandomSelectedAgentDescription() {
+		
+		if (agentConfigurations == null ||
+				agentConfigurations.exportNumberOfAgentConfigurations() == 0 ||
+				problemTools == null ||
+				problemTools.exportNumberOfProblemTools() == 0) {
+			return null;
+		}
+		
+		InputAgentConfiguration agentToCreate =
+				agentConfigurations.exportRandomAgentConfiguration();
+		Class<?> problemToolClass =
+				problemTools.exportRandomSelectedProblemTool();
+		
+		if (agentToCreate == null || problemToolClass == null) {
+			return null;
+		}
+		
+		InputAgentDescription methodToCreate =
+				new InputAgentDescription(agentToCreate, problemToolClass);
+		return methodToCreate;
+	}
+	
+	/**
+	 * Tests validation of {@link JobRun}
+	 * @param logger
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		
+		if (jobID == null || ! jobID.valid(logger)) {
+			logger.log(Level.WARNING, JobID.class.getSimpleName() + " is not valid");
+			return false;
+		}
+		
+		if (agentConfigurations == null || ! agentConfigurations.valid(logger)) {
+			logger.log(Level.WARNING, AgentConfigurations.class.getSimpleName() + " are not valid");
+			return false;
+		}
+		
+		if (problem == null || ! problem.valid(logger)) {
+			logger.log(Level.WARNING, Problem.class.getSimpleName() + " is not valid");
+			return false;
+		}
+		
+		if (problemTools == null || ! problemTools.valid(problem.getClass(), logger)) {
+			logger.log(Level.WARNING, ProblemTools.class.getSimpleName() + " are not valid");
+			return false;
+		}
+		
 		return true;
+	}
+	
+	/**
+	 * Returns clone
+	 */
+	public JobRun deepClone() {
+		return new JobRun(this);
 	}
 }

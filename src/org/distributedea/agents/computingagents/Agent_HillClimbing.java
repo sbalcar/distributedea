@@ -2,8 +2,10 @@ package org.distributedea.agents.computingagents;
 
 import java.util.logging.Level;
 
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
@@ -11,16 +13,14 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
+import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.ProblemToolEvaluation;
-import org.distributedea.problems.ProblemToolValidation;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.ProblemToolException;
 
 /**
  * Agent represents Hill Climbing Algorithm Method
@@ -35,8 +35,10 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problemStruct.getProblemToolClass(), getLogger());
+		Class<?> problemToolClass =
+				problemStruct.exportProblemToolClass(getLogger());
+		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
+				problemToolClass, getLogger());
 		
 		Class<?> problem = problemStruct.getProblem().getClass();
 		Class<?> representation = problemTool.reprezentationWhichUses();
@@ -61,9 +63,9 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected MethodDescription getMethodDescription() {
+	protected AgentInfo getAgentInfo() {
 		
-		MethodDescription description = new MethodDescription();
+		AgentInfo description = new AgentInfo();
 		description.importComputingAgentClassName(this.getClass());
 		description.setNumberOfIndividuals(1);
 		description.setExploitation(false);
@@ -73,76 +75,68 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	protected void startComputing(Problem problem, ProblemTool problemTool,
-			JobID jobID, AgentConfiguration agentConf) throws ProblemToolException {
+	protected void startComputing(ProblemStruct problemStruct,
+			AgentConfiguration agentConf) throws Exception {
+		
+		if (problemStruct == null || ! problemStruct.valid(getCALogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemStruct.class.getSimpleName() + " is not valid");
+		}
+		
+		JobID jobID = problemStruct.getJobID();
+		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
+		Problem problem = problemStruct.getProblem();
+		boolean individualDistribution = problemStruct.getIndividualDistribution();
+		
+		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
 		
 		long generationNumberI = -1;
-		
-		Individual individualI =
-				problemTool.generateIndividual(problem, getCALogger());
-		
-		double fitnessI =
-				problemTool.fitness(individualI, problem, getCALogger());
-		
+
 		// save, log and distribute computed Individual
-		processIndividualFromInitGeneration(individualI,
-				fitnessI, generationNumberI, problem, jobID);
+		IndividualEvaluated individualEvalI =
+				problemTool.generateIndividualEval(problem, getCALogger());
+
+		processIndividualFromInitGeneration(individualEvalI,
+				generationNumberI, problem, jobID);
 		
 		
 		while (state == CompAgentState.COMPUTING) {
 			
 			// increment next number of generation
 			generationNumberI++;
-			
-			
-			fitnessI = problemTool.fitness(individualI, problem, getCALogger());
-			
-			Individual individualNew = null;
-			try {
-				individualNew = getNewIndividual(individualI, problem, problemTool);
-			} catch (ProblemToolException e) {
-				getCALogger().log(Level.INFO, "Problem to generate a new individual");
-				commitSuicide();
-				return;
-			}
-			
-			double fitnessNew =
-					problemTool.fitness(individualNew, problem, getCALogger());
-			
+						
+			IndividualEvaluated individualEvalNew = getNewIndividual(individualEvalI, problem, problemTool);
+
 			boolean isNewIndividualBetter =
-					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							fitnessNew, fitnessI, problem);
+					FitnessTool.isFirstIndividualEBetterThanSecond(
+							individualEvalNew, individualEvalI, problem);
 
 			if (isNewIndividualBetter) {
 				getCALogger().log(Level.INFO, "JUMP");
-				fitnessI = fitnessNew;
-				individualI = individualNew;
+				individualEvalI = individualEvalNew;
 			}
 			
 			// save, log and distribute computed Individual
-			processComputedIndividual(individualI,
-					fitnessI, generationNumberI, problem, jobID);
+			processComputedIndividual(individualEvalI,
+					generationNumberI, problem, jobID);
 			
 			// send new Individual to distributed neighbors
-			if (computingThread.isIndividualDistribution()) {
-				distributeIndividualToNeighours(individualI, fitnessI, problem, jobID);
+			if (individualDistribution) {
+				distributeIndividualToNeighours(individualEvalI, problem, jobID);
 			}
 			
 			//take received individual to new generation
 			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
 			
-			if (computingThread.isIndividualDistribution() &&
-					ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, fitnessI, problem)) {
-				
-				IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
+			if (individualDistribution &&
+					FitnessTool.isFistIndividualWBetterThanSecond(
+							recievedIndividualW, individualEvalI, problem)) {
 				
 				// update if better that actual
-				individualI = recievedIndividual.getIndividual();
-				fitnessI = recievedIndividual.getFitness();
+				individualEvalI = recievedIndividualW.getIndividualEvaluated();
 				
 				// save and log received Individual
 				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
@@ -153,10 +147,11 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		problemTool.exit();
 	}
 
-	protected Individual getNewIndividual(Individual individual,
-			Problem problem, ProblemTool problemTool) throws ProblemToolException {
+	protected IndividualEvaluated getNewIndividual(IndividualEvaluated individualEval,
+			Problem problem, IProblemTool problemTool) throws ProblemToolException {
 		
-		return problemTool.improveIndividual(individual, problem, getCALogger());
+		Individual individual = individualEval.getIndividual();
+		return problemTool.improveIndividualEval(individual, problem, getCALogger());
 	}
 	
 }

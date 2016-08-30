@@ -1,0 +1,8 @@
+# vypise aktualni verzi javy
+java -version
+
+# vypise dostupne verze javy
+eselect java-vm list
+
+# vybere verzi javy
+eselect java-vm set user <cislo javy>

@@ -1,5 +1,6 @@
 package org.distributedea.agents.systemagents;
 
+import jade.content.Concept;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
@@ -11,26 +12,28 @@ import jade.proto.AchieveREResponder;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
-import javax.xml.bind.JAXBException;
 
-import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.datamanager.FileNames;
+import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
+import org.distributedea.logging.FileLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.individuals.SaveBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
-import org.distributedea.ontology.saveresult.SaveResults;
+import org.distributedea.ontology.saveresult.SaveResultOfIteration;
 
 
 /**
- * System-agent who manage data resources multi-agent framework
+ * System-agent who manages data resources multi-agent framework
  * @author stepan
  *
  */
@@ -47,6 +50,25 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		return ontologies;
 	}
 
+	public IAgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new FileLogger(this);
+		}
+		return logger;
+	}
+	
+	protected void initAgent() {
+		
+		//cleans result dir
+		try {
+			FilesystemInitTool.clearResultDir(getLogger());
+		} catch (IOException e1) {
+			getLogger().logThrowable("Can not clear result directory", e1);
+		}
+		
+		super.initAgent();
+	}
 
 	@Override
 	protected void setup() {
@@ -69,10 +91,14 @@ public class Agent_DataManager extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(request);
 
-					if (action.getAction() instanceof SaveBestIndividual) {
+					Concept concept = action.getAction();
+					getLogger().log(Level.INFO, "Request for " +
+							concept.getClass().getSimpleName());
+					
+					if (concept instanceof SaveBestIndividual) {
 						return respondToResultOfComputing(request, action);
 					
-					} else if (action.getAction() instanceof SaveResults) {
+					} else if (concept instanceof SaveResultOfIteration) {
 						return respondToSaveResults(request, action);
 					}
 
@@ -101,7 +127,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		
 		IndividualWrapper result = saveResultOfComputing.getResult();
 		
-		String fileName = Configuration.getResultFile(result.getJobID());
+		String fileName = FileNames.getResultFile(result.getJobID());
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
 			writer.append(result.getIndividualEvaluated().getFitness() + "\n");
@@ -115,15 +141,20 @@ public class Agent_DataManager extends Agent_DistributedEA {
 
 	protected ACLMessage respondToSaveResults(ACLMessage request, Action action) {
 		
-		SaveResults saveResults = (SaveResults)action.getAction();
+		SaveResultOfIteration saveResults = (SaveResultOfIteration)action.getAction();
 		ResultOfIteration results = saveResults.getResults();
 		
-		String monitoringDirName = Configuration.
+		if (results == null || ! results.valid(getLogger())) {
+			getLogger().log(Level.WARNING, "Received " +
+					SaveResultOfIteration.class.getSimpleName() + " is not valid");
+		}
+		
+		String monitoringDirName = FileNames.
 				getResultDirectoryMonitoringDirectory(results.getJobID());
 		
 		try {
 			results.exportXML(new File(monitoringDirName));
-		} catch (FileNotFoundException | JAXBException e) {
+		} catch (IOException e) {
 			getLogger().logThrowable("", e);
 		}
 		

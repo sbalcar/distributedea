@@ -4,6 +4,11 @@ import java.util.List;
 
 import org.distributedea.ontology.problem.tsp.Position;
 
+/**
+ * Ontology represents abstract class for TSP Problem
+ * @author stepan
+ *
+ */
 public abstract class ProblemTSP extends Problem {
 
 	private static final long serialVersionUID = 1L;

@@ -1,5 +1,6 @@
 package org.distributedea.agents.systemagents;
 
+import jade.content.Concept;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
@@ -23,19 +24,19 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
-import org.distributedea.agents.computingagents.computingagent.service.ComputingAgentService;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
+import org.distributedea.services.ComputingAgentService;
 
 /**
  * Agent represents ruler of node
@@ -83,19 +84,23 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(request);
 
-					if (action.getAction() instanceof DescribeNode) {
+					Concept concept = action.getAction();
+					getLogger().log(Level.INFO, "Request for " +
+							concept.getClass().getSimpleName());
+					
+					if (concept instanceof DescribeNode) {
 						// DescribeNode request action
 						return respondToDescribeNode(request, action);
 						
-					} else if (action.getAction() instanceof CreateAgent) {
+					} else if (concept instanceof CreateAgent) {
 						// CreateAgent request action
 						return respondToCreateAgent(request, action);
 					
-					} else if (action.getAction() instanceof KillAgent) {
+					} else if (concept instanceof KillAgent) {
 						// KillAgent request action
 						return respondToKillAgent(request, action);
 					
-					} else if (action.getAction() instanceof KillContainer) {
+					} else if (concept instanceof KillContainer) {
 						// KillContainer request action
 						return respondToKillContainer(request, action);
 					}
@@ -180,20 +185,22 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	protected ACLMessage respondToCreateAgent(ACLMessage request, Action action) {
 
 		CreateAgent createAgent = (CreateAgent) action.getAction();
-		AgentConfiguration configuration = createAgent.getConfiguration();
+		InputAgentConfiguration configuration = createAgent.getConfiguration();
 
-		String agentType = configuration.getAgentType();
+		Class<?> agentType = configuration.exportAgentClass();
 		String agentName = configuration.getAgentName();
 		
-		String s = "Creating agentName " + agentName + " agentType " + agentType;
+		String s = "Creating agentName " + agentName + " agentType " + agentType.getSimpleName();
 		getLogger().log(Level.INFO, s);
 		
-		AgentConfiguration createdAgentConfiguration = createAgent(this, configuration, getLogger());
+		AgentConfiguration createdAgentConfiguration =
+				createAgent(this, configuration, getLogger());
 		
 		// to Computing Agent sends required Agent Configuration
 		if (configuration.exportIsComputingAgent()) {
 		
-			ComputingAgentService.sendRequiredAgent(this, createdAgentConfiguration.exportAgentAID(),
+			ComputingAgentService.sendRequiredAgent(this,
+					createdAgentConfiguration.exportAgentAID(),
 					createdAgentConfiguration, getLogger());
 		}
 				
@@ -202,8 +209,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		reply.setLanguage(codec.getName());
 		reply.setOntology(ManagementOntology.getInstance().getName());
 
-		CreatedAgent createdAgent = new CreatedAgent();
-		createdAgent.setCreatedAgent(createdAgentConfiguration);
+		CreatedAgent createdAgent =
+				new CreatedAgent(createdAgentConfiguration);
 		
 		Result result = new Result(action.getAction(), createdAgent);
 
@@ -253,12 +260,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		} catch (StaleProxyException e) {
 			getLogger().log(Level.INFO, "Agent had already killed himself");
 		}
-		
+
+ 		// deregistr agent takes some time
  		try {
 			Thread.sleep(300);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.logThrowable("Error by waiting", e);
 		}
 		
 		ACLMessage reply = request.createReply();
@@ -278,9 +285,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			Action action) {
 
 		getLogger().log(Level.INFO, "Killing container");
-		System.out.println("Killing container");
 		
-		// TODO - kill agents
 	
 		final boolean isAgentOnMainControler =  isAgentOnMainControler(this, getLogger());
 		
@@ -331,16 +336,13 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return - confirms creation
 	 */
 	public static AgentConfiguration createAgent(Agent_DistributedEA agent,
-			AgentConfiguration configuration, IAgentLogger logger) {
+			InputAgentConfiguration configuration, IAgentLogger logger) {
 	
 		// starts another agents
 		String containerID = getNumberOfContainer();
 
 		
-		AgentConfiguration configurationI = new AgentConfiguration();
-		configurationI.setAgentName(configuration.getAgentName());
-		configurationI.setAgentType(configuration.getAgentType());
-		configurationI.setArguments(configuration.getArguments());
+		AgentConfiguration configurationI = new AgentConfiguration(configuration);
 		configurationI.setContainerID(containerID);
 		configurationI.setNumberOfAgent(0);
 		configurationI.setNumberOfContainer(0);
@@ -363,12 +365,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	/**
 	 * Tries to create Agent with specific numberOfAgent ID and numberOfContainer ID
 	 * @param agent
-	 * @param type
-	 * @param name
-	 * @param numberOfAgent
-	 * @param numberOfContainer
-	 * @param containerID
-	 * @param argumentList
+	 * @param configuration
 	 * @param logger
 	 * @return
 	 */
@@ -398,12 +395,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	private static AgentConfiguration createAndStartAgent(Agent_DistributedEA agent,
 			AgentConfiguration configuration) throws ControllerException {
 		
-		String agentType = configuration.getAgentType();
+		Class<?> agentClass = configuration.exportAgentClass();
 		String agentName = configuration.exportAgentname();
-		List<Argument> arguments = configuration.getArguments();
+		Arguments arguments = configuration.getArguments();
 		
 		Object[] jadeArgs = null;
-		if (agentType.equals(Sniffer.class.getName())) {
+		if (agentClass == Sniffer.class) {
 			
 			jadeArgs = Arguments.transformAgrumentsForSniffer(arguments);
 		}
@@ -412,7 +409,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		PlatformController container = agent.getContainerController();
 		
 		AgentController createdAgent = container.
-				createNewAgent(agentName, agentType, jadeArgs);
+				createNewAgent(agentName, agentClass.getName(), jadeArgs);
 		
 		createdAgent.start();
 		

@@ -1,5 +1,6 @@
 package org.distributedea.problems.tsp.point;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,12 @@ import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionPoint;
 import org.distributedea.problems.tsp.ProblemTSPTool;
 
+/**
+ * Ontology represents abstract {@link IProblemTool}  for
+ * problem {@link ProblemTSPPoint}
+ * @author stepan
+ *
+ */
 public abstract class ProblemTSPPointTool extends ProblemTSPTool {
 
 	@Override
@@ -18,18 +25,16 @@ public abstract class ProblemTSPPointTool extends ProblemTSPTool {
 	}
 	
 	@Override
-	public Problem readProblem(String inputFileName, IAgentLogger logger) {
+	public Problem readProblem(File fileOfProblem, IAgentLogger logger) {
 
+		List<Position> positionsInput = readProblemTSP(fileOfProblem, logger);
+		
 		List<PositionPoint> positions = new ArrayList<PositionPoint>();
-		for (Position positionI : readProblemTSP(inputFileName, logger)) {
+		for (Position positionI : positionsInput) {
 			positions.add((PositionPoint) positionI);
 		}
 		
-		ProblemTSPPoint problem = new ProblemTSPPoint();
-		problem.setProblemFileName(inputFileName);
-		problem.setPositions(positions);
-		
-		return problem;
+		return new ProblemTSPPoint(positions, fileOfProblem);
 	}
 	
 

@@ -1,0 +1,5 @@
+# list all limits
+ulimit -a
+
+# set unlimited time for cpu
+ulimit -t unlimited

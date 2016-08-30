@@ -1,6 +1,13 @@
 package org.distributedea.ontology.problem.tsp;
 
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
 
+/**
+ * Ontology represents one TSP-GPS position
+ * @author stepan
+ *
+ */
 public class PositionGPS extends Position {
 
 	private static final long serialVersionUID = 1L;
@@ -9,10 +16,21 @@ public class PositionGPS extends Position {
 	private double latitude;
 	private double longitude;
 	
-	public PositionGPS() {}
 	
+	public PositionGPS() {
+		number = -1;
+		latitude = Double.NaN;
+		longitude = Double.NaN;
+	}
+	
+	/**
+	 * Copy constructor
+	 * @param position
+	 */
 	public PositionGPS(PositionGPS position) {
-		
+		if (position == null || ! position.valid(new TrashLogger())) {
+			throw new IllegalArgumentException();
+		}
 		setNumber(position.getNumber());
 		setLatitude(position.getLatitude());
 		setLongitude(position.getLongitude());
@@ -39,6 +57,27 @@ public class PositionGPS extends Position {
 		this.longitude = longitude;
 	}
 	
+	/**
+	 * Tests validity
+	 */
+	public boolean valid(IAgentLogger logger) {
+		if (number < 0) {
+			return false;
+		}
+		if (latitude == Double.NaN) {
+			return false;
+		}
+		if (longitude == Double.NaN) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Returns clone
+	 * @return
+	 */
 	public PositionGPS deepClone() {
 		return new PositionGPS(this);
 	}

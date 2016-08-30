@@ -2,8 +2,13 @@ package org.distributedea.problems.tsp.gps.permutation;
 
 import java.util.List;
 
+import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.problems.ProblemTool;
+
 /**
- * Problem tool for TSP Problem Represent by Permutation implements 2Opt permutation operator
+ * Operator {@link ProblemTool} for {@link ProblemTSPPoint} using permutation
+ * representation of {@link Individual}s. Operator implements 2Opt operator.
  * @author stepan
  *
  */

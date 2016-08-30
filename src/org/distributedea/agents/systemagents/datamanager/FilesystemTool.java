@@ -1,131 +1,80 @@
 package org.distributedea.agents.systemagents.datamanager;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-import org.distributedea.Configuration;
+import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.job.JobID;
 
 public class FilesystemTool {
 
-	public static void createLogSpaceForJobRun(JobID jobID) {
+	public static List<Double> readVectorFromFile(File file) throws IOException {
 		
-		String logDirectoryName = Configuration.getLogBatchDirectory(jobID.getBatchID());
-		File logDirectory = new File(logDirectoryName);
-		if (! logDirectory.isDirectory()) {
-			logDirectory.mkdir();
+		if (file == null || ! file.isFile()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + "is not valid");
 		}
+		List<Double> vectors = new ArrayList<>();
 		
-		String logBatchDirectoryName = Configuration.getInputBatchDirectory(jobID.getBatchID());
-		File logBatchDirectory = new File(logBatchDirectoryName);
-		if (! logBatchDirectory.isDirectory()) {
-			logBatchDirectory.mkdir();
-		}	
-		
-		String logCADirectoryName = Configuration.getComputingAgentLogDirectory(jobID);
-		File logCADirectory = new File(logCADirectoryName);
-		if (! logCADirectory.isDirectory()) {
-			logCADirectory.mkdir();
-		}
-		
-		String logCARunDirectoryName = Configuration.getComputingAgentRunLogDirectory(jobID);
-		File logCARunDirectory = new File(logCARunDirectoryName);
-		if (! logCARunDirectory.isDirectory()) {
-			logCARunDirectory.mkdir();
-		}
-		
-		String logCAResultDirectoryName = Configuration.getComputingAgentLogSolutionDirectory(jobID);
-		File logCAResultDirectory = new File(logCAResultDirectoryName);
-		if (! logCAResultDirectory.isDirectory()) {
-			logCAResultDirectory.mkdir();
-		}
-		
-		String logCAImprovementDirectoryName = Configuration.getComputingAgentLogImprovementOfDistributionDirectory(jobID);
-		File logCAImprovementDirectory = new File(logCAImprovementDirectoryName);
-		if (! logCAImprovementDirectory.isDirectory()) {
-			logCAImprovementDirectory.mkdir();
-		}
-		
-	}
-	
-	public static void createResultSpaceForBatch(String batchID) {
-				
-		String resultBatchDirName = Configuration.getResultDirectory(batchID);
-		File resultBatchDirectory = new File(resultBatchDirName);
-		if (! resultBatchDirectory.isDirectory()) {
-			resultBatchDirectory.mkdir();
-		}
-		
-		String resultInputParamDirName = Configuration.getResultDirectoryWithCopyOfInputParameters(batchID);
-		File resultInputParamDirectory = new File(resultInputParamDirName);
-		if (! resultInputParamDirectory.isDirectory()) {
-			resultInputParamDirectory.mkdir();
-		}
-		
-		String resultInputBatchCopyDirName = Configuration.getResultDirectoryWithCopyOfInputBatch(batchID);
-		File resultInputBatchCopyDirectory = new File(resultInputBatchCopyDirName);
-		if (! resultInputBatchCopyDirectory.isDirectory()) {
-			resultInputBatchCopyDirectory.mkdir();
-		}
-	}
-	
-	public static void copyBatchDescriptionToResultDir(String batchID) {
-		
-		String batchDescriptionFileName = Configuration.getBatchDescriptionFile(batchID);
-		File batchDescriptionFile = new File(batchDescriptionFileName);
-		
-		String resultDirectoryWithCopyOfInputBatchName =Configuration.getResultDirectoryWithCopyOfInputBatch(batchID);
-		File resultDirectoryWithCopyOfInputBatch = new File(resultDirectoryWithCopyOfInputBatchName);
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		
 		try {
-			FileUtils.copyFileToDirectory(batchDescriptionFile, resultDirectoryWithCopyOfInputBatch);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void moveInputJobToResultDir(JobID jobIDStruct) {
-		
-		String batchID = jobIDStruct.getBatchID();
-		String jobID = jobIDStruct.getJobID();
-		
-		String inputJobFileName = Configuration.getInputJobFile(batchID, jobID);
-		File inputJobFile = new File(inputJobFileName);
+		    String line = br.readLine();
 
-		String resultDirectoryWithCopyOfInputBatchName =Configuration.getResultDirectoryWithCopyOfInputBatch(batchID);
-		File resultDirectoryWithCopyOfInputBatch = new File(resultDirectoryWithCopyOfInputBatchName);
-
-		// removing old copy
-		String newInputJobFileName = resultDirectoryWithCopyOfInputBatchName + File.separator + inputJobFile.getName();
-		File newInputJobFile = new File(newInputJobFileName);
-		if (newInputJobFile.exists()) {
-			newInputJobFile.delete();
-		}
-		
-		try {
-			FileUtils.moveToDirectory(inputJobFile, resultDirectoryWithCopyOfInputBatch, true);
+		    while (line != null && line != "") {
+		    	
+		    	double number = Double.valueOf(line);
+		    	vectors.add(number);
+		    	
+		    	line = br.readLine();
+		    }
+		    
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
+		} finally {
+		    br.close();
 		}
 		
+		return vectors;
 	}
 	
-	public static void copyMatlabToResultDir(String batchID) {
+
+	
+	public static Map<JobID, Double> getResultOfJobForAllRuns(String batchID, String jobID, int numberOfRuns) throws IOException {
 		
-		File postProcDir = new File("matlab");
+		Map<JobID, Double> results = new HashMap<>();
 		
-		String resultPostProcDirName = Configuration.getResultDirectoryForMatlab(batchID);
-		File resultPostProcDir = new File(resultPostProcDirName);
-		
-		try {
-			FileUtils.copyDirectory(postProcDir, resultPostProcDir);
-			//FileUtils.cleanDirectory(postProcDir);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (int runNumberI = 0; runNumberI < numberOfRuns; runNumberI++) {
+			
+			JobID jobIDStructI = new JobID(batchID, jobID, runNumberI);
+			Double lastValue = getResultOfJobRun(jobIDStructI);
+
+			results.put(jobIDStructI, lastValue);
 		}
+		
+		return results;
+	}
+	
+	public static Double getResultOfJobRun(JobID JobID) throws IOException {
+		
+		if (JobID == null || ! JobID.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					JobID.class.getSimpleName() + " is not valid");
+		}
+		
+		String fileName = FileNames.getResultFile(JobID);
+		List<Double> listOfFitnessValues = FilesystemTool.readVectorFromFile(new File(fileName));
+		
+		if (listOfFitnessValues == null || listOfFitnessValues.isEmpty()) {
+			return null;
+		}
+		
+		return listOfFitnessValues.get(listOfFitnessValues.size() -1);
 	}
 }

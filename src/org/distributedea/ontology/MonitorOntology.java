@@ -5,6 +5,7 @@ import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.individuals.Individual;
@@ -31,6 +32,7 @@ public class MonitorOntology extends BeanOntology {
             
             add(statisticPackage);
         	
+            add(AgentDescriptions.class);
             add(AgentDescription.class);
             add(AgentConfiguration.class);
             add(Argument.class);

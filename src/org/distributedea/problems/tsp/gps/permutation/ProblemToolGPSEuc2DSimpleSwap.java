@@ -9,14 +9,15 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSP;
-import org.distributedea.problems.ProblemToolValidation;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.tsp.gps.permutation.operators.SinglePointCrossover;
 import org.distributedea.problems.tsp.point.permutation.ProblemTSPPointPermutationTool;
 import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSwap;
 
 /**
- * Problem tool for TSP Problem Represent by Permutation implements Simple gene swap operator
+ * Represents {@link ProblemTool} for TSP {@link Problem} for permutation based
+ * {@link Individual} representation. Operator implements simple gene swap algorithm. 
  * @author stepan
  *
  */
@@ -37,10 +38,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 			permutation.add(minValue + numberI);
 		}
 		
-		IndividualPermutation individualPerm = new IndividualPermutation();
-		individualPerm.setPermutation(permutation);
-		
-		return individualPerm;
+		return new IndividualPermutation(permutation);
 	}
 	
 	/**
@@ -60,18 +58,33 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 		return improveIndividual(individual, problem, individualClass, problemClass, logger);
 	}
 	
+	/**
+	 * Tries to improve {@link Individual} by using simple swap method
+	 * @param individual
+	 * @param problem
+	 * @param individualClass
+	 * @param problemClass
+	 * @param logger
+	 * @return
+	 * @throws ProblemToolException
+	 */
 	public Individual improveIndividual(Individual individual, Problem problem,
 			Class<?> individualClass, Class<?> problemClass, IAgentLogger logger
 			) throws ProblemToolException {
 		
-		boolean areParametersValid = 
-				ProblemToolValidation.isIndividualTypeOf(
-						individual, individualClass, logger) &&
-				ProblemToolValidation.isProblemTypeOf(
-						problem, problemClass, logger);
-			
-		if (! areParametersValid) {
-			throw new ProblemToolException("Invalid parameters in Problem Tool");
+		if (individual == null || ! individual.valid(logger) ||
+				! individual.theSameClass(individualClass)) {
+			throw new IllegalArgumentException("Argument " +
+					Individual.class.getSimpleName() + " is not valid.");
+		}
+		if (problem == null || ! problem.valid(logger) ||
+				! problem.theSameClass(problemClass)) {
+			throw new IllegalArgumentException("Argument " +
+					Problem.class.getSimpleName() + " is not valid.");
+		}
+		if (logger == null) {
+			throw new IllegalArgumentException("Argument " +
+					IAgentLogger.class.getSimpleName() + " is not valid.");
 		}
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
@@ -95,10 +108,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 		
 		convertingChunkOfPermutation(rndFirstIndex, rndSecondIndex, permutationNew);
 		
-		IndividualPermutation individualNew = new IndividualPermutation();
-		individualNew.setPermutation(permutationNew);
-		
-		return individualNew;
+		return new IndividualPermutation(permutationNew);
 	}
 
 	protected void convertingChunkOfPermutation(int startIndex, int endIndex,

@@ -2,7 +2,7 @@ package org.distributedea.agents.systemagents.centralmanager.plannertype;
 
 import java.util.logging.Level;
 
-import org.distributedea.agents.systemagents.centralmanager.planner.modes.Iteration;
+import org.distributedea.ontology.iteration.Iteration;
 
 public class PlannerTypeTimeRestriction extends PlannerType {
 	

@@ -6,8 +6,8 @@ import java.util.Random;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.ProblemToolException;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.GeneticOperator;
@@ -27,12 +27,12 @@ public class EACrossoverWrapper implements GeneticOperator {
 
 	private double crossRate;
 	private Problem problem;
-	private ProblemTool problemTool;
+	private IProblemTool problemTool;
 	private Configuration conf;
 	private AgentLogger logger;
 	
 	public EACrossoverWrapper(double crossRate, Problem problem,
-			ProblemTool problemTool, Configuration conf, AgentLogger logger) {
+			IProblemTool problemTool, Configuration conf, AgentLogger logger) {
 		
 		this.crossRate = crossRate;
 		this.problem = problem;

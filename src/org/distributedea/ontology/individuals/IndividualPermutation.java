@@ -4,12 +4,47 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
+
+/**
+ * Ontology represents one permutation based {@link Individual}
+ * @author stepan
+ *
+ */
 public class IndividualPermutation extends Individual {
 
 	private static final long serialVersionUID = 1L;
 	
 	private List<Integer> permutation = null;
 
+	
+	@Deprecated
+	public IndividualPermutation() {}
+	
+	/**
+	 * Constructor
+	 * @param permutation
+	 */
+	public IndividualPermutation(List<Integer> permutation) {
+		this.permutation = permutation;
+	}
+
+	/**
+	 * Copy constructor
+	 * @param individual
+	 */
+	public IndividualPermutation(IndividualPermutation individual) {
+		if (individual == null || ! individual.valid(new TrashLogger())) {
+			throw new IllegalArgumentException();
+		}
+		List<Integer> permutationNew = new ArrayList<>();
+		for (Integer valueI : individual.getPermutation()) {
+			permutationNew.add(new Integer(valueI));
+		}
+		permutation = permutationNew;
+	}
+	
 	public List<Integer> getPermutation() {
 		
 		if (permutation == null) {
@@ -37,6 +72,7 @@ public class IndividualPermutation extends Individual {
 		return permutationExport;
 	}
 
+	@Deprecated
 	public void setPermutation(List<Integer> permutation) {
 		this.permutation = permutation;
 	}
@@ -45,7 +81,14 @@ public class IndividualPermutation extends Individual {
 		return permutation.size();
 	}
 	
-	public boolean validation() {
+	/**
+	 * Test validity
+	 */
+	public boolean valid(IAgentLogger logger) {
+		
+		if (permutation == null) {
+			return false;
+		}
 		
 		int numberOfElement = 0;
 		
@@ -66,6 +109,13 @@ public class IndividualPermutation extends Individual {
 		}
 	}
 
+	/**
+	 * Returns clone
+	 */
+	public Individual deepClone() {
+		return new IndividualPermutation(this);
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		

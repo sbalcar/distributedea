@@ -1,18 +1,23 @@
 package org.distributedea.ontology.monitor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import javax.xml.bind.JAXBException;
-
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 
 import com.thoughtworks.xstream.XStream;
 
 import jade.content.Concept;
 
+/**
+ * Ontology represents one statistical result of method. Values are counted
+ * by monitoring Individuals which is sending the current agent.
+ * @author stepan
+ *
+ */
 public class MethodStatisticResult implements Concept {
 
 	private static final long serialVersionUID = 1L;
@@ -72,6 +77,16 @@ public class MethodStatisticResult implements Concept {
 		this.fitnessAverage = fitnessAverage;
 	}
 
+	/**
+	 * Tests validity
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		if (bestIndividual == null) {
+			return false;
+		}
+		return true;
+	}
 
 	public boolean equals(Object other) {
 		
@@ -131,14 +146,13 @@ public class MethodStatisticResult implements Concept {
 	/**
 	 * Exports structure as the XML String to the file
 	 * 
-	 * @throws FileNotFoundException
-	 * @throws JAXBException 
+	 * @throws IOException 
 	 */
-	public void exportXML(File methodStatisticDir) throws FileNotFoundException, JAXBException {
+	public void exportXML(File methodStatisticDir) throws IOException {
 
-		if (methodStatisticDir == null || (! methodStatisticDir.exists()) ||
-				(! methodStatisticDir.isDirectory())) {
-			return;
+		if (methodStatisticDir == null || ! methodStatisticDir.isDirectory()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
 		}
 		
 		String fileName = methodStatisticDir.getAbsolutePath() +
@@ -165,11 +179,16 @@ public class MethodStatisticResult implements Concept {
 	/**
 	 * Import the {@link MethodStatisticResult} from the file
 	 * 
-	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
 	public static MethodStatisticResult importXML(File file)
-			throws FileNotFoundException {
+			throws IOException {
 
+		if (file == null || ! file.isFile()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
+		}
+		
 		Scanner scanner = new Scanner(file);
 		String xml = scanner.useDelimiter("\\Z").next();
 		scanner.close();

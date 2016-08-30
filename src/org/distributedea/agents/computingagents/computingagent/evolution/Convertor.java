@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.IProblemTool;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.Gene;
@@ -123,7 +124,7 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	public static Individual convertToIndividual(IChromosome chromosome,
-			Problem problem, ProblemTool problemTool, Configuration conf) throws InvalidConfigurationException {
+			Problem problem, IProblemTool problemTool, Configuration conf) throws InvalidConfigurationException {
 	
 		Individual convertedIndividual = null;
 		
@@ -145,7 +146,7 @@ public class Convertor {
 		
 		
 		if (convertedIndividual == null ||
-				! convertedIndividual.validation()) {
+				! convertedIndividual.valid(new TrashLogger())) {
 			throw new IllegalStateException("Conversion is not valid");
 		}
 		
@@ -173,10 +174,7 @@ public class Convertor {
 			permutation.add(genValueI);
 		}
 		
-		IndividualPermutation individual = new IndividualPermutation();
-		individual.setPermutation(permutation);
-		
-		return individual;
+		return new IndividualPermutation(permutation);
 	}
 	
 	private static IndividualPoint convertToIndividualPoint(
@@ -193,10 +191,7 @@ public class Convertor {
 			coordinates.add(genValueI);
 		}
 		
-		IndividualPoint individual = new IndividualPoint();
-		individual.setCoordinates(coordinates);
-		
-		return individual;
+		return new IndividualPoint(coordinates);
 	}
 	
 }

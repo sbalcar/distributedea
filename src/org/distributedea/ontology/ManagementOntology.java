@@ -4,21 +4,21 @@ import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.agentinfo.AgentInfo;
+import org.distributedea.ontology.agentinfo.AgentInfoWrapper;
+import org.distributedea.ontology.agentinfo.GetAgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
-import org.distributedea.ontology.management.EverythingPreparedToBeKilled;
+import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
-import org.distributedea.ontology.methoddescription.GetMethodDescription;
-import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.methoddescriptionwrapper.MethodDescriptionWrapper;
 
 public class ManagementOntology extends BeanOntology {
 
@@ -31,14 +31,14 @@ public class ManagementOntology extends BeanOntology {
         	add(DescribeNode.class);
         	add(NodeInfo.class);
         	
-        	add(GetMethodDescription.class);
-            add(MethodDescription.class);
-            add(MethodDescriptionWrapper.class);
+        	add(GetAgentInfo.class);
+            add(AgentInfo.class);
+            add(AgentInfoWrapper.class);
             
             add(CreateAgent.class);
             add(CreatedAgent.class);
             add(PrepareYourselfToKill.class);
-            add(EverythingPreparedToBeKilled.class);
+            add(ReadyToBeKilled.class);
             add(KillAgent.class);
             add(KillContainer.class);
             add(RequiredAgent.class);

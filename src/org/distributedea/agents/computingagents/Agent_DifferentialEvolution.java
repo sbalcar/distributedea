@@ -3,9 +3,11 @@ package org.distributedea.agents.computingagents;
 import java.util.Random;
 import java.util.Vector;
 
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
@@ -13,17 +15,19 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.ontology.problemwrapper.noontologie.ProblemStruct;
+import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.ProblemToolEvaluation;
-import org.distributedea.problems.ProblemToolValidation;
-import org.distributedea.problems.exceptions.ProblemToolException;
 
+/**
+ * Agent represents Differential Evolution Algorithm Method
+ * @author stepan
+ *
+ */
 public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
@@ -33,8 +37,10 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 
-		ProblemTool problemTool = ProblemToolValidation.instanceProblemTool(
-				problemStruct.getProblemToolClass(), getLogger());
+		Class<?> problemToolClass =
+				problemStruct.exportProblemToolClass(getLogger());
+		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
+				problemToolClass, getLogger());
 		
 		Class<?> problem = problemStruct.getProblem().getClass();
 		Class<?> representation = problemTool.reprezentationWhichUses();
@@ -60,9 +66,9 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected MethodDescription getMethodDescription() {
+	protected AgentInfo getAgentInfo() {
 		
-		MethodDescription description = new MethodDescription();
+		AgentInfo description = new AgentInfo();
 		description.importComputingAgentClassName(this.getClass());
 		description.setNumberOfIndividuals(popSize);
 		description.setExploitation(true);
@@ -72,34 +78,42 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	protected void startComputing(Problem problem, ProblemTool problemTool,
-			JobID jobID, AgentConfiguration agentConf) throws ProblemToolException {
+	protected void startComputing(ProblemStruct problemStruct,
+			AgentConfiguration agentConf) throws Exception {
 	
+		if (problemStruct == null || ! problemStruct.valid(getCALogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemStruct.class.getSimpleName() + " is not valid");
+		}
+		
+		JobID jobID = problemStruct.getJobID();
+		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
+		Problem problem = problemStruct.getProblem();
+		boolean individualDistribution = problemStruct.getIndividualDistribution();
+		
+		
 		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
 		
-		Random random = new Random();
 		
 		long generationNumberI = -1;
 		
 		
 		// generates Individuals
-		Vector<Individual> population = new Vector<Individual>();
+		Vector<IndividualEvaluated> population = new Vector<>();
 		for (int i = 0; i < popSize; i++) {
-			Individual individualI = problemTool.generateIndividual(problem, getCALogger());
+			IndividualEvaluated individualI = problemTool.generateIndividualEval(problem, getCALogger());
 			population.add(individualI);
 		}
 		
-		IndividualWrapper bestGeneratedIndividual =
-				getBestIndividual(population, problem, problemTool, getLogger());
+		DifferentialModel model = new DifferentialModel(population);
 		
-		IndividualEvaluated bestGeneratedIndEval = bestGeneratedIndividual.getIndividualEvaluated();
-		Individual individualI = bestGeneratedIndEval.getIndividual();
-		double fitnessI = bestGeneratedIndEval.getFitness();
+		IndividualEvaluated individualEvalI =
+				model.getBestIndividual(problem, problemTool, getLogger());
 		
 		// save, log and distribute computed Individual
-		processIndividualFromInitGeneration(individualI,
-				fitnessI, generationNumberI, problem, jobID);
+		processIndividualFromInitGeneration(individualEvalI,
+				generationNumberI, problem, jobID);
 		
 		
 		while (state == CompAgentState.COMPUTING) {
@@ -107,69 +121,50 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			// increment next number of generation
 			generationNumberI++;
 			
-			//pick random point from population
-			int candidateIndex = Math.abs(random.nextInt()) % (popSize-1);
+						
+			//pick random point from population			
+			DifferentialQuaternion quaternion = model.getQuaternion();
 			
-			int index1;
-			do {
-				index1 = Math.abs(random.nextInt()) % (popSize-1);
-			} while (index1 == candidateIndex);
+			IndividualEvaluated individualEvalCandidateI = quaternion.individualCandidateI;
+			
+			Individual individual1 = quaternion.individual1.getIndividual();
+			Individual individual2 = quaternion.individual2.getIndividual();
+			Individual individual3 = quaternion.individual3.getIndividual();
+			
+									
+			IndividualEvaluated[] individualsNew =
+					problemTool.createNewIndividualEval(individual1,
+							individual2, individual3, problem, getCALogger());
+			IndividualEvaluated individualEvalNew = individualsNew[0];
 
-			int index2;
-			do {
-				index2 = Math.abs(random.nextInt()) % (popSize-1);
-			} while (index2 == candidateIndex || index2 == index1);
-			
-			int index3;
-			do {
-				index3 = Math.abs(random.nextInt()) % (popSize-1);
-			} while (index3 == candidateIndex || index3 == index1 || index3 == index2);
-			
-			Individual individualCandidate = population.get(candidateIndex);
-			fitnessI = problemTool.fitness(individualCandidate, problem, getCALogger());
-			
-			Individual individual1 = population.get(index1);
-			Individual individual2 = population.get(index2);
-			Individual individual3 = population.get(index3);
-			
-			Individual[] individualsNew =
-					problemTool.createNewIndividual(individual1, individual2,
-							individual3, problem, getCALogger() );
-			Individual individualNew = individualsNew[0];
 
-			double fitnessNew =
-					problemTool.fitness(individualNew, problem, getCALogger());
-			
-			boolean isNewIndividualBetter =
-					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							fitnessNew, fitnessI, problem);
-			
-			if (isNewIndividualBetter) {
+			if (FitnessTool.isFirstIndividualEBetterThanSecond(
+							individualEvalNew, individualEvalCandidateI, problem)) {
 				// switching Individuals
-				population.set(candidateIndex, individualNew);				
+				model.replaceIndividual(individualEvalCandidateI, individualEvalNew);
 			}
 			
 			
 			// save, log and distribute computed Individual
-			processComputedIndividual(individualNew,
-					fitnessNew, generationNumberI, problem, jobID);
+			processComputedIndividual(individualEvalI, generationNumberI,
+					problem, jobID);
 			
 			// send new Individual to distributed neighbors
-			if (computingThread.isIndividualDistribution()) {
-				distributeIndividualToNeighours(individualNew, fitnessNew, problem, jobID);
+			if (individualDistribution) {
+				distributeIndividualToNeighours(individualEvalI, problem, jobID);
 			}
 			
 			//take received individual to new generation
 			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
 			
-			if (computingThread.isIndividualDistribution() &&
-					ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, fitnessI, problem) &&
-					ProblemToolEvaluation.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, fitnessNew, problem)) {
+			if (individualDistribution &&
+					FitnessTool.isFistIndividualWBetterThanSecond(
+							recievedIndividualW, individualEvalCandidateI, problem) &&
+					FitnessTool.isFistIndividualWBetterThanSecond(
+							recievedIndividualW, individualEvalNew, problem)) {
 				
-				IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
-				population.set(candidateIndex, recievedIndividual.getIndividual());
+				model.replaceIndividual(individualEvalCandidateI,
+						recievedIndividualW.getIndividualEvaluated());
 				
 				// save and log received Individual
 				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
@@ -180,39 +175,89 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		
 	}
 
-	private IndividualWrapper getBestIndividual(Vector<Individual> individuals, Problem problem,
-			ProblemTool problemTool, AgentLogger logger) {
+}
+
+
+class DifferentialModel {
+	
+	private Vector<IndividualEvaluated> population = new Vector<>();
+	
+	private Random random = new Random();
+	
+	public DifferentialModel(Vector<IndividualEvaluated> population) {
+		if (population == null) {
+			throw new IllegalArgumentException();
+		}	
+		this.population = population;
+	}
+
+	public DifferentialQuaternion getQuaternion() {
+	
+		int popSize = population.size();
 		
-		if (individuals == null || individuals.size() == 0) {
+		//pick random point from population
+		int candidateIndex = Math.abs(random.nextInt()) % (popSize-1);
+		
+		int index1;
+		do {
+			index1 = Math.abs(random.nextInt()) % (popSize-1);
+		} while (index1 == candidateIndex);
+
+		int index2;
+		do {
+			index2 = Math.abs(random.nextInt()) % (popSize-1);
+		} while (index2 == candidateIndex || index2 == index1);
+		
+		int index3;
+		do {
+			index3 = Math.abs(random.nextInt()) % (popSize-1);
+		} while (index3 == candidateIndex || index3 == index1 || index3 == index2);
+		
+		DifferentialQuaternion quaternion = new DifferentialQuaternion();
+		quaternion.individualCandidateI = population.get(candidateIndex);
+		
+		quaternion.individual1 = population.get(index1);
+		quaternion.individual2 = population.get(index2);
+		quaternion.individual3 = population.get(index3);
+		
+		return quaternion;
+	}
+
+	public void replaceIndividual(IndividualEvaluated indivToDel,
+			IndividualEvaluated indivToAdd) {
+		population.remove(indivToDel);
+		population.add(indivToAdd);
+	}
+			
+	public IndividualEvaluated getBestIndividual(Problem problem,
+			IProblemTool problemTool, IAgentLogger logger) {
+		
+		if (population.isEmpty()) {
 			return null;
 		}
 		
-		Individual bestIndividual = individuals.get(0);
-		double bestFitness = problemTool.fitness(bestIndividual, problem, logger);
+		IndividualEvaluated bestIndividual = population.get(0);
 		
-		for (Individual individualI : individuals) {
-			
-			double fitnessI = problemTool.fitness(individualI, problem, logger);
+		for (IndividualEvaluated individualI : population) {
 			
 			boolean isIndividualBetter =
-					ProblemToolEvaluation.isFistFitnessBetterThanSecond(
-							fitnessI, bestFitness, problem);
+					FitnessTool.isFirstIndividualEBetterThanSecond(
+							individualI, bestIndividual, problem);
 			if (isIndividualBetter) {
 				bestIndividual = individualI;
-				bestFitness = fitnessI;
 			}
-			
 		}
 		
-		IndividualEvaluated indEval = new IndividualEvaluated();
-		indEval.setFitness(bestFitness);
-		indEval.setIndividual(bestIndividual);
-		
-		IndividualWrapper result = new IndividualWrapper();
-		result.setIndividualEvaluated(indEval);
-		
-		return result;
+		return bestIndividual;		
 	}
+}
 
-
+class DifferentialQuaternion {
+	
+	IndividualEvaluated individualCandidateI;
+	
+	IndividualEvaluated individual1;
+	IndividualEvaluated individual2;
+	IndividualEvaluated individual3;
+	
 }

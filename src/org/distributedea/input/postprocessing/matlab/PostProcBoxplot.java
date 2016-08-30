@@ -1,26 +1,32 @@
 package org.distributedea.input.postprocessing.matlab;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.distributedea.InputConfiguration;
-import org.distributedea.input.Tool;
-import org.distributedea.input.batches.BatchHeteroComparingTSP;
-import org.distributedea.input.postprocessing.PostProcessing;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
+import org.distributedea.agents.systemagents.datamanager.FileNames;
+import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
+import org.distributedea.input.MatlabTool;
+import org.distributedea.input.batches.BatchTestTSP;
+import org.distributedea.input.batches.InputBatch;
+import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.Job;
-public class PostProcBoxplot extends PostProcessing {
+import org.distributedea.ontology.job.JobRun;
 
-	String NL = "\n";
+/**
+ * Postprocessing creating boxplots for given {@link Batch}.  In the graph is one
+ * boxplot for one {@link Job}. As one value takes final result of one {@link JobRun}.
+ * One boxplot represents differences between runs of one {@link Job}.
+ * @author stepan
+ *
+ */
+public class PostProcBoxplot extends PostProcessingMatlab {
 	
 	@Override
-	public void run(Batch batch) {
+	public void run(Batch batch) throws Exception {
 		
 		List<Job> jobWrps = batch.getJobs();
 		String batchID = batch.getBatchID();
@@ -29,24 +35,24 @@ public class PostProcBoxplot extends PostProcessing {
 		List<String> legends = new ArrayList<>();
 		List<String> matrix = new ArrayList<>();
 		
-		for (Job jobWrpI : jobWrps) {
+		for (Job jobI : jobWrps) {
 				
-			String jobIDI = jobWrpI.getJobID();
+			String jobIDI = jobI.getJobID();
 			legends.add(jobIDI);
 			
-			String columbI = processJobWrapper(jobWrpI, batchID);
+			String columbI = processJob(jobI, batchID);
 			matrix.add(columbI);
 		}
 		
-		String legendStr = Tool.convertToMatlabLegend(legends);
-		String matrixStr = Tool.convertToMatlabMatrix(matrix);
+		String legendStr = MatlabTool.convertToMatlabLegend(legends);
+		String matrixStr = MatlabTool.convertToMatlabMatrix(matrix);
 		
 		
 		String TITLE = batch.getDescription();
 		String YLABEL = "hodnota fitnes v kilometrech";
 		
 		String OUTPUT_FILE = batch.getBatchID() + "BoxPlot";
-		String OUTPUT_PATH = "matlab";
+		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batchID);
 		
 		String matlabCode =
 		"h = figure" + NL +
@@ -67,65 +73,29 @@ public class PostProcBoxplot extends PostProcessing {
 		"exit;";
 		
 		System.out.println(matlabCode);
-
-		try(  PrintWriter out = new PrintWriter(OUTPUT_PATH + File.separator + OUTPUT_FILE + ".m")  ){
-		    out.println(matlabCode);
-		    out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 		
-		String bashSourceCode = "cd " + OUTPUT_PATH + ";" + NL + 
-		"matlab -nodisplay -r " + OUTPUT_FILE;
-		
-		String bashScriptFileName = OUTPUT_PATH + File.separator + "run.sh";
-		try(  PrintWriter out = new PrintWriter(bashScriptFileName)  ){
-		    out.println(bashSourceCode);
-		    out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		
-		if (InputConfiguration.runPostProcessing) {
-			executeMatlabScript(bashScriptFileName);
-		}
-	
+		saveAndProcessMatlab(matlabCode, OUTPUT_PATH, OUTPUT_FILE);
 	}
 	
-	public void executeMatlabScript(String bashScriptFileName) {
-	
-		Runtime rt = Runtime.getRuntime();
-		try {
-			Process pr0 = rt.exec("chmod +x " + bashScriptFileName);
-			pr0.waitFor();
-			Process pr1 = rt.exec("./" + bashScriptFileName);
-			pr1.waitFor();
-			Process pr2 = rt.exec("rm " + bashScriptFileName);
-			pr2.waitFor();
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println("Export OK");
-	}
 
-	public String processJobWrapper(Job jobWrp, String batchID) {
+
+	private String processJob(Job job, String batchID) throws IOException {
 		
-		String jobID = jobWrp.getJobID();	
-		int numberOfRuns = jobWrp.getNumberOfRuns();
+		String jobID = job.getJobID();	
+		int numberOfRuns = job.getNumberOfRuns();
 		
-		Map<JobID, Double> resultsOfJobsMap = Tool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
+		Map<JobID, Double> resultsOfJobsMap = FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
 		
 		List<Double> resultsOfJobs = new ArrayList<>(resultsOfJobsMap.values());
 		
-		return Tool.convertToMatlamArray(resultsOfJobs);
+		return MatlabTool.convertDoublesToMatlamArray(resultsOfJobs);
 		
 	}
 	
-	public static void main(String [] args) {
+	public static void main(String [] args) throws Exception {
 		
-		BatchHeteroComparingTSP batchCmp = new BatchHeteroComparingTSP(); 
+//		InputBatch batchCmp = new BatchHeteroComparingTSP();
+		InputBatch batchCmp = new BatchTestTSP();
 		Batch batch = batchCmp.batch();
 		
 		PostProcBoxplot p = new PostProcBoxplot();

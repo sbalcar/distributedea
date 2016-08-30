@@ -1,13 +1,13 @@
 package org.distributedea.problems.tsp;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.distributedea.Configuration;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.problem.Problem;
@@ -21,7 +21,7 @@ import org.distributedea.problems.ProblemTool;
  * @author stepan
  *
  */
-public abstract class ProblemTSPTool implements ProblemTool {
+public abstract class ProblemTSPTool extends ProblemTool {
 	
 	@Override
 	public void initialization(Problem problem, AgentConfiguration agentConf, IAgentLogger logger) {
@@ -32,30 +32,42 @@ public abstract class ProblemTSPTool implements ProblemTool {
 	}
 	
 	@Override
-	public Problem readProblem(String inputProblemFileName, IAgentLogger logger) {
+	public Problem readProblem(File problemFile, IAgentLogger logger) {
 
-		String inputFileName = Configuration.getInputProblemFile(inputProblemFileName);
-		
-		List<PositionGPS> positions = new ArrayList<PositionGPS>();
-		for (Position positionI : readProblemTSP(inputFileName, logger)) {
-			positions.add((PositionGPS) positionI);
+		List<Position> positions;
+		try {
+			positions = readProblemTSP(problemFile, logger);
+		} catch (Exception e) {
+			logger.logThrowable("Can not read " +
+					Problem.class.getSimpleName(), e);
+			return null;
 		}
 		
-		ProblemTSPGPS problem = new ProblemTSPGPS();
-		problem.setProblemFileName(inputProblemFileName);
-		problem.setPositions(positions);
+		List<PositionGPS> positionsGPS = new ArrayList<PositionGPS>();
+		for (Position positionI : positions) {
+			positionsGPS.add((PositionGPS) positionI);
+		}
 		
-		return problem;
+		return new ProblemTSPGPS(positionsGPS, problemFile);
 	}
 	
 	/**
 	 * Reads TSP Problem from the file
 	 * 
-	 * @param tspFileName
+	 * @param fileProblem
 	 * @return
 	 */
-	protected List<Position> readProblemTSP(String tspFileName,
+	protected List<Position> readProblemTSP(File fileProblem,
 			IAgentLogger logger) {
+		
+		if (fileProblem == null || ! fileProblem.isFile()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
+		}
+		if (logger == null) {
+			throw new IllegalArgumentException("Argument " +
+					IAgentLogger.class.getSimpleName() + " is null");
+		}
 		
 		List<Position> positions = new ArrayList<Position>();
 		
@@ -65,7 +77,7 @@ public abstract class ProblemTSPTool implements ProblemTool {
  
 			String sCurrentLine;
  
-			br = new BufferedReader(new FileReader(tspFileName));
+			br = new BufferedReader(new FileReader(fileProblem.getAbsolutePath()));
  
 			while ((sCurrentLine = br.readLine()) != null) {
 				
@@ -96,7 +108,8 @@ public abstract class ProblemTSPTool implements ProblemTool {
 			}
  
 		} catch (IOException exception) {
-			logger.logThrowable("Problem with reading " + tspFileName + " file", exception);
+			logger.logThrowable("Problem with reading " +
+					fileProblem.getName() + " file", exception);
 			return null;
 			
 		} finally {
@@ -105,7 +118,8 @@ public abstract class ProblemTSPTool implements ProblemTool {
 					br.close();
 				}
 			} catch (IOException ex) {
-				logger.logThrowable("Problem with closing the file: " + tspFileName, ex);
+				logger.logThrowable("Problem with closing the file: " +
+						fileProblem.getName(), ex);
 			}
 		}
 		

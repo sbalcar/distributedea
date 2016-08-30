@@ -1,5 +1,8 @@
 package org.distributedea.agents.systemagents;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -7,12 +10,16 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.systemagents.manageragent.ManagerAgentService;
-import org.distributedea.configuration.AgentConfigurations;
-import org.distributedea.configuration.XmlConfigurationProvider;
+import org.distributedea.agents.systemagents.datamanager.FileNames;
+import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
+import org.distributedea.logging.FileLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.services.ManagerAgentService;
 
 import jade.content.onto.Ontology;
 import jade.core.AID;
@@ -20,7 +27,7 @@ import jade.wrapper.StaleProxyException;
 
 /**
  * Agent which is responsible for initialization of agents on node
- * @author balcs7am
+ * @author stepan
  *
  */
 public class Agent_Initiator extends Agent_DistributedEA {
@@ -37,96 +44,116 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		return ontologies;
 	}
 
+	public IAgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new FileLogger(this);
+		}
+		return logger;
+	}
+	
 	protected void setup() {
 
 		initAgent();
 		// Agent Initiator doesn't have any DF registration
 
-		getLogger().log(Level.INFO, "Agent Intitator is starting - " + "AID: " + getAID().getName());
+		getLogger().log(Level.INFO, "" + Agent_Initiator.class.getSimpleName() +
+				" is starting - " + "AID: " + getAID().getName());
 
 		// check java version
 		String javaVersion = System.getProperty("java.version");
-		if (! javaVersion.startsWith("1.7")) {
+		if (! javaVersion.contains("1.7")) {
+			getLogger().log(Level.INFO, "The system requires java 1.7");
 			System.out.println("The system requires java 1.7");
-			
+			hardKill();
+		}
+		
+		boolean isOnMainControler = Agent_ManagerAgent.isAgentOnMainControler(this, getLogger());
+		
+		// cleaning log directory
+		if (isOnMainControler) {
 			try {
-				this.getContainerController().kill();
-			} catch (StaleProxyException e) {
+				FilesystemInitTool.clearLogDir(getLogger());
+			} catch (IOException e) {
+				getLogger().logThrowable("Can not clean log directory", e);
+				hardKill();
 			}
 		}
 		
-		String fileName = null;
-		if (Agent_ManagerAgent.isAgentOnMainControler(this, getLogger())) {
-
-			fileName = org.distributedea.Configuration.getConfigurationFile();
+		executeUlimit();
+		
+		File agentConfFile = null;
+		if (isOnMainControler) {
+			agentConfFile = new File(FileNames.getConfigurationFile());
 		} else {
-
-			fileName = org.distributedea.Configuration
-					.getConfigurationSlaveFile();
+			agentConfFile = new File(FileNames.getConfigurationSlaveFile());
 		}
-
-		getLogger().log(Level.INFO, "Reading configuration from: " + fileName);
-
-		AgentConfigurations configuration =
-				XmlConfigurationProvider.getConfiguration(fileName, getLogger());
-
-		List<AgentConfiguration> managerAgentConfigurations =
-				new ArrayList<AgentConfiguration>();
-
-		List<AgentConfiguration> noManagerAgentConfigurations =
-				new ArrayList<AgentConfiguration>();
-
-		for (AgentConfiguration agentConfigurationI :
-				configuration.getAgentConfigurations()) {
-			String agentType = agentConfigurationI.getAgentType();
-
-			if (agentType.equals(Agent_ManagerAgent.class.getName())) {
-				managerAgentConfigurations.add(agentConfigurationI);
-			} else {
-				noManagerAgentConfigurations.add(agentConfigurationI);
-			}
-		}
-
-		if (managerAgentConfigurations.size() != 1) {
-
-			if (managerAgentConfigurations.isEmpty()) {
-				getLogger().log(Level.SEVERE, "Error in the config file - isn't any Agent Manager");
-			}
-			if (managerAgentConfigurations.size() > 1) {
-				getLogger().log(Level.SEVERE, "Error in the config file - More than one Agent Manager");
-			}
-
-			try {
-				System.out.println("Killing");
-				getContainerController().kill();
-			} catch (StaleProxyException e) {
-				getLogger().logThrowable("Exception by killing container", e);
-			}
-		}
-
-		AgentConfiguration agentManagerConf = managerAgentConfigurations.get(0);
-
-		AgentConfiguration aManagerAgent = createAgent(this, agentManagerConf);
+		initAgents(agentConfFile);
 		
+		// kill this agent
+		doDelete();
+	}
 
-		if (aManagerAgent == null) {
+	private void executeUlimit() {
+		
+		String processString = ManagementFactory.getRuntimeMXBean().getName();
+		String processPID = processString.substring(0, processString.indexOf("@"));
+		
+		Runtime rt = Runtime.getRuntime();
+		try {
+			
+			Process pr0 = rt.exec("renice +19 -p " + processPID);
+			pr0.waitFor();
+//			Process pr1 = rt.exec("ulimit -t unlimited");
+//			pr1.waitFor();
+			Process pr2 = rt.exec("kinit -R");
+			pr2.waitFor();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void initAgents(File agentConfFile) {
+		if (agentConfFile == null || ! agentConfFile.isFile()) {
+			getLogger().log(Level.INFO, "File with system agents is not valid");
+			hardKill();
+		}
+		
+		getLogger().log(Level.INFO, "Reading configuration from: " + agentConfFile.getName());
 
-			getLogger().log(Level.SEVERE, "Error by creating agent");
-			try {
-				System.out.println("Killing");
-				getContainerController().kill();
-			} catch (StaleProxyException e) {
-				getLogger().logThrowable("Exception by killing container", e);
-			}
+		InputAgentConfigurations configurations = InputAgentConfigurations.importFromXML(
+				agentConfFile);
+		if (configurations == null || ! configurations.valid(logger)) {
+			hardKill();
 		}
 
-		getLogger().log(Level.INFO, "-------" + this.getAID().getName() + " "
-				+ this.getAID().getLocalName());
+		List<InputAgentConfiguration> managerAgentConfigurations =
+				configurations.exportAgentConfigurations(Agent_ManagerAgent.class);
+		if (managerAgentConfigurations.isEmpty()) {
+			getLogger().log(Level.SEVERE, "Error in the config file - isn't any Agent Manager");
+			hardKill();
+		}
+		if (managerAgentConfigurations.size() > 1) {
+			getLogger().log(Level.SEVERE, "Error in the config file - More than one Agent Manager");
+			hardKill();
+		}
 
+		AgentConfiguration aManagerAgent = Agent_ManagerAgent.createAgent(
+				this, managerAgentConfigurations.get(0), getLogger());
+		
+		if (aManagerAgent == null) {
+			getLogger().log(Level.SEVERE, "Error by creating " + Agent_ManagerAgent.class.getSimpleName());
+			hardKill();
+		}
+		
+		
+		
+		List<InputAgentConfiguration> noManagerAgentConfigurations =
+				configurations.exportsComplement(managerAgentConfigurations);
 
 		AID aManagerAgentAID = aManagerAgent.exportAgentAID();
 		
-		for (AgentConfiguration configurationI : noManagerAgentConfigurations) {
+		for (InputAgentConfiguration configurationI : noManagerAgentConfigurations) {
 
 			AgentConfiguration result =
 					ManagerAgentService.sendCreateAgent(this, aManagerAgentAID,
@@ -134,32 +161,29 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 			if (result == null) {
 				getLogger().log(Level.SEVERE, "Error by creating agent");
-				try {
-					System.out.println("Killing");
-					getContainerController().kill();
-				} catch (StaleProxyException e) {
-					getLogger().logThrowable("Exception by killing container", e);
-				}
+				ManagerAgentService.killAllContainers(this, logger);
+				hardKill();
 			}
 
 		}
 
-		doDelete();
-
 	}
-
+	
 	/**
-	 * Creates agent in this container
-	 * 
-	 * @param type - agent type = name of class
-	 * @param name - agent name
-	 * @return - confirms creation
+	 * Hard kill local container
 	 */
-	public AgentConfiguration createAgent(Agent_DistributedEA agent, AgentConfiguration agentManagerConf) {
+	private void hardKill() {
 
-		return Agent_ManagerAgent.createAgent(this, agentManagerConf, getLogger());
+		try {
+			System.out.println("Killing");
+			getContainerController().kill();
+		} catch (StaleProxyException e) {
+			getLogger().logThrowable("Exception by killing container", e);
+		}
+
+		//waiting to kill
+		while(true) {}
 	}
-
 
 	/**
 	 *  Get from hostname Container ID

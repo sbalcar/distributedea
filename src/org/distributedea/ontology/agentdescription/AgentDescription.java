@@ -2,28 +2,35 @@ package org.distributedea.ontology.agentdescription;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import javax.xml.bind.JAXBException;
-
-import org.distributedea.agents.systemagents.centralmanager.planner.history.MethodInstanceDescription;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.job.noontology.Job;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.ontology.methodtype.MethodType;
+import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
 
 import jade.content.Concept;
 import jade.core.AID;
 
+/**
+ * Ontology for Method Description
+ * @author stepan
+ */
 public class AgentDescription implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Agent configuration
+	 * Agent specification including class, name and parameters
 	 */
 	private AgentConfiguration agentConfiguration;
 	
@@ -32,21 +39,59 @@ public class AgentDescription implements Concept {
 	 */
 	private String problemToolClass;
 
+	
+	
+	@Deprecated
+	public AgentDescription() {} // only for Jade
+	
+	/**
+	 * Constructor
+	 * @param agentConfiguration
+	 * @param problemToolClass
+	 */
+	public AgentDescription(AgentConfiguration agentConfiguration, Class<?> problemToolClass) {
+		if (agentConfiguration == null || ! agentConfiguration.valid(new TrashLogger())) {
+			throw new IllegalArgumentException();
+		}
+	
+		this.agentConfiguration = agentConfiguration;
+		this.importProblemToolClass(problemToolClass);
+	}
 
 	public AgentConfiguration getAgentConfiguration() {
 		return agentConfiguration;
 	}
+	@Deprecated
 	public void setAgentConfiguration(AgentConfiguration agentConfiguration) {
+		if (agentConfiguration == null || ! agentConfiguration.valid(new TrashLogger())) {
+			throw new IllegalArgumentException();
+		}
 		this.agentConfiguration = agentConfiguration;
 	}
 	
 	public String getProblemToolClass() {
 		return problemToolClass;
 	}
+	@Deprecated
 	public void setProblemToolClass(String problemToolClass) {
+		if (problemToolClass == null) {
+			throw new IllegalArgumentException();
+		}
 		this.problemToolClass = problemToolClass;
 	}
 
+	/**
+	 * Export Agent class
+	 * @return
+	 */
+	public Class<?> exportAgentClass() {
+		return agentConfiguration.exportAgentClass();
+	}
+	
+	/**
+	 * Export {@link IProblemTool} class
+	 * @return
+	 */
 	public Class<?> exportProblemToolClass() {
 		try {
 			return Class.forName(problemToolClass);
@@ -54,38 +99,74 @@ public class AgentDescription implements Concept {
 			return null;
 		}
 	}
+	/**
+	 * Import {@link IProblemTool} class
+	 * @param problemToolClass
+	 */
 	public void importProblemToolClass(Class<?> problemToolClass) {
 		this.problemToolClass = problemToolClass.getName();
 	}
 	
-	public void importProblemTool(ProblemTool problemTool) {
-		this.problemToolClass = problemTool.getClass().getName();
-	}
-	
+	/**
+	 * Export Agent AID
+	 * @return
+	 */
 	public AID exportAgentAID() {
 		return agentConfiguration.exportAgentAID();
 	}
 	
-	public String exportAgentName() {
+	/**
+	 * Export Agent user friendly name containing {@link IProblemTool} class
+	 * name
+	 * @return
+	 */
+	public String exportMethodName() {
 		
 		 String problemToolClassName = exportProblemToolClass().getSimpleName();
 		 
 		 return agentConfiguration.exportAgentname() + "-" + problemToolClassName;
 	}
 
-	public MethodInstanceDescription exportMethodInstanceDescription(
-			int instanceNumber) {
+	/**
+	 * Export {@link MethodType}
+	 * @return
+	 */
+	public MethodType exportMethodType() {
 		
-		MethodInstanceDescription methodInstanceDescrittion =
-				new MethodInstanceDescription();
+		Class<?> agentClass = getAgentConfiguration().exportAgentClass();
+		Class<?> problemToolClass = exportProblemToolClass();
 		
-		methodInstanceDescrittion.setInstanceNumber(instanceNumber);
-		methodInstanceDescrittion.importAgentClass(
-				getAgentConfiguration().exportAgentType());
-		methodInstanceDescrittion.importProblemToolClass(
+		return new MethodType(agentClass, problemToolClass);
+	}
+	
+	/**
+	 * Exports {@link InputAgentDescription}
+	 * @return
+	 */
+	public InputAgentDescription exportInputAgentDescription() {
+		if (! valid(new TrashLogger())) {
+			return null;
+		}
+		
+		InputAgentConfiguration inputAgentConfClone =
+				getAgentConfiguration().exportInputAgentConfiguration();
+		
+		return new InputAgentDescription(inputAgentConfClone,
 				exportProblemToolClass());
-
-		return methodInstanceDescrittion;
+	}
+	
+	/**
+	 * Tests validity
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		if (agentConfiguration == null || ! agentConfiguration.valid(logger)) {
+			return false;
+		}
+		if (exportProblemToolClass() == null) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
@@ -128,13 +209,13 @@ public class AgentDescription implements Concept {
 	/**
 	 * Exports structure as the XML String to the file
 	 * 
-	 * @throws FileNotFoundException
-	 * @throws JAXBException 
+	 * @throws IOException
 	 */
-	public void exportXML(File dir) throws FileNotFoundException, JAXBException {
+	public void exportXML(File dir) throws IOException {
 
-		if (dir == null || (! dir.exists()) || (! dir.isDirectory())) {
-			return;
+		if (dir == null || ! dir.isDirectory()) {
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
 		}
 		
 		String fileName = dir.getAbsolutePath() + File.separator + "description.xml";
@@ -165,7 +246,8 @@ public class AgentDescription implements Concept {
 			throws FileNotFoundException {
 
 		if (file == null || ! file.exists()) {
-			return null;
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
 		}
 		
 		Scanner scanner = new Scanner(file);
@@ -185,5 +267,17 @@ public class AgentDescription implements Concept {
 		xstream.setMode(XStream.NO_REFERENCES);
 
 		return (AgentDescription) xstream.fromXML(xml);
+	}
+	
+	/**
+	 * Exports clone
+	 * @return
+	 */
+	public AgentDescription deepClone() {
+		
+		AgentConfiguration confClone = agentConfiguration.deepClone();
+		Class<?> problemToolClassClone = this.exportProblemToolClass();
+		
+		return new AgentDescription(confClone, problemToolClassClone);
 	}
 }

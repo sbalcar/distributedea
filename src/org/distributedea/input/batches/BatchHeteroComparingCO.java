@@ -1,17 +1,18 @@
 package org.distributedea.input.batches;
 
-import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowBestResult;
-import org.distributedea.agents.systemagents.centralmanager.planner.PlannerFollowupHelpers;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisation;
-import org.distributedea.agents.systemagents.centralmanager.planner.initialisation.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerFollowNaiveAskingForBestResult;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfMaterial;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisation;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.jobs.InputContOpt;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
-import org.distributedea.input.postprocessing.matlab.PostProcComparing;
-import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 
 public class BatchHeteroComparingCO extends InputBatch {
 
@@ -31,20 +32,26 @@ public class BatchHeteroComparingCO extends InputBatch {
 		Job jobW1 = InputContOpt.test03();
 		jobW1.setJobID("followBestResult");
 		jobW1.setDescription("Follow Best Result");
-		jobW1.setPlanner(new PlannerFollowBestResult());
+		jobW1.setPlanner(new PlannerFollowNaiveAskingForBestResult());
 		
 		Job jobW2 = InputContOpt.test03();
 		jobW2.setJobID("followupHelpers");
 		jobW2.setDescription("Follow up Helpers");
-		jobW2.setPlanner(new PlannerFollowupHelpers());
+		jobW2.setPlanner(new PlannerTheBestHelper());
+		
+		Job jobW7 = InputContOpt.test03();
+		jobW7.setJobID("theGreatestQuantityOfMaterial");
+		jobW7.setDescription("The Greatest Quantity Of Genetic Material");
+		jobW7.setPlanner(new PlannerTheGreatestQuantityOfMaterial());
+
 		
 		batch.addJobWrapper(jobW0);
 		batch.addJobWrapper(jobW1);
 		batch.addJobWrapper(jobW2);
-		
+		batch.addJobWrapper(jobW7);
 		
 		PostProcessing psMat0 = new PostProcBoxplot();
-		PostProcessing psMat1 = new PostProcComparing();
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun();
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);

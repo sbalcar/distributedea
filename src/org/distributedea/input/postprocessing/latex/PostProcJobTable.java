@@ -1,9 +1,12 @@
 package org.distributedea.input.postprocessing.latex;
 
+import java.io.File;
+
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.BatchHomoComparingTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.Job;
+import org.distributedea.logging.TrashLogger;
 
 public class PostProcJobTable extends PostProcessing {
 
@@ -14,13 +17,14 @@ public class PostProcJobTable extends PostProcessing {
 		
 		String NL = "\n";
 		
-		String problemToSolve = jobWrp.getProblemToSolve().getSimpleName();
+		String problemToSolve = jobWrp.exportProblemToSolve(new TrashLogger()).getSimpleName();
 		String isIndividualDistribution = jobWrp.isIndividualDistribution() ? "ano" : "ne" ;
-		String problemFileName = jobWrp.getProblemFileName();
+		String problemFileName = jobWrp.exportProblemFile().getName();
 		String scheduler = jobWrp.getPlanner().getClass().getSimpleName();
 		String description = jobWrp.getDescription();
 		String jobID = jobWrp.getJobID();
-		String methodsFileName = jobWrp.getMethodsFileName().endsWith("methods.xml") ? "všechny" : jobWrp.getMethodsFileName();
+		File methodsFile = jobWrp.exportMethodsFile();
+		String methodsFileName = methodsFile.getName().endsWith("methods.xml") ? "všechny" : methodsFile.getName();
 		
 		String jobTableCode =
 		"\\begin{table} [hh]" + NL +

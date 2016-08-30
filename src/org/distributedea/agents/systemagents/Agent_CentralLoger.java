@@ -3,17 +3,19 @@ package org.distributedea.agents.systemagents;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
+import jade.content.Concept;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.basic.Action;
-import jade.content.onto.basic.Result;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.logging.FileLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.logger.LogMessage;
 
@@ -27,7 +29,7 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 	private static final long serialVersionUID = 1L;
 
 	/**
-     * Returns list of all ontologies that are used by CentralLoger agent.
+     * Returns list of all ontologies
      */
 	@Override
 	public List<Ontology> getOntologies() {
@@ -38,6 +40,14 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 		return ontologies;
 	}
 
+	public IAgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new FileLogger(this);
+		}
+		return logger;
+	}
+	
 	@Override
 	protected void setup() {
 		
@@ -45,7 +55,7 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 		registrDF();
 
 		MessageTemplate mesTemplate =
-				MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+				MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 
 		addBehaviour(new AchieveREResponder(this, mesTemplate) {
 
@@ -58,10 +68,11 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 					Action action = (Action)
 							getContentManager().extractContent(request);
 
-					/*
-					 * Logging action
-					 */
-					if (action.getAction() instanceof LogMessage) {
+					Concept concept = action.getAction();
+					getLogger().log(Level.INFO, "Inform with " +
+							concept.getClass().getSimpleName());
+					
+					if (concept instanceof LogMessage) {
 						return respondToLogMessage(request, action);
 					}
 
@@ -77,7 +88,11 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 
 				return failure;
 			}
-
+			
+			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
+				return null;
+			}
+			
 		});
 
 	}
@@ -91,25 +106,11 @@ public class Agent_CentralLoger extends Agent_DistributedEA {
 	 */
 	private ACLMessage respondToLogMessage(ACLMessage request, Action a) {
 
-		getLogger().log(Level.INFO, "respondToLogMessage");
-
-		@SuppressWarnings("unused")
-		LogMessage logMessage = (LogMessage) a.getAction();
-
-
-		ACLMessage reply = request.createReply();
-		reply.setPerformative(ACLMessage.AGREE);
-
-		Result result = new Result(a, "OK");
-		try {
-			getContentManager().fillContent(reply, result);
-		} catch (CodecException e) {
-			getLogger().logThrowable("CodecException by sending the answer for LogMessage", e);
-		} catch (OntologyException e) {
-			getLogger().logThrowable("OntologyException by sending the answer for LogMessage", e);
-		}
-
-		return reply;
-	}
+		LogMessage logMessage = (LogMessage) a.getAction();		
+		String message = logMessage.getMessage();
+		getLogger().log(Level.INFO, message);
 		
+		return null;
+	}
+	
 }

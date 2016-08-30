@@ -1,0 +1,2 @@
+# spusteni Jade pomoci javy a uz prekompilovanych class
+java -verbose -cp `find repository/ | grep .jar$ | tr '\n' ':'`:bin jade.Boot -gui -jade_domain_df_autocleanup true -agents Initiator:org.distributedea.agents.systemagents.Agent_Initiator

@@ -1,5 +1,6 @@
 package org.distributedea.problems.tsp.point.permutation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,8 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionPoint;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.tsp.gps.permutation.IProblemTSPPermutationTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemTSPGPSEuc2DPermutationTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
@@ -18,6 +20,12 @@ import org.distributedea.problems.tsp.gps.permutation.operators.SinglePointCross
 import org.distributedea.problems.tsp.point.ProblemTSPPointTool;
 import org.distributedea.problems.tsp.point.permutation.tools.PermutationTool;
 
+/**
+ * Abstract {@link ProblemTool} for {@link ProblemTSPPoint} using permutation
+ * representation of {@link Individual}s
+ * @author stepan
+ *
+ */
 public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool implements IProblemTSPPermutationTool {
 
 	@Override
@@ -57,10 +65,7 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 		
 		List<Integer> permNew = PermutationTool.nextPermutation(perm);
 		
-		IndividualPermutation individualPermNew = new IndividualPermutation();
-		individualPermNew.setPermutation(permNew);
-		
-		return individualPermNew;
+		return new IndividualPermutation(permNew);
 	}
 	
 	@Override
@@ -96,11 +101,11 @@ public abstract class ProblemTSPPointPermutationTool extends ProblemTSPPointTool
 	}
 	
 	@Override
-	public Individual readSolution(String fileName, Problem problem,
+	public Individual readSolution(File fileOfSolution, Problem problem,
 			IAgentLogger logger) {
 		
 		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.readSolution(fileName, problem, logger);
+		return tool.readSolution(fileOfSolution, problem, logger);
 	}
 	
 	@Override

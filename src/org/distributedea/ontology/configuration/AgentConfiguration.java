@@ -2,92 +2,173 @@ package org.distributedea.ontology.configuration;
 
 import jade.content.Concept;
 import jade.core.AID;
+import jade.core.Agent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.Configuration;
+import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.Agent_BruteForce;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
 
-
+/**
+ * Ontology represents description of {@link Agent_DistributedEA}
+ * @author stepan
+ *
+ */
 public class AgentConfiguration implements Concept {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private String agentName;
-	private String agentType;
-	private List<Argument> arguments;
+	private String agentClassName;
+	private Arguments arguments;
 
-	private String containerID;
+	private String containerID = "";
 	
 	private int numberOfContainer = 0;
 	private int numberOfAgent = 0;
 	
-	public AgentConfiguration() {}
+	@Deprecated
+	public AgentConfiguration() {   // only for Jade
+		this.arguments = new Arguments(new ArrayList<Argument>());
+	}
 	
-	public AgentConfiguration(String agentName, String agentType,
-			List<Argument> arguments) {
+	/**
+	 * Constructor
+	 * @param agentName
+	 * @param agentClass
+	 * @param arguments
+	 */
+	public AgentConfiguration(String agentName, Class<?> agentClass,
+			Arguments arguments) {
+		if (agentName == null || agentName.isEmpty()) {
+			throw new IllegalArgumentException("Arguments " +
+					String.class.getSimpleName() + " is not valid");			
+		}
+		if (arguments == null ||
+				! arguments.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Arguments " +
+				Arguments.class.getSimpleName() + " is not valid");
+		}
 		
 		this.agentName = agentName;
-		this.agentType = agentType;
+		this.importAgentClass(agentClass);
 		this.arguments = arguments;
 	}
 
-	public AgentConfiguration(Class<?> agentType,
-			List<Argument> arguments) {
-		
-		this.agentName = agentType.getSimpleName();
-		this.agentType = agentType.getName();
+	/**
+	 * Constructor, name is simple name of {@link Agent} Class
+	 * @param agentType
+	 * @param arguments
+	 */
+	public AgentConfiguration(Class<?> agentClass,
+			Arguments arguments) {
+		if (agentClass == null) {
+			throw new IllegalArgumentException("Argument " +
+					Class.class.getSimpleName() + " is not valid");
+		}
+		if (arguments == null ||
+				! arguments.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					Arguments.class.getSimpleName() + " is not valid");
+		}
+		this.agentName = agentClass.getSimpleName();
+		this.importAgentClass(agentClass);
 		this.arguments = arguments;
 	}
-	
-	public AgentConfiguration(AgentConfiguration agentConfI) {
-		
-		setAgentName(agentConfI.getAgentName());
-		setAgentType(agentConfI.getAgentType());
-		
-		List<Argument> argumentsClone = new ArrayList<>();
-		for (Argument argumentI : agentConfI.getArguments()) {
-			
-			Argument argumentCloneI = new Argument(argumentI);
-			argumentsClone.add(argumentCloneI);
+
+	/**
+	 * Constructor
+	 * @param agentConf
+	 */
+	public AgentConfiguration(InputAgentConfiguration agentConf) {
+		if (agentConf == null || ! agentConf.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputAgentConfiguration.class.getSimpleName() + " is not valid");
 		}
-		setArguments(argumentsClone);
 		
-		setContainerID(agentConfI.getContainerID());
-		setNumberOfContainer(agentConfI.getNumberOfContainer());
-		setNumberOfAgent(agentConfI.getNumberOfAgent());
+		this.agentName = agentConf.getAgentName();
+		this.importAgentClass(agentConf.exportAgentClass());
+		this.arguments = agentConf.getArguments().deepClone();
+	}
+	
+	/**
+	 * Copy constructor
+	 * @param agentConf
+	 */
+	public AgentConfiguration(AgentConfiguration agentConf) {
+		
+		if (agentConf == null || ! agentConf.valid(new TrashLogger())) {
+			throw new IllegalArgumentException();
+		}
+		
+		setAgentName(agentConf.getAgentName());
+		importAgentClass(agentConf.exportAgentClass());
+		
+		setArguments(agentConf.getArguments().deepClone());
+		
+		setContainerID(agentConf.getContainerID());
+		setNumberOfContainer(agentConf.getNumberOfContainer());
+		setNumberOfAgent(agentConf.getNumberOfAgent());
 	}
 
 	public String getAgentName() {
 		return agentName;
 	}
 	public void setAgentName(String agentName) {
+		if (agentName == null || agentName.isEmpty() ||
+				agentName.contains(" ")) {
+			throw new IllegalArgumentException("Argument " +
+					String.class.getSimpleName() + " is not valid");
+		}
 		this.agentName = agentName;
 	}
-	
-	public String getAgentType() {
-		return agentType;
+	@Deprecated
+	public String getAgentClassName() {
+		return agentClassName;
 	}
-	public void setAgentType(String agentType) {
-		this.agentType = agentType;
+	@Deprecated
+	public void setAgentClassName(String agentType) {
+		this.agentClassName = agentType;
 	}
-	public Class<?> exportAgentType() {
+	/**
+	 * Exports {@link Class} of agent
+	 * @return
+	 */
+	public Class<?> exportAgentClass() {
 		try {
-			return Class.forName(getAgentType());
+			return Class.forName(getAgentClassName());
 		} catch (ClassNotFoundException e1) {
 			return null;
 		}
 	}
+	/**
+	 * Imports {@link Class} of agent
+	 * @param agentClass
+	 */
+	public void importAgentClass(Class<?> agentClass) {
+		if (agentClass == null) {
+			throw new IllegalArgumentException("Argument " +
+					Class.class.getSimpleName() + " can not be null");
+		}
+		this.agentClassName = agentClass.getName();
+	}
 	
-	public List<Argument> getArguments() {
+	public Arguments getArguments() {
 		return arguments;
 	}
-	public void setArguments(List<Argument> arguments) {
+	public void setArguments(Arguments arguments) {
+		if (arguments == null ||
+				! arguments.valid(new TrashLogger())) {
+			throw new IllegalArgumentException();
+		}
 		this.arguments = arguments;
-	}	
-	
-	
+	}
+
 	public String getContainerID() {
 		return containerID;
 	}
@@ -118,7 +199,7 @@ public class AgentConfiguration implements Concept {
 	public boolean exportIsComputingAgent() {
 		
 		String namespace = Agent_BruteForce.class.getPackage().getName();
-		if (agentType.startsWith(namespace)) {
+		if (agentClassName.startsWith(namespace)) {
 			return true;
 		}
 		
@@ -127,7 +208,7 @@ public class AgentConfiguration implements Concept {
 	
 	public boolean exportIsAgentWitoutSuffix() {
 		
-		Class<?> agentTypeClass = exportAgentType();
+		Class<?> agentTypeClass = exportAgentClass();
 		
 		// starts agents which are in system only one-times
 		List<Class<?>> uniqueAgentList = Configuration.agentsWithoutSuffix();
@@ -139,6 +220,10 @@ public class AgentConfiguration implements Concept {
 		return false;
 	}
 	
+	/**
+	 * Exports name of {@link Agent_DistributedEA}
+	 * @return
+	 */
 	public String exportAgentname() {
 		
 		if (exportIsAgentWitoutSuffix()) {
@@ -169,12 +254,52 @@ public class AgentConfiguration implements Concept {
 		}
 	}
 	
+	/**
+	 * Exports Jade AID specification of Agent
+	 * @return
+	 */
 	public AID exportAgentAID() {
 		
 		String agentName = exportAgentname();
-		return new AID(agentName, false);
+		try {
+			return new AID(agentName, false);
+		} catch(Exception e) {
+			return null;
+		}
 	}
 	
+	/**
+	 * Exports {@link InputAgentConfiguration}
+	 * @return
+	 */
+	public InputAgentConfiguration exportInputAgentConfiguration() {
+		if (! valid(new TrashLogger())) {
+			return null;
+		}
+		return new InputAgentConfiguration(
+				getAgentName(),
+				exportAgentClass(),
+				getArguments().deepClone());
+	}
+	
+	/**
+	 * Tests validity
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		if (exportAgentClass() == null) {
+			return false;
+		}
+		if (arguments == null || ! arguments.valid(logger)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns Clone
+	 * @return
+	 */
 	public AgentConfiguration deepClone() {
 		return new AgentConfiguration(this);
 	}
@@ -191,32 +316,21 @@ public class AgentConfiguration implements Concept {
 	    boolean aregetAgentNamesEqual =
 	    		this.getAgentName().equals(acOuther.getAgentName());
 	    boolean areAgentTypeEqual =
-	    		this.getAgentType().equals(acOuther.getAgentType());
+	    		this.exportAgentClass() == acOuther.exportAgentClass();
+	    boolean areArgumentsEqual =
+	    		this.getArguments().equals(acOuther.getArguments());
 	    
-	    if (getArguments() == null && acOuther.getArguments() == null) {
-	    	return aregetAgentNamesEqual && areAgentTypeEqual;
-	    }
+	    boolean areContainerIDEqual =
+	    		this.containerID.equals(acOuther.getContainerID());
+	    boolean areNumberOfContainerEqual =
+	    		this.numberOfContainer == acOuther.getNumberOfContainer();
+	    boolean areNumberOfAgentEqual =
+	    		this.numberOfAgent == acOuther.getNumberOfAgent();
+
 	    
-	    if ((getArguments() == null && acOuther.getArguments() != null) ||
-	    		(getArguments() != null && acOuther.getArguments() == null)) {
-	    	return false;
-	    }
-	    
-	    if (getArguments().size() != acOuther.getArguments().size()) {
-	    	return false;
-	    }
-    	for (int argumentIndex = 0;
-    			argumentIndex < getArguments().size(); argumentIndex++) {
-    		
-    		Argument argThis = getArguments().get(argumentIndex);
-    		Argument argOther = acOuther.getArguments().get(argumentIndex);
-    		
-    		if (! argThis.equals(argOther)) {
-    			return false;
-    		}
-    	}
-	    
-	    return true;
+	    return aregetAgentNamesEqual && areAgentTypeEqual &&
+	    		areArgumentsEqual && areContainerIDEqual &&
+	    		areNumberOfContainerEqual && areNumberOfAgentEqual;
 	}
 	
     @Override
@@ -227,12 +341,6 @@ public class AgentConfiguration implements Concept {
 	@Override
 	public String toString() {
 		
-		String value = agentName + agentType;
-		if (arguments != null) {
-			for (Argument argumentI : arguments) {
-				value += argumentI.toString();
-			}
-		}
-		return value;
+		return exportAgentname();
 	}
 }

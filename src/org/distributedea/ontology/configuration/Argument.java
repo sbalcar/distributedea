@@ -1,5 +1,7 @@
 package org.distributedea.ontology.configuration;
 
+import org.distributedea.logging.IAgentLogger;
+
 import jade.content.Concept;
 
 
@@ -47,6 +49,18 @@ public class Argument implements Concept {
 		this.sendOnlyValue = sendOnlyValue;
 	}
 
+	/**
+	 * Tests validity
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		return true;
+	}
+
+	/**
+	 * Returns clone
+	 * @return
+	 */
 	public Argument deepClone() {
 		return new Argument(this);
 	}
@@ -83,5 +97,15 @@ public class Argument implements Concept {
 	@Override
 	public String toString() {
 		return name + value + sendOnlyValue;
+	}
+	
+	public Argument exportClone() {
+		
+		Argument clone = new Argument();
+		clone.setName(name);
+		clone.setValue(value);
+		clone.setSendOnlyValue(sendOnlyValue);
+		
+		return clone;
 	}
 }

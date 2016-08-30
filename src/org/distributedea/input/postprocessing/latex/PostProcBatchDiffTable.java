@@ -2,10 +2,10 @@ package org.distributedea.input.postprocessing.latex;
 
 import java.util.List;
 
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.BatchHomoComparingTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.ontology.job.noontology.Batch;
-import org.distributedea.ontology.job.noontology.Job;
 
 public class PostProcBatchDiffTable extends PostProcessing {
 

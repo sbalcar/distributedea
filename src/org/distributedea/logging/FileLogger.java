@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Level;
 
-import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.datamanager.FileNames;
 
 public class FileLogger implements IAgentLogger {
 
 	String fileName;
 	
 	public FileLogger(Agent_DistributedEA agent) {
-		this.fileName = Configuration.
+		this.fileName = FileNames.
 				getGeneralLogDirectoryForComputingAgent(agent.getAID());
 	}
 	

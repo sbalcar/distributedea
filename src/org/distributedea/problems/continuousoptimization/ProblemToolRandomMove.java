@@ -9,7 +9,7 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
-import org.distributedea.problems.exceptions.ProblemToolException;
+import org.distributedea.problems.ProblemToolException;
 
 public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 
@@ -56,11 +56,8 @@ public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 		if (isTheLastIndividual) {
 			return null;
 		}
-		
-		IndividualPoint individualNew = new IndividualPoint();
-		individualNew.setCoordinates(coordinatesNew);
 
-		return individualNew;
+		return new IndividualPoint(coordinatesNew);
 	}
 
 	@Override
@@ -160,11 +157,8 @@ public class ProblemToolRandomMove extends ProblemContinuousOptTool {
 			
 			coordinates.add(valueNew);
 		}
-		
-		IndividualPoint individualNew = new IndividualPoint();
-		individualNew.setCoordinates(coordinates);
-		
-		Individual[] individuals = {individualNew};
+				
+		Individual[] individuals = {new IndividualPoint(coordinates)};
 		return individuals;
 	}
 
