@@ -8,9 +8,9 @@ import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.agentinfo.AgentInfoWrapper;
 import org.distributedea.ontology.agentinfo.GetAgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.AgentName;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
-import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
 import org.distributedea.ontology.management.ReadyToBeKilled;
@@ -41,8 +41,8 @@ public class ManagementOntology extends BeanOntology {
             add(ReadyToBeKilled.class);
             add(KillAgent.class);
             add(KillContainer.class);
-            add(RequiredAgent.class);
             add(AgentConfiguration.class);
+            add(AgentName.class);
             add(Arguments.class);
             add(Argument.class);
 

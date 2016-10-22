@@ -3,7 +3,7 @@ package org.distributedea.agents.systemagents.centralmanager.structures.history.
 import java.util.Comparator;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistory;
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodInstanceDescription;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 
 public class ComparatorLexicographical implements Comparator<MethodHistory> {

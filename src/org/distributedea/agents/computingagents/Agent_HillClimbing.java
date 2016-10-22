@@ -7,7 +7,7 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
@@ -72,6 +72,9 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		description.setExploration(true);
 		
 		return description;
+	}
+	
+	protected void processArguments(Arguments args) throws Exception {
 	}
 	
 	@Override
@@ -150,8 +153,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	protected IndividualEvaluated getNewIndividual(IndividualEvaluated individualEval,
 			Problem problem, IProblemTool problemTool) throws ProblemToolException {
 		
-		Individual individual = individualEval.getIndividual();
-		return problemTool.improveIndividualEval(individual, problem, getCALogger());
+		return problemTool.improveIndividualEval(individualEval, problem, getCALogger());
 	}
 	
 }

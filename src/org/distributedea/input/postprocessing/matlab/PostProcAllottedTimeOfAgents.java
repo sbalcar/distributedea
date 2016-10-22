@@ -6,19 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistories;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistory;
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodInstanceDescription;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.MatlabTool;
 import org.distributedea.input.batches.BatchTestTSP;
-import org.distributedea.input.batches.InputBatch;
+import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 
 /**
  * PostProcessing compares numbers of {@link Iteration}s which
@@ -52,14 +53,17 @@ public class PostProcAllottedTimeOfAgents extends PostProcessingMatlab {
 		File monitoringDirI = new File(monitoringDirNameI);
 		
 		History history = History.importXML(monitoringDirI);
-		history.sortMethodInstancesByName();
+		MethodHistories methodHistories = history.getMethodHistories();
+		
+		methodHistories.sortMethodInstancesByName();
 
 		String YLABEL = "CPU jádro-iterace";
 		
 		List<Long> iterationsList = new ArrayList<>();
 		List<String> labelsList = new ArrayList<>();
 		
-		for (MethodHistory methodI : history.getMethodInstances()) {
+		for (MethodHistory methodI :
+			methodHistories.getMethods()) {
 			
 			iterationsList.add(methodI.exportNumberOfIteration());
 			
@@ -107,7 +111,7 @@ public class PostProcAllottedTimeOfAgents extends PostProcessingMatlab {
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-		InputBatch batchCmp = new BatchTestTSP();
+		IInputBatch batchCmp = new BatchTestTSP();
 		Batch batch = batchCmp.batch();
 		
 		PostProcessing p = new PostProcAllottedTimeOfAgents();

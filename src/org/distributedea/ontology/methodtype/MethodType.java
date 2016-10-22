@@ -3,6 +3,9 @@ package org.distributedea.ontology.methodtype;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
+import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
 import org.distributedea.problems.IProblemTool;
 
 import jade.content.Concept;
@@ -21,6 +24,11 @@ public class MethodType implements Concept {
 	 * Agent class
 	 */
 	private String agentClassName;
+
+	/**
+	 * Arguments of agent
+	 */
+	private Arguments arguments;
 	
 	/**
 	 * Problem Tool to use for solving Problem 
@@ -37,9 +45,16 @@ public class MethodType implements Concept {
 	 * @param agentClass
 	 * @param problemToolClass
 	 */
-	public MethodType(Class<?> agentClass, Class<?>  problemToolClass) {
+	public MethodType(Class<?> agentClass, Class<?>  problemToolClass, Arguments arguments) {
+		
+		if (arguments == null || ! arguments.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					Arguments.class.getSimpleName() + " is not valid");
+		}
+		
 		importAgentClass(agentClass);
 		importProblemToolClass(problemToolClass);
+		this.arguments = arguments;
 	}
 	
 	/**
@@ -53,6 +68,7 @@ public class MethodType implements Concept {
 		}
 		importAgentClass(methodType.exportAgentClass());
 		importProblemToolClass(methodType.exportProblemToolClass());
+		this.arguments = methodType.getArguments().deepClone();
 	}
 	
 	@Deprecated
@@ -63,6 +79,19 @@ public class MethodType implements Concept {
 	public void setAgentClassName(String agentClassName) {
 		this.agentClassName = agentClassName;
 	}
+	
+	public Arguments getArguments() {
+		return arguments;
+	}
+	@Deprecated
+	public void setArguments(Arguments arguments) {
+		if (arguments == null || ! arguments.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					Arguments.class.getSimpleName() + " is not valid");
+		}
+		this.arguments = arguments;
+	}
+
 	@Deprecated
 	public String getProblemToolClassName() {
 		return problemToolClassName;
@@ -117,6 +146,18 @@ public class MethodType implements Concept {
 	}
 	
 	/**
+	 * Exports {@link InputAgentDescription} of this {@link MethodType}
+	 * @return
+	 */
+	public InputAgentDescription exportInputAgentDescription() {
+	
+		InputAgentConfiguration configuration = new InputAgentConfiguration(
+				exportAgentClass().getSimpleName(), exportAgentClass(), getArguments());
+		
+		return new InputAgentDescription(configuration, exportProblemToolClass());
+	}
+	
+	/**
 	 * Test validity
 	 * @return
 	 */
@@ -125,6 +166,9 @@ public class MethodType implements Concept {
 			return false;
 		}
 		if (exportProblemToolClass() == null) {
+			return false;
+		}
+		if (getArguments() == null || ! getArguments().valid(logger)) {
 			return false;
 		}
 		return true;
@@ -138,7 +182,14 @@ public class MethodType implements Concept {
 	    
 	    MethodType methodType = (MethodType)other;
 	    
-	    return this.toString().equals(methodType.toString());
+	    boolean areAgentClassEqual =
+	    		exportAgentClass() == methodType.exportAgentClass();
+	    boolean areProblemToolEqual =
+	    		exportProblemToolClass() == methodType.exportProblemToolClass();
+	    boolean areArgumentsEqual =
+	    		getArguments().equals(methodType.getArguments());
+	    
+	    return areAgentClassEqual && areProblemToolEqual && areArgumentsEqual;
 	}
 	
     @Override
@@ -149,13 +200,15 @@ public class MethodType implements Concept {
 	@Override
 	public String toString() {
 		
-		return agentClassName + problemToolClassName;
+		return agentClassName + problemToolClassName +
+			arguments.toString();
 	}
 
 	public String exportString() {
 		
 		return exportAgentClass().getSimpleName() + "-" +
-				exportProblemToolClass().getSimpleName();
+				exportProblemToolClass().getSimpleName() + "-" +
+				arguments.toString();
 	}
 	
 	

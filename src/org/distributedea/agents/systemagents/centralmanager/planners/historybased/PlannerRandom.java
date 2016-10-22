@@ -1,15 +1,13 @@
 package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
 
-import java.util.Random;
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisation;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRandom;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
-import org.distributedea.agents.systemagents.centralmanager.structures.methodsstatistics.MethodsStatistics;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistories;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
@@ -17,10 +15,10 @@ import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
+
 
 public class PlannerRandom implements Planner {
 	
@@ -28,9 +26,7 @@ public class PlannerRandom implements Planner {
 	private JobRun jobRun;
 	private IAgentLogger logger;
 	
-	private PlannerInitialisation plannerInit = null;
-	
-	Random ran = new Random();
+	private Planner plannerInit = null;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -42,9 +38,8 @@ public class PlannerRandom implements Planner {
 		this.jobRun = jobRun;
 		this.logger = logger;
 		
-		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
 		
-		plannerInit = new PlannerInitialisation(state, true);
+		plannerInit = new PlannerInitialisationRandom();
 		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
 	}
 
@@ -65,49 +60,17 @@ public class PlannerRandom implements Planner {
 	
 	private InputRePlan replanning(Iteration iteration, History history
 			 ) throws Exception {
-		
-		History historyOfCurrentMethods = history.
-				exportHistoryOfRunningMethods(iteration, 0);
-		MethodsStatistics currentMethodsResults =
-				historyOfCurrentMethods.exportMethodsResults(iteration);
-		int todo;
-/*		
-		if (currentMethodsResults.getNumberOfMethodsStatistics() <= 1) {
-			return new RePlan(iteration);
-		}
-*/
-		InputAgentDescription candidateDescription = plannerInit.removeNextCandidate();
-		if (candidateDescription != null) {
-			
-			MethodStatistic theWorstMethodStatistic = currentMethodsResults
-					.exportMethodAchievedTheLeastQuantityOfImprovement();
-			AgentDescription methodToKill =
-					theWorstMethodStatistic.exportAgentDescriptionClone();
-			
-			InputAgentDescription methodToCreate =
-					jobRun.exportRandomSelectedAgentDescription();
-			
-			return new InputRePlan(iteration, methodToKill, methodToCreate);
-		}
-		
-		return replanRandomByRandomMethod(iteration, currentMethodsResults);
-	}
-	
-	
-	private InputRePlan replanRandomByRandomMethod(Iteration iteration,
-			MethodsStatistics currentMethodsResults) throws Exception {			
+
+		MethodHistories currentMethodsHistory = history.getMethodHistories()
+				.exportHistoryOfRunningMethods(iteration, 0);
 
 		//random select agent to kill
-		MethodStatistic randomMethodStatistic =
-				currentMethodsResults.exportRandomMethodStatistic();
-
 		AgentDescription methodToKill =
-				randomMethodStatistic.exportAgentDescriptionClone();
+				currentMethodsHistory.exportRandomRunningMethod();
 		
 		//random select agent to create
 		InputAgentDescription methodToCreate =
 				jobRun.exportRandomSelectedAgentDescription();
-
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate);
 	}
@@ -115,7 +78,7 @@ public class PlannerRandom implements Planner {
 	
 	@Override
 	public void exit(Agent_CentralManager centralManager, IAgentLogger logger) {
-		ManagerAgentService.killAllComputingAgent(centralManager, logger);
 		
+		ManagerAgentService.killAllComputingAgent(centralManager, logger);
 	}
 }

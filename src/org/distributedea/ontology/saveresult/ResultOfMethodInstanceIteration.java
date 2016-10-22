@@ -5,10 +5,10 @@ import java.io.IOException;
 
 import jade.content.Concept;
 
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodInstanceDescription;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 
 /**

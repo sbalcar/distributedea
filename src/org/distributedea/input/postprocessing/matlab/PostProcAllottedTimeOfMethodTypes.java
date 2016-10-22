@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistories;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.MatlabTool;
 import org.distributedea.input.batches.BatchTestTSP;
-import org.distributedea.input.batches.InputBatch;
+import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.iteration.Iteration;
@@ -52,14 +53,16 @@ public class PostProcAllottedTimeOfMethodTypes extends PostProcessingMatlab {
 		File monitoringDirI = new File(monitoringDirNameI);
 		
 		History history = History.importXML(monitoringDirI);
-		history.sortMethodInstancesByName();
+		MethodHistories methodHistories = history.getMethodHistories();
+		
+		methodHistories.sortMethodInstancesByName();
 
 		List<Long> iterationsList = new ArrayList<>();
 		List<String> labelsList = new ArrayList<>();
 		
-		for (MethodType methodTypeI : history.exportMethodTypes()) {
+		for (MethodType methodTypeI : methodHistories.exportMethodTypes()) {
 			
-			long iterationI = history.exportNumberOfIterationOf(methodTypeI);
+			long iterationI = methodHistories.exportNumberOfIterationOf(methodTypeI);
 			iterationsList.add(iterationI);
 			
 			labelsList.add(methodTypeI.exportString());
@@ -89,7 +92,7 @@ public class PostProcAllottedTimeOfMethodTypes extends PostProcessingMatlab {
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-		InputBatch batchCmp = new BatchTestTSP();
+		IInputBatch batchCmp = new BatchTestTSP();
 		Batch batch = batchCmp.batch();
 		
 		PostProcessing p = new PostProcAllottedTimeOfMethodTypes();

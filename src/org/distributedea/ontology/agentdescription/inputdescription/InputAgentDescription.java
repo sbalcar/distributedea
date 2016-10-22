@@ -4,7 +4,7 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.problems.IProblemTool;
@@ -109,7 +109,9 @@ public class InputAgentDescription implements Concept {
 		Class<?> agentClass = getInputAgentConfiguration().exportAgentClass();
 		Class<?> problemToolClass = exportProblemToolClass();
 		
-		return new MethodType(agentClass, problemToolClass);
+		Arguments arguments = inputAgentConfiguration.getArguments();
+		
+		return new MethodType(agentClass, problemToolClass, arguments);
 	}
 	
 	/**
@@ -129,18 +131,18 @@ public class InputAgentDescription implements Concept {
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof AgentDescription)) {
+	    if (!(other instanceof InputAgentDescription)) {
 	        return false;
 	    }
 	    
-	    AgentDescription adOuther = (AgentDescription)other;
+	    InputAgentDescription iadOuther = (InputAgentDescription)other;
 	    
-	    boolean areAgentagentConfigurationsEqual =
-	    		this.getInputAgentConfiguration().equals(adOuther.getAgentConfiguration());
+	    boolean areInputAgentConfigurationEqual =
+	    		this.getInputAgentConfiguration().equals(iadOuther.getInputAgentConfiguration());
 	    boolean areProblemToolClassesEqual =
-	    		this.getProblemToolClass().equals(adOuther.getProblemToolClass());
+	    		this.getProblemToolClass().equals(iadOuther.getProblemToolClass());
 	    
-	    if (areAgentagentConfigurationsEqual && 
+	    if (areInputAgentConfigurationEqual && 
 	    		areProblemToolClassesEqual) {
 	    	return true;
 	    }

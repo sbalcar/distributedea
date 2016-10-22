@@ -87,12 +87,12 @@ public class ModelOfHelpmates {
 	public Pair<AgentDescription, Integer> exportMinPrioritizedDescription() {
 		
 		// initialization of data structure
-		Map<AgentDescription, Integer> helpmateMapI = exportAgentPriority();
+		Map<AgentDescription, Integer> helpmatesMap = exportAgentPriority();
 		
 		int minPriority = Integer.MAX_VALUE;
 		AgentDescription minPriorityDescription = null;
 		
-		for (Map.Entry<AgentDescription, Integer> entry : helpmateMapI.entrySet()) {
+		for (Map.Entry<AgentDescription, Integer> entry : helpmatesMap.entrySet()) {
 			
 			AgentDescription descriptionI = entry.getKey();
 		    int priorityI = entry.getValue();

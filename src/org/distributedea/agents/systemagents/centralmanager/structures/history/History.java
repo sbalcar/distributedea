@@ -3,18 +3,18 @@ package org.distributedea.agents.systemagents.centralmanager.structures.history;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodhistory.ComparatorLexicographical;
 import org.distributedea.agents.systemagents.centralmanager.structures.methodsstatistics.MethodsStatistics;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.AgentDescriptions;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
@@ -36,7 +36,7 @@ public class History {
 	private final List<Plan> plans;
 	private final List<RePlan> replans;
 	
-	private final List<MethodHistory> methods;
+	private final MethodHistories methods;
 	
 	/**
 	 * Constructor
@@ -48,7 +48,7 @@ public class History {
 					JobID.class.getSimpleName() + " is not valid");
 		}
 		this.jobID = jobID;
-		this.methods = new ArrayList<>();
+		this.methods = new MethodHistories();
 		this.plans = new ArrayList<>();
 		this.replans = new ArrayList<>();
 	}
@@ -60,11 +60,25 @@ public class History {
 	 * @param plans
 	 * @param replans
 	 */
-	private History(JobID jobID, List<MethodHistory> methods,  List<Plan> plans, List<RePlan> replans) {
+	private History(JobID jobID, MethodHistories methods, List<Plan> plans,
+			List<RePlan> replans) {
 		if (jobID == null || ! jobID.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					JobID.class.getSimpleName() + " is not valid");
 		}
+		if (methods == null || ! methods.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					MethodHistories.class.getSimpleName() + " is not valid");
+		}
+		if (plans == null) {
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
+		}
+		if (replans == null) {
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
+		}
+		
 		this.jobID = jobID;
 		this.methods = methods;
 		this.plans = plans;
@@ -79,16 +93,18 @@ public class History {
 		return jobID.deepClone();
 	}
 
-	public List<MethodHistory> getMethodInstances() {
+	/**
+	 * Returns the {@link MethodHistories}
+	 * @return
+	 */
+	public MethodHistories getMethodHistories() {
 		return methods;
 	}
-	public int getNumberOfMethodInstances() {
-		if (methods == null) {
-			return 0;
-		}
-		return methods.size();
-	}
 
+	/**
+	 * Returns the {@link List} of {@link RePlan}s
+	 * @return
+	 */
 	public List<RePlan> getRePlans() {
 		return replans;
 	}
@@ -110,14 +126,14 @@ public class History {
 			processAgentToCreate(agentDescriptionI);
 		}
 	}
+	
 	/**
-	 * Inserts the replanning result of Planner into the history,
+	 * Inserts the re-planning result of Planner into the history,
 	 * results contains methods which were killed and created 
 	 * @param replan
 	 */
 	public void addNewRePlan(RePlan replan) {
 		if (replan == null || ! replan.valid(new TrashLogger())) {
-			replan.valid(new TrashLogger());
 			throw new IllegalArgumentException("Argument " +
 					RePlan.class.getSimpleName() + " is not valid");
 		}
@@ -127,7 +143,7 @@ public class History {
 		AgentDescriptions agentsToKill = replan.getAgentsToKill();
 		for (AgentDescription agentToKillI : agentsToKill.getAgentDescriptions()) {
 			MethodHistory methodHistory =
-					getMethodHistoryOfCurentlyRunning(agentToKillI);
+					methods.getMethodHistoryOfCurentlyRunning(agentToKillI);
 			if (methodHistory != null) {
 				methodHistory.setCurrentAgent(null);
 			}
@@ -145,96 +161,21 @@ public class History {
 		MethodType methodType =
 				agentToCreateI.exportMethodType();
 		
-		MethodHistory methodHistory = getFirstDeadMethodHistoryOfSameType(methodType);
+		MethodHistory methodHistory = methods.getFirstDeadMethodHistoryOfSameType(methodType);
 		if (methodHistory != null) {
 			methodHistory.setCurrentAgent(agentToCreateI.deepClone());
 			return;
 		}
 		
-		int max = maxNumberOfAvailableInstance(methodType);
+		int max = methods.maxNumberOfAvailableInstance(methodType);
 
-		MethodInstanceDescription methodInstanceDescription = new MethodInstanceDescription(methodType, max +1);
+		MethodInstanceDescription methodInstanceDescription =
+				new MethodInstanceDescription(methodType, max +1);
 				
 		MethodHistory methodHistoryI = new MethodHistory(
 				methodInstanceDescription, agentToCreateI.deepClone());
 		
 		this.methods.add(methodHistoryI);
-	}
-	
-	private int maxNumberOfAvailableInstance(MethodType instance) {
-
-		int number = -1;
-		for (MethodHistory methodHistoryI : methods) {
-			
-			MethodInstanceDescription instanceI =
-					methodHistoryI.getMethodInstanceDescription();
-			if (instanceI.exportAreTheSameType(instance)) {
-				int instanceNumberI = instanceI.getInstanceNumber();
-				if (instanceNumberI > number) {
-					number = instanceNumberI;
-				}
-			}
-		}
-		
-		return number;
-	}
-	
-	private MethodHistory getMethodHistoryOfCurentlyRunning(AgentDescription agentDescription) {
-		
-		String agentName = agentDescription.getAgentConfiguration().exportAgentname();
-		
-		for (MethodHistory methodHistoryI : methods) {
-			
-			AgentDescription agentI = methodHistoryI.getCurrentAgent();
-			
-			if (agentI == null) {
-				continue;
-			}
-			
-			String agentNameI = agentI.getAgentConfiguration().exportAgentname();
-			
-			if (agentNameI.equals(agentName)) {
-				return methodHistoryI;
-			}
-		}
-		return null;
-	}
-	
-	private MethodHistory getFirstDeadMethodHistoryOfSameType(MethodType methodType) {
-		
-		for (MethodHistory methodHistoryI : methods) {
-			
-			// skip if Method is dead
-			if (methodHistoryI.getCurrentAgent() != null) {
-				continue;
-			}
-			
-			MethodInstanceDescription methodInstDescI =
-					methodHistoryI.getMethodInstanceDescription();
-			
-			if (methodInstDescI.exportAreTheSameType(methodType)) {
-				return methodHistoryI;
-			}
-		}
-		return null;
-	}
-	
-	private MethodHistory getMethodHistoryOfRunningMethod(AgentDescription agentDescription) {
-
-		for (MethodHistory methodHistoryI : methods) {
-
-			AgentDescription agentDescriptionI =
-					methodHistoryI.getCurrentAgent();
-			
-			if (agentDescriptionI == null) {
-				continue;
-			
-			} else if (agentDescriptionI.exportMethodName().equals(
-					agentDescription.exportMethodName())) {
-				return methodHistoryI;
-			}
-		}
-		return null;
 	}
 
 	private RePlan getRePlan(Iteration iteration) {
@@ -256,37 +197,10 @@ public class History {
 	}
 	
 	
-	private Iteration getLastIterationOfMethods() {
-		if (methods == null || methods.isEmpty()) {
-			return null;
-		}
-		
-		MethodHistory selectedMethodHistory = methods.get(0);
-		for (MethodHistory methodHistoryI : methods) {
-			
-			MethodStatisticResultWrapper resultWrpI =
-					methodHistoryI.exportLastStatistic();
-			Iteration iterationI = resultWrpI.getIteration();
-			
-			MethodStatisticResultWrapper selectedResultWrp =
-					selectedMethodHistory.exportLastStatistic();
-			Iteration selectedIteration = selectedResultWrp.getIteration();
-			
-			if (iterationI.getIterationNumber() >
-					selectedIteration.getIterationNumber()) {
-				selectedMethodHistory = methodHistoryI;
-			}
-		}
-		
-		MethodStatisticResultWrapper lastResultWrp =
-				selectedMethodHistory.exportLastStatistic();
-		return lastResultWrp.getIteration();
-	}
-	
 	/**
-	 * Adds to history Statistic of current Iteration number,
-	 * for inserting Statistic is required to have added Plan and RePlan
-	 * of the belonging iteration
+	 * Adds to history {@link Statistic} of current {@link Iteration} number,
+	 * for inserting Statistic is required to have added {@link Plan}
+	 * and {@link RePlan} of the belonging {@link Iteration}
 	 * @param statistic
 	 * @param iteration
 	 */
@@ -350,12 +264,12 @@ public class History {
 		AgentDescription agentDescription =
 				methodStatistic.getAgentDescription();
 		
-		MethodHistory methodHistory =
-				getMethodHistoryOfRunningMethod(agentDescription);
+		MethodHistory methodHistory = methods
+				.getMethodHistoryOfRunningMethod(agentDescription);
 		if (methodHistory != null) {
 			methodHistory.addStatistic(statistic, iteration);
 		} else {
-			getMethodHistoryOfRunningMethod(agentDescription);
+			methods.getMethodHistoryOfRunningMethod(agentDescription);
 			throw new IllegalStateException("Not avaliable last " +
 					MethodHistory.class.getSimpleName() + " " +
 					agentDescription.exportMethodName());
@@ -363,81 +277,42 @@ public class History {
 
 	}
 	
-	public History exportHistoryOfAgents(List<Class<?>> agentClasses) {
-		if (agentClasses == null) {
-			throw new IllegalArgumentException();
-		}
-
-		List<MethodHistory> selectedMethods = exportMethodsOfAgent(agentClasses);
+	/**
+	 * Exports {@link InputAgentDescriptions} from {@link JobRun} which
+	 * have never run
+	 * @param jobRun
+	 * @return
+	 */
+	public InputAgentDescriptions exportsMethodsWhichHaveNeverRun(JobRun jobRun) {
 		
-		return new History(jobID, selectedMethods, plans, replans);
-	}
-	private List<MethodHistory> exportMethodsOfAgent(List<Class<?>> agentClasses) {
+		InputAgentDescriptions agentDescriptions =
+				jobRun.exportInputAgentDescriptions();
 		
-		List<MethodHistory> selectedMethods = new ArrayList<>();
-		for (Class<?> agentClassI : agentClasses) {
-			
-			List<MethodHistory> selectedMethodsI =
-					exportMethodsOfAgent(agentClassI);
-			selectedMethods.addAll(selectedMethodsI);
-		}
-		return selectedMethods;
-	}
-	private List<MethodHistory> exportMethodsOfAgent(Class<?> agentClass) {
-
-		List<MethodHistory> selected = new ArrayList<>();
-		for (MethodHistory methodI : methods) {
-			
-			MethodInstanceDescription methodInstaneI =
-					methodI.getMethodInstanceDescription();
-						
-			if (methodInstaneI.exportAgentClass() != agentClass) {
-				selected.add(methodI);
-			}
-		}
-		
-		return selected;
+		return getMethodHistories().exportsMethodsWhichHaveNeverRun(
+				agentDescriptions);
 	}
 	
 	/**
-	 * Exports History Of given type of MethodIstacess
-	 * @param methodInstanes
+	 * Exports {@link MethodsStatistics} for given {@link Iteration}
+	 * @param agentClasses
+	 * @param iteration
 	 * @return
 	 */
-	public History exportHistoryOfMethodInstances(List<MethodType> methodInstanes) {
-		if (methodInstanes == null) {
-			throw new IllegalArgumentException();
+	public MethodsStatistics exportMethodsStatisticsOfAgent(List<Class<?>> agentClasses,
+			Iteration iteration) {
+		if (agentClasses == null) {
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
+		}
+		if (iteration == null || ! iteration.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					Iteration.class.getSimpleName() + " is not valid");
 		}
 		
-		List<MethodHistory> selectedMethods = exportMethodsOfInstance(methodInstanes);
+		MethodHistories selectedMethods =
+				methods.exportMethodHistoriesOfAgent(agentClasses);
 		
-		return new History(jobID, selectedMethods, plans, replans);
-	}
-	private List<MethodHistory> exportMethodsOfInstance(List<MethodType> methodInstanes) {
-		
-		List<MethodHistory> selectedMethods = new ArrayList<>();
-		for (MethodType methodTypeI : methodInstanes) {
-			
-			List<MethodHistory> selectedMethodsI =
-					exportMethodsOfInstance(methodTypeI);
-			selectedMethods.addAll(selectedMethodsI);
-		}
-		return selectedMethods;
-	}
-	private List<MethodHistory> exportMethodsOfInstance(MethodType methodType) {
-
-		List<MethodHistory> selected = new ArrayList<>();
-		for (MethodHistory methodI : methods) {
-			
-			MethodInstanceDescription methodInstaneI =
-					methodI.getMethodInstanceDescription();
-						
-			if (methodInstaneI.exportAreTheSameType(methodType)) {
-				selected.add(methodI);
-			}
-		}
-		
-		return selected;
+		return selectedMethods.exportMethodsResults(iteration, jobID);
 	}
 	
 	/**
@@ -455,99 +330,45 @@ public class History {
 		if (methodInstancesToSelect.isEmpty()) {
 			return null;
 		}
-
-		MethodType methodDescription = methodInstancesToSelect.get(0);
-		History historySelected =
-				exportHistoryOfMethodInstances(Arrays.asList(methodDescription));
-		Iteration iteration = historySelected.getLastIterationOfMethods();
-		// first methodInstance has never been running
-		if (iteration == null) {
-			return methodDescription;
-		}
 		
-		for (MethodType methodDescriptionI : methodInstancesToSelect) {
-
-			History historySelectedI =
-					exportHistoryOfMethodInstances(Arrays.asList(methodDescriptionI));
-			Iteration iterationI =
-					historySelectedI.getLastIterationOfMethods();
-			// methodInstance has never been running
-			if (iterationI == null) {
-				return methodDescriptionI.exportClone();
-			}
-			
-			if (iterationI.getIterationNumber() <
-				iteration.getIterationNumber()) {
-				methodDescription = methodDescriptionI;
-				iteration = iterationI;
-			}
-
-		}
+		List<MethodType> methodInstancesToSelectCopy =
+				new ArrayList<MethodType>(methodInstancesToSelect);
+		methodInstancesToSelectCopy.removeAll(methods.exportMethodTypes());
+	
 		
-		return methodDescription.exportClone();
+		MethodTypeHistories methodTypeHistories =
+				methods.getMethodTypeHistory();
+		
+		MethodTypeHistories methodTypeHistoriesSelected =
+				methodTypeHistories.exportMethodTypeHistoriesOf(methodInstancesToSelect);
+		methodTypeHistoriesSelected.addMethodWhichHaveNeverRun(methodInstancesToSelectCopy);
+		
+		
+		return methodTypeHistoriesSelected.methodTypeWhichDidntRunForTheLongestTime();
 	}
 	
 	/**
-	 * Returns Methods Type, one of Given, which didn't run for the longest time
+	 * Returns {@link MethodType}, one of given Agent Class, which didn't run for the longest time
 	 * @param methodInstancesToSelect
 	 * @return
 	 */
-	public Class<?> agentClassWhichDidntRunForTheLongestTime(List<Class<?>> agentClasses) {
+	public MethodType agentClassWhichDidntRunForTheLongestTime(List<Class<?>> agentClasses) {
 
 		if (agentClasses == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " can't be null");
 		}
 		if (agentClasses.isEmpty()) {
 			return null;
 		}
 		
-		Class<?> agentClass = agentClasses.get(0);
+		MethodHistories methodHistories =
+				methods.exportMethodHistoriesOfAgent(agentClasses);
 		
-		List<Class<?>> agentClassList = new ArrayList<>();
-		agentClassList.add(agentClass);
-		
-		History historySelected =
-				exportHistoryOfAgents(agentClassList);
-		Iteration iteration =
-				historySelected.getLastIterationOfMethods();
-		// first agentClass has never been running
-		if (iteration == null) {
-			return agentClass;
-		}
-		
-		for (Class<?> agentClassI : agentClasses) {
-			
-			List<Class<?>> agentClassListI = new ArrayList<>();
-			agentClassListI.add(agentClassI);
-			
-			History historySelectedI =
-					exportHistoryOfAgents(agentClassListI);
-			Iteration iterationI =
-					historySelectedI.getLastIterationOfMethods();
-			// agentClass has never been running
-			if (iterationI == null) {
-				return agentClassI;
-			}
+		MethodTypeHistories methodTypeHistories =
+				methodHistories.getMethodTypeHistory();
 
-			if (iterationI.getIterationNumber() <
-					iteration.getIterationNumber()) {
-				agentClass = agentClassI;
-				iteration = iterationI;
-			}
-			
-		}
-		return agentClass;
-	}
-	public boolean containsMethodInstanceType(
-			MethodType methodType) {
-		
-		MethodType methodTypeTheLongestTime =
-				methodsWhichDidntRunForTheLongestTime(Arrays.asList(methodType));
-		if (methodTypeTheLongestTime == null) {
-			return false;
-		}
-		
-		return true;
+		return methodTypeHistories.methodTypeWhichDidntRunForTheLongestTime();
 	}
 	
 	/**
@@ -557,95 +378,7 @@ public class History {
 	 */
 	public MethodsStatistics exportMethodsResults(Iteration iteration) {
 		
-		if (iteration == null || ! iteration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					Iteration.class.getSimpleName() + " is not valid");
-		}
-		
-		MethodsStatistics results = new MethodsStatistics(jobID, iteration);
-		
-		for (MethodHistory methodI : methods) {
-			
-			MethodStatisticResultWrapper resultWrpI =
-					methodI.exportStatistic(iteration);
-			
-			if (resultWrpI == null) {
-				continue;
-			}
-			
-			AgentDescription agentDescriptionI =
-					resultWrpI.getAgentDescription();
-			MethodStatisticResult methodStatisticResultI =
-					resultWrpI.getMethodStatisticResult();
-			
-			MethodStatistic methodStatisticI = new MethodStatistic(
-					agentDescriptionI, methodStatisticResultI);
-			
-			results.addMethodStatistic(methodStatisticI);			
-		}
-		
-		return results;
-	}
-	
-	/**
-	 * Exports {@link History} of method instances which were running in given {@link Iteration}
-	 * @param iteration
-	 * @return
-	 */
-	public History exportHistoryOfRunningMethods(Iteration iteration) {
-		
-		if (iteration == null || ! iteration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					Iteration.class.getSimpleName() + " is not valid");
-		}
-		
-		List<MethodHistory> currentlyRunningMethods = new ArrayList<>();
-		for (MethodHistory methodHistoryI : getMethodInstances()) {
-			
-			MethodStatisticResultWrapper statisticI =
-					methodHistoryI.exportStatistic(iteration);
-			if (statisticI == null) {
-				continue;
-			}
-			
-			Iteration iterationI = statisticI.getIteration();
-			
-			if (iterationI.getIterationNumber() ==
-					iteration.getIterationNumber()) {
-				currentlyRunningMethods.add(methodHistoryI);
-			}
-		}
-		
-		return new History(getJobID(), currentlyRunningMethods, plans, replans);
-	}
-
-	/**
-	 * Exports {@link History} of currently running methods with minimal history duration
-	 * @param iteration
-	 * @param minimumLengthOfHistory
-	 * @return
-	 */
-	public History exportHistoryOfRunningMethods(Iteration iteration, long minimumLengthOfHistory) {
-		
-		if (iteration == null || ! iteration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					Iteration.class.getSimpleName() + " is not valid");
-		}
-		
-		History historyOfCurrentlyRunningMethods =
-				exportHistoryOfRunningMethods(iteration);
-		
-		List<MethodHistory> amethodsWithHisotry = new ArrayList<>();
-		for (MethodHistory methodHistoryI :
-			historyOfCurrentlyRunningMethods.getMethodInstances()) {
-			
-			if (methodHistoryI.isRunningLastNIteration(iteration,
-					minimumLengthOfHistory)) {
-				amethodsWithHisotry.add(methodHistoryI);
-			}
-		}
-		
-		return new History(getJobID(), amethodsWithHisotry, plans, replans);
+		return methods.exportMethodsResults(iteration, jobID);
 	}
 	
 	/**
@@ -654,14 +387,7 @@ public class History {
 	 */
 	public AgentDescriptions exportRunningMethods() {
 		
-		List<AgentDescription> agentDescriptions = new ArrayList<>();
-		for (MethodHistory methodHistoryI : methods) {
-			AgentDescription currentAgentI = methodHistoryI.getCurrentAgent();
-			if (currentAgentI != null) {
-				agentDescriptions.add(currentAgentI);
-			}
-		}
-		return new AgentDescriptions(agentDescriptions);
+		return methods.exportRunningMethods();
 	}
 	
 	private Plan exportPlan(Iteration iteration) {
@@ -685,6 +411,28 @@ public class History {
 		return null;
 	}
 	
+	public boolean wereLastKRePlanEmpty(Iteration iteration, int k) {
+		
+		if (iteration == null || ! iteration.valid(new TrashLogger())) {
+			throw new IllegalStateException("Argument " +
+					Iteration.class.getSimpleName() + " is not valid");
+		}
+		
+		Iteration iterationI = iteration;
+		
+		for (int i = 0; i < k; i++) {
+			
+			iterationI = iterationI.exportPreviousIteration();
+			
+			RePlan e = exportRePlan(iterationI);
+			if (e == null || ! e.isEmpty()) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Exports results of given {@link Iteration}
 	 * @param iteration
@@ -697,16 +445,8 @@ public class History {
 					Iteration.class.getSimpleName() + " is not valid");
 		}
 		
-		List<ResultOfMethodInstanceIteration> results = new ArrayList<>();
-		for (MethodHistory methodHistoryI : methods) {
-			
-			ResultOfMethodInstanceIteration statisticI =
-					methodHistoryI.exportResultOfMethodInstanceIteration(iteration);
-			if (statisticI != null) {
-				results.add(statisticI);
-			}
-		}
-		
+		List<ResultOfMethodInstanceIteration> results =
+				methods.exportResultOfIterations(iteration);
 		Plan plan = exportPlan(iteration);
 		RePlan rePlan = exportRePlan(iteration);
 		
@@ -725,97 +465,6 @@ public class History {
 	}
 	
 	/**
-	 * Export number of the last {@link Iteration} which was running
-	 * @return
-	 */
-	public long exportNumberOfLastIteration() {
-		
-		long number = -1;
-		
-		for (MethodHistory mathodI : methods) {
-			long numberI =
-					mathodI.exportNumberOfLastIteration();
-			if (numberI > number) {
-				number = numberI;
-			}
-		}
-		
-		return number;
-	}
-	
-	/**
-	 * Exports number of {@link Iteration} of given {@link MethodType}
-	 * @param methodType
-	 * @return
-	 */
-	public long exportNumberOfIterationOf(MethodType methodType) {
-		
-		long number = 0;
-		
-		for (MethodHistory methodI : methods) {
-			
-			MethodInstanceDescription methodInstanceI =
-					methodI.getMethodInstanceDescription();
-			MethodType methodTypeI =
-					methodInstanceI.getMethodType();
-			
-			if (! methodTypeI.equals(methodType)) {
-				continue;
-			}
-			
-			number += methodI.exportNumberOfIteration();
-		}
-		
-		return number;
-	}
-
-	public long exportNumberOfTheBestCreatedIndividuals(MethodType methodType) {
-		
-		long number = 0;
-		
-		for (MethodHistory methodI : methods) {
-			
-			MethodInstanceDescription methodInstanceI =
-					methodI.getMethodInstanceDescription();
-			MethodType methodTypeI =
-					methodInstanceI.getMethodType();
-			
-			if (! methodTypeI.equals(methodType)) {
-				continue;
-			}
-			
-			number += methodI.exportNumberOfTheBestCreatedIndividuals();
-		}
-		
-		return number;
-	}
-
-	public List<MethodType> exportMethodTypes() {
-		
-		List<MethodType> methodTypes = new ArrayList<>();
-		
-		for (MethodHistory methodI : methods) {
-			MethodInstanceDescription instanceI =
-					methodI.getMethodInstanceDescription();
-			MethodType methodTypeI = instanceI.getMethodType();
-			
-			if (! methodTypes.contains(methodTypeI)) {
-				methodTypes.add(methodTypeI.exportClone());
-			}
-		}
-		
-		return methodTypes;
-	}
-	
-	/**
-	 * Sorts methods by {@link MethodInstanceDescription} name
-	 */
-	public void sortMethodInstancesByName() {
-		
-		Collections.sort(methods, new ComparatorLexicographical());
-	}
-	
-	/**
 	 * Exports {@link History} to XML
 	 * @param dir
 	 * @throws IOException
@@ -830,7 +479,7 @@ public class History {
 		jobID.exportXML(dir);
 		
 		// export history of methods
-		for ( MethodHistory methodI : methods) {
+		for ( MethodHistory methodI : methods.getMethods()) {
 			 methodI.exportXML(dir);
 		}
 
@@ -917,6 +566,9 @@ public class History {
 		    }
 		}
 		
-		return new History(jobID, importedMethods, importedPlans, importedRePlans);
+		return new History(jobID, new MethodHistories(importedMethods),
+				importedPlans, importedRePlans);
 	}
+
+
 }

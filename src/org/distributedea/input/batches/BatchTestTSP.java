@@ -15,7 +15,7 @@ import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfMetho
 import org.distributedea.input.postprocessing.matlab.PostProcMeritsOfMethodTypes;
 
 
-public class BatchTestTSP extends InputBatch {
+public class BatchTestTSP implements IInputBatch {
 
 	@Override
 	public Batch batch() {

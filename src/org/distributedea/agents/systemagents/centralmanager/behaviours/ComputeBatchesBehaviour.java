@@ -6,9 +6,9 @@ import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerT
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
+import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobRun;
-
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
 
@@ -73,6 +73,9 @@ public class ComputeBatchesBehaviour extends OneShotBehaviour {
 
 		// add Behavior for Job Runs
 		for (Job jobI : batch.getJobs()) {
+			
+			FilesystemInitTool.clearResultSpaceForJob(batchID, jobI.getJobID(), logger);
+			
 			processJob(jobI, batchID);
 		}
 

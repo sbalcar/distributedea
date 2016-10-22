@@ -4,11 +4,16 @@ import jade.content.Concept;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.AgentDescriptions;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
+import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.ontology.methodtype.MethodType;
 
 /**
  * Ontology represents {@link List} of {@link InputAgentDescription} elements.
@@ -19,13 +24,13 @@ public class InputAgentDescriptions implements Concept {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private List<InputAgentDescription> agentDescriptions;
+	private List<InputAgentDescription> inputAgentDescriptions;
 
 	/**
 	 * Constructor
 	 */
 	public InputAgentDescriptions() {
-		this.agentDescriptions = new ArrayList<>();
+		this.inputAgentDescriptions = new ArrayList<>();
 	}
 	
 	/**
@@ -37,6 +42,43 @@ public class InputAgentDescriptions implements Concept {
 	}
 
 	/**
+	 * Constructor - Cartesian product of {@link InputAgentConfigurations}
+	 * and {@link ProblemTools}
+	 * @param configurations
+	 * @param problemTools
+	 */
+	public InputAgentDescriptions(InputAgentConfigurations configurations,
+			ProblemTools problemTools) {
+		
+		if (configurations == null ||
+				! configurations.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputAgentConfigurations.class.getSimpleName() + "is not valid");
+		}
+		if (problemTools == null ||
+				! problemTools.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemTools.class.getSimpleName() + "is not valid");
+		}
+		
+		List<InputAgentDescription> descriptions = new ArrayList<>();
+		
+		for (InputAgentConfiguration configurationI : configurations.getAgentConfigurations()) {
+			
+			for (Class<?> problemToolsI : problemTools.getProblemTools()) {
+				
+				InputAgentDescription descriptionI =
+						new InputAgentDescription(configurationI, problemToolsI);
+				
+				descriptions.add(descriptionI);
+			}
+		}
+		
+		importDescriptions(descriptions);
+	}
+
+	
+	/**
 	 * Copy constructor
 	 * @param agentDescription
 	 */
@@ -47,18 +89,18 @@ public class InputAgentDescriptions implements Concept {
 					InputAgentDescriptions.class.getSimpleName() + " is not valid");
 		}
 		InputAgentDescriptions agentDescriptionClone = agentDescription.deepClone();
-		this.agentDescriptions = agentDescriptionClone.getAgentDescriptions();
+		this.inputAgentDescriptions = agentDescriptionClone.getInputAgentDescriptions();
 	}
 
 	/**
 	 * Returns list of {@link InputAgentDescription}.
 	 * @return
 	 */
-	public List<InputAgentDescription> getAgentDescriptions() {
-		return agentDescriptions;
+	public List<InputAgentDescription> getInputAgentDescriptions() {
+		return inputAgentDescriptions;
 	}
 	@Deprecated
-	public void setAgentDescriptions(List<InputAgentDescription> agentDescriptions) {
+	public void setInputAgentDescriptions(List<InputAgentDescription> agentDescriptions) {
 		importDescriptions(agentDescriptions);
 	}
 
@@ -67,14 +109,19 @@ public class InputAgentDescriptions implements Concept {
 	 * @param agentDescriptions
 	 */
 	public void addAgentDescriptions(InputAgentDescription agentDescriptions) {
-		List<InputAgentDescription> importAgent = new ArrayList<>();
-		importAgent.add(agentDescriptions);
-		importDescriptions(importAgent);
+		if (agentDescriptions == null ||
+				! agentDescriptions.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputAgentDescription.class.getSimpleName() + " is not valid");			
+		}
+		
+		this.inputAgentDescriptions.add(agentDescriptions);
 	}
 
 	private void importDescriptions(List<InputAgentDescription> agentDescriptions) {
 		if (agentDescriptions == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
 		}
 		IAgentLogger logger = new TrashLogger();
 		for (InputAgentDescription agentDescriptionI : agentDescriptions) {
@@ -84,7 +131,7 @@ public class InputAgentDescriptions implements Concept {
 				throw new IllegalArgumentException();
 			}
 		}
-		this.agentDescriptions = agentDescriptions;
+		this.inputAgentDescriptions = agentDescriptions;
 	}
 	
 	/**
@@ -92,13 +139,19 @@ public class InputAgentDescriptions implements Concept {
 	 * @param agentDescription
 	 * @return
 	 */
-	public boolean containsAgentDescription(AgentDescription agentDescription) {
+	public boolean containsAgentDescription(InputAgentDescription agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					agentDescription.getClass().getSimpleName() + " is not valid.");
 		}
-		return agentDescriptions.contains(agentDescription);
+		return inputAgentDescriptions.contains(agentDescription);
+	}
+	
+	
+	public InputAgentDescription get(int index) {
+		
+		return this.inputAgentDescriptions.get(index);
 	}
 	
 	/**
@@ -112,16 +165,85 @@ public class InputAgentDescriptions implements Concept {
 			throw new IllegalArgumentException("Argument " +
 					int.class.getSimpleName() + " is not valid");
 		}
-		return this.agentDescriptions.remove(index);
+		return this.inputAgentDescriptions.remove(index);
 	}
 
+	public boolean removeAll(InputAgentDescriptions inputAgentDscrs) {
+		return this.inputAgentDescriptions.removeAll(
+				inputAgentDscrs.getInputAgentDescriptions());
+	}
+	
 	/**
 	 * Returns true if this structure contains no {@link AgentDescription}
 	 * @return
 	 */
 	public boolean isEmpty() {
 
-		return this.agentDescriptions.isEmpty();
+		return this.inputAgentDescriptions.isEmpty();
+	}
+
+	/**
+	 * Returns size
+	 * @return
+	 */
+	public int size() {
+
+		return this.inputAgentDescriptions.size();
+	}
+	
+	/**
+	 * Exports random selected {@link InputAgentDescription}
+	 * @return
+	 */
+	public InputAgentDescription exportRandomInputAgentDescription() {
+		
+		if (inputAgentDescriptions.isEmpty()) {
+			return null;
+		}
+		Random ran = new Random();
+		int indexAD = ran.nextInt(inputAgentDescriptions.size());
+		return inputAgentDescriptions.get(indexAD);
+	}
+	
+	public InputAgentDescriptions exportIntersection(InputAgentDescriptions inputAgentDscrs) {
+		
+		InputAgentDescriptions intersection = new InputAgentDescriptions();
+		
+		for (InputAgentDescription inputAgentDescriptionI : inputAgentDescriptions) {
+			if (inputAgentDscrs.containsAgentDescription(
+					inputAgentDescriptionI)) {
+				intersection.addAgentDescriptions(inputAgentDescriptionI);
+			}
+		}
+		
+		return intersection;
+	}
+	
+	/**
+	 * Exports complement - {@link InputAgentDescription}s which are not in
+	 * given structure
+	 * @param descriptions
+	 * @return
+	 */
+	public InputAgentDescriptions exportComplement(InputAgentDescriptions descriptions) {
+		
+		InputAgentDescriptions thisClone = this.deepClone();
+		thisClone.removeAll(descriptions);
+		
+		return thisClone;
+	}
+	
+	public List<MethodType> exportMethodTypes() {
+		
+		List<MethodType> methodTypes = new ArrayList<>();
+		
+		for (InputAgentDescription inputAgentDescriptionI :
+			inputAgentDescriptions) {
+			
+			methodTypes.add(inputAgentDescriptionI.exportMethodType());
+		}
+		
+		return methodTypes;
 	}
 	
 	/**
@@ -129,10 +251,10 @@ public class InputAgentDescriptions implements Concept {
 	 * @return
 	 */
 	public boolean valid(IAgentLogger logger) {
-		if (agentDescriptions == null) {
+		if (inputAgentDescriptions == null) {
 			return false;
 		}
-		for (InputAgentDescription agentDescriptionI : agentDescriptions) {
+		for (InputAgentDescription agentDescriptionI : inputAgentDescriptions) {
 			if (agentDescriptionI == null ||
 					! agentDescriptionI.valid(logger)) {
 				return false;
@@ -150,10 +272,55 @@ public class InputAgentDescriptions implements Concept {
 			return null;
 		}
 		List<InputAgentDescription> descriptionsClone = new ArrayList<>();
-		for (InputAgentDescription agentDescriptionI : agentDescriptions) {
+		for (InputAgentDescription agentDescriptionI : inputAgentDescriptions) {
 			descriptionsClone.add(
 					agentDescriptionI.deepClone());
 		}
 		return new InputAgentDescriptions(descriptionsClone);
 	}
+	
+	
+	@Override
+	public boolean equals(Object other) {
+		
+	    if (!(other instanceof InputAgentDescriptions)) {
+	        return false;
+	    }
+	    
+	    InputAgentDescriptions inputAgentDescriptionsOuther = (InputAgentDescriptions)other;
+	    
+	    if (inputAgentDescriptions.size() !=
+	    		inputAgentDescriptionsOuther.size()) {
+	    	return false;
+	    }
+	    for (int i = 0; i < inputAgentDescriptions.size(); i++) {
+	    	
+	    	InputAgentDescription iaI =
+	    			inputAgentDescriptions.get(i);
+	    	InputAgentDescription iadOutherI =
+	    			inputAgentDescriptionsOuther.get(i);
+	    	
+	    	if (! iaI.equals(iadOutherI)) {
+	    		return false;
+	    	}
+	    }
+	    return true;
+	}
+	
+    @Override
+    public int hashCode() {
+    	return toString().hashCode();
+    }
+    
+	@Override
+	public String toString() {
+		String string = "";
+		
+		for (InputAgentDescription inputAgentDescrI : inputAgentDescriptions) {
+			string += inputAgentDescrI.toString();
+		}
+		
+		return string;
+	}
+	
 }

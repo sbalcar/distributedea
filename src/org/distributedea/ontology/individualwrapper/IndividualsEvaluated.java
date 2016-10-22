@@ -5,6 +5,7 @@ import jade.content.Concept;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
@@ -95,6 +96,14 @@ public class IndividualsEvaluated  implements Concept {
 	}
 	
 	/**
+	 * Returns number of {@link IndividualEvaluated}s in structure
+	 * @return
+	 */
+	public int size() {
+		return this.individualsEvaluated.size();
+	}
+	
+	/**
 	 * Sorts {@link IndividualEvaluated}s from the best to the worst
 	 * @param problem
 	 */
@@ -102,6 +111,20 @@ public class IndividualsEvaluated  implements Concept {
 		
 		Collections.sort(individualsEvaluated,
 				new CmpIndividualEvaluated(problem));
+	}
+	
+	/**
+	 * Exports sorted list of {@link IndividualEvaluated} - from best to worst
+	 * @param problem
+	 * @return
+	 */
+	public List<IndividualEvaluated> exportSortedFromBestToWorst(Problem problem) {
+		
+		List<IndividualEvaluated> individualsCopy =
+				new ArrayList<IndividualEvaluated>(individualsEvaluated);
+		Collections.sort(individualsCopy, new CmpIndividualEvaluated(problem));
+
+		return individualsCopy;
 	}
 	
 	/**
@@ -134,15 +157,60 @@ public class IndividualsEvaluated  implements Concept {
 		return this.individualsEvaluated.remove(index);
 	}
 	
+	public void removeDuplicates() {
+		
+		List<IndividualEvaluated> individualsUnique =
+				new ArrayList<>();
+		
+		for (IndividualEvaluated individualI : individualsEvaluated) {
+			if (! individualsUnique.contains(individualI)) {
+				individualsUnique.add(individualI);
+			}
+		}
+		
+		this.individualsEvaluated = individualsUnique;
+	}
+	
 	public synchronized IndividualEvaluated exportIndividual(int index) {
 
 		return individualsEvaluated.get(index);
 	}
 
 	
+	/**
+	 * Exports the best {@link IndividualEvaluated} of structure
+	 * @param problem
+	 * @return
+	 */
 	public IndividualEvaluated exportTheBestIndividual(Problem problem) {
 		return Collections.min(individualsEvaluated,
 				new CmpIndividualEvaluated(problem));
+	}
+	
+	/**
+	 * Exports sorted list of {@link IndividualEvaluated}s
+	 * @param problem
+	 * @return
+	 */
+	public List<IndividualEvaluated> exportIndividualsFromBestToWorst(Problem problem) {
+		
+		ArrayList<IndividualEvaluated> individualsList =
+				new ArrayList<IndividualEvaluated>(individualsEvaluated);
+		
+		Collections.sort(individualsList, new CmpIndividualEvaluated(problem));
+		
+		return individualsList;
+	}
+	
+	/**
+	 * Export random {@link IndividualEvaluated}
+	 * @return
+	 */
+	public IndividualEvaluated exportRandomIndividualEvaluated() {
+		
+		Random ran = new Random();
+		int indexAC = ran.nextInt(individualsEvaluated.size());
+		return individualsEvaluated.get(indexAC);
 	}
 	
 	/**

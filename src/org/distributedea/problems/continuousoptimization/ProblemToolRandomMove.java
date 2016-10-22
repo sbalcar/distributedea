@@ -11,7 +11,7 @@ import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.continousoptimalization.Interval;
 import org.distributedea.problems.ProblemToolException;
 
-public class ProblemToolRandomMove extends ProblemContinuousOptTool {
+public class ProblemToolRandomMove extends AProblemToolContinuousOpt {
 
 	private double maxStep = 0.005;
 	

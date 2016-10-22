@@ -4,8 +4,7 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisation;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
@@ -13,6 +12,7 @@ import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.iteration.Iteration;
@@ -29,7 +29,7 @@ public class PlannerFollowNaiveAskingForBestResult implements Planner {
 	private JobRun jobRun;
 	private IAgentLogger logger;
 	
-	private PlannerInitialisation plannerInit = null; 
+	private Planner plannerInit = null; 
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -41,9 +41,8 @@ public class PlannerFollowNaiveAskingForBestResult implements Planner {
 		this.jobRun = jobRun;
 		this.logger = logger;
 		
-		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
 		
-		plannerInit = new PlannerInitialisation(state, true);
+		plannerInit = new PlannerInitialisationOneMethodPerCore();
 		return plannerInit.agentInitialisation(centralManager, iteration,
 				jobRun, logger);
 	}
@@ -91,7 +90,14 @@ public class PlannerFollowNaiveAskingForBestResult implements Planner {
 			return new InputRePlan(iteration);
 		}
 		
-		InputAgentDescription candidateDescrip = plannerInit.removeNextCandidate();
+		InputAgentDescriptions agentDescriptions =
+				jobRun.exportInputAgentDescriptions();
+
+		InputAgentDescriptions methodsWhichHaveNeverRun =  history
+				.getMethodHistories().exportsMethodsWhichHaveNeverRun(agentDescriptions);
+		
+		InputAgentDescription candidateDescrip = methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
+		
 		if (candidateDescrip != null) {
 			
 			//kill the worst and replace by new Method
@@ -115,7 +121,7 @@ public class PlannerFollowNaiveAskingForBestResult implements Planner {
 			IAgentLogger logger) throws Exception {
 		
 		String theWorstIndivAgentName = theWorstIndivWrp.
-				exportAgentConfiguration().getAgentName();
+				exportAgentConfiguration().exportAgentname();
 		double theWorstIndivFitness = theWorstIndivWrp.
 				getIndividualEvaluated().getFitness();
 		
@@ -123,7 +129,7 @@ public class PlannerFollowNaiveAskingForBestResult implements Planner {
 				" fitness: " + theWorstIndivFitness);
 
 		String theBestIndivAgentName = theBestIndivWrp.
-				exportAgentConfiguration().getAgentName();
+				exportAgentConfiguration().exportAgentname();
 		double theBestIndivFitness = theBestIndivWrp.
 				getIndividualEvaluated().getFitness();
 		

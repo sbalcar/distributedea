@@ -36,7 +36,7 @@ public class FileLogger implements IAgentLogger {
 		writeToFile(line);
 	}
 
-	private void writeToFile(String line) {
+	protected void writeToFile(String line) {
 		
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(fileName, true));

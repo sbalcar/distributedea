@@ -81,40 +81,6 @@ public class IndividualPermutation extends Individual {
 		return permutation.size();
 	}
 	
-	/**
-	 * Test validity
-	 */
-	public boolean valid(IAgentLogger logger) {
-		
-		if (permutation == null) {
-			return false;
-		}
-		
-		int numberOfElement = 0;
-		
-		int minVal = Collections.min(getPermutation());
-		
-		for (int valueI = minVal; valueI <= getPermutation().size(); valueI++) {
-			for (int itemI : getPermutation()) {
-				if (valueI == itemI) {
-					numberOfElement++;
-				}
-			}
-		}
-		
-		if (numberOfElement == sizeOfPermutation()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Returns clone
-	 */
-	public Individual deepClone() {
-		return new IndividualPermutation(this);
-	}
 	
 	@Override
 	public boolean equals(Object other) {
@@ -157,10 +123,56 @@ public class IndividualPermutation extends Individual {
 	    
 	    return true;
 	}
-
+	
+    @Override
+    public int hashCode() {
+    	return toString().hashCode();
+    }
+    
+	@Override
+	public String toString() {
+		return permutation.toString();
+	}
+	
+	
 	@Override
 	public String toLogString() {
 		return permutation.toString();
+	}
+	
+	/**
+	 * Test validity
+	 */
+	public boolean valid(IAgentLogger logger) {
+		
+		if (permutation == null) {
+			return false;
+		}
+		
+		int numberOfElement = 0;
+		
+		int minVal = Collections.min(getPermutation());
+		
+		for (int valueI = minVal; valueI <= getPermutation().size(); valueI++) {
+			for (int itemI : getPermutation()) {
+				if (valueI == itemI) {
+					numberOfElement++;
+				}
+			}
+		}
+		
+		if (numberOfElement == sizeOfPermutation()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns clone
+	 */
+	public Individual deepClone() {
+		return new IndividualPermutation(this);
 	}
 	
 }

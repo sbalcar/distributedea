@@ -1,6 +1,5 @@
 package org.distributedea.ontology;
 
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodInstanceDescription;
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.AccessesResult;
@@ -10,6 +9,7 @@ import org.distributedea.ontology.individuals.SaveBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;

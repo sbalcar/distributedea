@@ -1,0 +1,259 @@
+package org.distributedea.problems.tsp.gps.permutation;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individuals.IndividualPermutation;
+import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problem.ProblemTSP;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problem.tsp.Position;
+import org.distributedea.ontology.problem.tsp.PositionGPS;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.ProblemToolException;
+import org.distributedea.problems.tsp.gps.ProblemTSPGPSTool;
+import org.jgap.impl.StockRandomGenerator;
+
+/**
+ * Abstract {@link ProblemTool} for {@link ProblemTSPPoint} using permutation
+ * representation of {@link Individual}s
+ * @author stepan
+ *
+ */
+public abstract class AProblemToolTSPGPSEuc2DPermutation extends ProblemTSPGPSTool implements IProblemTSPPermutationTool {
+	
+	@Override
+	public Class<?> reprezentationWhichUses() {
+	
+		return IndividualPermutation.class;
+	}
+	
+	@Override
+	public Individual generateIndividual(Problem problem,
+			IAgentLogger logger) {
+		
+		ProblemTSPGPS problemTSP = (ProblemTSPGPS) problem;
+		
+		List<Position> positions = new ArrayList<Position>();
+		for (PositionGPS positionI : problemTSP.getPositions()) {
+			positions.add(positionI);
+		}
+		return generateIndividual(positions);
+	}
+	
+	@Override
+	public Individual readSolution(File fileOfSolution, Problem problem,
+			IAgentLogger logger) {
+
+		return readSolutionTSP(fileOfSolution, logger);
+	}
+	
+	@Override
+	public double fitness(Individual individual, Problem problem,
+			IAgentLogger logger) {
+		
+		IndividualPermutation individualPerm = (IndividualPermutation) individual;
+		ProblemTSPGPS problemTSP = (ProblemTSPGPS) problem;
+		
+		return fitnessPermutation(individualPerm, problemTSP, this, logger);
+	}
+	
+	@Override
+	public Individual[] createNewIndividual(Individual individual1,
+			Individual individual2, Problem problem, IAgentLogger logger)
+			throws ProblemToolException {
+
+		throw new ProblemToolException("Not possible to implement in this context");
+	}
+	
+	
+	/**
+	 * Generates the new Permutation based Individual from TSP-Problem
+	 * @param problem
+	 * @return
+	 */	
+	public IndividualPermutation generateIndividual(List<Position> positions) {
+		
+		List<Integer> numbers = new ArrayList<>();
+		for (Position positionI : positions) {
+			numbers.add(positionI.getNumber());
+		}
+		
+		Random rn = new StockRandomGenerator();
+		List<Integer> permutation = new ArrayList<>();
+		
+		while (! numbers.isEmpty()) {
+		
+			int rndIndex = rn.nextInt(numbers.size());
+			int valueI = numbers.remove(rndIndex);
+			permutation.add(valueI);
+		}
+		
+		return new IndividualPermutation(permutation);
+	}
+
+
+	/**
+	 * Reads TSP Permutation Solution
+	 * @param tspFileName
+	 * @param logger
+	 * @return
+	 */
+	private IndividualPermutation readSolutionTSP(File fileOfSolution,
+			IAgentLogger logger) {
+		
+		List<Integer> permutation = new ArrayList<Integer>();
+		
+		BufferedReader br = null;
+		 
+		try {
+ 
+			String sCurrentLine;
+ 
+			br = new BufferedReader(new FileReader(fileOfSolution.getAbsolutePath()));
+ 
+			while ((sCurrentLine = br.readLine()) != null) {
+				
+				if (sCurrentLine.startsWith("NAME") ||
+					sCurrentLine.startsWith("COMMENT") ||
+					sCurrentLine.startsWith("TYPE") ||
+					sCurrentLine.startsWith("DIMENSION") ||
+					sCurrentLine.startsWith("TOUR_SECTION") ||
+					sCurrentLine.startsWith("EOF") ) {
+					
+					logger.log(Level.INFO, sCurrentLine);
+
+				} else {
+					String delims = "[ ]+";
+					String[] tokens = sCurrentLine.split(delims);
+					
+					int number = Integer.parseInt(tokens[0]);
+					
+					permutation.add(number);
+				}
+				
+			}
+ 
+		} catch (IOException exception) {
+			logger.logThrowable("Problem with reading " + fileOfSolution.getName() + " file", exception);
+			return null;
+			
+		} finally {
+			try {
+				if (br != null){
+					br.close();
+				}
+			} catch (IOException ex) {
+				logger.logThrowable("Problem with closing the file: " + fileOfSolution.getName(), ex);
+			}
+		}
+		
+		//remove -1
+		permutation.remove(permutation.size() -1);
+				
+		return new IndividualPermutation(permutation);
+	}
+	
+	
+	/**
+	 * Counts fitness of the Permutation-Individual represents TSP-Problem
+	 * 
+	 * @param individual
+	 * @param problem
+	 * @return
+	 */
+	public static double fitnessPermutation(IndividualPermutation individual,
+			ProblemTSP problem, IProblemTSPPermutationTool tool,
+			IAgentLogger logger) {
+		
+		if (individual == null) {
+			return Double.NaN;
+		}
+		
+		List<Integer> permutation = individual.getPermutation();
+		
+		double distance = 0;
+		
+		for (int permutationIndex = 0;
+				permutationIndex < permutation.size(); permutationIndex++) {
+
+			int itemNumberIstart = permutation.get(permutationIndex);
+			int itemNumberIend;
+			if (permutationIndex + 1 == permutation.size()) {
+				itemNumberIend = permutation.get(0);
+			} else {
+				itemNumberIend = permutation.get(permutationIndex + 1);
+			}
+			
+			Position possitionIstart =
+					problem.exportPosition(itemNumberIstart);
+			Position possitionIend =
+					problem.exportPosition(itemNumberIend);
+
+			double distI = tool.distanceBetween(possitionIstart, possitionIend, logger);
+			if (distI < 0) {
+				logger.log(Level.SEVERE, "Distance between two points is less zero");
+			}
+			distance += distI;
+		}
+		
+	    return distance;
+	}
+	
+	
+	/**
+	 * Counts distance between two GPS positions
+	 * 
+	 * @param position1
+	 * @param position2
+	 * @return
+	 */
+	public double distanceBetween(Position position1,
+			Position position2, IAgentLogger logger)  {
+		
+		PositionGPS positionGPS1 = (PositionGPS) position1;
+		PositionGPS positionGPS2 = (PositionGPS) position2;
+		
+		return distanceBetween(
+				positionGPS1.getLatitude(),
+				positionGPS1.getLongitude(),
+				positionGPS2.getLatitude(),
+				positionGPS2.getLongitude(),
+				logger
+				);
+	}
+	
+	
+	/**
+	 * Counts distance between two points on the earth
+	 * 
+	 * @param latitude1
+	 * @param longitude1
+	 * @param latitude2
+	 * @param longitude2
+	 * @return
+	 */
+	private double distanceBetween(double latitude1, double longitude1,
+			double latitude2, double longitude2, IAgentLogger logger)  {
+		
+		if (latitude1 == latitude2 &&
+				longitude1 == longitude2) {
+			return 0;
+		}	    
+		
+		double xd = (latitude1 - latitude2);
+		double yd = (longitude1 - longitude2);
+
+		return Math.round(Math.sqrt((xd * xd) + (yd * yd)));
+	}
+	
+}

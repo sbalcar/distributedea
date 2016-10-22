@@ -98,7 +98,7 @@ public interface IProblemTool {
 	 */
 	public Individual improveIndividual(Individual individual, Problem problem,
 			IAgentLogger logger) throws ProblemToolException;    
-	public IndividualEvaluated improveIndividualEval(Individual individual, Problem problem,
+	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual, Problem problem,
 			IAgentLogger logger) throws ProblemToolException;
 	
 	public Individual getNeighbor(Individual individual, Problem problem,

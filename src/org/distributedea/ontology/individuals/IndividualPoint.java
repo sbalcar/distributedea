@@ -89,22 +89,6 @@ public class IndividualPoint  extends Individual {
 		}
 		
 	}
-
-	@Override
-	public boolean valid(IAgentLogger logger) {
-		
-		if (coordinates == null) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Returns clone
-	 */
-	public Individual deepClone() {
-		return new IndividualPoint(this);
-	}
 	
 	@Override
 	public boolean equals(Object other) {
@@ -138,10 +122,37 @@ public class IndividualPoint  extends Individual {
 	    
 	    return true;
 	}
+		
+    @Override
+    public int hashCode() {
+    	return toString().hashCode();
+    }
+    
+	@Override
+	public String toString() {
+		return coordinates.toString();
+	}
+	
 	
 	@Override
 	public String toLogString() {
 		return coordinates.toString();
 	}
 	
+
+	@Override
+	public boolean valid(IAgentLogger logger) {
+		
+		if (coordinates == null) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns clone
+	 */
+	public Individual deepClone() {
+		return new IndividualPoint(this);
+	}
 }

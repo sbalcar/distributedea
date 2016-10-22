@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.distributedea.agents.computingagents.Agent_Evolution;
+import org.distributedea.agents.computingagents.Agent_EvolutionJGAP;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
@@ -171,12 +171,12 @@ public class TestCO {
 		Map<AgentDescription, Integer> map = new HashMap<AgentDescription, Integer>();
 			
 		AgentConfiguration ac1 = new AgentConfiguration("Agent_Evolution-17",
-				Agent_Evolution.class, new Arguments(new ArrayList<Argument>()));
+				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		AgentDescription a1 =
 				new AgentDescription(ac1, ProblemToolRandomMove.class);
 		
 		AgentConfiguration ac2 = new AgentConfiguration("Agent_Evolution-17",
-				Agent_Evolution.class, new Arguments(new ArrayList<Argument>()));
+				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		AgentDescription a2 =
 				new AgentDescription(ac2, ProblemToolRandomMove.class);
 		

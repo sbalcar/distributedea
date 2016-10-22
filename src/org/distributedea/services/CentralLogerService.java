@@ -9,7 +9,7 @@ import jade.lang.acl.ACLMessage;
 
 import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.systemagents.Agent_CentralLoger;
+import org.distributedea.agents.systemagents.Agent_CentralLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.logger.LogMessage;
@@ -17,7 +17,7 @@ import org.distributedea.ontology.logger.LogMessage;
 public class CentralLogerService {
 
 	/**
-	 * Ensures to save log message by using {@link Agent_CentralLoger}.
+	 * Ensures to save log message by using {@link Agent_CentralLogger}.
 	 * Agent sends request {@link LogMessage} to log message and receives
 	 * the agree-message.
 	 * 

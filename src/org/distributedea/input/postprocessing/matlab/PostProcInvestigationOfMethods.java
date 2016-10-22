@@ -6,20 +6,21 @@ import java.util.Collections;
 import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistories;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistory;
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodInstanceDescription;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodStatisticResultWrapper;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.MatlabTool;
 import org.distributedea.input.batches.BatchTestTSP;
-import org.distributedea.input.batches.InputBatch;
+import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 
 /**
  * Creates for each {@link JobRun} graph of {@link MethodInstanceDescription}
@@ -51,7 +52,9 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 		
 		String historyDir = FileNames.getResultDirectoryMonitoringDirectory(jobID);
 		History history = History.importXML(new File(historyDir));
-		history.sortMethodInstancesByName();
+		
+		MethodHistories methodHistories = history.getMethodHistories();
+		methodHistories.sortMethodInstancesByName();
 		
 		String TITLE = "Průběh jednotlivých metod"; // batch.getDescription();
 		String YLABEL = "jádra systému a jejich vytížení instancemi metod";
@@ -60,7 +63,7 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batch.getBatchID());
 		
 
-		int numOfIter = (int) history.exportNumberOfLastIteration();
+		int numOfIter = (int) history.getMethodHistories().exportNumberOfLastIteration();
 		
 		String matlabCode =
 		"h = figure" + NL +
@@ -72,9 +75,9 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 
 		List<String> labelsList = new ArrayList<>();
 		List<String> hsList = new ArrayList<>();
-		for (int i = 0; i < history.getMethodInstances().size(); i++) {
+		for (int i = 0; i < methodHistories.getMethods().size(); i++) {
 		
-			MethodHistory methodHistoryI = history.getMethodInstances().get(i);
+			MethodHistory methodHistoryI = methodHistories.getMethods().get(i);
 			
 			MethodInstanceDescription methodInstanceI =
 					methodHistoryI.getMethodInstanceDescription();
@@ -137,7 +140,7 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-		InputBatch batchCmp = new BatchTestTSP();
+		IInputBatch batchCmp = new BatchTestTSP();
 		Batch batch = batchCmp.batch();
 		
 		PostProcessing p = new PostProcInvestigationOfMethods();

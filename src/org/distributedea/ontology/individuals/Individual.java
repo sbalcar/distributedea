@@ -15,7 +15,7 @@ public abstract class Individual implements Concept {
 
 	/**
 	 * Tests validity of Individual. Method don't has name "isvalid()" because
-	 * prefix is has for Jade Ontology spetial significance.
+	 * prefix is has for Jade Ontology special significance.
 	 * @return
 	 */
 	public abstract boolean valid(IAgentLogger logger);

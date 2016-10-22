@@ -14,6 +14,7 @@ import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.configuration.AgentConfiguration;
@@ -23,6 +24,7 @@ import org.distributedea.services.ManagerAgentService;
 
 import jade.content.onto.Ontology;
 import jade.core.AID;
+import jade.core.Profile;
 import jade.wrapper.StaleProxyException;
 
 /**
@@ -54,6 +56,21 @@ public class Agent_Initiator extends Agent_DistributedEA {
 	
 	protected void setup() {
 
+		// initialization of logger parameter
+		FileNames.mainControllerIP = this.getProperty(Profile.MAIN_HOST, null);
+		
+		boolean isOnMainControler = Agent_ManagerAgent.isAgentOnMainControler(this, new TrashLogger());
+		
+		// cleaning log directory
+		if (isOnMainControler) {
+			try {
+				FilesystemInitTool.clearLogDir(new TrashLogger());
+			} catch (IOException e) {
+				new TrashLogger().logThrowable("Can not clean log directory", e);
+				hardKill();
+			}
+		}
+		
 		initAgent();
 		// Agent Initiator doesn't have any DF registration
 
@@ -66,18 +83,6 @@ public class Agent_Initiator extends Agent_DistributedEA {
 			getLogger().log(Level.INFO, "The system requires java 1.7");
 			System.out.println("The system requires java 1.7");
 			hardKill();
-		}
-		
-		boolean isOnMainControler = Agent_ManagerAgent.isAgentOnMainControler(this, getLogger());
-		
-		// cleaning log directory
-		if (isOnMainControler) {
-			try {
-				FilesystemInitTool.clearLogDir(getLogger());
-			} catch (IOException e) {
-				getLogger().logThrowable("Can not clean log directory", e);
-				hardKill();
-			}
 		}
 		
 		executeUlimit();

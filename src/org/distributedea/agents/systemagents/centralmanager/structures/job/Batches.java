@@ -101,7 +101,7 @@ public class Batches {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Batches importXML(File batchesDir) throws IOException {
+	public static Batches importXML(File batchesDir) throws Exception {
 		
 		List<Batch> batches = new ArrayList<>();
 	
@@ -120,7 +120,7 @@ public class Batches {
 	 * @param batchesDir
 	 * @throws IOException
 	 */
-	public void exportXML(File batchesDir) throws IOException {
+	public void exportXML(File batchesDir) throws Exception {
 		if (batchesDir == null || ! batchesDir.isDirectory()) {
 			throw new IllegalArgumentException("Argument " +
 					File.class.getSimpleName() + " is not valid");

@@ -3,8 +3,7 @@ package org.distributedea.input.batches;
 import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerFollowNaiveAskingForBestResult;
 import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisation;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.jobs.InputContOpt;
@@ -14,7 +13,7 @@ import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 
-public class BatchHeteroComparingCO extends InputBatch {
+public class BatchHeteroComparingCO implements IInputBatch {
 
 	@Override
 	public Batch batch() {
@@ -26,8 +25,7 @@ public class BatchHeteroComparingCO extends InputBatch {
 		Job jobW0 = InputContOpt.test03();
 		jobW0.setJobID("onlyInit");
 		jobW0.setDescription("Only Initialization");
-		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
-		jobW0.setPlanner(new PlannerInitialisation(state, true));
+		jobW0.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		
 		Job jobW1 = InputContOpt.test03();
 		jobW1.setJobID("followBestResult");

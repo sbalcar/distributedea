@@ -40,12 +40,14 @@ import org.distributedea.ontology.agentinfo.GetAgentInfo;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.RequiredAgent;
+import org.distributedea.ontology.configuration.AgentName;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
@@ -68,11 +70,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	protected CompAgentState state = CompAgentState.INITIALIZATION;
 	
+	// configuration of this agent
+	AgentConfiguration agentConf = null;
+	
 	// logger for Computing Agent
 	private IAgentLogger logger = null;
-	
-	// Agent configuration which required CentralManager from the local Manager
-	protected AgentConfiguration requiredAgentConfiguration = null;
 	
 	private BestIndividualModel bestIndividualModel = new BestIndividualModel();
 	
@@ -111,6 +113,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 */
 	protected abstract AgentInfo getAgentInfo();
 	
+	/**
+	 * Process input {@link Arguments} which computing agent receives.
+	 * 
+	 * @param arguments
+	 */
+	protected abstract void processArguments(Arguments arguments) throws Exception;
+	
+	
 	@Override
 	public List<Ontology> getOntologies() {
 
@@ -135,7 +145,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
         dfd.addServices(sd);
         
         try {  
-            DFService.register(this, dfd );  
+            DFService.register(this, dfd);  
         
         } catch (FIPAException fe) {
         	getLogger().logThrowable("Registration faild", fe);
@@ -155,13 +165,34 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	
 	
+	private AgentConfiguration processJadeArguments(Object[] jadeArguments) {
+		
+		Object argumentObj0 = jadeArguments[0];
+		AgentName agentName = AgentName.importXML((String) argumentObj0);
+		
+		Object[] argumentsObj = new Object[jadeArguments.length -1];
+		System.arraycopy(jadeArguments, 1, argumentsObj, 0, jadeArguments.length -1);
+		Arguments arguments = Arguments.importArguments(argumentsObj);
+		
+		return new AgentConfiguration(agentName, this.getClass(), arguments);
+	}
+	
 	@Override
 	protected void setup() {
 		
+		// process Jade arguments
+		this.agentConf = processJadeArguments(getArguments());
+		try {
+			processArguments(this.agentConf.getArguments());
+		} catch (Exception e1) {
+			commitSuicide();
+		}
+		
 		initAgent();
 		registrDF();
-		
-		
+
+		state = CompAgentState.INITIALIZED;
+				
 		final MessageTemplate mesTemplateRequest =
 						MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		
@@ -265,49 +296,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 		});
 		
-		
-		
-		final MessageTemplate mesTemplateManaInform =
-				MessageTemplate.and(
-						MessageTemplate.MatchOntology(ManagementOntology.getInstance().getName()),
-						MessageTemplate.MatchPerformative(ACLMessage.INFORM) );
-		
-		addBehaviour(new AchieveREResponder(this, mesTemplateManaInform) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected ACLMessage handleRequest(ACLMessage msgInform) {
-				
-				try {
-					Action action = (Action)
-							getContentManager().extractContent(msgInform);
-					
-					Concept concept = action.getAction();
-					getLogger().log(Level.INFO, "Request for " +
-							concept.getClass().getSimpleName());
-					
-					if (concept instanceof RequiredAgent) {
-
-						processRequiredAgent(msgInform, (RequiredAgent) concept);
-					}
-
-				} catch (OntologyException e) {
-					getLogger().logThrowable("Problem extracting content", e);
-				} catch (CodecException e) {
-					getLogger().logThrowable("Codec problem", e);
-				}
-
-				return null;
-			}
-			
-			@Override
-			protected ACLMessage prepareResultNotification(ACLMessage request,
-					ACLMessage response) throws FailureException {
-				return null;
-			}
-
-		});
 	}
 
 	
@@ -324,7 +312,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		//active waiting for some result
 		AgentInfoWrapper methodDescriptionWrp =
-				new AgentInfoWrapper(getAgentInfo(), requiredAgentConfiguration);
+				new AgentInfoWrapper(getAgentInfo(), agentConf);
 
 		Result result = new Result(action.getAction(), methodDescriptionWrp);
 
@@ -339,20 +327,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 
 		return reply;
-	}
-
-	protected void processRequiredAgent(ACLMessage msgInform, RequiredAgent requiredAgent) {
-		
-		if (! requiredAgent.valid(getLogger())) {
-			throw new IllegalStateException();
-		}
-		
-		logger.log(Level.INFO, "OK registrace " +  requiredAgent.getAgentConfiguration().exportAgentname());
-		
-		if (state == CompAgentState.INITIALIZATION) {
-			this.requiredAgentConfiguration = requiredAgent.getAgentConfiguration();
-			state = CompAgentState.INITIALIZED;
-		}
 	}
 
 	protected void processIndividual(ACLMessage request, Action action) {
@@ -572,7 +546,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		} );
 
 		// starts thread where is running computation
-		this.computingThread = new ComputingThread(this, problemStruct, requiredAgentConfiguration);	
+		this.computingThread = new ComputingThread(this, problemStruct, agentConf);	
 		this.computingThread.start();
 
 	}
@@ -596,6 +570,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	
 
+	protected void distributeIndividualToNeighours(IndividualsEvaluated individualsEval,
+			Problem problem, JobID jobID) {
+		
+		individualsToDistribution.addIndividual(
+				individualsEval.getIndividualsEvaluated(), problem);
+	}
 	
 	protected void distributeIndividualToNeighours(List<IndividualEvaluated> individualsEval,
 			Problem problem, JobID jobID) {
@@ -622,7 +602,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		try {
-			return new AgentDescription(requiredAgentConfiguration, problemToolClass);
+			return new AgentDescription(agentConf, problemToolClass);
 		} catch (Exception e) {
 			return null;
 		}
@@ -648,7 +628,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
 		AgentDescription description =
-				new AgentDescription(requiredAgentConfiguration, problemTool.getClass());
+				new AgentDescription(agentConf, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
@@ -670,7 +650,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
 		AgentDescription description =
-				new AgentDescription(requiredAgentConfiguration, problemTool.getClass());
+				new AgentDescription(agentConf, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);

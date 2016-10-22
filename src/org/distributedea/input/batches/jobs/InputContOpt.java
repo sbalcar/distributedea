@@ -6,8 +6,7 @@ import java.io.File;
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerDummy;
 import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisation;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
@@ -78,8 +77,7 @@ public class InputContOpt {
 		job.importMethodsFile(new File(
 				FileNames.getMethodsFile(MethodConstants.METHODS_ALL)));
 		
-		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
-		job.setPlanner(new PlannerInitialisation(state, true));
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolRandomMove.class));

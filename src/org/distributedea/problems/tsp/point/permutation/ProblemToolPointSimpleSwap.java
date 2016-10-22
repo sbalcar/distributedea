@@ -13,7 +13,7 @@ import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleS
  * @author stepan
  *
  */
-public class ProblemToolPointSimpleSwap extends ProblemTSPPointPermutationTool {
+public class ProblemToolPointSimpleSwap extends AProblemToolTSPPointPermutation {
 	
 	@Override
 	public Individual improveIndividual(Individual individual, Problem problem,

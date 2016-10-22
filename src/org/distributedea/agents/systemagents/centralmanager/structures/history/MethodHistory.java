@@ -8,9 +8,11 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
 
@@ -270,6 +272,15 @@ public class MethodHistory {
 		}
 
 		return string;
+	}
+	
+	/**
+	 * Tests validity
+	 * @param logger
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		return true;
 	}
 	
 	/**

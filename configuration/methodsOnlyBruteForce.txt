@@ -2,6 +2,6 @@
 <configuration>
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_BruteForce" name="Agent_BruteForce">
-        </agent>        
+        </agent>
     </agents>
 </configuration>

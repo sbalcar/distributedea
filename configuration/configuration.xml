@@ -10,7 +10,7 @@
         <agent type="org.distributedea.agents.systemagents.Agent_Monitor" name="Monitor">
         </agent>
 
-        <agent type="org.distributedea.agents.systemagents.Agent_CentralLoger" name="CentralLoger">
+        <agent type="org.distributedea.agents.systemagents.Agent_CentralLogger" name="CentralLogger">
         </agent>
 
         <agent type="org.distributedea.agents.systemagents.Agent_DataManager" name="DataManager">

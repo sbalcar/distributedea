@@ -17,7 +17,6 @@ import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
-import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
@@ -31,31 +30,29 @@ public class PlannerTool {
 	/**
 	 * Creates and runs given given {@link Agent_ComputingAgent}s in plan
 	 * @param centralManager
-	 * @param iteration
 	 * @param job
 	 * @param plan
 	 * @param logger
 	 * @return
 	 */
 	public static Plan createAndRunAgents(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun job,
-			InputPlan plan, IAgentLogger logger) {
+			JobRun job, InputPlan plan, IAgentLogger logger) {
 		
 		Plan createdAgents =
-				createAgents(centralManager, iteration, plan, logger);
+				createAgents(centralManager, plan, logger);
 		runAgents(centralManager, createdAgents.getNewAgents(), job, logger);
 		
 		return createdAgents;
 	}
 
 	public static Plan createAgents(Agent_CentralManager centralManager,
-			Iteration iteration, InputPlan plan, IAgentLogger logger) {
+			InputPlan inputPlan, IAgentLogger logger) {
 		
 		List<AgentDescription> createdAgents = new ArrayList<>();
 		//create computing agents
-		for (int cpuIndex = 0; cpuIndex < plan.getSchedule().size(); cpuIndex++) {	
+		for (int cpuIndex = 0; cpuIndex < inputPlan.getSchedule().size(); cpuIndex++) {	
 		
-			Pair<AID,InputAgentDescription> pairI = plan.getSchedule().get(cpuIndex);
+			Pair<AID,InputAgentDescription> pairI = inputPlan.getSchedule().get(cpuIndex);
 			
 			AID managerAgentOfEmptyCoreAIDI = pairI.first;
 			
@@ -72,7 +69,7 @@ public class PlannerTool {
 			createdAgents.add(createdAgentDescriptionI);
 		}
 		
-		return new Plan(iteration, new AgentDescriptions(createdAgents));
+		return new Plan(inputPlan.getIteration(), new AgentDescriptions(createdAgents));
 	}
 	
 	private static void runAgents(Agent_CentralManager centralManager,
@@ -110,7 +107,7 @@ public class PlannerTool {
 		List<AgentDescription> agentsToKill =
 				replan.getAgentsToKill().getAgentDescriptions();
 		List<InputAgentDescription> agentsToCreate =
-				replan.getAgentsToCreate().getAgentDescriptions();
+				replan.getAgentsToCreate().getInputAgentDescriptions();
 		
 		List<AgentDescription> agentsCreated = new ArrayList<>();
 		

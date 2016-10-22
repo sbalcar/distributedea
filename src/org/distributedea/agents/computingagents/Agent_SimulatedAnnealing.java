@@ -5,6 +5,7 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
@@ -45,6 +46,9 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		description.setExploration(true);
 		
 		return description;
+	}
+
+	protected void processArguments(Arguments args) throws Exception {
 	}
 	
    	@Override
@@ -87,7 +91,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 			}
 			
 			IndividualEvaluated individualEvalNewI = 
-					problemTool.improveIndividualEval(individualEvalI.getIndividual(), problem, getCALogger());
+					problemTool.improveIndividualEval(individualEvalI, problem, getCALogger());
 	
             // decide on the acceptance the neighbour
 			double acceptanceProbability = acceptanceProbability(individualEvalI,

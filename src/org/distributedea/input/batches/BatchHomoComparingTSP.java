@@ -13,7 +13,7 @@ import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 
-public class BatchHomoComparingTSP extends InputBatch {
+public class BatchHomoComparingTSP implements IInputBatch {
 
 	public Batch batch() {
 		

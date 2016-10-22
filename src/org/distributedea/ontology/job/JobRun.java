@@ -9,6 +9,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.AgentConfigurations;
 import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
@@ -94,6 +95,10 @@ public class JobRun implements Concept {
 		return jobID;
 	}
 	public void setJobID(JobID jobID) {
+		if (jobID == null || ! jobID.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					JobID.class.getSimpleName() + " is not valid");
+		}
 		this.jobID = jobID;
 	}
 	
@@ -105,6 +110,11 @@ public class JobRun implements Concept {
 		return agentConfigurations;
 	}
 	public void setAgentConfigurations(InputAgentConfigurations agentConfigurations) {
+		if (agentConfigurations == null ||
+				! agentConfigurations.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputAgentConfigurations.class.getSimpleName() + " is not valid");
+		}
 		this.agentConfigurations = agentConfigurations;
 	}
 	
@@ -127,6 +137,11 @@ public class JobRun implements Concept {
 		return problemTools;
 	}
 	public void setProblemTools(ProblemTools problemTools) {
+		if (problemTools == null ||
+				! problemTools.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemTools.class.getSimpleName() + " is not valid");
+		}
 		this.problemTools = problemTools;
 	}
 
@@ -138,7 +153,20 @@ public class JobRun implements Concept {
 		return problem;
 	}
 	public void setProblem(Problem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					Problem.class.getSimpleName() + " is not valid");
+		}
 		this.problem = problem;
+	}
+	
+	/**
+	 * Exports the {@link InputAgentDescriptions}
+	 * @return
+	 */
+	public InputAgentDescriptions exportInputAgentDescriptions() {
+		return new InputAgentDescriptions(
+				getAgentConfigurations(),getProblemTools());
 	}
 	
 	/**

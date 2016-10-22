@@ -23,18 +23,41 @@ public class AgentConfiguration implements Concept {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private String agentName;
-	private String agentClassName;
-	private Arguments arguments;
-
-	private String containerID = "";
+	private AgentName agentName;
 	
-	private int numberOfContainer = 0;
-	private int numberOfAgent = 0;
+	private String agentClassName;
+	
+	private Arguments arguments;
+	
 	
 	@Deprecated
 	public AgentConfiguration() {   // only for Jade
 		this.arguments = new Arguments(new ArrayList<Argument>());
+	}
+	
+	/**
+	 * Constructor
+	 * @param agentName
+	 * @param agentClass
+	 * @param arguments
+	 */
+	public AgentConfiguration(AgentName agentName, Class<?> agentClass,
+			Arguments arguments) {
+		
+		if (agentName == null ||
+				! agentName.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Arguments " +
+					AgentName.class.getSimpleName() + " is not valid");			
+		}
+		if (arguments == null ||
+				! arguments.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Arguments " +
+				Arguments.class.getSimpleName() + " is not valid");
+		}
+		
+		this.agentName = agentName;
+		this.importAgentClass(agentClass);
+		this.arguments = arguments;
 	}
 	
 	/**
@@ -55,7 +78,7 @@ public class AgentConfiguration implements Concept {
 				Arguments.class.getSimpleName() + " is not valid");
 		}
 		
-		this.agentName = agentName;
+		this.agentName = new AgentName(agentName);
 		this.importAgentClass(agentClass);
 		this.arguments = arguments;
 	}
@@ -76,7 +99,7 @@ public class AgentConfiguration implements Concept {
 			throw new IllegalArgumentException("Argument " +
 					Arguments.class.getSimpleName() + " is not valid");
 		}
-		this.agentName = agentClass.getSimpleName();
+		this.agentName = new AgentName(agentClass.getSimpleName());
 		this.importAgentClass(agentClass);
 		this.arguments = arguments;
 	}
@@ -91,7 +114,7 @@ public class AgentConfiguration implements Concept {
 					InputAgentConfiguration.class.getSimpleName() + " is not valid");
 		}
 		
-		this.agentName = agentConf.getAgentName();
+		this.agentName = new AgentName(agentConf.getAgentName());
 		this.importAgentClass(agentConf.exportAgentClass());
 		this.arguments = agentConf.getArguments().deepClone();
 	}
@@ -106,27 +129,25 @@ public class AgentConfiguration implements Concept {
 			throw new IllegalArgumentException();
 		}
 		
-		setAgentName(agentConf.getAgentName());
+		setAgentName(agentConf.getAgentName().deepClone());
+		
 		importAgentClass(agentConf.exportAgentClass());
 		
 		setArguments(agentConf.getArguments().deepClone());
-		
-		setContainerID(agentConf.getContainerID());
-		setNumberOfContainer(agentConf.getNumberOfContainer());
-		setNumberOfAgent(agentConf.getNumberOfAgent());
 	}
 
-	public String getAgentName() {
+	public AgentName getAgentName() {
 		return agentName;
 	}
-	public void setAgentName(String agentName) {
-		if (agentName == null || agentName.isEmpty() ||
-				agentName.contains(" ")) {
+	public void setAgentName(AgentName agentName) {
+		if (agentName == null ||
+				! agentName.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					String.class.getSimpleName() + " is not valid");
+					AgentName.class.getSimpleName() + " is not valid");
 		}
 		this.agentName = agentName;
 	}
+	
 	@Deprecated
 	public String getAgentClassName() {
 		return agentClassName;
@@ -169,31 +190,12 @@ public class AgentConfiguration implements Concept {
 		this.arguments = arguments;
 	}
 
-	public String getContainerID() {
-		return containerID;
-	}
-	public void setContainerID(String containerID) {
-		this.containerID = containerID;
-	}
-
-	public int getNumberOfContainer() {
-		return numberOfContainer;
-	}
-	public void setNumberOfContainer(int numberOfContainer) {
-		this.numberOfContainer = numberOfContainer;
-	}
 	public void incrementNumberOfContainer() {
-		this.numberOfContainer++;
+		this.getAgentName().incrementNumberOfContainer();
 	}
 	
-	public int getNumberOfAgent() {
-		return numberOfAgent;
-	}
-	public void setNumberOfAgent(int numberOfAgent) {
-		this.numberOfAgent = numberOfAgent;
-	}
 	public void incrementNumberOfAgent() {
-		this.numberOfAgent++;
+		this.getAgentName().incrementNumberOfAgent();
 	}
 	
 	public boolean exportIsComputingAgent() {
@@ -226,32 +228,13 @@ public class AgentConfiguration implements Concept {
 	 */
 	public String exportAgentname() {
 		
-		if (exportIsAgentWitoutSuffix()) {
-			return getAgentName();
-		}
-		
-		String containerNameWitID = exportContainerSuffix();
-		
-		String agentFullName = agentName + numberOfAgent +
-				Configuration.CONTAINER_NUMBER_PREFIX +
-				containerNameWitID;
-		
-		return agentFullName;
+		return getAgentName().exportAgentname(
+				exportIsAgentWitoutSuffix());		
 	}
 	
 	public String exportContainerSuffix() {
 		
-		String  containerChar = "";
-		if (numberOfContainer >= 0) {
-			char cChar = (char) ('a' + numberOfContainer);
-			containerChar = "" + cChar;
-		}
-		
-		if (containerID == null) {
-			return containerChar;
-		} else {
-			return containerID + containerChar;
-		}
+		return getAgentName().exportContainerSuffix();
 	}
 	
 	/**
@@ -277,7 +260,7 @@ public class AgentConfiguration implements Concept {
 			return null;
 		}
 		return new InputAgentConfiguration(
-				getAgentName(),
+				getAgentName().getAgentName(),
 				exportAgentClass(),
 				getArguments().deepClone());
 	}
@@ -315,22 +298,15 @@ public class AgentConfiguration implements Concept {
 	    
 	    boolean aregetAgentNamesEqual =
 	    		this.getAgentName().equals(acOuther.getAgentName());
+	    
 	    boolean areAgentTypeEqual =
 	    		this.exportAgentClass() == acOuther.exportAgentClass();
+	    
 	    boolean areArgumentsEqual =
 	    		this.getArguments().equals(acOuther.getArguments());
 	    
-	    boolean areContainerIDEqual =
-	    		this.containerID.equals(acOuther.getContainerID());
-	    boolean areNumberOfContainerEqual =
-	    		this.numberOfContainer == acOuther.getNumberOfContainer();
-	    boolean areNumberOfAgentEqual =
-	    		this.numberOfAgent == acOuther.getNumberOfAgent();
-
-	    
 	    return aregetAgentNamesEqual && areAgentTypeEqual &&
-	    		areArgumentsEqual && areContainerIDEqual &&
-	    		areNumberOfContainerEqual && areNumberOfAgentEqual;
+	    		areArgumentsEqual;
 	}
 	
     @Override
@@ -341,6 +317,6 @@ public class AgentConfiguration implements Concept {
 	@Override
 	public String toString() {
 		
-		return exportAgentname();
+		return exportAgentname() + "-" + getArguments().toString();
 	}
 }

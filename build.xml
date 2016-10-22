@@ -8,6 +8,7 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.7"/>
     <property name="source" value="1.7"/>
+    <path id="Persisted container [target/classes for project [distributedea]].libraryclasspath"/>
     <path id="Maven Dependencies.libraryclasspath">
         <pathelement location="repository/net/sf/ingenias/jade/4.2/jade-4.2.jar"/>
         <pathelement location="repository/net/sf/jgap/jgap/3.4.4/jgap-3.4.4.jar"/>
@@ -15,8 +16,6 @@
         <pathelement location="repository/log4j/log4j/1.2.9/log4j-1.2.9.jar"/>
         <pathelement location="repository/commons-codec/commons-codec/1.3/commons-codec-1.3.jar"/>
         <pathelement location="repository/net/sf/trove4j/trove4j/2.0.2/trove4j-2.0.2.jar"/>
-        <pathelement location="repository/com/thoughtworks/xstream/xstream/1.2.2/xstream-1.2.2.jar"/>
-        <pathelement location="repository/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O.jar"/>
         <pathelement location="repository/xpp3/xpp3/1.1.3.4.O/xpp3-1.1.3.4.O.jar"/>
         <pathelement location="repository/commons-cli/commons-cli/1.0/commons-cli-1.0.jar"/>
         <pathelement location="repository/commons-logging/commons-logging/1.0/commons-logging-1.0.jar"/>
@@ -27,25 +26,48 @@
         <pathelement location="repository/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
         <pathelement location="repository/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
         <pathelement location="repository/commons-io/commons-io/2.4/commons-io-2.4.jar"/>
-        <pathelement location="repository/org/mvel/mvel2/2.2.0.Final/mvel2-2.2.0.Final.jar"/>
+        <pathelement location="repository/com/thoughtworks/xstream/xstream/1.4.9/xstream-1.4.9.jar"/>
+        <pathelement location="repository/xmlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar"/>
+        <pathelement location="repository/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar"/>
     </path>
     <path id="distributedea.classpath">
         <pathelement location="target/classes"/>
+        <pathelement location="${JRE_LIB}"/>
+        <path refid="Persisted container [target/classes for project [distributedea]].libraryclasspath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
+    <path id="run.TestCO.classpath">
+        <pathelement location="${JRE_LIB}"/>
+        <path refid="distributedea.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.TestCO.bootclasspath"/>
     <path id="run.distributedea.classpath">
+        <pathelement location="${JRE_LIB}"/>
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
+    <path id="run.distributedea.bootclasspath"/>
     <path id="run.distributedea-slave.classpath">
+        <pathelement location="${JRE_LIB}"/>
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
+    <path id="run.distributedea-slave.bootclasspath"/>
     <path id="run.JNIfgeneric1.classpath">
+        <pathelement location="${JRE_LIB}"/>
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
+    <path id="run.JNIfgeneric1.bootclasspath"/>
     <path id="run.BatchExporter.classpath">
+        <pathelement location="${JRE_LIB}"/>
+        <path refid="distributedea.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.BatchExporter.bootclasspath"/>
+    <path id="run.PostProcInvestigationOfMedianJobRun.classpath">
+        <pathelement location="${JRE_LIB}"/>
         <path refid="distributedea.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
@@ -53,7 +75,6 @@
         <mkdir dir="target/classes"/>
         <copy includeemptydirs="false" todir="target/classes">
             <fileset dir="src">
-                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -85,27 +106,57 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+    <target name="TestCO">
+        <java classname="org.distributedea.tests.continousoptimalization.TestCO" failonerror="true" fork="yes">
+            <classpath refid="run.TestCO.classpath"/>
+            <bootclasspath>
+                <path refid="run.TestCO.bootclasspath"/>
+            </bootclasspath>
+        </java>
+    </target>
     <target name="distributedea">
         <java classname="jade.Boot" failonerror="true" fork="yes">
             <jvmarg line="-Djava.library.path=lib"/>
-            <arg line="-gui -jade_domain_df_autocleanup true -agents Initiator:org.distributedea.agents.systemagents.Agent_Initiator"/>
+            <arg line="-gui -local-host 195.113.21.151 -jade_domain_df_autocleanup true -agents Initiator:org.distributedea.agents.systemagents.Agent_Initiator"/>
             <classpath refid="run.distributedea.classpath"/>
+            <bootclasspath>
+                <path refid="run.distributedea.bootclasspath"/>
+            </bootclasspath>
+        </java>
+    </target>
+    <target name="distributedeanogui">
+        <java classname="jade.Boot" failonerror="true" fork="yes">
+            <jvmarg line="-Djava.library.path=lib"/>
+            <arg line="-local-host 127.0.0.1 -jade_domain_df_autocleanup true -agents Initiator:org.distributedea.agents.systemagents.Agent_Initiator"/>
+            <classpath refid="run.distributedea.classpath"/>
+            <bootclasspath>
+                <path refid="run.distributedea.bootclasspath"/>
+            </bootclasspath>
         </java>
     </target>
     <target name="distributedea-slave">
         <java classname="jade.Boot" failonerror="true" fork="yes">
-            <arg line="-gui -host 195.113.21.147 -port 1099 -container -container-name Slave-Container -jade_domain_df_autocleanup true -agents Initiator2:org.distributedea.agents.systemagents.Agent_Initiator"/>
+            <arg line="-gui -host 195.113.21.151 -port 1099 -container -container-name Slave-Container -jade_domain_df_autocleanup true -agents Initiator2:org.distributedea.agents.systemagents.Agent_Initiator"/>
             <classpath refid="run.distributedea-slave.classpath"/>
+            <bootclasspath>
+                <path refid="run.distributedea-slave.bootclasspath"/>
+            </bootclasspath>
         </java>
     </target>
     <target name="JNIfgeneric1">
         <java classname="org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric1" failonerror="true" fork="yes">
             <classpath refid="run.JNIfgeneric1.classpath"/>
+            <bootclasspath>
+                <path refid="run.JNIfgeneric1.bootclasspath"/>
+            </bootclasspath>
         </java>
     </target>
     <target name="BatchExporter">
         <java classname="org.distributedea.input.BatchExporter" failonerror="true" fork="yes">
             <classpath refid="run.BatchExporter.classpath"/>
+            <bootclasspath>
+                <path refid="run.BatchExporter.bootclasspath"/>
+            </bootclasspath>
         </java>
     </target>
 </project>

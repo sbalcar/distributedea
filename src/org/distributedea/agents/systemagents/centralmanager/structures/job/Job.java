@@ -10,10 +10,24 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerAgentInfo;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerRandom;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerRandomImpr;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestAverageOfFitness;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestResult;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQGoodMaterialImprovementFitness;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQMaterialGoodMaterialImprovement;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfGoodMaterial;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfImprovement;
+import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfMaterial;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRandom;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerType;
+import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.agents.systemagents.initiator.XmlConfigurationProvider;
 import org.distributedea.logging.IAgentLogger;
@@ -24,6 +38,7 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import jade.content.Concept;
 
@@ -32,7 +47,6 @@ import jade.content.Concept;
  * @author stepan
  *
  */
-@XmlRootElement (name="jobs")
 public class Job implements Concept, Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -373,10 +387,10 @@ public class Job implements Concept, Serializable {
 	 * @throws FileNotFoundException
 	 * @throws JAXBException 
 	 */
-	public void exportXML(File jobFile) throws IOException {
+	public void exportXML(File jobFile) throws Exception {
 
 		String xml = exportXML();
-
+		
 		PrintWriter file = new PrintWriter(jobFile.getAbsolutePath());
 		file.println(xml);
 		file.close();
@@ -388,9 +402,12 @@ public class Job implements Concept, Serializable {
 	 */
 	public String exportXML() {
 
-		XStream xstream = new XStream();
+		XStream xstream = new XStream(new DomDriver());
 		xstream.setMode(XStream.NO_REFERENCES);
-
+		xstream.autodetectAnnotations(true);
+		
+		processAliases(xstream);
+		
 		return xstream.toXML(this);
 	}
 	
@@ -400,16 +417,16 @@ public class Job implements Concept, Serializable {
 	 * @throws FileNotFoundException
 	 */
 	public static Job importXML(File file)
-			throws FileNotFoundException {
+			throws Exception {
 
 		Scanner scanner = new Scanner(file);
 		String xml = scanner.useDelimiter("\\Z").next();
 		scanner.close();
-
+		
 		return importXML(xml);
 		
 	}
-
+	
 	/**
 	 * Import the {@link Job} from the String
 	 */
@@ -417,8 +434,33 @@ public class Job implements Concept, Serializable {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
-
+		xstream.autodetectAnnotations(true);
+		
+		processAliases(xstream);
+		
 		return (Job) xstream.fromXML(xml);
 	}
 	
+	private static void processAliases(XStream xstream) {
+		
+		xstream.alias("job", Job.class);
+		
+		xstream.alias("plannerInitialisationOneMethodPerCore", PlannerInitialisationOneMethodPerCore.class);
+		xstream.alias("plannerInitialisationRandom", PlannerInitialisationRandom.class);
+		xstream.alias("plannerInitialisationRunEachMethodOnce", PlannerInitialisationRunEachMethodOnce.class);
+		
+		xstream.alias("plannerAgentInfo", PlannerAgentInfo.class);
+		xstream.alias("plannerRandom", PlannerRandom.class);
+		xstream.alias("plannerRandomImpr", PlannerRandomImpr.class);
+		xstream.alias("plannerTheBestAverageOfFitness", PlannerTheBestAverageOfFitness.class);
+		xstream.alias("plannerTheBestHelper", PlannerTheBestHelper.class);
+		xstream.alias("plannerTheBestResult", PlannerTheBestResult.class);
+		xstream.alias("plannerTheGreatestQuantityOfImprovement", PlannerTheGreatestQuantityOfImprovement.class);
+		xstream.alias("plannerTheGreatestQuantityOfMaterial", PlannerTheGreatestQuantityOfMaterial.class);
+		xstream.alias("plannerTheGreatestQuantityOfGoodMaterial", PlannerTheGreatestQuantityOfGoodMaterial.class);
+		xstream.alias("plannerTheGreatestQuantityCombination", PlannerTheGreatestQGoodMaterialImprovementFitness.class);
+		xstream.alias("plannerTheGreatestQMaterialGoodMaterialImprovement", PlannerTheGreatestQMaterialGoodMaterialImprovement.class);
+		
+		xstream.alias("plannerTypeTimeRestriction", PlannerTypeTimeRestriction.class);
+	}
 }

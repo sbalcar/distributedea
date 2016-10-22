@@ -9,6 +9,7 @@ import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
@@ -77,6 +78,9 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		return description;
 	}
 	
+	protected void processArguments(Arguments arguments) throws Exception {
+	}
+	
 	@Override
 	protected void startComputing(ProblemStruct problemStruct,
 			AgentConfiguration agentConf) throws Exception {
@@ -108,7 +112,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		
 		DifferentialModel model = new DifferentialModel(population);
 		
-		IndividualEvaluated individualEvalI =
+		final IndividualEvaluated individualEvalI =
 				model.getBestIndividual(problem, problemTool, getLogger());
 		
 		// save, log and distribute computed Individual
@@ -146,12 +150,12 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			
 			// save, log and distribute computed Individual
-			processComputedIndividual(individualEvalI, generationNumberI,
+			processComputedIndividual(individualEvalNew, generationNumberI,
 					problem, jobID);
 			
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
-				distributeIndividualToNeighours(individualEvalI, problem, jobID);
+				distributeIndividualToNeighours(individualEvalNew, problem, jobID);
 			}
 			
 			//take received individual to new generation

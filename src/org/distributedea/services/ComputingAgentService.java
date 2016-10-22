@@ -22,7 +22,6 @@ import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.structures.helpers.ModelOfHelpmates;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.logging.IAgentLogger;
@@ -34,8 +33,6 @@ import org.distributedea.ontology.agentinfo.AgentInfosWrapper;
 import org.distributedea.ontology.agentinfo.GetAgentInfo;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
-import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.RequiredAgent;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
@@ -208,56 +205,6 @@ public class ComputingAgentService {
 		
 		return agentInfoWrp;
 
-	}
-	
-	/**
-	 * Obtains AgentConfiguration required for {@link Agent_ManagerAgent}
-	 * @param agent
-	 * @param computingAgent
-	 * @param agentConfiguration
-	 * @param logger
-	 */
-	public static void sendRequiredAgent(Agent_DistributedEA agent, AID computingAgent,
-			AgentConfiguration agentConfiguration, IAgentLogger logger) {
-				
-		if (agent == null) {
-			throw new IllegalArgumentException("Argument " +
-					Agent_DistributedEA.class.getSimpleName() + " can't be null");
-		}
-		if (agentConfiguration == null || ! agentConfiguration.valid(logger)) {
-			throw new IllegalArgumentException("Argument " +
-					AgentConfiguration.class.getSimpleName() + " is not valid");
-		}
-		if (logger == null) {
-			throw new IllegalArgumentException("Argument " +
-					IAgentLogger.class.getSimpleName() + " can't be null");
-		}
-		
-		RequiredAgent requiredAgent = new RequiredAgent(agentConfiguration);
-		
-		Ontology ontology = ManagementOntology.getInstance();
-		
-		ACLMessage msgRequiredAgent = new ACLMessage(ACLMessage.INFORM);
-		msgRequiredAgent.setSender(agent.getAID());
-		msgRequiredAgent.addReceiver(computingAgent);
-		msgRequiredAgent.setLanguage(agent.getCodec().getName());
-		msgRequiredAgent.setOntology(ontology.getName());
-
-		
-		Action action = new Action(computingAgent, requiredAgent);
-		
-		try {
-			agent.getContentManager().fillContent(msgRequiredAgent, action);
-			
-		} catch (Codec.CodecException e) {
-			logger.logThrowable("CodecException by sending " +
-					RequiredAgent.class.getSimpleName(), e);
-		} catch (OntologyException e) {
-			logger.logThrowable("OntologyException by sending " +
-					RequiredAgent.class.getSimpleName(), e);
-		}
-		
-		agent.send(msgRequiredAgent);
 	}
 	
 	/**

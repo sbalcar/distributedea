@@ -24,7 +24,7 @@ public interface Planner {
 	 * @param logger
 	 */
 	public abstract Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun job, IAgentLogger logger) throws Exception;
+			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws Exception;
 	
 	
 	/**

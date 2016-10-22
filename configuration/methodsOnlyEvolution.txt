@@ -2,6 +2,12 @@
 <configuration>
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_Evolution" name="Agent_Evolution">
+            <arguments>
+               <argument key="popSize" value="10" sendOnlyValue="false" />
+               <argument key="mutationRate" value="0.9" sendOnlyValue="false" />
+               <argument key="crossRate" value="0.5" sendOnlyValue="false" />
+               <argument key="selector" value="org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector" sendOnlyValue="false" />
+            </arguments>
         </agent>
     </agents>
 </configuration>

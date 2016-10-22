@@ -3,7 +3,7 @@ package org.distributedea;
 import java.util.Arrays;
 import java.util.List;
 
-import org.distributedea.agents.systemagents.Agent_CentralLoger;
+import org.distributedea.agents.systemagents.Agent_CentralLogger;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_DataManager;
 import org.distributedea.agents.systemagents.Agent_Monitor;
@@ -48,7 +48,7 @@ public class Configuration {
 		Class<?>[] classes = new Class[] {
 				Agent_CentralManager.class,
 				Agent_DataManager.class,
-				Agent_CentralLoger.class,
+				Agent_CentralLogger.class,
 				Agent_Monitor.class
 			};
 		

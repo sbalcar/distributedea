@@ -2,25 +2,41 @@ package org.distributedea.ontology.configuration;
 
 import org.distributedea.logging.IAgentLogger;
 
+import com.thoughtworks.xstream.XStream;
+
 import jade.content.Concept;
 
-
+/**
+ * Structure represents one argument for Agent
+ * @author stepan
+ *
+ */
 public class Argument implements Concept {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
 	private String value;
-	private Boolean sendOnlyValue = false;
+	private Boolean sendOnlyValue;
 	
-	public Argument() {
+	@Deprecated
+	public Argument() { // only for Jade
 	}
 	
+	/**
+	 * Constructor
+	 * @param name
+	 * @param value
+	 */
 	public Argument(String name, String value) {
 		this.value = value;
 		this.name = name;
 	}
 
+	/**
+	 * Copy constructor
+	 * @param argument
+	 */
 	public Argument(Argument argument) {
 		
 		setName(argument.getName());
@@ -41,7 +57,7 @@ public class Argument implements Concept {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
+	
 	public Boolean getSendOnlyValue() {
 		return sendOnlyValue;
 	}
@@ -50,19 +66,33 @@ public class Argument implements Concept {
 	}
 
 	/**
-	 * Tests validity
+	 * Exports value as integer
 	 * @return
 	 */
-	public boolean valid(IAgentLogger logger) {
-		return true;
+	public int exportValueAsInteger() {
+		return Integer.parseInt(value);
 	}
-
+	
 	/**
-	 * Returns clone
+	 * Exports value as double
 	 * @return
 	 */
-	public Argument deepClone() {
-		return new Argument(this);
+	public double exportValueAsDouble() {
+		return Double.parseDouble(value);
+	}
+	
+	/**
+	 * Export value as Class
+	 * @return
+	 */
+	public Class<?> exportValueAsClass() {
+		
+		try {
+			return Class.forName(this.value);
+			
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
 	}
 	
 	@Override
@@ -79,14 +109,10 @@ public class Argument implements Concept {
 	    boolean areAgentValuesEqual =
 	    		this.getValue().equals(argumentOuther.getValue());
 	    boolean areSendOnlyValuesEqual =
-	    		this.getSendOnlyValue() == argumentOuther.getSendOnlyValue();
+	    		this.getSendOnlyValue().equals(argumentOuther.getSendOnlyValue());
 	    
-	    if (areAgentNameEqual && areAgentValuesEqual && 
-	    		areSendOnlyValuesEqual) {
-	    	return true;
-	    } else {
-	    	return false;
-	    }
+	    return areAgentNameEqual && areAgentValuesEqual && 
+	    		areSendOnlyValuesEqual;
 	}
 	
     @Override
@@ -96,16 +122,46 @@ public class Argument implements Concept {
     
 	@Override
 	public String toString() {
-		return name + value + sendOnlyValue;
+		return name + "-" + value + "-" + sendOnlyValue;
 	}
 	
-	public Argument exportClone() {
-		
-		Argument clone = new Argument();
-		clone.setName(name);
-		clone.setValue(value);
-		clone.setSendOnlyValue(sendOnlyValue);
-		
-		return clone;
+	/**
+	 * Exports to the XML String
+	 */
+	public String exportXML() {
+
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.NO_REFERENCES);
+
+		return xstream.toXML(this);
 	}
+	
+	/**
+	 * Import the {@link Argument} from the String
+	 */
+	public static Argument importXML(String xml) {
+
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.NO_REFERENCES);
+
+		return (Argument) xstream.fromXML(xml);
+	}
+	
+	
+	/**
+	 * Tests validity
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		return true;
+	}
+
+	/**
+	 * Returns clone
+	 * @return
+	 */
+	public Argument deepClone() {
+		return new Argument(this);
+	}
+	
 }

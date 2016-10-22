@@ -2,6 +2,6 @@
 <configuration>
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_TabuSearch" name="Agent_TabuSearch">
-        </agent> 
+        </agent>
     </agents>
 </configuration>

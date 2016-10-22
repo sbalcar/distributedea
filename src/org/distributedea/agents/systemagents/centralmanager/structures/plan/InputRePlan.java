@@ -11,7 +11,6 @@ import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDe
 import org.distributedea.ontology.iteration.Iteration;
 
 
-
 /**
  * Represents input for re-planning. Contains new agents to create and
  * currently running agents to be killed in the given {@link Iteration}.
@@ -180,7 +179,8 @@ public class InputRePlan implements Concept {
 	 * @param agentToCreate
 	 */
 	public void addAgentsToCreate(InputAgentDescription agentToCreate) {
-		if (agentToCreate == null) {
+		if (agentToCreate == null ||
+				! agentToCreate.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					InputAgentDescription.class.getSimpleName() + " is not valid");
 		}
@@ -193,6 +193,29 @@ public class InputRePlan implements Concept {
 
 	}
 
+	public boolean isEmpty() {
+		return agentsToKill.isEmpty() && agentsToCreate.isEmpty();
+	}
+	
+	public InputRePlan exportOptimalizedInpuRePlan() {
+		
+		InputAgentDescriptions inputAgentDescriptions =
+				agentsToKill.exportInputAgentDescriptions();
+		
+		InputAgentDescriptions intersection =
+				inputAgentDescriptions.exportIntersection(agentsToCreate);
+		
+		AgentDescriptions agentsToKillClone = agentsToKill.deepClone();
+		agentsToKillClone.removeAll(intersection);
+		
+		InputAgentDescriptions agentsToCreateClone = agentsToCreate.deepClone();
+		agentsToCreateClone.removeAll(intersection);
+		
+		return new InputRePlan(iteration.deepClone(),
+				agentsToKillClone,
+				agentsToCreateClone);
+	}
+	
 	/**
 	 * Tests validity
 	 * @return

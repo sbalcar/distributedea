@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodInstanceDescription;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 

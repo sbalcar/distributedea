@@ -102,7 +102,27 @@ public class ProblemTools {
 		return ProblemTool.createInstanceOfProblemTool(problemToolClass,
 				logger);
 	}
-	
+
+	/**
+	 * Test validity
+	 * @param logger
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+				
+		for (Class<?> problemToolClassI : problemTools) {
+			
+			IProblemTool problemToolI = ProblemTool.
+					createInstanceOfProblemTool(problemToolClassI, logger);
+			
+			if (problemToolI == null) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 	/**
 	 * Test validity of this {@link ProblemTools} structure
 	 * @param problemToSolve

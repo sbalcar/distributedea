@@ -177,6 +177,7 @@ public class RePlan implements Concept {
 		}
 		this.agentsToCreate = agentsToCreate;
 	}
+	
 	/**
 	 * Adds method to create
 	 * @param agentToCreate
@@ -204,6 +205,10 @@ public class RePlan implements Concept {
 			return false;
 		}
 		return agentsToCreate.containsAgentDescription(agentToCreate);
+	}
+	
+	public boolean isEmpty() {
+		return agentsToKill.isEmpty() && agentsToCreate.isEmpty();
 	}
 	
 	/**

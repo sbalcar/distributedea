@@ -18,8 +18,10 @@ import jade.core.AID;
  */
 public class FileNames {
 
-	public static String JOB_SUFIX = "job";
-	public static String POSTPROCESSING_SUFIX = "ps";
+	public static String mainControllerIP;
+	
+	public final static String JOB_SUFIX = "job";
+	public final static String POSTPROCESSING_SUFIX = "ps";
 	
 	
 	/**
@@ -160,8 +162,8 @@ public class FileNames {
 	 * @return
 	 */
 	public static String getResultFile(JobID jobID) {
-		
-		return getResultDirectoryForJobs(jobID.getBatchID()) + File.separator +
+	
+		return getResultDirectoryForJobRun(jobID) + File.separator +
 				"result-" + jobID.getJobID() + "-" + jobID.getRunNumber() + ".txt";
 	}	
 	
@@ -194,9 +196,15 @@ public class FileNames {
 	 * Provides way to centralized log directory
 	 * @return
 	 */
-	public static String getLogDirectory() {
+	public static String getGlobalLogDirectory() {
 		
 		return "log";
+	}
+	
+	public static String getLogDirectory() {
+		
+		return getGlobalLogDirectory() + File.separator +
+				"central-" + mainControllerIP;
 	}
 
 	public static String getGeneralLogDirectoryForComputingAgent(

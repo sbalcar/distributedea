@@ -63,6 +63,7 @@ public class InputAgentConfigurations implements Concept {
 					List.class.getSimpleName() + " is not valid");
 		}
 		
+		this.agentConfigurations = new ArrayList<>();
 		for (InputAgentConfiguration agentConfI :
 				agentConfigurations.getAgentConfigurations()) {
 			
@@ -87,8 +88,9 @@ public class InputAgentConfigurations implements Concept {
 
 	public void addAgentConfigurations(InputAgentConfiguration agentConfiguration) {
 		
-		if (agentConfigurations == null ||
+		if (agentConfiguration == null ||
 				! agentConfiguration.valid(new TrashLogger())) {
+
 			throw new IllegalArgumentException("Argument " +
 					AgentConfiguration.class.getSimpleName() + " is not valid");
 		}

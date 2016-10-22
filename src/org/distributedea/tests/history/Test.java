@@ -1,7 +1,6 @@
 package org.distributedea.tests.history;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class Test {
 		
 	}
 	
-	private static List<Batch> getInputBatches() throws IOException {
+	private static List<Batch> getInputBatches() throws Exception {
 		
 		File batchesDir = new File(FileNames.getDirectoryOfInputBatches());
 		

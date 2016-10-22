@@ -3,16 +3,15 @@ package org.distributedea.agents.computingagents;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
-import org.distributedea.agents.computingagents.computingagent.evolution.Convertor;
-import org.distributedea.agents.computingagents.computingagent.evolution.EACrossoverWrapper;
-import org.distributedea.agents.computingagents.computingagent.evolution.EAFitnessWrapper;
-import org.distributedea.agents.computingagents.computingagent.evolution.EAMutationWrapper;
+import org.distributedea.agents.computingagents.computingagent.evolution.EvolutionPopulationModel;
+import org.distributedea.agents.computingagents.computingagent.evolution.selectors.ISelector;
+import org.distributedea.agents.computingagents.computingagent.evolution.selectors.Selector;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.configuration.Argument;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
@@ -25,14 +24,6 @@ import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
-import org.jgap.Configuration;
-import org.jgap.Genotype;
-import org.jgap.IChromosome;
-import org.jgap.InvalidConfigurationException;
-import org.jgap.Population;
-import org.jgap.impl.DefaultConfiguration;
-import org.jgap.impl.StandardPostSelector;
-import org.jgap.impl.WeightedRouletteSelector;
 
 /**
  * Agent represents Evolution Algorithm Method
@@ -43,9 +34,18 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
 
+	private String POP_SIZE = "popSize";
 	private int popSize = 10;
+	
+	private String MUTATION_RATE = "mutationRate";
 	private double mutationRate = 0.9;
+	
+	private String CROSS_RATE = "crossRate";
 	private double crossRate = 0.5;
+	
+	private String SELECTOR = "selector";
+	private ISelector selector;
+	
 	
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
@@ -88,6 +88,29 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		
 		return description;
 	}
+
+	protected void processArguments(Arguments arguments) throws Exception {
+		
+		// set population size
+		Argument popSizeArg = arguments.exportArgument(POP_SIZE);
+		this.popSize = popSizeArg.exportValueAsInteger();
+		
+		// set cross rate
+		Argument crossRateArg = arguments.exportArgument(CROSS_RATE);
+		this.crossRate = crossRateArg.exportValueAsDouble();
+		
+		// set mutation rate
+		Argument mutationRateArg = arguments.exportArgument(MUTATION_RATE);
+		this.mutationRate = mutationRateArg.exportValueAsDouble();
+		
+		// set selector
+		Argument selectorArg = arguments.exportArgument(SELECTOR);
+		
+		Class<?> selectorClass = selectorArg.exportValueAsClass();
+		
+		this.selector = Selector.createInstance(selectorClass);
+		
+	}
 	
 	@Override
 	protected void startComputing(ProblemStruct problemStruct,
@@ -106,144 +129,79 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		
-		
+				
 		
 		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
 		
-		Configuration conf = new DefaultConfiguration();
-		Configuration.reset();
-		
-		// generates Individuals
-		List<IndividualEvaluated> individuals = new ArrayList<>();
-		for (int i = 0; i < popSize; i++) {
-			IndividualEvaluated individualI = problemTool.generateIndividualEval(problem, getCALogger());
-			individuals.add(individualI);
-		}		
-		
-		// converts Individuals to Chromosomes
-		Population population = new Population(conf);
-		for (IndividualEvaluated individualI : individuals) {
-			IChromosome chromI = Convertor.convertToIChromosome(individualI.getIndividual(), problem, conf);
-			//chromI.setFitnessValue(individualI.getFitness());
-			
-			population.addChromosome(chromI);
-		}
-		
-		if (individualDistribution) {
-			distributeIndividualToNeighours(individuals, problem, jobID);
-		}
-
-		
-		conf.setSampleChromosome(population.getChromosome(0));
-		conf.setFitnessFunction(
-				new EAFitnessWrapper(conf, problem, problemTool, getCALogger()));
-		conf.setPopulationSize(popSize);
-		
-        //conf.removeNaturalSelectors(false);
-        //conf.removeNaturalSelectors(true);
-		conf.addNaturalSelector(new WeightedRouletteSelector(conf), true);
-		
-		conf.getGeneticOperators().clear();
-		conf.addGeneticOperator(
-				new EAMutationWrapper(mutationRate, problem, problemTool, conf, getCALogger()));
-		conf.addGeneticOperator(
-				new EACrossoverWrapper(crossRate, problem, problemTool, conf, getCALogger()));
-		conf.addNaturalSelector(new StandardPostSelector(conf), false);
-		
-		Genotype pop = new Genotype(conf, population);
-		
 		
 		long generationNumberI = -1;
 		
-		// best chromosome from actual generation
-		IChromosome choosenChromosomeI = pop.getFittestChromosome();
-		Individual individualI = Convertor.convertToIndividual(
-				choosenChromosomeI, problem, problemTool, conf);
-		double fitnessI = problemTool.fitness(individualI, problem, getCALogger());
-		IndividualEvaluated individualEvalI = new IndividualEvaluated(individualI, fitnessI);
 		
-		// save, log and distribute computed Individual
-		processIndividualFromInitGeneration(individualEvalI,
-				generationNumberI, problem, jobID);
-
-		while (state == CompAgentState.COMPUTING) {
-			// increment next number of generation
-			generationNumberI++;
-			
-			// try - for situation when some operator doesn't work correctly
-			try {
-				pop.evolve();
-			} catch (Exception e) {
-				getCALogger().logThrowable("Error by evolving", e);
-				commitSuicide();
-				return;
+		// generates Individuals
+		List<IndividualEvaluated> individuals = new ArrayList<>();
+		while (individuals.size() < popSize) {
+			IndividualEvaluated individualI = problemTool.
+					generateIndividualEval(problem, getCALogger());
+			if (! individuals.contains(individualI)) {
+				individuals.add(individualI);
 			}
+		}
+		
+		EvolutionPopulationModel populationI = new EvolutionPopulationModel(individuals);
+		
+		IndividualEvaluated bestIndividualI = populationI.getBestIndividual(problem);
+		
+		
+		if (individualDistribution) {
+			distributeIndividualToNeighours(populationI.getIndividuals(), problem, jobID);
+		}
+		
+		while (state == CompAgentState.COMPUTING) {
 			
-			// best chromosome from actual generation
-			choosenChromosomeI = pop.getFittestChromosome();
-			individualI = Convertor.convertToIndividual(choosenChromosomeI,
-					problem, problemTool, conf);
-			fitnessI = problemTool.fitness(individualI, problem, getCALogger());
-			IndividualEvaluated individualEvalI_ = new IndividualEvaluated(individualI, fitnessI);
+			generationNumberI++;
+						
+			// process cross
+			EvolutionPopulationModel populationNewI = populationI.
+					processCross(crossRate, selector,
+					problemTool, problem, getLogger());
 			
-			// save, log and distribute computed Individual
-			processComputedIndividual(individualEvalI_,
-					generationNumberI, problem, jobID);
+			// add all generation before mutation
+			populationNewI.addIndividuals(populationI.getIndividuals());
 			
-			List<IndividualEvaluated> populationOntol =
-					convertPopulationToOntology(pop.getPopulation(), problem,
-					problemTool, conf);
+			// process mutation on each individual in population
+			populationNewI.processMutation(mutationRate, problemTool, problem, getLogger());
 			
-			// send new Individual to distributed neighbors
+			// inserts the best individual from last generation to model
+			populationNewI.addIndividual(bestIndividualI);
+			
+			// distribute individuals to another islands
 			if (individualDistribution) {
-				distributeIndividualToNeighours(populationOntol, problem, jobID);
+				distributeIndividualToNeighours(populationNewI.getIndividuals(), problem, jobID);
 			}
 			
 			//take received individual to new generation
 			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
-			
-			if (individualDistribution &&
-					FitnessTool.isFirstIndividualWBetterThanSecond(
-							recievedIndividualW, fitnessI, problem)) {
-				
-				IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
-				
-				IChromosome recievedChromI = Convertor
-						.convertToIChromosome(recievedIndividual.getIndividual(), problem, conf);
-				pop.getPopulation().addChromosome(recievedChromI);
-				
-				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
-			}
 
+			// save and log received Individual
+			processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
+			
+			
+			// add received individuals to population
+			populationNewI.addIndividual(recievedIndividualW.getIndividualEvaluated());
+			
+			// correct size of new population to hard coded parameter
+			populationNewI.correctedPopulationModel(problem, popSize);
+			
+			// update population by new population
+			populationI = populationNewI;
+			bestIndividualI = populationNewI.getBestIndividual(problem);
+			
+			// save, log and distribute computed Individual
+			processComputedIndividual(bestIndividualI,
+					generationNumberI, problem, jobID);
 		}
 		
-		problemTool.exit();
 	}
-
-
-	private List<IndividualEvaluated> convertPopulationToOntology(Population population, Problem problem,
-			IProblemTool problemTool, Configuration conf) throws InvalidConfigurationException {
-		
-		List<IndividualEvaluated> individuals = new ArrayList<>();
-		
-		for (int i = 0; i < population.size(); i++) {
-			IChromosome iChromosomeI = population.getChromosome(i);
-			
-			Individual individualI = Convertor.convertToIndividual(
-					iChromosomeI, problem, problemTool, conf);
-			
-			double fitnessI = problemTool.fitness(individualI, problem,
-					getCALogger());
-			
-			IndividualEvaluated individualEvalI =
-					new IndividualEvaluated(individualI, fitnessI);
-			
-			individuals.add(individualEvalI);
-		}
-		return individuals;
-	}
-	
 	
 }

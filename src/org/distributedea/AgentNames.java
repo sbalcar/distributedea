@@ -7,7 +7,7 @@ package org.distributedea;
  */
 public enum AgentNames {
 
-	INITIATOR("Initiator"), CENTRAL_LOGER("CentralLoger"),
+	INITIATOR("Initiator"), CENTRAL_LOGER("CentralLogger"),
 	MANAGER_AGENT("ManagerAgent"), DATA_MANAGER("DataManager"),
 	MONITOR("Monitor");
 

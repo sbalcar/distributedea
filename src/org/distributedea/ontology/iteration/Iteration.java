@@ -58,7 +58,7 @@ public class Iteration implements Concept {
 	 * Returns the ration of number and expected max numer of {@link Iteration}.
 	 * @return
 	 */	
-	public double exportRationOfIteration() {
+	public double exportRation() {
 		
 		return (double) getIterationNumber() / (double) getExpectetMaxIterationNumber();
 	}

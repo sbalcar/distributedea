@@ -165,6 +165,25 @@ public class AgentConfigurations implements Concept {
 		return new InputAgentConfigurations(inputAgentConfs);
 	}
 	
+	public int size() {
+		
+		return agentConfigurations.size();
+	}
+
+	public AgentConfiguration export(int index) {
+		
+		return agentConfigurations.get(index);
+	}
+	
+	/**
+	 * Returns Clone
+	 * @return
+	 */
+	public AgentConfigurations deepClone() {
+		
+		return new AgentConfigurations(this);
+	}
+	
 	/**
 	 * Tests validity
 	 * @param logger
@@ -185,12 +204,46 @@ public class AgentConfigurations implements Concept {
 		return true;
 	}
 	
-	/**
-	 * Returns Clone
-	 * @return
-	 */
-	public AgentConfigurations deepClone() {
-		return new AgentConfigurations(this);
+	@Override
+	public boolean equals(Object other) {
+		
+	    if (!(other instanceof AgentConfigurations)) {
+	        return false;
+	    }
+	    
+	    AgentConfigurations agentConfigurationsOuther = (AgentConfigurations)other;
+	    
+	    if (agentConfigurations.size() !=
+	    		agentConfigurationsOuther.size()) {
+	    	return false;
+	    }
+	    for (int i = 0; i < agentConfigurations.size(); i++) {
+	    	
+	    	AgentConfiguration acI =
+	    			agentConfigurations.get(i);
+	    	AgentConfiguration acOutherI =
+	    			agentConfigurationsOuther.export(i);
+	    	
+	    	if (! acI.equals(acOutherI)) {
+	    		return false;
+	    	}
+	    }
+	    return true;
 	}
 	
+    @Override
+    public int hashCode() {
+    	return toString().hashCode();
+    }
+    
+	@Override
+	public String toString() {
+		String string = "";
+		
+		for (AgentConfiguration agentConfigurationI : agentConfigurations) {
+			string += agentConfigurationI.toString();
+		}
+		
+		return string;
+	}
 }

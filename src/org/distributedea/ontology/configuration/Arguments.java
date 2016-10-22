@@ -19,8 +19,10 @@ public class Arguments implements Concept {
 	
 	protected List<Argument> arguments;
 
-	@Deprecated
-	public Arguments() { // only for Jade
+	/**
+	 * Constructor
+	 */
+	public Arguments() {
 		this.arguments = new ArrayList<Argument>();
 	}
 
@@ -93,6 +95,21 @@ public class Arguments implements Concept {
 	}
 	
 	/**
+	 * Export {@link Argument} by name
+	 * @param argumentName
+	 * @return
+	 */
+	public Argument exportArgument(String argumentName) {
+		
+		for (Argument argumentI : this.arguments) {
+			if (argumentI.getName().equals(argumentName)) {
+				return argumentI;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Test validity
 	 * @return
 	 */
@@ -159,6 +176,39 @@ public class Arguments implements Concept {
 		}
 		
 		return value;
+	}
+	
+	/**
+	 * Export arguments for Jade
+	 * @return
+	 */
+	public Object[] exportAgrumentsForJade() {
+		
+		Object[] jadeArgs = new Object[arguments.size()];
+		
+		for (int i = 0; i < arguments.size(); i++) {
+			
+			Argument argumentI = arguments.get(i);
+			
+			jadeArgs[i] = argumentI.exportXML();
+		}
+		
+		return jadeArgs;
+	}
+	
+	public static Arguments importArguments(Object[] jadeArgs) {
+		
+		Arguments args = new Arguments();
+		
+		for (int i = 0; i < jadeArgs.length; i++) {
+			
+			Object oI = jadeArgs[i];
+			Argument argI = Argument.importXML((String) oI);
+			
+			args.addArgument(argI);
+		}
+		
+		return args;
 	}
 	
 	public static Object[] transformAgrumentsForSniffer(Arguments arguments) {

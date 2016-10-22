@@ -5,6 +5,7 @@ import jade.content.Concept;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 
 /**
@@ -61,7 +62,12 @@ public class MethodStatistic implements Concept {
 		return methodStatisticResult.getBestIndividual();
 	}
 	public AgentDescription exportAgentDescriptionClone() {
+		
 		return getAgentDescription().deepClone();
+	}
+	public InputAgentDescription exportInputAgentDescriptionClone() {
+		
+		return exportAgentDescriptionClone().exportInputAgentDescription();
 	}
 	
 	/**

@@ -4,30 +4,33 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisation;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistories;
 import org.distributedea.agents.systemagents.centralmanager.structures.methodsstatistics.MethodsStatistics;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
+import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
+
 public class PlannerTheGreatestQuantityOfImprovement implements Planner {
 
-	private Agent_CentralManager centralManager;
-	private JobRun jobRun;
-	private IAgentLogger logger;
+	protected Agent_CentralManager centralManager;
+	protected JobRun jobRun;
+	protected IAgentLogger logger;
 	
-	protected PlannerInitialisation plannerInit = null;
+	protected Planner plannerInit = null;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -39,9 +42,8 @@ public class PlannerTheGreatestQuantityOfImprovement implements Planner {
 		
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 		
-		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
 		
-		plannerInit = new PlannerInitialisation(state, true);
+		plannerInit = new PlannerInitialisationOneMethodPerCore();
 		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
 	}
 
@@ -54,6 +56,15 @@ public class PlannerTheGreatestQuantityOfImprovement implements Planner {
 		
 		// process RePlan
 		InputRePlan rePlan = replanning(iteration, history);
+		
+		
+		// correct empty re-planning
+		if (rePlan.isEmpty() &&
+				history.wereLastKRePlanEmpty(iteration, 10)) {
+			logger.log(Level.INFO, "correct replanning");
+			rePlan = correctReplanning(iteration, history);
+		}
+		
 		RePlan rePlanUpdated = PlannerTool.processReplanning(centralManager, rePlan, jobRun, logger);
 		
 		return new Pair<Plan, RePlan>(rePlanInit.first, rePlanUpdated);
@@ -62,15 +73,18 @@ public class PlannerTheGreatestQuantityOfImprovement implements Planner {
 	protected InputRePlan replanning(Iteration iteration, History history)
 			throws Exception {
 
-		History historyOfCurrentMethods = history.
-				exportHistoryOfRunningMethods(iteration, 3);
+		// pring info
+		printLog(centralManager, iteration, history, logger);
 		
-		if (historyOfCurrentMethods.getNumberOfMethodInstances() <= 1) {
+		MethodHistories currentMethodsHistory = history.getMethodHistories()
+				.exportHistoryOfRunningMethods(iteration, 3);
+		
+		if (currentMethodsHistory.getNumberOfMethodInstances() <= 1) {
 			return new InputRePlan(iteration);
 		}
 		
 		MethodsStatistics currentMethodsResults =
-				historyOfCurrentMethods.exportMethodsResults(iteration);
+				currentMethodsHistory.exportMethodsResults(iteration, history.getJobID());
 		MethodStatistic greatestQuantMethodStatistic = currentMethodsResults.
 				exportMethodAchievedTheGreatestQuantityOfImprovement();
 		MethodStatistic leastQuantMethodStatistic = currentMethodsResults.
@@ -78,18 +92,69 @@ public class PlannerTheGreatestQuantityOfImprovement implements Planner {
 		
 		AgentDescription methodToKill =
 				leastQuantMethodStatistic.exportAgentDescriptionClone();
-		AgentDescription methodGreatestQuant =
-				greatestQuantMethodStatistic.exportAgentDescriptionClone();
+		InputAgentDescription methodGreatestQuant =
+				greatestQuantMethodStatistic.exportInputAgentDescriptionClone();
 		
-		InputAgentDescription candidateMethod = plannerInit.removeNextCandidate();
-		if (candidateMethod != null) {
+		
+		InputAgentDescriptions methodsWhichHaveNeverRun =
+				history.exportsMethodsWhichHaveNeverRun(jobRun);
+		
+		if (! methodsWhichHaveNeverRun.isEmpty()) {
 
-			return new InputRePlan(iteration, methodToKill,
-					candidateMethod);
+			InputAgentDescription candidateMethod =
+					methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
+			
+			return new InputRePlan(iteration, methodToKill,	candidateMethod);
 		}
 		
-		return new InputRePlan(iteration, methodToKill,
-				methodGreatestQuant.exportInputAgentDescription());
+		return new InputRePlan(iteration, methodToKill, methodGreatestQuant).
+				exportOptimalizedInpuRePlan();
+	}
+
+	protected InputRePlan correctReplanning(Iteration iteration, History history)
+			throws Exception {
+		
+		MethodHistories currentMethodsHistory = history.getMethodHistories()
+				.exportHistoryOfRunningMethods(iteration, 0);
+
+		//random select agent to kill
+		AgentDescription methodToKill =
+				currentMethodsHistory.exportRandomRunningMethod();
+		
+		MethodType methodTypeNotRunForTheLongestTime =
+				history.methodsWhichDidntRunForTheLongestTime(
+						jobRun.exportInputAgentDescriptions().exportMethodTypes());
+
+		InputAgentDescription methodToCreate =
+				methodTypeNotRunForTheLongestTime.exportInputAgentDescription();
+		
+		return new InputRePlan(iteration, methodToKill, methodToCreate);
+	}
+	
+	private void printLog(Agent_CentralManager centralManager,
+			Iteration iteration, History history, IAgentLogger logger) {
+		
+		MethodsStatistics currentMethodsResults = history.getMethodHistories()
+				.exportMethodsResults(iteration, history.getJobID());
+		MethodStatistic greatestQuantityMethodStatistic = currentMethodsResults.
+				exportMethodAchievedTheGreatestQuantityOfImprovement();
+		MethodStatistic leastQuantityMethodStatistic = currentMethodsResults.
+				exportMethodAchievedTheLeastQuantityOfImprovement();
+		
+		String minPriorityAgentName = leastQuantityMethodStatistic.
+				getAgentDescription().getAgentConfiguration().exportAgentname();
+		int leastQuantity = leastQuantityMethodStatistic.
+				getMethodStatisticResult().getNumberOfTheBestCreatedIndividuals();
+		
+		logger.log(Level.INFO, "The least Quantity: " + minPriorityAgentName + " quantity of improvement: " + leastQuantity);
+
+		
+		String maxPriorityAgentName = greatestQuantityMethodStatistic.
+				getAgentDescription().getAgentConfiguration().exportAgentname();
+		int greatestQuantity = greatestQuantityMethodStatistic.
+				getMethodStatisticResult().getNumberOfTheBestCreatedIndividuals();
+		
+		logger.log(Level.INFO, "The greatest Quantity : " + maxPriorityAgentName + " quantity of improvement: " + greatestQuantity);
 	}
 
 	@Override

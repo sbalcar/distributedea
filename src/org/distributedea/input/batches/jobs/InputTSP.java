@@ -4,10 +4,9 @@ package org.distributedea.input.batches.jobs;
 import java.io.File;
 
 import org.distributedea.InputConfiguration;
-import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce;
+import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce_;
 import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisation;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationState;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
@@ -36,7 +35,7 @@ public class InputTSP {
 		job.importMethodsFile(new File(
 				FileNames.getMethodsFile(MethodConstants.METHODS_ALL)));
 		
-		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce_());
 		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
@@ -58,7 +57,7 @@ public class InputTSP {
 		job.importMethodsFile(new File(
 				FileNames.getMethodsFile(MethodConstants.METHODS_ALL)));
 		
-		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce_());
 		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
@@ -80,7 +79,7 @@ public class InputTSP {
 		job.importMethodsFile(new File(
 				FileNames.getMethodsFile(MethodConstants.METHODS_ALL)));
 		
-		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce_());
 		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolPoint2opt.class));
@@ -121,8 +120,7 @@ public class InputTSP {
 		job.importMethodsFile(new File(
 				FileNames.getMethodsFile(MethodConstants.METHODS_ALL)));
 		
-		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
-		job.setPlanner(new PlannerInitialisation(state, true));
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		job.setPlannerType(new PlannerTypeTimeRestriction(50));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
@@ -141,8 +139,7 @@ public class InputTSP {
 		job.importMethodsFile(new File(
 				FileNames.getMethodsFile(MethodConstants.METHODS_ALL)));
 
-		PlannerInitialisationState state = PlannerInitialisationState.RUN_ONE_AGENT_PER_CORE;
-		job.setPlanner(new PlannerInitialisation(state, true));
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		job.setPlannerType(new PlannerTypeTimeRestriction(10));
 		job.setProblemTools(
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));

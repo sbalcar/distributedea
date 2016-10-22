@@ -67,10 +67,10 @@ public abstract class ProblemTool implements IProblemTool {
 	}
 	
 	
-	public IndividualEvaluated improveIndividualEval(Individual individual, Problem problem,
+	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual, Problem problem,
 			IAgentLogger logger) throws ProblemToolException {
 		
-		Individual individualNew = improveIndividual(individual, problem, logger);
+		Individual individualNew = improveIndividual(individual.getIndividual(), problem, logger);
 		double fitness = fitness(individualNew, problem, logger);
 		
 		return new IndividualEvaluated(individualNew, fitness);

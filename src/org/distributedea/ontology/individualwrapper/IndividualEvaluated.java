@@ -79,6 +79,40 @@ public class IndividualEvaluated implements Concept {
 		return true;
 	}
 	
+	
+	
+	@Override
+	public boolean equals(Object other) {
+		
+	    if (!(other instanceof IndividualEvaluated)) {
+	        return false;
+	    }
+	    
+	    IndividualEvaluated ieOuther = (IndividualEvaluated)other;
+	    
+	    boolean areIndividualsEqual =
+	    		getIndividual().equals(ieOuther.getIndividual());
+
+	    boolean areFitnessEqual =
+	    		getFitness() == ieOuther.getFitness();
+	    
+	    return areIndividualsEqual && areFitnessEqual;
+	}
+	
+    @Override
+    public int hashCode() {
+    	return toString().hashCode();
+    }
+    
+	@Override
+	public String toString() {
+		
+		return "" + getIndividual().toString() +
+				getFitness();
+	}
+	
+	
+	
 	/**
 	 * Tests validity
 	 * @return

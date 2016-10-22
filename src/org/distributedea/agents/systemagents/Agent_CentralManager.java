@@ -5,7 +5,6 @@ import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,11 +15,14 @@ import org.distributedea.agents.systemagents.centralmanager.behaviours.ComputeBa
 import org.distributedea.agents.systemagents.centralmanager.behaviours.ConsoleAutomatBehaviour;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
+import org.distributedea.logging.FileAndConsoleLogger;
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.MonitorOntology;
 import org.distributedea.ontology.ResultOntology;
+import org.distributedea.services.CentralLogerService;
 import org.distributedea.services.ManagerAgentService;
 
 /**
@@ -51,6 +53,14 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		return ontologies;
 	}
 	
+	public IAgentLogger getLogger() {
+		
+		if (logger == null) {
+			this.logger = new FileAndConsoleLogger(this);
+		}
+		return logger;
+	}
+	
 	@Override
 	protected void setup() {
 		
@@ -61,13 +71,16 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		while (! areAllServicesAvailable()) {
 		}
 		
+		CentralLogerService.logMessage(this, "Initialization OK", logger);
+		
 		Batches batches = null;
 		try {
 			File batchesDir = new File(FileNames.getDirectoryOfInputBatches());
 			batches = Batches.importXML(batchesDir);
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			getLogger().log(Level.INFO, "Can not load input Batches");
+			CentralLogerService.logMessage(this, "Input Batches wasn't loaded", getLogger());
 			ManagerAgentService.killAllContainers(this, getLogger());
 			return;
 		}

@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 import org.distributedea.ontology.iteration.Iteration;
 
+
 public class PlannerTypeTimeRestriction extends PlannerType {
 	
 	private long countOfReplaning;

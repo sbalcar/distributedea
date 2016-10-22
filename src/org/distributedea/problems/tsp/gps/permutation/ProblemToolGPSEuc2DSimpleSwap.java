@@ -12,7 +12,7 @@ import org.distributedea.ontology.problem.ProblemTSP;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.tsp.gps.permutation.operators.SinglePointCrossover;
-import org.distributedea.problems.tsp.point.permutation.ProblemTSPPointPermutationTool;
+import org.distributedea.problems.tsp.point.permutation.AProblemToolTSPPointPermutation;
 import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSwap;
 
 /**
@@ -21,7 +21,7 @@ import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSw
  * @author stepan
  *
  */
-public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutationTool {
+public class ProblemToolGPSEuc2DSimpleSwap extends AProblemToolTSPGPSEuc2DPermutation {
 
 	
 	@Override
@@ -153,7 +153,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends ProblemTSPGPSEuc2DPermutation
 	public Individual generateNextIndividual(Problem problem,
 			Individual individual, IAgentLogger logger) {
 		
-		ProblemTSPPointPermutationTool tool = new ProblemToolPointSimpleSwap();
+		AProblemToolTSPPointPermutation tool = new ProblemToolPointSimpleSwap();
 		return tool.generateNextIndividual(problem, individual, logger);
 	}
 

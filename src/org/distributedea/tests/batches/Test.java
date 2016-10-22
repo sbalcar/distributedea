@@ -1,19 +1,18 @@
 package org.distributedea.tests.batches;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.batches.BatchHeteroComparingTSP;
-import org.distributedea.input.batches.InputBatch;
+import org.distributedea.input.batches.IInputBatch;
 
 public class Test {
 
 	public static void test() {
 		
-		InputBatch inputBatch = new BatchHeteroComparingTSP();
+		IInputBatch inputBatch = new BatchHeteroComparingTSP();
 		Batch batch = inputBatch.batch();
 		
 		Batches batches = new Batches(batch);
@@ -21,7 +20,7 @@ public class Test {
 		
 		try {
 			batches.exportXML(batchDir);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -30,7 +29,7 @@ public class Test {
 		Batches importedBatches = null;
 		try {
 			importedBatches = Batches.importXML(batchesDir);
-		} catch (IOException e) {
+		} catch (Exception e) {
 		}
 		
 		Batch importedBatch = importedBatches.getBatches().get(0);

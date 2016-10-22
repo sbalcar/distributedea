@@ -15,7 +15,7 @@ import org.distributedea.ontology.job.JobID;
  *
  */
 public class FilesystemInitTool {
-
+	
 	/**
 	 * Creates log space in filesystem for given {@link JobID}
 	 * @param jobID
@@ -58,6 +58,27 @@ public class FilesystemInitTool {
 			logCAImprovementDirectory.mkdir();
 		}
 		
+	}
+	
+	public static void clearResultSpaceForJob(String batchID, String jobID, IAgentLogger logger) {
+		
+		String resultJobDirectoryName =
+				FileNames.getResultDirectoryForJob(new JobID(batchID, jobID, 0));
+		
+		File resultJobDir = new File(resultJobDirectoryName);
+		if (resultJobDir.isDirectory()) {
+			try {
+				FileUtils.deleteDirectory(resultJobDir);
+			} catch (IOException e) {
+				logger.logThrowable("Can not delete result directory", e);
+			}
+		}
+		
+		try {
+			resultJobDir.mkdir();
+		} catch (Exception e) {
+			logger.logThrowable("Can not create result directory", e);
+		}
 	}
 	
 	/**
@@ -155,6 +176,17 @@ public class FilesystemInitTool {
 	 */
 	public static void clearLogDir(IAgentLogger logger) throws IOException {
 		
+		String logGlobalDirName = FileNames.getGlobalLogDirectory();
+		
+		File logGlobalDirectory = new File(logGlobalDirName);
+		try {
+			logGlobalDirectory.mkdir();
+		} catch (Exception e) {
+			logger.logThrowable("Can not create log directory", e);
+			throw new IOException("Can not create log directory");
+		}
+		
+		
 		String logDirName = FileNames.getLogDirectory();
 		
 		File logDir = new File(logDirName);
@@ -197,27 +229,7 @@ public class FilesystemInitTool {
 	 * @param logger
 	 * @throws IOException
 	 */
-	public static void clearResultDir(IAgentLogger logger) throws IOException {
-		
-		String resultDirName = FileNames.getDirectoryofResults();
-		
-		File resultDir = new File(resultDirName);
-		if (resultDir.isDirectory()) {
-			try {
-				FileUtils.deleteDirectory(new File(resultDirName));
-			} catch (IOException e) {
-				logger.logThrowable("Can not delete result directory", e);
-				throw new IOException("Can not delete result directory");
-			}
-		}
-		
-		File resultDirectory = new File(resultDirName);
-		try {
-			resultDirectory.mkdir();
-		} catch (Exception e) {
-			logger.logThrowable("Can not create result directory", e);
-			throw new IOException("Can not create result directory");
-		}
-		
+	public static void clearResultDir(IAgentLogger logger) throws IOException {	
 	}
+	
 }

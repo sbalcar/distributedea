@@ -14,7 +14,7 @@ import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
 import org.distributedea.input.MatlabTool;
 import org.distributedea.input.batches.BatchTestTSP;
-import org.distributedea.input.batches.InputBatch;
+import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.logging.TrashLogger;
@@ -156,7 +156,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-		InputBatch batchCmp = new BatchTestTSP();
+		IInputBatch batchCmp = new BatchTestTSP();
 		Batch batch = batchCmp.batch();
 		
 		PostProcessing p = new PostProcInvestigationOfMedianJobRun();

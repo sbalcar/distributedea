@@ -7,7 +7,9 @@ import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.AgentName;
 import org.distributedea.ontology.configuration.Argument;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.job.JobID;
@@ -35,6 +37,8 @@ public class MonitorOntology extends BeanOntology {
             add(AgentDescriptions.class);
             add(AgentDescription.class);
             add(AgentConfiguration.class);
+            add(AgentName.class);
+            add(Arguments.class);
             add(Argument.class);
             
         } catch (Exception e) {

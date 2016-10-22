@@ -28,6 +28,7 @@ import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.AgentName;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
@@ -195,14 +196,6 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		
 		AgentConfiguration createdAgentConfiguration =
 				createAgent(this, configuration, getLogger());
-		
-		// to Computing Agent sends required Agent Configuration
-		if (configuration.exportIsComputingAgent()) {
-		
-			ComputingAgentService.sendRequiredAgent(this,
-					createdAgentConfiguration.exportAgentAID(),
-					createdAgentConfiguration, getLogger());
-		}
 				
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
@@ -341,11 +334,13 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		// starts another agents
 		String containerID = getNumberOfContainer();
 
+		AgentName agentName = new AgentName(configuration.getAgentName());
+		agentName.setContainerID(containerID);
+		agentName.setNumberOfAgent(0);
+		agentName.setNumberOfContainer(0);
 		
 		AgentConfiguration configurationI = new AgentConfiguration(configuration);
-		configurationI.setContainerID(containerID);
-		configurationI.setNumberOfAgent(0);
-		configurationI.setNumberOfContainer(0);
+		configurationI.setAgentName(agentName);
 		
 		AgentConfiguration controller = tryCreateAgent(agent, configurationI, logger);
 		while (controller == null) {
@@ -396,20 +391,32 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			AgentConfiguration configuration) throws ControllerException {
 		
 		Class<?> agentClass = configuration.exportAgentClass();
-		String agentName = configuration.exportAgentname();
+		AgentName agentName = configuration.getAgentName();
+		String agentNameString = configuration.exportAgentname();
 		Arguments arguments = configuration.getArguments();
 		
 		Object[] jadeArgs = null;
 		if (agentClass == Sniffer.class) {
 			
 			jadeArgs = Arguments.transformAgrumentsForSniffer(arguments);
+		} else {
+			
+			Object agentNameArg0 = agentName.exportXML();
+			Object[] argumentsArgs = configuration.getArguments().exportAgrumentsForJade();
+			
+			Object[] jadeArguments = new Object[argumentsArgs.length + 1];
+			jadeArguments[0] = agentNameArg0;
+			System.arraycopy(argumentsArgs, 0, jadeArguments, 1, argumentsArgs.length);
+			
+			
+			jadeArgs = jadeArguments;
 		}
 		
 		// get a container controller
 		PlatformController container = agent.getContainerController();
 		
 		AgentController createdAgent = container.
-				createNewAgent(agentName, agentClass.getName(), jadeArgs);
+				createNewAgent(agentNameString, agentClass.getName(), jadeArgs);
 		
 		createdAgent.start();
 		

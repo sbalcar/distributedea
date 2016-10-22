@@ -103,6 +103,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 			plannerType.run(planner, jobRun);
 		} catch (Exception e) {
 			logger.logThrowable("Error by running " + jobID.toString(), e);
+			e.printStackTrace();
 			centralManager.exit();
 		}
 		

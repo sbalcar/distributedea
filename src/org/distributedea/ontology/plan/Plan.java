@@ -40,6 +40,7 @@ public class Plan implements Concept {
 	 */
 	public Plan(Iteration iteration) {
 		setIteration(iteration);
+		this.newAgents = new AgentDescriptions();
 		
 	}
 	/**
@@ -90,6 +91,7 @@ public class Plan implements Concept {
 		}
 		this.newAgents = newAgents;
 	}
+	
 	/**
 	 * Adds method to create
 	 * @param agentToCreate
@@ -106,6 +108,24 @@ public class Plan implements Concept {
 		}
 		
 		this.newAgents.addAgentDescriptions(agentToCreate);
+	}
+	
+	/**
+	 * Adds method to create
+	 * @param agentToCreate
+	 */
+	public void addAgentsToCreate(AgentDescriptions agentDescriptions) {
+		if (agentDescriptions == null ||
+				! agentDescriptions.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AgentDescription.class.getSimpleName() + " is not valid");
+		}
+		
+		for (AgentDescription agentDescriptionI :
+			agentDescriptions.getAgentDescriptions()) {
+			
+			addAgentsToCreate(agentDescriptionI);
+		}
 	}
 	
 	public static Plan concat(Plan plan1, Plan plan2) {
@@ -139,14 +159,8 @@ public class Plan implements Concept {
 		if (iteration == null || ! iteration.valid(logger)) {
 			return false;
 		}
-		if (newAgents == null) {
+		if (newAgents == null || ! newAgents.valid(logger)) {
 			return false;
-		}
-		for (AgentDescription descriptionI :
-				newAgents.getAgentDescriptions()) {
-			if (! descriptionI.valid(logger)) {
-				return false;
-			}
 		}
 		return true;
 	}

@@ -8,7 +8,8 @@ import java.util.Random;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQualitiOfFitnessAverage;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQualityOfBestIndividual;
-import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantitiOfMaterial;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfMaterial;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfGoodMaterial;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfImprovement;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.AgentDescription;
@@ -106,7 +107,7 @@ public class MethodsStatistics {
 	 * @param agentClasses
 	 * @return
 	 */
-	public MethodsStatistics getMethodResultsContainsInstancesOf(
+	public MethodsStatistics getMethodStatisticsOfAgentClasses(
 			List<Class<?>> agentClasses) {
 		
 		List<MethodStatistic> methodInstances = getMethodInstancesOf(
@@ -228,6 +229,38 @@ public class MethodsStatistics {
 		return methodsStatistics.get(0);
 	}
 	
+	
+	/**
+	 * Exports {@link MethodStatistic} of method which achieved the greatest
+	 * quantity of good material
+	 * @return
+	 */
+	public MethodStatistic exportMethodAchievedTheGreatestQuantityOfGoodMaterial() {
+		
+		if (this.methodsStatistics == null || this.methodsStatistics.isEmpty()) {
+			return null;
+		}
+		
+		Collections.sort(methodsStatistics, new ComparatorQuantityOfGoodMaterial());
+		return methodsStatistics.get(methodsStatistics.size() -1);
+	}
+	
+	/**
+	 * Exports {@link MethodStatistic} of method which achieved the least
+	 * quantity of good material
+	 * @return
+	 */
+	public MethodStatistic exportMethodAchievedTheLeastQuantityOfGoodMaterial() {
+		
+		if (this.methodsStatistics == null || this.methodsStatistics.isEmpty()) {
+			return null;
+		}
+
+		Collections.sort(methodsStatistics, new ComparatorQuantityOfGoodMaterial());
+		return methodsStatistics.get(0);
+	}
+	
+	
 	/**
 	 * Exports {@link MethodStatistic} of method which achieved the greatest
 	 * quantity of created type of individuals
@@ -238,7 +271,7 @@ public class MethodsStatistics {
 			return null;
 		}
 		
-		Collections.sort(methodsStatistics, new ComparatorQuantitiOfMaterial());
+		Collections.sort(methodsStatistics, new ComparatorQuantityOfMaterial());
 		return methodsStatistics.get(methodsStatistics.size() -1);
 	}
 	
@@ -252,7 +285,7 @@ public class MethodsStatistics {
 			return null;
 		}
 		
-		Collections.sort(methodsStatistics, new ComparatorQuantitiOfMaterial());
+		Collections.sort(methodsStatistics, new ComparatorQuantityOfMaterial());
 		return methodsStatistics.get(0);
 	}
 

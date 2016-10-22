@@ -11,6 +11,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methodtype.MethodType;
@@ -50,8 +51,10 @@ public class AgentDescription implements Concept {
 	 * @param problemToolClass
 	 */
 	public AgentDescription(AgentConfiguration agentConfiguration, Class<?> problemToolClass) {
-		if (agentConfiguration == null || ! agentConfiguration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+		if (agentConfiguration == null ||
+				! agentConfiguration.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AgentConfiguration.class.getSimpleName() + " is not valid");
 		}
 	
 		this.agentConfiguration = agentConfiguration;
@@ -136,7 +139,9 @@ public class AgentDescription implements Concept {
 		Class<?> agentClass = getAgentConfiguration().exportAgentClass();
 		Class<?> problemToolClass = exportProblemToolClass();
 		
-		return new MethodType(agentClass, problemToolClass);
+		Arguments arguments = agentConfiguration.getArguments();
+		
+		return new MethodType(agentClass, problemToolClass, arguments);
 	}
 	
 	/**
@@ -183,12 +188,8 @@ public class AgentDescription implements Concept {
 	    boolean areProblemToolClassesEqual =
 	    		this.getProblemToolClass().equals(adOuther.getProblemToolClass());
 	    
-	    if (areAgentagentConfigurationsEqual && 
-	    		areProblemToolClassesEqual) {
-	    	return true;
-	    }
-	    
-	    return false;
+	    return areAgentagentConfigurationsEqual && 
+	    		areProblemToolClassesEqual;
 	}
 	
     @Override

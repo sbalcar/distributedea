@@ -102,7 +102,7 @@ public class Batch implements Concept {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Batch importXML(File batchDir) throws IOException {
+	public static Batch importXML(File batchDir) throws Exception {
 		if (batchDir == null || ! batchDir.isDirectory()) {
 			throw new IllegalArgumentException("Argument " +
 					File.class.getSimpleName() + " is not valid");
@@ -166,7 +166,7 @@ public class Batch implements Concept {
 	 * @param batchDir
 	 * @throws IOException
 	 */
-	public void exportXML(File batchDir) throws IOException {
+	public void exportXML(File batchDir) throws Exception {
 		if (batchDir == null || ! batchDir.isDirectory()) {
 			throw new IllegalArgumentException("Argument " +
 					File.class.getSimpleName() + " is not valid");
