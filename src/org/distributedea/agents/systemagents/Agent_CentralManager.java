@@ -124,7 +124,10 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 	public void exit() {
 		
 		ManagerAgentService.killAllComputingAgent(this, getLogger());
+		
 		endsComputationOfAllBatches();
+		
+		ManagerAgentService.killAllContainers(this, getLogger());
 	}
 	
 	/**

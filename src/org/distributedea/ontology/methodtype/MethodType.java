@@ -3,9 +3,9 @@ package org.distributedea.ontology.methodtype;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.configuration.Arguments;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.problems.IProblemTool;
 
 import jade.content.Concept;
@@ -146,15 +146,15 @@ public class MethodType implements Concept {
 	}
 	
 	/**
-	 * Exports {@link InputAgentDescription} of this {@link MethodType}
+	 * Exports {@link InputMethodDescription} of this {@link MethodType}
 	 * @return
 	 */
-	public InputAgentDescription exportInputAgentDescription() {
+	public InputMethodDescription exportInputAgentDescription() {
 	
 		InputAgentConfiguration configuration = new InputAgentConfiguration(
 				exportAgentClass().getSimpleName(), exportAgentClass(), getArguments());
 		
-		return new InputAgentDescription(configuration, exportProblemToolClass());
+		return new InputMethodDescription(configuration, exportProblemToolClass());
 	}
 	
 	/**

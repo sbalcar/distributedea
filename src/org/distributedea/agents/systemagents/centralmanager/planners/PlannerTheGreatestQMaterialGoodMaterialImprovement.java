@@ -1,21 +1,20 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
@@ -103,15 +102,15 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements Plann
 	 */
 	private InputRePlan swapMethods(Iteration iteration, History history) {
 
-		AgentDescriptions runningMethods =
+		MethodDescriptions runningMethods =
 				history.exportRunningMethods();
 
-		InputAgentDescriptions runningInputMethods =
+		InputMethodDescriptions runningInputMethods =
 				runningMethods.exportInputAgentDescriptions();
 		
-		InputAgentDescriptions allMethods =
+		InputMethodDescriptions allMethods =
 				jobRun.exportInputAgentDescriptions();
-		InputAgentDescriptions deadMethods =
+		InputMethodDescriptions deadMethods =
 				allMethods.exportComplement(runningInputMethods);
 		
 		InputRePlan inputRePlan = new InputRePlan(iteration);
@@ -121,8 +120,8 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements Plann
 		
 		for (int i = 0; i < methodToSwitchNumber; i++) {
 			
-			AgentDescription runningI = runningMethods.export(i);
-			InputAgentDescription deadI = deadMethods.get(i);
+			MethodDescription runningI = runningMethods.export(i);
+			InputMethodDescription deadI = deadMethods.get(i);
 			
 			inputRePlan.addAgentsToKill(runningI);
 			inputRePlan.addAgentsToCreate(deadI);

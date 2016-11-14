@@ -11,10 +11,10 @@ import java.util.logging.Level;
 import org.distributedea.Configuration;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 
 /**
  * Extended {@link AgentLogger} for {@link Agent_ComputingAgent}
@@ -132,7 +132,7 @@ public class AgentComputingLogger extends AgentLogger {
 	 * @param deltaFitness
 	 */
 	public void logDiffImprovementOfDistribution(double deltaFitness, long generationNumber,
-			Individual individual, AgentDescription descriptionOfSolutionBuilder, JobID jobID) {
+			Individual individual, MethodDescription descriptionOfSolutionBuilder, JobID jobID) {
 		
 		File dir = new File(FileNames.getComputingAgentLogImprovementOfDistributionDirectory(jobID));
 		if (! dir.exists()) {

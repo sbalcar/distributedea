@@ -2,9 +2,9 @@ package org.distributedea.ontology.individualwrapper;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.IProblemTool;
 
@@ -22,7 +22,7 @@ public class IndividualWrapper implements Concept {
 
 	private JobID jobID;
 	
-	private AgentDescription agentDescription;
+	private MethodDescription agentDescription;
 	
 	private IndividualEvaluated individualEvaluated;
 
@@ -35,7 +35,7 @@ public class IndividualWrapper implements Concept {
 	 * @param agentDescription
 	 * @param individualEvaluated
 	 */
-	public IndividualWrapper(JobID jobID, AgentDescription agentDescription,
+	public IndividualWrapper(JobID jobID, MethodDescription agentDescription,
 			IndividualEvaluated individualEvaluated) {
 		setJobID(jobID);
 		setAgentDescription(agentDescription);
@@ -64,18 +64,18 @@ public class IndividualWrapper implements Concept {
 		this.jobID = jobID;
 	}
 
-	public AgentDescription getAgentDescription() {
+	public MethodDescription getAgentDescription() {
 		return agentDescription;
 	}
 	@Deprecated
-	public void setAgentDescription(AgentDescription agentDescription) {
+	public void setAgentDescription(MethodDescription agentDescription) {
 		this.agentDescription = agentDescription;
 	}
 	
 	public AgentConfiguration exportAgentConfiguration() {
 		return agentDescription.getAgentConfiguration();
 	}
-	public AgentDescription exportAgentDescriptionClone() {
+	public MethodDescription exportAgentDescriptionClone() {
 		return agentDescription.deepClone();
 	}
 	

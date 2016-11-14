@@ -12,12 +12,12 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.c
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfGoodMaterial;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfImprovement;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.problems.IProblemTool;
@@ -73,18 +73,18 @@ public class MethodsStatistics {
 		this.methodsStatistics = methodsStatistics;
 	}
 	/**
-	 * Returns clone of {@link AgentDescriptions}.
+	 * Returns clone of {@link MethodDescriptions}.
 	 * @return
 	 */
-	public AgentDescriptions exportAgentDescriptions() {
+	public MethodDescriptions exportAgentDescriptions() {
 		
-		List<AgentDescription> descriptions = new ArrayList<>();
+		List<MethodDescription> descriptions = new ArrayList<>();
 		for (MethodStatistic methodStatI : methodsStatistics) {
-			AgentDescription agentDescriptionI =
+			MethodDescription agentDescriptionI =
 					methodStatI.getAgentDescription();
 			descriptions.add(agentDescriptionI.deepClone());
 		}
-		return new AgentDescriptions(descriptions);
+		return new MethodDescriptions(descriptions);
 	}
 	/**
 	 * Adds {@link MethodStatistic}
@@ -141,7 +141,7 @@ public class MethodsStatistics {
 		
 		List<MethodStatistic> selectedMethods = new ArrayList<>();
 		for (MethodStatistic methodStatisticI : methodsStatistics) {
-			AgentDescription agentDescriptionI =
+			MethodDescription agentDescriptionI =
 					methodStatisticI.getAgentDescription();
 			Class<?> agentClassI = agentDescriptionI.exportAgentClass();
 			if (agentClassI == agentClass) {
@@ -300,7 +300,7 @@ public class MethodsStatistics {
 		}
 		
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		AgentDescription agentDescription = method0.getAgentDescription();
+		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		Class<?> problemToolClass =
 				agentDescription.exportProblemToolClass();
@@ -323,7 +323,7 @@ public class MethodsStatistics {
 		}
 
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		AgentDescription agentDescription = method0.getAgentDescription();
+		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		Class<?> problemToolClass =
 				agentDescription.exportProblemToolClass();
@@ -347,7 +347,7 @@ public class MethodsStatistics {
 		}
 		
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		AgentDescription agentDescription = method0.getAgentDescription();
+		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		Class<?> problemToolClass =
 				agentDescription.exportProblemToolClass();
@@ -373,7 +373,7 @@ public class MethodsStatistics {
 		}
 		
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		AgentDescription agentDescription = method0.getAgentDescription();
+		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		Class<?> problemToolClass =
 				agentDescription.exportProblemToolClass();
@@ -397,7 +397,7 @@ public class MethodsStatistics {
 		
 		MethodStatistic bestMethod =
 				exportMethodAchievedTheBestOfBestIndividuals();
-		AgentDescription agentDescription =
+		MethodDescription agentDescription =
 				bestMethod.getAgentDescription();
 		IndividualEvaluated bestIndividual =
 				bestMethod.getMethodStatisticResult().getBestIndividual();

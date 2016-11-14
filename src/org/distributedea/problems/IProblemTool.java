@@ -2,6 +2,7 @@ package org.distributedea.problems;
 
 import java.io.File;
 
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
@@ -64,21 +65,6 @@ public interface IProblemTool {
 			IAgentLogger logger);
 	
 	/**
-	 * Generated random {@link Individual} as solution for given {@link Problem}
-	 * @param problem
-	 * @param logger
-	 * @return
-	 */
-	public Individual generateIndividual(Problem problem, IAgentLogger logger);
-	public Individual generateFirstIndividual(Problem problem, IAgentLogger logger);
-	public Individual generateNextIndividual(Problem problem,
-			Individual individual, IAgentLogger logger);
-	public IndividualEvaluated generateIndividualEval(Problem problem, IAgentLogger logger);
-	public IndividualEvaluated generateFirstIndividualEval(Problem problem, IAgentLogger logger);
-	public IndividualEvaluated generateNextIndividualEval(Problem problem,
-			Individual individual, IAgentLogger logger);
-	
-	/**
 	 * Evaluates given {@link Individual} as solution of given {@link Problem}
 	 * @param individual
 	 * @param problem
@@ -89,32 +75,45 @@ public interface IProblemTool {
 			IAgentLogger logger);
 	
 	/**
+	 * Generated random {@link Individual} as solution for given {@link Problem}
+	 * @param problem
+	 * @param logger
+	 * @return
+	 */
+	public IndividualEvaluated generateIndividualEval(Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger);
+	
+	public IndividualEvaluated generateFirstIndividualEval(Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger);
+	
+	public IndividualEvaluated generateNextIndividualEval(Problem problem,
+			IndividualEvaluated individual, PedigreeParameters pedigreeParams,
+			IAgentLogger logger);
+	
+	
+	/**
 	 * Tries to improve given {@link Individual}. Improving fitness is not guaranteed.
 	 * @param individual
 	 * @param problem
 	 * @param logger
 	 * @return
 	 * @throws ProblemToolException
-	 */
-	public Individual improveIndividual(Individual individual, Problem problem,
-			IAgentLogger logger) throws ProblemToolException;    
+	 */  
 	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual, Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger) throws ProblemToolException;
+	
+	public IndividualEvaluated getNeighborEval(IndividualEvaluated individual,
+			Problem problem, long neighborIndex, PedigreeParameters pedigreeParams,
 			IAgentLogger logger) throws ProblemToolException;
 	
-	public Individual getNeighbor(Individual individual, Problem problem,
-			long neighborIndex, IAgentLogger logger) throws ProblemToolException;
-	public IndividualEvaluated getNeighborEval(Individual individual, Problem problem,
-			long neighborIndex, IAgentLogger logger) throws ProblemToolException;
+	public IndividualEvaluated[] createNewIndividual(IndividualEvaluated individualEval1,
+			IndividualEvaluated individualEval2, Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger)
+			throws ProblemToolException;
 	
-	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, IAgentLogger logger)
-			throws ProblemToolException;
-	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Individual individual3,
-			Problem problem, IAgentLogger logger)
-			throws ProblemToolException;
-	public IndividualEvaluated[] createNewIndividualEval(Individual individual1, 
-			Individual individual2, Individual individual3,
-			Problem problem, IAgentLogger logger)
+
+	public IndividualEvaluated[] createNewIndividualEval(IndividualEvaluated individual1, 
+			IndividualEvaluated individual2, IndividualEvaluated individual3,
+			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger)
 			throws ProblemToolException;	
 }

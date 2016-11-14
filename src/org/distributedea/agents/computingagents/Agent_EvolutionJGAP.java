@@ -10,6 +10,7 @@ import org.distributedea.agents.computingagents.computingagent.evolutionjgap.Con
 import org.distributedea.agents.computingagents.computingagent.evolutionjgap.EACrossoverWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolutionjgap.EAFitnessWrapper;
 import org.distributedea.agents.computingagents.computingagent.evolutionjgap.EAMutationWrapper;
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Arguments;
@@ -19,6 +20,7 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -110,7 +112,8 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
 		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
@@ -122,7 +125,8 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		// generates Individuals
 		List<IndividualEvaluated> individuals = new ArrayList<>();
 		for (int i = 0; i < popSize; i++) {
-			IndividualEvaluated individualI = problemTool.generateIndividualEval(problem, getCALogger());
+			IndividualEvaluated individualI = problemTool.generateIndividualEval(
+					problem, pedigreeParams, getCALogger());
 			individuals.add(individualI);
 		}		
 		
@@ -166,7 +170,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		Individual individualI = Convertor.convertToIndividual(
 				choosenChromosomeI, problem, problemTool, conf);
 		double fitnessI = problemTool.fitness(individualI, problem, getCALogger());
-		IndividualEvaluated individualEvalI = new IndividualEvaluated(individualI, fitnessI);
+		IndividualEvaluated individualEvalI = new IndividualEvaluated(individualI, fitnessI, null);
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualEvalI,
@@ -190,7 +194,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 			individualI = Convertor.convertToIndividual(choosenChromosomeI,
 					problem, problemTool, conf);
 			fitnessI = problemTool.fitness(individualI, problem, getCALogger());
-			IndividualEvaluated individualEvalI_ = new IndividualEvaluated(individualI, fitnessI);
+			IndividualEvaluated individualEvalI_ = new IndividualEvaluated(individualI, fitnessI, null);
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI_,
@@ -242,7 +246,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 					getCALogger());
 			
 			IndividualEvaluated individualEvalI =
-					new IndividualEvaluated(individualI, fitnessI);
+					new IndividualEvaluated(individualI, fitnessI, null);
 			
 			individuals.add(individualEvalI);
 		}

@@ -7,14 +7,14 @@ import jade.content.Concept;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.AgentConfigurations;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 
@@ -161,11 +161,11 @@ public class JobRun implements Concept {
 	}
 	
 	/**
-	 * Exports the {@link InputAgentDescriptions}
+	 * Exports the {@link InputMethodDescriptions}
 	 * @return
 	 */
-	public InputAgentDescriptions exportInputAgentDescriptions() {
-		return new InputAgentDescriptions(
+	public InputMethodDescriptions exportInputAgentDescriptions() {
+		return new InputMethodDescriptions(
 				getAgentConfigurations(),getProblemTools());
 	}
 	
@@ -191,10 +191,10 @@ public class JobRun implements Concept {
 	}
 	
 	/**
-	 * Export random selected {@link AgentDescription}
+	 * Export random selected {@link MethodDescription}
 	 * @return
 	 */
-	public InputAgentDescription exportRandomSelectedAgentDescription() {
+	public InputMethodDescription exportRandomSelectedAgentDescription() {
 		
 		if (agentConfigurations == null ||
 				agentConfigurations.exportNumberOfAgentConfigurations() == 0 ||
@@ -212,8 +212,8 @@ public class JobRun implements Concept {
 			return null;
 		}
 		
-		InputAgentDescription methodToCreate =
-				new InputAgentDescription(agentToCreate, problemToolClass);
+		InputMethodDescription methodToCreate =
+				new InputMethodDescription(agentToCreate, problemToolClass);
 		return methodToCreate;
 	}
 	

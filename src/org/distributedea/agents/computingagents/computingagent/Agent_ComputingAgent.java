@@ -32,8 +32,6 @@ import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptionPriority;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.agentinfo.AgentInfoWrapper;
 import org.distributedea.ontology.agentinfo.GetAgentInfo;
@@ -51,6 +49,8 @@ import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
@@ -71,7 +71,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected CompAgentState state = CompAgentState.INITIALIZATION;
 	
 	// configuration of this agent
-	AgentConfiguration agentConf = null;
+	protected AgentConfiguration agentConf = null;
 	
 	// logger for Computing Agent
 	private IAgentLogger logger = null;
@@ -496,9 +496,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		reply.setOntology(ResultOntology.getInstance().getName());
 		
 
-		AgentDescription description = getAgentDescription();
+		MethodDescription description = getAgentDescription();
 		
-		List<AgentDescriptionPriority> helpmateList =
+		List<MethodDescriptionCounter> helpmateList =
 				getHelpmateList(newStatisticsForEachQuery);
 		StatisticOfHelpmates statisticOfHelpmates =
 				new StatisticOfHelpmates(description, helpmateList);
@@ -535,7 +535,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 					 return;
 				 }
 				 
-				 AgentDescription description = getAgentDescription();
+				 MethodDescription description = getAgentDescription();
 
 				 IndividualWrapper individualWrapper =
 						new IndividualWrapper(problemWrapper.getJobID(), description, individualEval);
@@ -551,9 +551,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	}
 	
-	private List<AgentDescriptionPriority> getHelpmateList(boolean newStatisticsForEachQuery) {
+	private List<MethodDescriptionCounter> getHelpmateList(boolean newStatisticsForEachQuery) {
 		
-		List<AgentDescriptionPriority> helpmateList = this.helpers.getPrioritiesOfHelpers();
+		List<MethodDescriptionCounter> helpmateList = this.helpers.getPrioritiesOfHelpers();
 		if (newStatisticsForEachQuery) {
 			this.helpers.clean();
 		}
@@ -589,7 +589,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		individualsToDistribution.addIndividual(individualEval, problem);
 	}
 	
-	private AgentDescription getAgentDescription() {
+	private MethodDescription getAgentDescription() {
 
 		Class<?> problemToolClass = null;
 		
@@ -602,7 +602,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		try {
-			return new AgentDescription(agentConf, problemToolClass);
+			return new MethodDescription(agentConf, problemToolClass);
 		} catch (Exception e) {
 			return null;
 		}
@@ -627,8 +627,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
-		AgentDescription description =
-				new AgentDescription(agentConf, problemTool.getClass());
+		MethodDescription description =
+				new MethodDescription(agentConf, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
@@ -649,8 +649,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
-		AgentDescription description =
-				new AgentDescription(agentConf, problemTool.getClass());
+		MethodDescription description =
+				new MethodDescription(agentConf, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
@@ -687,7 +687,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			throw new IllegalArgumentException();
 		}
 		
-		AgentDescription description =
+		MethodDescription description =
 				individualWrp.getAgentDescription();
 		
 		if (bestIndividualModel.isNewBetter(individualWrp, problem,

@@ -1,4 +1,4 @@
-package org.distributedea.ontology.configuration.inputconfiguration;
+package org.distributedea.ontology.configurationinput;
 
 import jade.content.Concept;
 
@@ -10,13 +10,13 @@ import java.util.Random;
 import org.distributedea.agents.systemagents.initiator.XmlConfigurationProvider;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.AgentConfigurations;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 
 
 /**
- * Ontology represents list of {@link InputAgentDescription} elements.
+ * Ontology represents list of {@link InputMethodDescription} elements.
  * @author stepan
  *
  */

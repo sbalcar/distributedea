@@ -6,12 +6,12 @@ import java.util.List;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.systemagents.Agent_Monitor;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.problems.IProblemTool;
@@ -136,13 +136,13 @@ public class MonitorStatisticModel {
 		return bestIndividual;
 	}
 	
-	private MethodStatisticModel getMethodStatisticModel(AgentDescription description) {
+	private MethodStatisticModel getMethodStatisticModel(MethodDescription description) {
 		
 		String agentName = description.exportMethodName();
 		
 		for (MethodStatisticModel modelI : methods) {
 			
-			AgentDescription descriptionI = modelI.getAgentDescription();
+			MethodDescription descriptionI = modelI.getAgentDescription();
 			if (descriptionI.exportMethodName().equals(agentName)) {
 				return modelI;
 			}
@@ -157,7 +157,7 @@ public class MonitorStatisticModel {
 	 */
 	public void addIndividualWrp(IndividualWrapper individualWrp) {
 		
-		AgentDescription agentDescInput =
+		MethodDescription agentDescInput =
 				individualWrp.getAgentDescription();
 		IndividualEvaluated individualEvalInput =
 				individualWrp.getIndividualEvaluated();

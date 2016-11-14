@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.logging.Level;
 
@@ -8,10 +8,10 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.M
 import org.distributedea.agents.systemagents.centralmanager.structures.methodsstatistics.MethodsStatistics;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 
 
@@ -37,18 +37,18 @@ public class PlannerTheBestAverageOfFitness extends PlannerTheGreatestQuantityOf
 		MethodStatistic worstAverageMethodStatistic = currentMethodsResults.
 				exportMethodAchievedTheWorstAverageOfFitness();
 		
-		AgentDescription methodToKill =
+		MethodDescription methodToKill =
 				worstAverageMethodStatistic.exportAgentDescriptionClone();
-		InputAgentDescription methodGreatestQuant =
+		InputMethodDescription methodGreatestQuant =
 				bestAverageMethodStatistic.exportInputAgentDescriptionClone();
 		
 
-		InputAgentDescriptions methodsWhichHaveNeverRun =
+		InputMethodDescriptions methodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(jobRun);
 		
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 
-			InputAgentDescription candidateMethod =
+			InputMethodDescription candidateMethod =
 					methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
 			
 			return new InputRePlan(iteration, methodToKill,

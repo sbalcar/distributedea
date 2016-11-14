@@ -11,11 +11,11 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.H
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputPlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
@@ -41,12 +41,12 @@ public class PlannerInitialisationRandom implements Planner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 		
-		InputAgentDescriptions agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				job.exportInputAgentDescriptions();
 		
 		InputPlan inputPlan = new InputPlan(iteration);
 		for (AID aidI : managersAID) {
-			InputAgentDescription agentDescriptionI =
+			InputMethodDescription agentDescriptionI =
 					agentDescriptions.exportRandomInputAgentDescription();
 			inputPlan.add(aidI, agentDescriptionI);
 		}
@@ -64,10 +64,10 @@ public class PlannerInitialisationRandom implements Planner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		InputAgentDescriptions agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				jobRun.exportInputAgentDescriptions();
 
-		InputAgentDescriptions methodsWhichHaveNeverRun =  history
+		InputMethodDescriptions methodsWhichHaveNeverRun =  history
 				.getMethodHistories().exportsMethodsWhichHaveNeverRun(agentDescriptions);
 
 		
@@ -77,11 +77,11 @@ public class PlannerInitialisationRandom implements Planner {
 			AID aidI = managersAID.get(i);
 			
 			if (i < methodsWhichHaveNeverRun.size()) {
-				InputAgentDescription methodNeverRunI = 
+				InputMethodDescription methodNeverRunI = 
 						methodsWhichHaveNeverRun.get(i);
 				inputPlan.add(aidI, methodNeverRunI);
 			} else {
-				InputAgentDescription methodRandomI = agentDescriptions
+				InputMethodDescription methodRandomI = agentDescriptions
 						.exportRandomInputAgentDescription();
 				inputPlan.add(aidI, methodRandomI);
 			}

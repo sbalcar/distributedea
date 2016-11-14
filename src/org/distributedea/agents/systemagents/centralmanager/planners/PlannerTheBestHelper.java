@@ -1,9 +1,8 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.helpers.ModelOfHelpmates;
@@ -11,11 +10,11 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.H
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ComputingAgentService;
@@ -79,29 +78,29 @@ public class PlannerTheBestHelper implements Planner {
 			return new InputRePlan(iteration);
 		}
 		
-		InputAgentDescriptions methodsWhichHaveNeverRun =
+		InputMethodDescriptions methodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(jobRun);
 		
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 		
-			InputAgentDescription candidateDescription =
+			InputMethodDescription candidateDescription =
 					methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
 			
-			Pair<AgentDescription, Integer> minPriorityPair =
+			Pair<MethodDescription, Integer> minPriorityPair =
 					helpmates.exportMinPrioritizedDescription();
-			AgentDescription methodToKill = minPriorityPair.first;
+			MethodDescription methodToKill = minPriorityPair.first;
 			
 			return new InputRePlan(iteration, methodToKill, candidateDescription);
 		}
 		
-		Pair<AgentDescription, Integer> minPriorityPair =
+		Pair<MethodDescription, Integer> minPriorityPair =
 				helpmates.exportMinPrioritizedDescription();
-		AgentDescription methodToKill = minPriorityPair.first;
+		MethodDescription methodToKill = minPriorityPair.first;
 		
-		Pair<AgentDescription, Integer> maxPriorityPair =
+		Pair<MethodDescription, Integer> maxPriorityPair =
 				helpmates.exportMaxPrioritizedDescription();
-		AgentDescription maxPriorityDesc = maxPriorityPair.first;
-		InputAgentDescription methodToCreate =
+		MethodDescription maxPriorityDesc = maxPriorityPair.first;
+		InputMethodDescription methodToCreate =
 				maxPriorityDesc.exportInputAgentDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate).
@@ -111,14 +110,14 @@ public class PlannerTheBestHelper implements Planner {
 	private void printLog(Agent_CentralManager centralManager,
 			ModelOfHelpmates helpmates, IAgentLogger logger) throws Exception {
 		
-		Pair<AgentDescription, Integer> minPriorityPair =
+		Pair<MethodDescription, Integer> minPriorityPair =
 				helpmates.exportMinPrioritizedDescription();
-		AgentDescription minPriorityDescription = minPriorityPair.first;
+		MethodDescription minPriorityDescription = minPriorityPair.first;
 		int minPriority = minPriorityPair.second;
 		
-		Pair<AgentDescription, Integer> maxPriorityPair =
+		Pair<MethodDescription, Integer> maxPriorityPair =
 				helpmates.exportMaxPrioritizedDescription();
-		AgentDescription maxPriorityDescription = maxPriorityPair.first;
+		MethodDescription maxPriorityDescription = maxPriorityPair.first;
 		int maxPriority = maxPriorityPair.second;
 		
 		String minPriorityAgentName = minPriorityDescription.getAgentConfiguration().exportAgentname();

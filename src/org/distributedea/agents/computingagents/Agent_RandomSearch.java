@@ -1,5 +1,6 @@
 package org.distributedea.agents.computingagents;
 
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
@@ -28,9 +29,9 @@ public class Agent_RandomSearch extends Agent_HillClimbing {
 	
 	@Override
 	protected IndividualEvaluated getNewIndividual(IndividualEvaluated individual,
-			Problem problem, IProblemTool problemTool) {
+			Problem problem, IProblemTool problemTool, PedigreeParameters pedigreeParams) {
 
-		return problemTool.generateIndividualEval(problem, getLogger());
+		return problemTool.generateIndividualEval(problem, pedigreeParams, getLogger());
 	}
 	
 }

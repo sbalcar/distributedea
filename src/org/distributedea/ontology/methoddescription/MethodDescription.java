@@ -1,4 +1,4 @@
-package org.distributedea.ontology.agentdescription;
+package org.distributedea.ontology.methoddescription;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,11 +9,11 @@ import java.util.Scanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Arguments;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.problems.IProblemTool;
 
@@ -26,7 +26,7 @@ import jade.core.AID;
  * Ontology for Method Description
  * @author stepan
  */
-public class AgentDescription implements Concept {
+public class MethodDescription implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,14 +43,14 @@ public class AgentDescription implements Concept {
 	
 	
 	@Deprecated
-	public AgentDescription() {} // only for Jade
+	public MethodDescription() {} // only for Jade
 	
 	/**
 	 * Constructor
 	 * @param agentConfiguration
 	 * @param problemToolClass
 	 */
-	public AgentDescription(AgentConfiguration agentConfiguration, Class<?> problemToolClass) {
+	public MethodDescription(AgentConfiguration agentConfiguration, Class<?> problemToolClass) {
 		if (agentConfiguration == null ||
 				! agentConfiguration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -145,10 +145,10 @@ public class AgentDescription implements Concept {
 	}
 	
 	/**
-	 * Exports {@link InputAgentDescription}
+	 * Exports {@link InputMethodDescription}
 	 * @return
 	 */
-	public InputAgentDescription exportInputAgentDescription() {
+	public InputMethodDescription exportInputAgentDescription() {
 		if (! valid(new TrashLogger())) {
 			return null;
 		}
@@ -156,7 +156,7 @@ public class AgentDescription implements Concept {
 		InputAgentConfiguration inputAgentConfClone =
 				getAgentConfiguration().exportInputAgentConfiguration();
 		
-		return new InputAgentDescription(inputAgentConfClone,
+		return new InputMethodDescription(inputAgentConfClone,
 				exportProblemToolClass());
 	}
 	
@@ -177,11 +177,11 @@ public class AgentDescription implements Concept {
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof AgentDescription)) {
+	    if (!(other instanceof MethodDescription)) {
 	        return false;
 	    }
 	    
-	    AgentDescription adOuther = (AgentDescription)other;
+	    MethodDescription adOuther = (MethodDescription)other;
 	    
 	    boolean areAgentagentConfigurationsEqual =
 	    		this.getAgentConfiguration().equals(adOuther.getAgentConfiguration());
@@ -243,7 +243,7 @@ public class AgentDescription implements Concept {
 	 * 
 	 * @throws FileNotFoundException
 	 */
-	public static AgentDescription importXML(File file)
+	public static MethodDescription importXML(File file)
 			throws FileNotFoundException {
 
 		if (file == null || ! file.exists()) {
@@ -262,23 +262,23 @@ public class AgentDescription implements Concept {
 	/**
 	 * Import the {@link JobID} from the String
 	 */
-	public static AgentDescription importXML(String xml) {
+	public static MethodDescription importXML(String xml) {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
 
-		return (AgentDescription) xstream.fromXML(xml);
+		return (MethodDescription) xstream.fromXML(xml);
 	}
 	
 	/**
 	 * Exports clone
 	 * @return
 	 */
-	public AgentDescription deepClone() {
+	public MethodDescription deepClone() {
 		
 		AgentConfiguration confClone = agentConfiguration.deepClone();
 		Class<?> problemToolClassClone = this.exportProblemToolClass();
 		
-		return new AgentDescription(confClone, problemToolClassClone);
+		return new MethodDescription(confClone, problemToolClassClone);
 	}
 }

@@ -4,8 +4,8 @@ package org.distributedea.input.batches.jobs;
 import java.io.File;
 
 import org.distributedea.InputConfiguration;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce_;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerTypeTimeRestriction;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;

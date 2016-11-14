@@ -1,8 +1,8 @@
 package org.distributedea.input.batches;
 
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerRandom;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfImprovement;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfImprovement;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.jobs.InputTSP;

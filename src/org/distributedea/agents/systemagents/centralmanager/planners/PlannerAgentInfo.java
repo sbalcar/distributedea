@@ -1,10 +1,9 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
@@ -14,15 +13,15 @@ import org.distributedea.agents.systemagents.centralmanager.structures.methodsst
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.agentinfo.AgentInfosWrapper;
 import org.distributedea.ontology.configuration.AgentConfigurations;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
@@ -125,7 +124,7 @@ public class PlannerAgentInfo implements Planner {
 		JobRun exploitationJobRun = new JobRun(jobRun);
 		exploitationJobRun.setAgentConfigurations(exploitationInAgentConfs);
 		
-		InputAgentDescriptions exploitationMethodsWhichHaveNeverRun =
+		InputMethodDescriptions exploitationMethodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(exploitationJobRun);
 		
 		if (! exploitationMethodsWhichHaveNeverRun.isEmpty()) {
@@ -134,10 +133,10 @@ public class PlannerAgentInfo implements Planner {
 			
 			MethodStatistic methodStatistic = current3MethodsStats.
 					exportMethodAchievedTheLeastQuantityOfImprovement();
-			AgentDescription methodToKill = methodStatistic.
+			MethodDescription methodToKill = methodStatistic.
 					exportAgentDescriptionClone();
 
-			InputAgentDescription candidateMethod =
+			InputMethodDescription candidateMethod =
 					exploitationMethodsWhichHaveNeverRun.exportRandomInputAgentDescription();
 			return new InputRePlan(iteration, methodToKill, candidateMethod);
 		}
@@ -158,7 +157,7 @@ public class PlannerAgentInfo implements Planner {
 
 			MethodStatistic methodStatisticToCreate = explorationMethodsResults.
 					exportMethodAchievedTheBestAverageOfFitness();
-			InputAgentDescription methodToCreate =
+			InputMethodDescription methodToCreate =
 					methodStatisticToCreate.exportInputAgentDescriptionClone();
 			
 			// choose method to kill
@@ -171,7 +170,7 @@ public class PlannerAgentInfo implements Planner {
 			
 			MethodStatistic methodTheLeastQuantityOfType =
 					exploitationMethodStatistics.exportMethodAchievedTheLeastQuantityOfType();
-			AgentDescription methodToKill = 
+			MethodDescription methodToKill = 
 					methodTheLeastQuantityOfType.exportAgentDescriptionClone();
 			
 			return new InputRePlan(iteration, methodToKill, methodToCreate);

@@ -68,6 +68,7 @@ public class ComputingThread extends Thread {
 			
 		} catch (Exception e) {
 			System.out.println("Error by computing");
+			e.printStackTrace();
 			CentralLogerService.logMessage(agent, "Error by computing", agent.getLogger());
 			this.agent.getLogger().logThrowable("Error by computing", e);
 			this.agent.commitSuicide();

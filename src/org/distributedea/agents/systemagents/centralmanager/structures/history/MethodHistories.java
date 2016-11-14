@@ -8,12 +8,12 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.c
 import org.distributedea.agents.systemagents.centralmanager.structures.methodsstatistics.MethodsStatistics;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
@@ -146,16 +146,16 @@ public class MethodHistories {
 		return number;
 	}
 
-	public MethodHistory getMethodHistoryOfCurentlyRunning(AgentDescription agentDescription) {
+	public MethodHistory getMethodHistoryOfCurentlyRunning(MethodDescription agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-				AgentDescription.class.getSimpleName() + " is not valid");
+				MethodDescription.class.getSimpleName() + " is not valid");
 		}
 				
 		for (MethodHistory methodHistoryI : methods) {
 			
-			AgentDescription agentI = methodHistoryI.getCurrentAgent();
+			MethodDescription agentI = methodHistoryI.getCurrentAgent();
 			
 			if (agentI == null) {
 				continue;
@@ -192,18 +192,18 @@ public class MethodHistories {
 	}
 
 	/**
-	 * Returns {@link MethodHistory} of given {@link AgentDescription}
+	 * Returns {@link MethodHistory} of given {@link MethodDescription}
 	 * @param agentDescription
 	 * @return
 	 */
-	public MethodHistory getMethodHistoryOfRunningMethod(AgentDescription agentDescription) {
+	public MethodHistory getMethodHistoryOfRunningMethod(MethodDescription agentDescription) {
 		if (agentDescription == null || ! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argumet " +
-					AgentDescription.class.getSimpleName() + " is not valid");
+					MethodDescription.class.getSimpleName() + " is not valid");
 		}
 		for (MethodHistory methodHistoryI : methods) {
 
-			AgentDescription agentDescriptionI =
+			MethodDescription agentDescriptionI =
 					methodHistoryI.getCurrentAgent();
 			
 			if (agentDescriptionI == null) {
@@ -296,7 +296,7 @@ public class MethodHistories {
 				continue;
 			}
 			
-			AgentDescription agentDescriptionI =
+			MethodDescription agentDescriptionI =
 					resultWrpI.getAgentDescription();
 			MethodStatisticResult methodStatisticResultI =
 					resultWrpI.getMethodStatisticResult();
@@ -365,23 +365,23 @@ public class MethodHistories {
 	 * Exports currently running methods
 	 * @return
 	 */
-	public AgentDescriptions exportRunningMethods() {
+	public MethodDescriptions exportRunningMethods() {
 		
-		List<AgentDescription> agentDescriptions = new ArrayList<>();
+		List<MethodDescription> agentDescriptions = new ArrayList<>();
 		for (MethodHistory methodHistoryI : methods) {
-			AgentDescription currentAgentI = methodHistoryI.getCurrentAgent();
+			MethodDescription currentAgentI = methodHistoryI.getCurrentAgent();
 			if (currentAgentI != null) {
 				agentDescriptions.add(currentAgentI);
 			}
 		}
-		return new AgentDescriptions(agentDescriptions);
+		return new MethodDescriptions(agentDescriptions);
 	}
 
 	/**
-	 * Exports {@link AgentDescription} of random running method
+	 * Exports {@link MethodDescription} of random running method
 	 * @return
 	 */
-	public AgentDescription exportRandomRunningMethod() {
+	public MethodDescription exportRandomRunningMethod() {
 		
 		return exportRunningMethods().exportRandomAgentDescription();
 	}
@@ -502,19 +502,19 @@ public class MethodHistories {
 	 * @param inputDescriptions
 	 * @return
 	 */
-	public InputAgentDescriptions exportsMethodsWhichHaveNeverRun(
-			InputAgentDescriptions inputDescriptions) {
+	public InputMethodDescriptions exportsMethodsWhichHaveNeverRun(
+			InputMethodDescriptions inputDescriptions) {
 		if (inputDescriptions == null ||
 				! inputDescriptions.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					InputAgentDescriptions.class.getSimpleName() + " is not valid");
+					InputMethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		
 		List<MethodType> availableMethodTypes = exportMethodTypes();
 		
-		List<InputAgentDescription> methodsWhichHaveNeverRun = new ArrayList<>();
+		List<InputMethodDescription> methodsWhichHaveNeverRun = new ArrayList<>();
 		
-		for (InputAgentDescription inputAgentDescriptionI :
+		for (InputMethodDescription inputAgentDescriptionI :
 				inputDescriptions.getInputAgentDescriptions()) {
 			MethodType methodTypeI =
 					inputAgentDescriptionI.exportMethodType();
@@ -524,7 +524,7 @@ public class MethodHistories {
 			}
 		}
 		
-		return new InputAgentDescriptions(methodsWhichHaveNeverRun);
+		return new InputMethodDescriptions(methodsWhichHaveNeverRun);
 	}
 	
 	private List<MethodTypeHistory> getMethodTypeHistories() {

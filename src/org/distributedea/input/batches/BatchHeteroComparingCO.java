@@ -1,8 +1,8 @@
 package org.distributedea.input.batches;
 
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerFollowNaiveAskingForBestResult;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfMaterial;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;

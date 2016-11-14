@@ -2,10 +2,10 @@ package org.distributedea.agents.computingagents.computingagent.models;
 
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.AgentComputingLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 
 public class BestIndividualModel {
@@ -61,7 +61,7 @@ public class BestIndividualModel {
 			
 			IndividualEvaluated receivedIndividual =
 					individualWpr.getIndividualEvaluated();
-			AgentDescription description =
+			MethodDescription description =
 					individualWpr.getAgentDescription();
 			JobID jobID =
 					individualWpr.getJobID();

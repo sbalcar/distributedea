@@ -4,9 +4,9 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 
 /**
  * Ontology represents statistic of one method computation.
@@ -17,7 +17,7 @@ public class MethodStatistic implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
-	private AgentDescription agentDescription;
+	private MethodDescription agentDescription;
 	
 	private MethodStatisticResult methodStatisticResult;
 	
@@ -29,7 +29,7 @@ public class MethodStatistic implements Concept {
 	 * @param agentDescription
 	 * @param methodStatisticResult
 	 */
-	public MethodStatistic(AgentDescription agentDescription,
+	public MethodStatistic(MethodDescription agentDescription,
 			MethodStatisticResult methodStatisticResult) {
 		if (agentDescription == null || ! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException();
@@ -42,11 +42,11 @@ public class MethodStatistic implements Concept {
 		this.methodStatisticResult = methodStatisticResult;
 	}
 	
-	public AgentDescription getAgentDescription() {
+	public MethodDescription getAgentDescription() {
 		return agentDescription;
 	}
 	@Deprecated
-	public void setAgentDescription(AgentDescription agentDescription) {
+	public void setAgentDescription(MethodDescription agentDescription) {
 		this.agentDescription = agentDescription;
 	}
 	public MethodStatisticResult getMethodStatisticResult() {
@@ -61,11 +61,11 @@ public class MethodStatistic implements Concept {
 		
 		return methodStatisticResult.getBestIndividual();
 	}
-	public AgentDescription exportAgentDescriptionClone() {
+	public MethodDescription exportAgentDescriptionClone() {
 		
 		return getAgentDescription().deepClone();
 	}
-	public InputAgentDescription exportInputAgentDescriptionClone() {
+	public InputMethodDescription exportInputAgentDescriptionClone() {
 		
 		return exportAgentDescriptionClone().exportInputAgentDescription();
 	}

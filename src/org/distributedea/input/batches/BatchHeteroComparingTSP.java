@@ -1,16 +1,16 @@
 package org.distributedea.input.batches;
 
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerRandomImpr;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestAverageOfFitness;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestResult;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQGoodMaterialImprovementFitness;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQMaterialGoodMaterialImprovement;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfGoodMaterial;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfImprovement;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheGreatestQuantityOfMaterial;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerTheBestHelper;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerAgentInfo;
-import org.distributedea.agents.systemagents.centralmanager.planners.historybased.PlannerRandom;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomImpr;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestAverageOfFitness;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestResult;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQGoodMaterialImprovementFitness;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQMaterialGoodMaterialImprovement;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfGoodMaterial;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfImprovement;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;

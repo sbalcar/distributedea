@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemToolException;
@@ -107,10 +108,14 @@ public class EAMutationWrapper implements GeneticOperator {
 			return null;
 		}
 		
+		double fitness = problemTool.fitness(individual, problem, logger);
+		
 		// call the mutation
-		Individual individualNew;
+		IndividualEvaluated individualNew;
 		try {
-			individualNew = problemTool.improveIndividual(individual, problem, logger);
+			individualNew = problemTool.improveIndividualEval(
+					new IndividualEvaluated(individual, fitness, null),
+					problem, null, logger);
 		} catch (ProblemToolException e1) {
 			return null;
 		}
@@ -119,7 +124,7 @@ public class EAMutationWrapper implements GeneticOperator {
 		IChromosome newChromosumeI = null;
 		try {
 			newChromosumeI = Convertor.convertToIChromosome(
-					individualNew, problem, conf);
+					individualNew.getIndividual(), problem, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Individual to Chromosome", e);
 			return null;

@@ -9,12 +9,12 @@ import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
@@ -82,8 +82,8 @@ public class PlannerDummy implements Planner {
 				centralManager, computingAgent, problemStruct, logger);
 		
 
-		AgentDescription createdDescription =
-				new AgentDescription(createdAgent, problemToolI);
+		MethodDescription createdDescription =
+				new MethodDescription(createdAgent, problemToolI);
 		
 		return new Plan(iteration, createdDescription);
 	}

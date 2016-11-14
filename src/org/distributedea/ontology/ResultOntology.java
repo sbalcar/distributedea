@@ -1,7 +1,6 @@
 package org.distributedea.ontology;
 
 import org.distributedea.logging.ConsoleLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
@@ -9,8 +8,10 @@ import org.distributedea.ontology.individuals.SaveBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
+import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
@@ -28,8 +29,9 @@ public class ResultOntology extends BeanOntology {
         super("ResultOntology");
 
         String individualPackage = Individual.class.getPackage().getName();
+        String pedigreePackage = PedigreeCounter.class.getPackage().getName();
         String helpmatePackage = ReportHelpmate.class.getPackage().getName();
-        String agentDescriptionPackage = AgentDescription.class.getPackage().getName();
+        String agentDescriptionPackage = MethodDescription.class.getPackage().getName();
         
         try {
         	add(SaveBestIndividual.class);
@@ -50,6 +52,7 @@ public class ResultOntology extends BeanOntology {
         	
             add(IndividualWrapper.class);
             add(individualPackage);
+            add(pedigreePackage);
             add(JobID.class);
             
             add(agentDescriptionPackage);

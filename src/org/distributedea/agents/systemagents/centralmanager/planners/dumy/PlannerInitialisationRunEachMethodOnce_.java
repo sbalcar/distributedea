@@ -13,13 +13,13 @@ import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
@@ -52,7 +52,7 @@ public class PlannerInitialisationRunEachMethodOnce_ implements Planner {
 		// chooses ProblemTool by index
 		Class<?> problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
 		
-		List<AgentDescription> createdDescriptions = new ArrayList<>();
+		List<MethodDescription> createdDescriptions = new ArrayList<>();
 		
 		// create one agent for each configuration
 		InputAgentConfigurations configurations = job.getAgentConfigurations();
@@ -61,8 +61,8 @@ public class PlannerInitialisationRunEachMethodOnce_ implements Planner {
 			AgentConfiguration createdAgentI = ManagerAgentService.sendCreateAgent(
 					centralManager, managerAidI, agentConfigurationI, logger);
 			
-			AgentDescription descriptionI =
-					new AgentDescription(createdAgentI, problemToolI);
+			MethodDescription descriptionI =
+					new MethodDescription(createdAgentI, problemToolI);
 						
 			createdDescriptions.add(descriptionI);
 		}
@@ -82,7 +82,7 @@ public class PlannerInitialisationRunEachMethodOnce_ implements Planner {
 
 		}
 		
-		return new Plan(iteration, new AgentDescriptions(createdDescriptions));
+		return new Plan(iteration, new MethodDescriptions(createdDescriptions));
 	}
 
 	

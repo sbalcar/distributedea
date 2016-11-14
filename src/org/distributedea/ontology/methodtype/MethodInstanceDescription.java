@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -85,7 +85,7 @@ public class MethodInstanceDescription implements Concept {
 				methodType.exportProblemToolClass() == exportProblemToolClass();
 	}
 	
-	public boolean exportAreTheSameType(AgentDescription agentDescription) {
+	public boolean exportAreTheSameType(MethodDescription agentDescription) {
 		if (agentDescription == null) {
 			return false;
 		}

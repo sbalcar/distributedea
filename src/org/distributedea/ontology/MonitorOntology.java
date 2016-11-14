@@ -4,16 +4,17 @@ import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.AgentName;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
+import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
+import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounters;
 import org.distributedea.ontology.monitor.Statistic;
+import org.distributedea.ontology.pedigree.PedigreeCounter;
 
 
 public class MonitorOntology extends BeanOntology {
@@ -23,24 +24,23 @@ public class MonitorOntology extends BeanOntology {
 	private MonitorOntology() {
         super("MonitorOntology");
 
-        String statisticPackage = Statistic.class.getPackage().getName();
-        String individualPackage = Individual.class.getPackage().getName();
-        
         try {
             add(JobID.class);
             
-            add(individualPackage);
+            add(IndividualWrapper.class);
             add(IndividualEvaluated.class);
+            add(Individual.class.getPackage().getName());
             
-            add(statisticPackage);
+            add(PedigreeCounter.class.getPackage().getName());
+            add(MethodDescriptionCounters.class);
+            add(MethodDescriptionCounter.class);
+            add(MethodDescription.class);
+            		
+            add(AgentConfiguration.class.getPackage().getName());
+
+            add(Statistic.class.getPackage().getName());
+            add(MethodDescriptions.class);
         	
-            add(AgentDescriptions.class);
-            add(AgentDescription.class);
-            add(AgentConfiguration.class);
-            add(AgentName.class);
-            add(Arguments.class);
-            add(Argument.class);
-            
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);
         }

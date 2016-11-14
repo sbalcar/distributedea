@@ -9,9 +9,9 @@ import java.util.Set;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.javaextension.Pair;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptionPriority;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
 
 /**
  * Data structure of helpmates statistics of all running instances
@@ -31,13 +31,13 @@ public class ModelOfHelpmates {
 		return helpmates;
 	}
 
-	public int exportNumberConcreteAgentDescription(AgentDescription description) {
+	public int exportNumberConcreteAgentDescription(MethodDescription description) {
 		
-		List<AgentDescription> allDescriptions = exportAgentDescription();
+		List<MethodDescription> allDescriptions = exportAgentDescription();
 		
 		int numberOfLelement = 0;
 		
-		for (AgentDescription descriptionI : allDescriptions) {
+		for (MethodDescription descriptionI : allDescriptions) {
 			
 			if (descriptionI.equals(description)) {
 				numberOfLelement++;
@@ -53,10 +53,10 @@ public class ModelOfHelpmates {
 	 */
 	public int exportNumberOfDifferentAgentDescription() {
 		
-		List<AgentDescription> descriptions = exportAgentDescription();
+		List<MethodDescription> descriptions = exportAgentDescription();
 		
 		// removing duplicates
-		Set<AgentDescription> hs = new HashSet<>();
+		Set<MethodDescription> hs = new HashSet<>();
 		hs.addAll(descriptions);
 
 		return hs.size();
@@ -66,13 +66,13 @@ public class ModelOfHelpmates {
 	 * Exports all Agent Description with duplicates
 	 * @return
 	 */
-	private List<AgentDescription> exportAgentDescription() {
+	private List<MethodDescription> exportAgentDescription() {
 		
-		List<AgentDescription> descriptions = new ArrayList<>();
+		List<MethodDescription> descriptions = new ArrayList<>();
 		
 		for (StatisticOfHelpmates helperI : helpmates) {
 			
-			AgentDescription descriptionI = helperI.getAgentDescription();
+			MethodDescription descriptionI = helperI.getAgentDescription();
 			descriptions.add(descriptionI);
 		}
 		
@@ -84,17 +84,17 @@ public class ModelOfHelpmates {
 	 * Export the AgentDescription with the minimal priority
 	 * @return
 	 */
-	public Pair<AgentDescription, Integer> exportMinPrioritizedDescription() {
+	public Pair<MethodDescription, Integer> exportMinPrioritizedDescription() {
 		
 		// initialization of data structure
-		Map<AgentDescription, Integer> helpmatesMap = exportAgentPriority();
+		Map<MethodDescription, Integer> helpmatesMap = exportAgentPriority();
 		
 		int minPriority = Integer.MAX_VALUE;
-		AgentDescription minPriorityDescription = null;
+		MethodDescription minPriorityDescription = null;
 		
-		for (Map.Entry<AgentDescription, Integer> entry : helpmatesMap.entrySet()) {
+		for (Map.Entry<MethodDescription, Integer> entry : helpmatesMap.entrySet()) {
 			
-			AgentDescription descriptionI = entry.getKey();
+			MethodDescription descriptionI = entry.getKey();
 		    int priorityI = entry.getValue();
 		    
 		    if (priorityI < minPriority) {
@@ -109,17 +109,17 @@ public class ModelOfHelpmates {
 	 * Export the AgentDescription with the maximal priority
 	 * @return
 	 */
-	public Pair<AgentDescription, Integer> exportMaxPrioritizedDescription() {
+	public Pair<MethodDescription, Integer> exportMaxPrioritizedDescription() {
 		
 		// initialization of data structure
-		Map<AgentDescription, Integer> helpmateMapI = exportAgentPriority();
+		Map<MethodDescription, Integer> helpmateMapI = exportAgentPriority();
 
 		int maxPriority = Integer.MIN_VALUE;
-		AgentDescription maxPriorityDescription = null;
+		MethodDescription maxPriorityDescription = null;
 		
-		for (Map.Entry<AgentDescription, Integer> entry : helpmateMapI.entrySet()) {
+		for (Map.Entry<MethodDescription, Integer> entry : helpmateMapI.entrySet()) {
 			
-			AgentDescription descriptionI = entry.getKey();
+			MethodDescription descriptionI = entry.getKey();
 		    int priorityI = entry.getValue();
 
 		    if (priorityI > maxPriority) {
@@ -130,23 +130,23 @@ public class ModelOfHelpmates {
 		return new Pair<>(maxPriorityDescription, maxPriority);
 	}
 	
-	public Map<AgentDescription, Integer> exportAgentPriority() {
+	public Map<MethodDescription, Integer> exportAgentPriority() {
 
 		// initialization of data structure
-		Map<AgentDescription, Integer> helpmateMapI = new HashMap<AgentDescription, Integer>();
+		Map<MethodDescription, Integer> helpmateMapI = new HashMap<MethodDescription, Integer>();
 		for (StatisticOfHelpmates helpmateListI: getHelpers()) {
 			helpmateMapI.put(helpmateListI.getAgentDescription(), 0);
 		}
 		
 		// count priority in global
 		for (StatisticOfHelpmates helpmateListI: getHelpers()) {
-			List<AgentDescriptionPriority> wrappers = helpmateListI.getHelpersDescriptions();
+			List<MethodDescriptionCounter> wrappers = helpmateListI.getHelpersDescriptions();
 
 			// going through all results regarding their helpers
-			for (AgentDescriptionPriority wrapperI : wrappers) {
+			for (MethodDescriptionCounter wrapperI : wrappers) {
 				
-				AgentDescription descriptionI = wrapperI.getDescription();
-				int priorityI = wrapperI.getPriority();
+				MethodDescription descriptionI = wrapperI.getDescription();
+				int priorityI = wrapperI.getCounter();
 				
 				if (helpmateMapI.containsKey(descriptionI)) {
 					int freqeuency = helpmateMapI.get(descriptionI);

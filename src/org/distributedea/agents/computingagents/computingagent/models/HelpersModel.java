@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptionPriority;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
 
 /**
  * Structure represents model of computation-helpers
@@ -15,13 +15,13 @@ import org.distributedea.ontology.agentdescription.AgentDescriptionPriority;
  */
 public class HelpersModel {
 
-	private Map<AgentDescription, Integer> helpers = new HashMap<>();
+	private Map<MethodDescription, Integer> helpers = new HashMap<>();
 
 	/**
 	 * Adds helper to model
 	 * @param description
 	 */
-	public void addHelper(AgentDescription description) {
+	public void addHelper(MethodDescription description) {
 		
 		// put description to the map
 		if (helpers.containsKey(description)) {
@@ -36,17 +36,17 @@ public class HelpersModel {
 	 * Returns priorities of helpers
 	 * @return
 	 */
-	public List<AgentDescriptionPriority> getPrioritiesOfHelpers() {
+	public List<MethodDescriptionCounter> getPrioritiesOfHelpers() {
 		
-		List<AgentDescriptionPriority> helpmateList = new ArrayList<>();
+		List<MethodDescriptionCounter> helpmateList = new ArrayList<>();
 		
-        for (Map.Entry<AgentDescription, Integer> entryI: this.helpers.entrySet()) {
+        for (Map.Entry<MethodDescription, Integer> entryI: this.helpers.entrySet()) {
 			
-        	AgentDescription descriptionI = entryI.getKey();
+        	MethodDescription descriptionI = entryI.getKey();
         	Integer valueI = entryI.getValue();
         	
-        	AgentDescriptionPriority wrapperI =
-        			new AgentDescriptionPriority(descriptionI, valueI);
+        	MethodDescriptionCounter wrapperI =
+        			new MethodDescriptionCounter(descriptionI, valueI);
         	
         	helpmateList.add(wrapperI);
         }
@@ -58,6 +58,6 @@ public class HelpersModel {
 	 * Removes everything from model. The same as to create new empty model.
 	 */
 	public void clean() {
-		this.helpers = new HashMap<AgentDescription, Integer>();
+		this.helpers = new HashMap<MethodDescription, Integer>();
 	}
 }

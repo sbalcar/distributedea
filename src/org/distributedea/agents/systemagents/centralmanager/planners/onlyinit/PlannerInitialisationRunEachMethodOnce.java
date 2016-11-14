@@ -11,11 +11,11 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.H
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputPlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
@@ -33,7 +33,7 @@ public class PlannerInitialisationRunEachMethodOnce implements Planner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		InputAgentDescriptions agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				job.exportInputAgentDescriptions();
 		
 		
@@ -41,7 +41,7 @@ public class PlannerInitialisationRunEachMethodOnce implements Planner {
 		
 		for (int i = 0; i < agentDescriptions.size(); i++) {
 
-			InputAgentDescription iAgentDescriptionI =
+			InputMethodDescription iAgentDescriptionI =
 					agentDescriptions.get(i);
 
 			AID aidManagerI = managersAID.get(i % managersAID.size());
@@ -61,7 +61,7 @@ public class PlannerInitialisationRunEachMethodOnce implements Planner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		InputAgentDescriptions agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				job.exportInputAgentDescriptions();
 		
 		
@@ -69,7 +69,7 @@ public class PlannerInitialisationRunEachMethodOnce implements Planner {
 		
 		for (int i = 0; i < agentDescriptions.size(); i++) {
 
-			InputAgentDescription iAgentDescriptionI =
+			InputMethodDescription iAgentDescriptionI =
 					agentDescriptions.get(i);
 
 			AID aidManagerI = managersAID.get(i % managersAID.size());

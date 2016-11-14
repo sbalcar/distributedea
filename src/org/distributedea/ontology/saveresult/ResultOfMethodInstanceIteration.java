@@ -7,7 +7,7 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 
@@ -22,7 +22,7 @@ public class ResultOfMethodInstanceIteration implements Concept {
 
 	private MethodInstanceDescription methodInstanceDescription;
 	
-	private AgentDescription agentDescription;
+	private MethodDescription agentDescription;
 	
 	private MethodStatisticResult methodStatisticResult;
 
@@ -38,7 +38,7 @@ public class ResultOfMethodInstanceIteration implements Concept {
 	 */
 	public ResultOfMethodInstanceIteration(
 			MethodInstanceDescription methodInstanceDescription,
-			AgentDescription agentDescription,
+			MethodDescription agentDescription,
 			MethodStatisticResult methodStatisticResult) {
 		IAgentLogger logger = new TrashLogger();
 		
@@ -66,11 +66,11 @@ public class ResultOfMethodInstanceIteration implements Concept {
 		this.methodInstanceDescription = methodInstanceDescription;
 	}
 
-	public AgentDescription getAgentDescription() {
+	public MethodDescription getAgentDescription() {
 		return agentDescription;
 	}
 	@Deprecated
-	public void setAgentDescription(AgentDescription agentDescription) {
+	public void setAgentDescription(MethodDescription agentDescription) {
 		this.agentDescription = agentDescription;
 	}
 

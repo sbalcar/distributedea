@@ -11,9 +11,9 @@ import java.util.Scanner;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -27,7 +27,7 @@ public class Plan implements Concept {
 	private static final long serialVersionUID = 1L;
 	
 	private Iteration iteration;
-	private AgentDescriptions newAgents;
+	private MethodDescriptions newAgents;
 
 	
 	@Deprecated
@@ -40,14 +40,14 @@ public class Plan implements Concept {
 	 */
 	public Plan(Iteration iteration) {
 		setIteration(iteration);
-		this.newAgents = new AgentDescriptions();
+		this.newAgents = new MethodDescriptions();
 		
 	}
 	/**
 	 * Constructor for one new method
 	 * @param iteration
 	 */
-	public Plan(Iteration iteration, AgentDescription newAgent) {
+	public Plan(Iteration iteration, MethodDescription newAgent) {
 		setIteration(iteration);
 		addAgentsToCreate(newAgent);
 	}
@@ -55,14 +55,14 @@ public class Plan implements Concept {
 	 * Constructor for the list of new methods
 	 * @param iteration
 	 */
-	public Plan(Iteration iteration, AgentDescriptions newAgents) {
+	public Plan(Iteration iteration, MethodDescriptions newAgents) {
 		if (iteration == null || ! iteration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					Iteration.class.getSimpleName() + " is not valid");
 		}
 		if (newAgents == null || ! newAgents.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescriptions.class.getSimpleName() + " is not valid");
+					MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.iteration = iteration;
 		this.newAgents = newAgents;
@@ -80,14 +80,14 @@ public class Plan implements Concept {
 		this.iteration = iteration;
 	}
 
-	public AgentDescriptions getNewAgents() {
+	public MethodDescriptions getNewAgents() {
 		return newAgents;
 	}
 	@Deprecated
-	public void setNewAgents(AgentDescriptions newAgents) {
+	public void setNewAgents(MethodDescriptions newAgents) {
 		if (newAgents == null || ! newAgents.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescriptions.class.getSimpleName() + " is not valid");
+					MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.newAgents = newAgents;
 	}
@@ -96,15 +96,15 @@ public class Plan implements Concept {
 	 * Adds method to create
 	 * @param agentToCreate
 	 */
-	public void addAgentsToCreate(AgentDescription agentToCreate) {
+	public void addAgentsToCreate(MethodDescription agentToCreate) {
 		if (agentToCreate == null ||
 				! agentToCreate.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescription.class.getSimpleName() + " is not valid");
+					MethodDescription.class.getSimpleName() + " is not valid");
 		}
 		
 		if (this.newAgents == null) {
-			this.newAgents = new AgentDescriptions();
+			this.newAgents = new MethodDescriptions();
 		}
 		
 		this.newAgents.addAgentDescriptions(agentToCreate);
@@ -114,14 +114,14 @@ public class Plan implements Concept {
 	 * Adds method to create
 	 * @param agentToCreate
 	 */
-	public void addAgentsToCreate(AgentDescriptions agentDescriptions) {
+	public void addAgentsToCreate(MethodDescriptions agentDescriptions) {
 		if (agentDescriptions == null ||
 				! agentDescriptions.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescription.class.getSimpleName() + " is not valid");
+					MethodDescription.class.getSimpleName() + " is not valid");
 		}
 		
-		for (AgentDescription agentDescriptionI :
+		for (MethodDescription agentDescriptionI :
 			agentDescriptions.getAgentDescriptions()) {
 			
 			addAgentsToCreate(agentDescriptionI);
@@ -144,11 +144,11 @@ public class Plan implements Concept {
 			return null;
 		}
 		
-		List<AgentDescription> newAgents = new ArrayList<>();
+		List<MethodDescription> newAgents = new ArrayList<>();
 		newAgents.addAll(plan1.getNewAgents().getAgentDescriptions());
 		newAgents.addAll(plan2.getNewAgents().getAgentDescriptions());
 		
-		return new Plan(iteration1, new AgentDescriptions(newAgents));
+		return new Plan(iteration1, new MethodDescriptions(newAgents));
 	}
 	
 	/**

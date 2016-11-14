@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.ISelector;
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.problem.Problem;
@@ -98,7 +98,8 @@ public class EvolutionPopulationModel {
 	 * @throws ProblemToolException
 	 */
 	public EvolutionPopulationModel processMutation(double probOfMutation,
-			IProblemTool tool, Problem problem, IAgentLogger logger) throws ProblemToolException {
+			IProblemTool tool, Problem problem, PedigreeParameters pedigreeParams,
+			IAgentLogger logger) throws ProblemToolException {
 		
 		List<IndividualEvaluated> improvedIndividuals = new ArrayList<>();
 		
@@ -109,7 +110,7 @@ public class EvolutionPopulationModel {
 			
 			if (Math.random() < probOfMutation) {
 				newIndividualEvalI = tool.improveIndividualEval(
-						individualEvalI, problem, logger);
+						individualEvalI, problem, pedigreeParams, logger);
 			}
 			improvedIndividuals.add(newIndividualEvalI);
 		}
@@ -128,7 +129,8 @@ public class EvolutionPopulationModel {
 	 * @throws ProblemToolException
 	 */
 	public EvolutionPopulationModel processCross(double probOfCross, ISelector selector,
-			IProblemTool tool, Problem problem, IAgentLogger logger) throws ProblemToolException {
+			IProblemTool tool, Problem problem, PedigreeParameters pedigreeParams,
+			IAgentLogger logger) throws ProblemToolException {
 		
 		List<IndividualEvaluated> individualsCopy = new ArrayList<>();
 		
@@ -137,16 +139,10 @@ public class EvolutionPopulationModel {
 			IndividualEvaluated indivEval1 = selector.select(individuals, problem);
 			IndividualEvaluated indivEval2 = selector.select(individuals, problem);
 			
-			Individual individual1 = indivEval1.getIndividual();
-			Individual individual2 = indivEval2.getIndividual();
+			IndividualEvaluated[] indivEvalNew = tool.createNewIndividual(
+					indivEval1, indivEval2, problem, pedigreeParams, logger);
 			
-			Individual[] indivEvalNew = tool.createNewIndividual(
-					individual1, individual2, problem, logger);
-			Individual individual = indivEvalNew[0];
-			
-			double fitness = tool.fitness(individual, problem, logger);
-			
-			individualsCopy.add(new IndividualEvaluated(individual, fitness));
+			individualsCopy.add(indivEvalNew[0]);
 		}
 		
 		return new EvolutionPopulationModel(individualsCopy);
@@ -168,4 +164,5 @@ public class EvolutionPopulationModel {
 		this.individuals = new IndividualsEvaluated(
 				individualsCopy.subList(0, popSize));
 	}
+	
 }

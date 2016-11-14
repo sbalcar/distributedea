@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Arguments;
@@ -13,6 +14,7 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -90,7 +92,8 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
 		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
@@ -99,8 +102,8 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		long generationNumberI = -1;
 
 		// save, log and distribute computed Individual
-		IndividualEvaluated individualEvalI =
-				problemTool.generateIndividualEval(problem, getCALogger());
+		IndividualEvaluated individualEvalI = problemTool
+				.generateIndividualEval(problem, pedigreeParams, getCALogger());
 
 		processIndividualFromInitGeneration(individualEvalI,
 				generationNumberI, problem, jobID);
@@ -111,8 +114,9 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			// increment next number of generation
 			generationNumberI++;
 						
-			IndividualEvaluated individualEvalNew = getNewIndividual(individualEvalI, problem, problemTool);
-
+			IndividualEvaluated individualEvalNew = getNewIndividual(
+					individualEvalI, problem, problemTool, pedigreeParams);
+			
 			boolean isNewIndividualBetter =
 					FitnessTool.isFirstIndividualEBetterThanSecond(
 							individualEvalNew, individualEvalI, problem);
@@ -151,9 +155,10 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	protected IndividualEvaluated getNewIndividual(IndividualEvaluated individualEval,
-			Problem problem, IProblemTool problemTool) throws ProblemToolException {
+			Problem problem, IProblemTool problemTool,
+			PedigreeParameters pedigreeParams) throws ProblemToolException {
 		
-		return problemTool.improveIndividualEval(individualEval, problem, getCALogger());
+		return problemTool.improveIndividualEval(individualEval, problem, pedigreeParams, getCALogger());
 	}
 	
 }

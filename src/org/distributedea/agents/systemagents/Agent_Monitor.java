@@ -23,10 +23,10 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.MonitorOntology;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
@@ -44,7 +44,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 	
 	private MonitorStatisticModel model;
 	
-	private AgentDescriptions agentsToMonitor;
+	private MethodDescriptions agentsToMonitor;
 
 	@Override
 	public List<Ontology> getOntologies() {
@@ -205,7 +205,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		StartMonitoring startMonitoring = (StartMonitoring) action.getAction();
 		JobID jobID = startMonitoring.getJobID();
 		Class<?> problemToSolveClass = startMonitoring.exportProblemToSolveClass();
-		AgentDescriptions agentsToMonitor = startMonitoring.getAgentsToMonitor();	
+		MethodDescriptions agentsToMonitor = startMonitoring.getAgentsToMonitor();	
 		
 		this.model = new MonitorStatisticModel(jobID, problemToSolveClass);
 		this.agentsToMonitor = agentsToMonitor;
@@ -239,13 +239,13 @@ public class Agent_Monitor extends Agent_DistributedEA {
 			throw new IllegalStateException();
 		}
 		
-		AgentDescriptions monitoredAgents = statistic.exportAgentDescriptions();
-		AgentDescriptions agentsToMonitorClone = this.agentsToMonitor.deepClone();
+		MethodDescriptions monitoredAgents = statistic.exportAgentDescriptions();
+		MethodDescriptions agentsToMonitorClone = this.agentsToMonitor.deepClone();
 		
 		agentsToMonitorClone.removeAll(monitoredAgents);
 		if (! agentsToMonitorClone.isEmpty()) {
 			System.out.println("Metody co nic neposlaly:");
-			for (AgentDescription agentDescriptionI :
+			for (MethodDescription agentDescriptionI :
 				agentsToMonitorClone.getAgentDescriptions()) {
 				System.out.println(agentDescriptionI.exportMethodName());
 			}

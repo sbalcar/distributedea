@@ -5,6 +5,7 @@ import jade.content.Concept;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.IProblemTool;
 
@@ -21,6 +22,9 @@ public class IndividualEvaluated implements Concept {
 	
 	private double fitness;
 
+	private Pedigree pedigree;
+	
+	
 	@Deprecated
 	public IndividualEvaluated() {} // only for Jade
 	
@@ -29,9 +33,10 @@ public class IndividualEvaluated implements Concept {
 	 * @param individual
 	 * @param fitness
 	 */
-	public IndividualEvaluated(Individual individual, double fitness) {
+	public IndividualEvaluated(Individual individual, double fitness, Pedigree pedigree) {
 		this.individual = individual;
 		this.fitness = fitness;
+		this.pedigree = pedigree;
 	}
 
 	/**
@@ -44,6 +49,10 @@ public class IndividualEvaluated implements Concept {
 		}
 		this.individual = individualEval.getIndividual().deepClone();
 		this.fitness = individualEval.getFitness();
+		
+		if (individualEval.getPedigree() != null) {
+			this.pedigree = individualEval.getPedigree().deepClone();
+		}
 	}
 	
 	public Individual getIndividual() {
@@ -60,6 +69,13 @@ public class IndividualEvaluated implements Concept {
 	@Deprecated
 	public void setFitness(double fitness) {
 		this.fitness = fitness;
+	}
+
+	public Pedigree getPedigree() {
+		return pedigree;
+	}
+	public void setPedigree(Pedigree pedigree) {
+		this.pedigree = pedigree;
 	}
 	
 	public boolean validation(Problem problem, IProblemTool problemTool,
@@ -112,7 +128,6 @@ public class IndividualEvaluated implements Concept {
 	}
 	
 	
-	
 	/**
 	 * Tests validity
 	 * @return
@@ -121,6 +136,10 @@ public class IndividualEvaluated implements Concept {
 		if (individual == null || ! individual.valid(logger)) {
 			return false;
 		}
+		if (pedigree != null && ! pedigree.valid(logger)) {
+			return false;
+		}
+		
 		return true;
 	}
 	

@@ -10,9 +10,9 @@ import java.util.Scanner;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -26,13 +26,13 @@ public class RePlan implements Concept {
 	private static final long serialVersionUID = 1L;
 	
 	private Iteration iteration;
-	private AgentDescriptions agentsToKill;
-	private AgentDescriptions agentsToCreate;
+	private MethodDescriptions agentsToKill;
+	private MethodDescriptions agentsToCreate;
 	
 	@Deprecated
 	public RePlan() { // only for Jade
-		this.agentsToKill = new AgentDescriptions();
-		this.agentsToCreate = new AgentDescriptions();
+		this.agentsToKill = new MethodDescriptions();
+		this.agentsToCreate = new MethodDescriptions();
 	}
 	
 	/**
@@ -45,8 +45,8 @@ public class RePlan implements Concept {
 				Iteration.class.getSimpleName() + " is not valid");
 		}
 		this.iteration = teration;
-		this.agentsToKill = new AgentDescriptions();
-		this.agentsToCreate = new AgentDescriptions();
+		this.agentsToKill = new MethodDescriptions();
+		this.agentsToCreate = new MethodDescriptions();
 	}
 	
 	/**
@@ -55,8 +55,8 @@ public class RePlan implements Concept {
 	 * @param agentToKill
 	 * @param agentToCreate
 	 */
-	public RePlan(Iteration teration, AgentDescription agentToKill,
-			AgentDescription agentToCreate) {
+	public RePlan(Iteration teration, MethodDescription agentToKill,
+			MethodDescription agentToCreate) {
 		if (teration == null || ! teration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 				Iteration.class.getSimpleName() + " is not valid");
@@ -72,19 +72,19 @@ public class RePlan implements Concept {
 	 * @param agentsToKill
 	 * @param agentsToCreate
 	 */
-	public RePlan(Iteration iteration, AgentDescriptions agentsToKill,
-			AgentDescriptions agentsToCreate) {
+	public RePlan(Iteration iteration, MethodDescriptions agentsToKill,
+			MethodDescriptions agentsToCreate) {
 		if (iteration == null || ! iteration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 				Iteration.class.getSimpleName() + " is not valid");
 		}
 		if (agentsToKill == null || ! agentsToKill.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-				AgentDescriptions.class.getSimpleName() + " is not valid");
+				MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		if (agentsToCreate == null || ! agentsToCreate.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-				AgentDescriptions.class.getSimpleName() + " is not valid");
+				MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.iteration = iteration;
 		this.agentsToKill = agentsToKill;
@@ -124,14 +124,14 @@ public class RePlan implements Concept {
 	 * Returns methods to kill
 	 * @return
 	 */
-	public AgentDescriptions getAgentsToKill() {
+	public MethodDescriptions getAgentsToKill() {
 		return this.agentsToKill;
 	}
 	@Deprecated
-	public void setAgentsToKill(AgentDescriptions agentsToKill) {
+	public void setAgentsToKill(MethodDescriptions agentsToKill) {
 		if (agentsToKill == null || ! agentsToKill.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescriptions.class.getSimpleName() + " is not valid");
+					MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.agentsToKill = agentsToKill;
 	}
@@ -139,19 +139,19 @@ public class RePlan implements Concept {
 	 * Adds method to kill
 	 * @param agentToKill
 	 */
-	public void addAgentsToKill(AgentDescription agentToKill) {
+	public void addAgentsToKill(MethodDescription agentToKill) {
 		if (agentToKill == null || ! agentToKill.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescriptions.class.getSimpleName() + " is not valid");
+					MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 			
 		if (this.agentsToKill == null) {
-			this.agentsToKill = new AgentDescriptions();
+			this.agentsToKill = new MethodDescriptions();
 		}
 		
 		this.agentsToKill.addAgentDescriptions(agentToKill);
 	}
-	public boolean containsAgentToKill(AgentDescription agentToKill) {
+	public boolean containsAgentToKill(MethodDescription agentToKill) {
 		if (agentToKill == null || ! agentToKill.valid(new TrashLogger())) {
 			return false;
 		}
@@ -165,15 +165,15 @@ public class RePlan implements Concept {
 	 * Returns agents to create
 	 * @return
 	 */
-	public AgentDescriptions getAgentsToCreate() {
+	public MethodDescriptions getAgentsToCreate() {
 		return this.agentsToCreate;
 	}
 	@Deprecated
-	public void setAgentsToCreate(AgentDescriptions agentsToCreate) {
+	public void setAgentsToCreate(MethodDescriptions agentsToCreate) {
 		if (agentsToCreate == null ||
 				! agentsToCreate.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescriptions.class.getSimpleName() + " is not valid");
+					MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.agentsToCreate = agentsToCreate;
 	}
@@ -182,24 +182,24 @@ public class RePlan implements Concept {
 	 * Adds method to create
 	 * @param agentToCreate
 	 */
-	public void addAgentsToCreate(AgentDescription agentToCreate) {
+	public void addAgentsToCreate(MethodDescription agentToCreate) {
 		if (agentToCreate == null || ! agentToCreate.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescriptions.class.getSimpleName() + " is not valid");
+					MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		
 		if (this.agentsToCreate == null) {
-			this.agentsToCreate = new AgentDescriptions();
+			this.agentsToCreate = new MethodDescriptions();
 		}
 		
 		this.agentsToCreate.addAgentDescriptions(agentToCreate);
 	}
 
-	public boolean containsAgentToCreate(AgentDescription agentToCreate) {
+	public boolean containsAgentToCreate(MethodDescription agentToCreate) {
 		
 		if (agentToCreate == null || ! agentToCreate.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescription.class.getSimpleName() + " is not valid");
+					MethodDescription.class.getSimpleName() + " is not valid");
 		}
 		if (agentsToCreate == null) {
 			return false;

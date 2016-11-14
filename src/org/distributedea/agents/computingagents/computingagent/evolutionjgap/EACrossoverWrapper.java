@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemToolException;
@@ -129,10 +130,16 @@ public class EACrossoverWrapper implements GeneticOperator {
 			return null;
 		}
 		
-		Individual[] newIndividuals = null;
+		double fitness1 = problemTool.fitness(individualPerm1, problem, logger);
+		double fitness2 = problemTool.fitness(individualPerm2, problem, logger);
+		
+		IndividualEvaluated[] newIndividuals = null;
 		try {
 			newIndividuals = problemTool.createNewIndividual(
-						individualPerm1, individualPerm2, problem, logger);
+						new IndividualEvaluated(individualPerm1, fitness1, null),
+						new IndividualEvaluated(individualPerm2, fitness2, null),
+						problem, null, logger);
+			
 		} catch (ProblemToolException e1) {
 			logger.logThrowable("", e1);
 			return null;
@@ -142,9 +149,9 @@ public class EACrossoverWrapper implements GeneticOperator {
 		IChromosome chromosomeNewB = null;
 		try {
 			chromosomeNewA = Convertor.convertToIChromosome(
-					newIndividuals[0], problem,  conf);
+					newIndividuals[0].getIndividual(), problem,  conf);
 			chromosomeNewB = Convertor.convertToIChromosome(
-					newIndividuals[1], problem, conf);
+					newIndividuals[1].getIndividual(), problem, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Individual to Chromosome", e);
 			return null;

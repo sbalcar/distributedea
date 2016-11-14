@@ -1,7 +1,8 @@
-package org.distributedea.ontology.agentdescription;
+package org.distributedea.ontology.methoddescriptioncounter;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 
 import jade.content.Concept;
 
@@ -10,38 +11,38 @@ import jade.content.Concept;
  * @author stepan
  *
  */
-public class AgentDescriptionPriority implements Concept {
+public class MethodDescriptionCounter implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
-	private AgentDescription description;
-	private int priority;
+	private MethodDescription description;
+	private int counter;
 	
 	@Deprecated
-	public AgentDescriptionPriority() {} //only for Jade
+	public MethodDescriptionCounter() {} //only for Jade
 
 	/**
 	 * Constructor
 	 * @param description
-	 * @param priority
+	 * @param counter
 	 */
-	public AgentDescriptionPriority(AgentDescription description, int priority) {
+	public MethodDescriptionCounter(MethodDescription description, int counter) {
 		if (description == null || ! description.valid(new TrashLogger())) {
 			throw new IllegalArgumentException();
 		}
 		this.description = description;
-		this.priority = priority;
+		this.counter = counter;
 	}
 	
 	/**
 	 * Returns method
 	 * @return
 	 */
-	public AgentDescription getDescription() {
+	public MethodDescription getDescription() {
 		return description;
 	}
 	@Deprecated
-	public void setDescription(AgentDescription gescription) {
+	public void setDescription(MethodDescription gescription) {
 		this.description = gescription;
 	}
 	
@@ -49,12 +50,25 @@ public class AgentDescriptionPriority implements Concept {
 	 * Returns priority of method
 	 * @return
 	 */
-	public int getPriority() {
-		return priority;
+	public int getCounter() {
+		return counter;
 	}
 	@Deprecated
-	public void setPriority(int priority) {
-		this.priority = priority;
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+
+	public void increment() {
+		this.counter++;
+	}
+	
+	/**
+	 * Returns clone
+	 * @return
+	 */
+	public MethodDescriptionCounter deepClone() {
+		
+		return new MethodDescriptionCounter(this.description.deepClone(), this.counter);
 	}
 	
 	/**

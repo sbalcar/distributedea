@@ -1,11 +1,11 @@
-package org.distributedea.ontology.agentdescription.inputdescription;
+package org.distributedea.ontology.methoddescriptioninput;
 
 import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configuration.Arguments;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.problems.IProblemTool;
 
@@ -15,7 +15,7 @@ import org.distributedea.problems.IProblemTool;
  * @author stepan
  *
  */
-public class InputAgentDescription implements Concept {
+public class InputMethodDescription implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,14 +32,14 @@ public class InputAgentDescription implements Concept {
 	
 	
 	@Deprecated
-	public InputAgentDescription() {} // only for Jade
+	public InputMethodDescription() {} // only for Jade
 	
 	/**
 	 * Constructor
 	 * @param agentConfiguration
 	 * @param problemToolClass
 	 */
-	public InputAgentDescription(InputAgentConfiguration agentConfiguration,
+	public InputMethodDescription(InputAgentConfiguration agentConfiguration,
 			Class<?> problemToolClass) {
 		if (agentConfiguration == null ||
 				! agentConfiguration.valid(new TrashLogger())) {
@@ -131,11 +131,11 @@ public class InputAgentDescription implements Concept {
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof InputAgentDescription)) {
+	    if (!(other instanceof InputMethodDescription)) {
 	        return false;
 	    }
 	    
-	    InputAgentDescription iadOuther = (InputAgentDescription)other;
+	    InputMethodDescription iadOuther = (InputMethodDescription)other;
 	    
 	    boolean areInputAgentConfigurationEqual =
 	    		this.getInputAgentConfiguration().equals(iadOuther.getInputAgentConfiguration());
@@ -169,7 +169,7 @@ public class InputAgentDescription implements Concept {
 	 * Exports clone
 	 * @return
 	 */
-	public InputAgentDescription deepClone() {
+	public InputMethodDescription deepClone() {
 		
 		if (! valid(new TrashLogger())) {
 			return null;
@@ -178,6 +178,6 @@ public class InputAgentDescription implements Concept {
 		InputAgentConfiguration confClone = inputAgentConfiguration.deepClone();
 		Class<?> problemToolClassClone = this.exportProblemToolClass();
 		
-		return new InputAgentDescription(confClone, problemToolClassClone);
+		return new InputMethodDescription(confClone, problemToolClassClone);
 	}
 }

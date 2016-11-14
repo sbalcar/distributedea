@@ -3,12 +3,14 @@ package org.distributedea.agents.computingagents;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
@@ -64,15 +66,17 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
 		
-				
+		
 		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
 		
 		long generationNumberI = -1;
 
 		IndividualEvaluated individualEvalI =
-				problemTool.generateIndividualEval(problem, getCALogger());
+				problemTool.generateIndividualEval(problem, pedigreeParams, getCALogger());
 		
 		//saves data in Agent DataManager
 		processIndividualFromInitGeneration(individualEvalI,
@@ -91,7 +95,8 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 			}
 			
 			IndividualEvaluated individualEvalNewI = 
-					problemTool.improveIndividualEval(individualEvalI, problem, getCALogger());
+					problemTool.improveIndividualEval(individualEvalI, problem,
+					pedigreeParams, getCALogger());
 	
             // decide on the acceptance the neighbour
 			double acceptanceProbability = acceptanceProbability(individualEvalI,

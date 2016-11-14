@@ -1,4 +1,4 @@
-package org.distributedea.ontology.configuration.inputconfiguration;
+package org.distributedea.ontology.configurationinput;
 
 import jade.content.Concept;
 

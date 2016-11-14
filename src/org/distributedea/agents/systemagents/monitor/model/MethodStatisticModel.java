@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.problems.IProblemTool;
@@ -20,7 +20,7 @@ import org.distributedea.problems.ProblemTool;
  */
 public class MethodStatisticModel {
 	
-	private final AgentDescription agentDescription;
+	private final MethodDescription agentDescription;
 	
 	private final Class<?> problemToSolveClass;
 	
@@ -40,11 +40,11 @@ public class MethodStatisticModel {
 	 * Constructor
 	 * @param agentDescription
 	 */
-	public MethodStatisticModel(AgentDescription agentDescription) {
+	public MethodStatisticModel(MethodDescription agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescription.class.getSimpleName() + " is not valid");
+					MethodDescription.class.getSimpleName() + " is not valid");
 		}
 		
 		this.agentDescription = agentDescription;
@@ -58,7 +58,7 @@ public class MethodStatisticModel {
 		this.problemToSolveClass = problemClass;
 	}
 	
-	public AgentDescription getAgentDescription() {
+	public MethodDescription getAgentDescription() {
 		return agentDescription;
 	}
 	

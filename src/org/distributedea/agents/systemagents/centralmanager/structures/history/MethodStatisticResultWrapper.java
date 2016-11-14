@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 
 /**
@@ -20,7 +20,7 @@ public class MethodStatisticResultWrapper {
 
 	private final Iteration iteration;
 	
-	private AgentDescription agentDescription;
+	private MethodDescription agentDescription;
 	
 	private final MethodStatisticResult methodStatisticResult;
 	
@@ -32,7 +32,7 @@ public class MethodStatisticResultWrapper {
 	 * @param methodStatisticResult
 	 */
 	public MethodStatisticResultWrapper(Iteration iteration,
-			AgentDescription agentDescription,
+			MethodDescription agentDescription,
 			MethodStatisticResult methodStatisticResult) {
 		
 		this.iteration = iteration;
@@ -53,7 +53,7 @@ public class MethodStatisticResultWrapper {
 	 * Returns agent description
 	 * @return
 	 */
-	public AgentDescription getAgentDescription() {
+	public MethodDescription getAgentDescription() {
 		return agentDescription;
 	}
 
@@ -119,7 +119,7 @@ public class MethodStatisticResultWrapper {
 			 statisticDir.mkdir();
 		 }
 
-		 AgentDescription descriptionI = getAgentDescription();
+		 MethodDescription descriptionI = getAgentDescription();
 		 descriptionI.exportXML(new File(statisticDirName));
 
 		 MethodStatisticResult resultI = getMethodStatisticResult();
@@ -139,7 +139,7 @@ public class MethodStatisticResultWrapper {
 
 		String statisticDirName = statisticDir.getAbsolutePath();
 
-        AgentDescription descriptionI = AgentDescription.importXML(
+        MethodDescription descriptionI = MethodDescription.importXML(
         		new File(statisticDirName + File.separator + "description.xml"));
         
 		MethodStatisticResult resultI = MethodStatisticResult.importXML(

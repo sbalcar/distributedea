@@ -10,8 +10,8 @@ import javax.xml.bind.JAXBException;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
@@ -32,7 +32,7 @@ public class MethodHistory {
 	 * Describe current Agent forming method. Field is Null when the method
 	 * is in current {@link Iteration} not running.
 	 */
-	private AgentDescription currentAgent;
+	private MethodDescription currentAgent;
 	
 	/**
 	 * Statistics of individual iterations
@@ -46,7 +46,7 @@ public class MethodHistory {
 	 * @param currentAgent
 	 */
 	public MethodHistory(MethodInstanceDescription methodInstanceDescription,
-			AgentDescription currentAgent) {
+			MethodDescription currentAgent) {
 		if (methodInstanceDescription == null ||
 				! methodInstanceDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -70,10 +70,10 @@ public class MethodHistory {
 	 * Returns current Agent
 	 * @return
 	 */
-	public AgentDescription getCurrentAgent() {
+	public MethodDescription getCurrentAgent() {
 		return currentAgent;
 	}
-	public void setCurrentAgent(AgentDescription currentAgent) {
+	public void setCurrentAgent(MethodDescription currentAgent) {
 		this.currentAgent = currentAgent;
 	}
 	
@@ -209,7 +209,7 @@ public class MethodHistory {
 		
 		MethodInstanceDescription instanceDescrI =
 				getMethodInstanceDescription();
-		AgentDescription agentDescrI =
+		MethodDescription agentDescrI =
 				statistI.getAgentDescription();
 		MethodStatisticResult methodStatisticResultI =
 				statistI.getMethodStatisticResult();
@@ -346,10 +346,10 @@ public class MethodHistory {
 		MethodInstanceDescription methodInstanceImported =
 				MethodInstanceDescription.importXML(new File(currentAgentFileName));
 
-		AgentDescription currentAgent = null;
+		MethodDescription currentAgent = null;
 		String descriptionFileName = methodDirName + File.separator + "description.xml";		
 		if (new File(descriptionFileName).isFile()) {
-			currentAgent = AgentDescription.importXML(new File(descriptionFileName));
+			currentAgent = MethodDescription.importXML(new File(descriptionFileName));
 		}
 		
 		MethodHistory method = new MethodHistory(

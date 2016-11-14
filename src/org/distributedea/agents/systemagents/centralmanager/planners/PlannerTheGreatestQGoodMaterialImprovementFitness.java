@@ -1,9 +1,8 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;

@@ -18,8 +18,8 @@ import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.MonitorOntology;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
@@ -41,7 +41,7 @@ public class MonitorService {
 	 */
 	public static void startsMonitoring(Agent_DistributedEA agent,
 			JobID jobID, Class<?> problemToSolveClass,
-			AgentDescriptions agentsToMonitor, IAgentLogger logger) {
+			MethodDescriptions agentsToMonitor, IAgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -57,7 +57,7 @@ public class MonitorService {
 		}
 		if (agentsToMonitor == null || ! agentsToMonitor.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescriptions.class.getSimpleName() + " is not valid");
+					MethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		if (logger == null) {
 			throw new IllegalArgumentException("Argument " +

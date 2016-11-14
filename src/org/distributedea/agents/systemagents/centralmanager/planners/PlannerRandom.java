@@ -1,9 +1,8 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRandom;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
@@ -11,10 +10,10 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.M
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
@@ -65,11 +64,11 @@ public class PlannerRandom implements Planner {
 				.exportHistoryOfRunningMethods(iteration, 0);
 
 		//random select agent to kill
-		AgentDescription methodToKill =
+		MethodDescription methodToKill =
 				currentMethodsHistory.exportRandomRunningMethod();
 		
 		//random select agent to create
-		InputAgentDescription methodToCreate =
+		InputMethodDescription methodToCreate =
 				jobRun.exportRandomSelectedAgentDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate);

@@ -6,16 +6,17 @@ import java.util.Vector;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Arguments;
-import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -94,6 +95,8 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
 		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
@@ -106,7 +109,8 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		// generates Individuals
 		Vector<IndividualEvaluated> population = new Vector<>();
 		for (int i = 0; i < popSize; i++) {
-			IndividualEvaluated individualI = problemTool.generateIndividualEval(problem, getCALogger());
+			IndividualEvaluated individualI = problemTool.
+					generateIndividualEval(problem, pedigreeParams, getCALogger());
 			population.add(individualI);
 		}
 		
@@ -131,16 +135,15 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			IndividualEvaluated individualEvalCandidateI = quaternion.individualCandidateI;
 			
-			Individual individual1 = quaternion.individual1.getIndividual();
-			Individual individual2 = quaternion.individual2.getIndividual();
-			Individual individual3 = quaternion.individual3.getIndividual();
+			IndividualEvaluated individual1 = quaternion.individual1;
+			IndividualEvaluated individual2 = quaternion.individual2;
+			IndividualEvaluated individual3 = quaternion.individual3;
 			
 									
 			IndividualEvaluated[] individualsNew =
 					problemTool.createNewIndividualEval(individual1,
-							individual2, individual3, problem, getCALogger());
+							individual2, individual3, problem, pedigreeParams, getCALogger());
 			IndividualEvaluated individualEvalNew = individualsNew[0];
-
 
 			if (FitnessTool.isFirstIndividualEBetterThanSecond(
 							individualEvalNew, individualEvalCandidateI, problem)) {

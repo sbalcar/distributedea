@@ -9,11 +9,11 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.c
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfImprovement;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
 
@@ -144,7 +144,7 @@ public class Statistic implements Concept {
 		}
 		
 		MethodStatistic method0 = this.methodStatistics.get(0);
-		AgentDescription agentDescription = method0.getAgentDescription();
+		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		Class<?> problemToolClass =
 				agentDescription.exportProblemToolClass();		
@@ -168,7 +168,7 @@ public class Statistic implements Concept {
 			return null;
 		}
 		
-		AgentDescription agentDescription =
+		MethodDescription agentDescription =
 				bestMethod.getAgentDescription();
 		IndividualEvaluated bestIndividual =
 				bestMethod.getMethodStatisticResult().getBestIndividual();
@@ -177,34 +177,34 @@ public class Statistic implements Concept {
 	}
 	
 	/**
-	 * Exports {@link AgentDescriptions} clones
+	 * Exports {@link MethodDescriptions} clones
 	 * @return
 	 */
-	public AgentDescriptions exportAgentDescriptions() {
+	public MethodDescriptions exportAgentDescriptions() {
 		
-		List<AgentDescription> agentDescriptions = new ArrayList<>();
+		List<MethodDescription> agentDescriptions = new ArrayList<>();
 		for (MethodStatistic methodStatisticI : this.methodStatistics) {
-			AgentDescription agentDescriptionClonesI =
+			MethodDescription agentDescriptionClonesI =
 					methodStatisticI.exportAgentDescriptionClone();
 			agentDescriptions.add(agentDescriptionClonesI);
 		}
-		return new AgentDescriptions(agentDescriptions);
+		return new MethodDescriptions(agentDescriptions);
 	}
 	
 	/**
-	 * Tests if this {@link Statistic} contains all {@link AgentDescription}
-	 * from given {@link AgentDescriptions}.
+	 * Tests if this {@link Statistic} contains all {@link MethodDescription}
+	 * from given {@link MethodDescriptions}.
 	 * @param agentDescriptions
 	 * @return
 	 */
-	public boolean containsAllAgentDescriptions(AgentDescriptions agentDescriptions) {
+	public boolean containsAllAgentDescriptions(MethodDescriptions agentDescriptions) {
 		if (agentDescriptions == null ||
 				! agentDescriptions.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					agentDescriptions.getClass().getSimpleName() + " is not valid.");
 		}
 		
-		for (AgentDescription agentDescrI :
+		for (MethodDescription agentDescrI :
 				agentDescriptions.getAgentDescriptions()) {
 			if (! containsAgentDescriptions(agentDescrI)) {
 				return false;
@@ -223,18 +223,18 @@ public class Statistic implements Concept {
 	}
 	
 	/**
-	 * Tests if this {@link Statistic} contains given {@link AgentDescription}.
+	 * Tests if this {@link Statistic} contains given {@link MethodDescription}.
 	 * @param agentDescription
 	 * @return
 	 */
-	public boolean containsAgentDescriptions(AgentDescription agentDescription) {
+	public boolean containsAgentDescriptions(MethodDescription agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					agentDescription.getClass().getSimpleName() + " is not valid.");
 		}
 		for (MethodStatistic methodStatisticI : this.methodStatistics) {
-			AgentDescription agentDescriptionI =
+			MethodDescription agentDescriptionI =
 					methodStatisticI.getAgentDescription();
 			if (agentDescriptionI.equals(agentDescription)) {
 				return true;

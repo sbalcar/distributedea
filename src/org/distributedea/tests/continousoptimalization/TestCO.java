@@ -9,12 +9,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.distributedea.agents.computingagents.Agent_EvolutionJGAP;
-import org.distributedea.ontology.agentdescription.AgentDescription;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemToolException;
@@ -38,9 +39,9 @@ public class TestCO {
 		Problem problem = tool.readProblem(fileOfInput, null);
 		tool.initialization(problem, null, null);
 		
-		Individual individual = tool.generateIndividual(problem, null);
+		IndividualEvaluated individual = tool.generateIndividualEval(problem, null, null);
 		
-		double fitness = tool.fitness(individual, problem, null);
+		double fitness = tool.fitness(individual.getIndividual(), problem, null);
 		System.out.println(fitness);
 		
 		tool.exit();
@@ -69,11 +70,16 @@ public class TestCO {
 		
 		
 		for (int i = 0; i < 10; i++) {
-			Individual individual1 = tool1.generateIndividual(problem1, null);
-			double fitness1 = tool1.fitness(individual1, problem1, null);
+			IndividualEvaluated individualEval1 = tool1.generateIndividualEval(problem1, null, null);
+			Individual individual1 = individualEval1.getIndividual();
+			
+			double fitness1 = tool1.fitness(individualEval1.getIndividual(), problem1, null);
 			System.out.println(" fitness1: " + fitness1);		
 	
-			Individual individual2 = tool2.generateIndividual(problem2, null);
+			
+			IndividualEvaluated individualEval2 = tool2.generateIndividualEval(problem2, null, null);
+			Individual individual2 = individualEval2.getIndividual();
+			
 			double fitness2 = tool2.fitness(individual2, problem2, null);
 			System.out.println(" fitness2: " + fitness2);
 		}
@@ -94,7 +100,8 @@ public class TestCO {
 		Problem problem = tool.readProblem(fileOfInput, null);
 		tool.initialization(problem, null, null);
 		
-		Individual individual1 = tool.generateIndividual(problem, null);
+		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problem, null, null);
+		Individual individual1 = individualEval1.getIndividual();
 		
 		IndividualPoint individualPoint1 = (IndividualPoint) individual1;
 		List<Double> coordinatesList1 = individualPoint1.getCoordinates();
@@ -105,7 +112,8 @@ public class TestCO {
 		double[] coordinates1 = ArrayUtils.toPrimitive(coordinatesArray1);
 		
 		
-		Individual individual2 = tool.generateIndividual(problem, null);
+		IndividualEvaluated individualEval2 = tool.generateIndividualEval(problem, null, null);
+		Individual individual2 = individualEval2.getIndividual();
 		
 		IndividualPoint individualPoint2 = (IndividualPoint) individual2;
 		List<Double> coordinatesList2 = individualPoint2.getCoordinates();
@@ -168,17 +176,17 @@ public class TestCO {
 	
 	private void test5() {
 		
-		Map<AgentDescription, Integer> map = new HashMap<AgentDescription, Integer>();
+		Map<MethodDescription, Integer> map = new HashMap<MethodDescription, Integer>();
 			
 		AgentConfiguration ac1 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
-		AgentDescription a1 =
-				new AgentDescription(ac1, ProblemToolRandomMove.class);
+		MethodDescription a1 =
+				new MethodDescription(ac1, ProblemToolRandomMove.class);
 		
 		AgentConfiguration ac2 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
-		AgentDescription a2 =
-				new AgentDescription(ac2, ProblemToolRandomMove.class);
+		MethodDescription a2 =
+				new MethodDescription(ac2, ProblemToolRandomMove.class);
 		
 		map.put(a1, 1);
 		map.put(a2, 2);

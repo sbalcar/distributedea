@@ -12,7 +12,7 @@ import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.Agent_BruteForce;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 
 /**
  * Ontology represents description of {@link Agent_DistributedEA}

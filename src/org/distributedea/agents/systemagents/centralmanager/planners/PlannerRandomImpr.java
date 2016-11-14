@@ -1,9 +1,8 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
@@ -12,11 +11,11 @@ import org.distributedea.agents.systemagents.centralmanager.structures.methodsst
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.plan.Plan;
@@ -70,20 +69,20 @@ public class PlannerRandomImpr implements Planner {
 		
 
 		if (currentMethodsHistory.getNumberOfMethodInstances() <= 3) {
-			AgentDescription methodToKill =
+			MethodDescription methodToKill =
 					currentMethodsHistory.exportRandomRunningMethod();
 			
 			MethodType methodTypeNotRunForTheLongestTime =
 					history.methodsWhichDidntRunForTheLongestTime(
 							currentMethodsHistory.exportMethodTypes());
-			InputAgentDescription methodToCreate =
+			InputMethodDescription methodToCreate =
 					methodTypeNotRunForTheLongestTime.exportInputAgentDescription();
 			
 			return new InputRePlan(iteration, methodToKill, methodToCreate);
 		}
 		
 		
-		InputAgentDescriptions methodsWhichHaveNeverRun =
+		InputMethodDescriptions methodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(jobRun);
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 			
@@ -92,10 +91,10 @@ public class PlannerRandomImpr implements Planner {
 							history.getJobID());
 			MethodStatistic theWorstMethodStatistic = currentMethodsResults
 					.exportMethodAchievedTheLeastQuantityOfImprovement();
-			AgentDescription methodToKill =
+			MethodDescription methodToKill =
 					theWorstMethodStatistic.exportAgentDescriptionClone();
 			
-			InputAgentDescription methodToCreate =
+			InputMethodDescription methodToCreate =
 					methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
 			
 			return new InputRePlan(iteration, methodToKill, methodToCreate);
@@ -103,11 +102,11 @@ public class PlannerRandomImpr implements Planner {
 				
 
 		//random select agent to kill
-		AgentDescription methodToKill =
+		MethodDescription methodToKill =
 				currentMethodsHistory.exportRandomRunningMethod();
 		
 		//random select agent to create
-		InputAgentDescription methodToCreate =
+		InputMethodDescription methodToCreate =
 				jobRun.exportRandomSelectedAgentDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate);

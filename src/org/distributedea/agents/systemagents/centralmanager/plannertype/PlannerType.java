@@ -9,12 +9,12 @@ import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
@@ -104,7 +104,7 @@ public abstract class PlannerType implements IPlannerType {
 			iterationNumI++;
 			Iteration iterationStructI = iteration();
 
-			AgentDescriptions currentlyRunningAgents =
+			MethodDescriptions currentlyRunningAgents =
 					history.exportRunningMethods();
 			
 			MonitorService.startsMonitoring(centralManager, jobID,

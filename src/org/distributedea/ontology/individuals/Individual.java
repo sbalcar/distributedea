@@ -13,6 +13,7 @@ public abstract class Individual implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
+
 	/**
 	 * Tests validity of Individual. Method don't has name "isvalid()" because
 	 * prefix is has for Jade Ontology special significance.

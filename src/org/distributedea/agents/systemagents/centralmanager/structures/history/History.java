@@ -8,12 +8,12 @@ import java.util.List;
 import org.distributedea.agents.systemagents.centralmanager.structures.methodsstatistics.MethodsStatistics;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
@@ -121,7 +121,7 @@ public class History {
 		
 		this.plans.add(plan);
 		
-		for (AgentDescription agentDescriptionI :
+		for (MethodDescription agentDescriptionI :
 				plan.getNewAgents().getAgentDescriptions()) {
 			processAgentToCreate(agentDescriptionI);
 		}
@@ -140,8 +140,8 @@ public class History {
 		
 		this.replans.add(replan.deepClone());
 		
-		AgentDescriptions agentsToKill = replan.getAgentsToKill();
-		for (AgentDescription agentToKillI : agentsToKill.getAgentDescriptions()) {
+		MethodDescriptions agentsToKill = replan.getAgentsToKill();
+		for (MethodDescription agentToKillI : agentsToKill.getAgentDescriptions()) {
 			MethodHistory methodHistory =
 					methods.getMethodHistoryOfCurentlyRunning(agentToKillI);
 			if (methodHistory != null) {
@@ -149,14 +149,14 @@ public class History {
 			}
 		}
 
-		AgentDescriptions agentsToCreate = replan.getAgentsToCreate();
-		for (AgentDescription agentToCreateI : agentsToCreate.getAgentDescriptions()) {
+		MethodDescriptions agentsToCreate = replan.getAgentsToCreate();
+		for (MethodDescription agentToCreateI : agentsToCreate.getAgentDescriptions()) {
 			 processAgentToCreate(agentToCreateI);
 		}
 		
 	}
 	
-	private void processAgentToCreate(AgentDescription agentToCreateI) {
+	private void processAgentToCreate(MethodDescription agentToCreateI) {
 		
 		MethodType methodType =
 				agentToCreateI.exportMethodType();
@@ -231,7 +231,7 @@ public class History {
 			
 			for (MethodStatistic methodStatI : statistic.getStatistics()) {
 			
-				AgentDescription agentDescriptionI =
+				MethodDescription agentDescriptionI =
 						methodStatI.getAgentDescription();
 				
 				boolean wasThisAgentKilledI = currentRePlan
@@ -261,7 +261,7 @@ public class History {
 
 		MethodStatisticResult statistic =
 				methodStatistic.getMethodStatisticResult();
-		AgentDescription agentDescription =
+		MethodDescription agentDescription =
 				methodStatistic.getAgentDescription();
 		
 		MethodHistory methodHistory = methods
@@ -278,14 +278,14 @@ public class History {
 	}
 	
 	/**
-	 * Exports {@link InputAgentDescriptions} from {@link JobRun} which
+	 * Exports {@link InputMethodDescriptions} from {@link JobRun} which
 	 * have never run
 	 * @param jobRun
 	 * @return
 	 */
-	public InputAgentDescriptions exportsMethodsWhichHaveNeverRun(JobRun jobRun) {
+	public InputMethodDescriptions exportsMethodsWhichHaveNeverRun(JobRun jobRun) {
 		
-		InputAgentDescriptions agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				jobRun.exportInputAgentDescriptions();
 		
 		return getMethodHistories().exportsMethodsWhichHaveNeverRun(
@@ -385,7 +385,7 @@ public class History {
 	 * Exports currently running methods
 	 * @return
 	 */
-	public AgentDescriptions exportRunningMethods() {
+	public MethodDescriptions exportRunningMethods() {
 		
 		return methods.exportRunningMethods();
 	}

@@ -2,9 +2,9 @@ package org.distributedea.ontology.monitor;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescriptions;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 
 import jade.content.AgentAction;
 
@@ -19,7 +19,7 @@ public class StartMonitoring implements AgentAction {
 	
 	private JobID jobID;
 	private String problemToSolveClassName;
-	private AgentDescriptions agentsToMonitor;
+	private MethodDescriptions agentsToMonitor;
 	
 	
 	@Deprecated
@@ -30,7 +30,7 @@ public class StartMonitoring implements AgentAction {
 	 * @param jobID
 	 */
 	public StartMonitoring(JobID jobID, Class<?> problemToSolveClass,
-			AgentDescriptions agentDescriptions) {
+			MethodDescriptions agentDescriptions) {
 		
 		if (jobID == null || ! jobID.valid(new TrashLogger())) {
 			throw new IllegalArgumentException();
@@ -91,11 +91,11 @@ public class StartMonitoring implements AgentAction {
 	 * Returns agents to monitor
 	 * @return
 	 */
-	public AgentDescriptions getAgentsToMonitor() {
+	public MethodDescriptions getAgentsToMonitor() {
 		return agentsToMonitor;
 	}
 	@Deprecated
-	public void setAgentsToMonitor(AgentDescriptions agentsToMonitor) {
+	public void setAgentsToMonitor(MethodDescriptions agentsToMonitor) {
 		this.agentsToMonitor = agentsToMonitor;
 	}
 

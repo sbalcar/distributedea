@@ -7,12 +7,12 @@ import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfiguration;
-import org.distributedea.ontology.configuration.inputconfiguration.InputAgentConfigurations;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 
 /**
- * Ontology represents list of {@link AgentDescription}.
+ * Ontology represents list of {@link MethodDescription}.
  * @author stepan
  *
  */

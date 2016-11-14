@@ -1,4 +1,4 @@
-package org.distributedea.ontology.agentdescription;
+package org.distributedea.ontology.methoddescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,26 +6,26 @@ import java.util.Random;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 
 import jade.content.Concept;
 
 /**
- * Ontology represents list of {@link AgentDescription}.
+ * Ontology represents list of {@link MethodDescription}.
  * @author stepan
  *
  */
-public class AgentDescriptions implements Concept {
+public class MethodDescriptions implements Concept {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<AgentDescription> agentDescriptions;
+	private List<MethodDescription> agentDescriptions;
 	
 	/**
 	 * Constructor
 	 */
-	public AgentDescriptions() {
+	public MethodDescriptions() {
 		this.agentDescriptions = new ArrayList<>();
 	}
 	
@@ -33,7 +33,7 @@ public class AgentDescriptions implements Concept {
 	 * Constructor
 	 * @param agentDescriptions
 	 */
-	public AgentDescriptions(List<AgentDescription> agentDescriptions) {
+	public MethodDescriptions(List<MethodDescription> agentDescriptions) {
 		importDescriptions(agentDescriptions);
 	}
 
@@ -41,47 +41,47 @@ public class AgentDescriptions implements Concept {
 	 * Copy constructor
 	 * @param agentDescription
 	 */
-	public AgentDescriptions(AgentDescriptions agentDescription) {
+	public MethodDescriptions(MethodDescriptions agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException();
 		}
-		AgentDescriptions agentDescriptionClone = agentDescription.deepClone();
+		MethodDescriptions agentDescriptionClone = agentDescription.deepClone();
 		this.agentDescriptions = agentDescriptionClone.getAgentDescriptions();
 	}
 
 	/**
-	 * Returns list of {@link AgentDescription}.
+	 * Returns list of {@link MethodDescription}.
 	 * @return
 	 */
-	public List<AgentDescription> getAgentDescriptions() {
+	public List<MethodDescription> getAgentDescriptions() {
 		return agentDescriptions;
 	}
 	@Deprecated
-	public void setAgentDescriptions(List<AgentDescription> agentDescriptions) {
+	public void setAgentDescriptions(List<MethodDescription> agentDescriptions) {
 		importDescriptions(agentDescriptions);
 	}
 
 	/**
-	 * Adds {@link AgentDescription}
+	 * Adds {@link MethodDescription}
 	 * @param agentDescriptions
 	 */
-	public void addAgentDescriptions(AgentDescription agentDescription) {
+	public void addAgentDescriptions(MethodDescription agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AgentDescription.class.getSimpleName() + " is not valid");
+					MethodDescription.class.getSimpleName() + " is not valid");
 		}
 		
 		agentDescriptions.add(agentDescription);
 	}
 
-	private void importDescriptions(List<AgentDescription> agentDescriptions) {
+	private void importDescriptions(List<MethodDescription> agentDescriptions) {
 		if (agentDescriptions == null) {
 			throw new IllegalArgumentException();
 		}
 		IAgentLogger logger = new TrashLogger();
-		for (AgentDescription agentDescriptionI : agentDescriptions) {
+		for (MethodDescription agentDescriptionI : agentDescriptions) {
 			if (agentDescriptionI == null ||
 					! agentDescriptionI.valid(logger)) {
 				throw new IllegalArgumentException();
@@ -91,10 +91,10 @@ public class AgentDescriptions implements Concept {
 	}
 	
 	/**
-	 * Exports random {@link AgentDescription}
+	 * Exports random {@link MethodDescription}
 	 * @return
 	 */
-	public AgentDescription exportRandomAgentDescription() {
+	public MethodDescription exportRandomAgentDescription() {
 		
 		if (agentDescriptions.isEmpty()) {
 			return null;
@@ -105,34 +105,34 @@ public class AgentDescriptions implements Concept {
 	}
 	
 	/**
-	 * Exports {@link InputAgentDescriptions}
+	 * Exports {@link InputMethodDescriptions}
 	 * @return
 	 */
-	public InputAgentDescriptions exportInputAgentDescriptions() {
+	public InputMethodDescriptions exportInputAgentDescriptions() {
 		
-		List<InputAgentDescription> aDescriptions = new ArrayList<>();
+		List<InputMethodDescription> aDescriptions = new ArrayList<>();
 		
-		for (AgentDescription agentDescriptionI : agentDescriptions) {
-			InputAgentDescription inputAgentDescriptionI =
+		for (MethodDescription agentDescriptionI : agentDescriptions) {
+			InputMethodDescription inputAgentDescriptionI =
 					agentDescriptionI.exportInputAgentDescription();
 			aDescriptions.add(inputAgentDescriptionI);
 		}
 		
-		return new InputAgentDescriptions(aDescriptions);
+		return new InputMethodDescriptions(aDescriptions);
 	}
 	
 	/**
-	 * Tests if this {@link AgentDescriptions} contains given {@link AgentDescription}.
+	 * Tests if this {@link MethodDescriptions} contains given {@link MethodDescription}.
 	 * @param agentDescription
 	 * @return
 	 */
-	public boolean containsAgentDescription(AgentDescription agentDescription) {
+	public boolean containsAgentDescription(MethodDescription agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					agentDescription.getClass().getSimpleName() + " is not valid.");
 		}
-		for (AgentDescription agentDescriptionI : this.agentDescriptions) {
+		for (MethodDescription agentDescriptionI : this.agentDescriptions) {
 			if (agentDescriptionI.equals(agentDescription)) {
 				return true;
 			}
@@ -141,18 +141,18 @@ public class AgentDescriptions implements Concept {
 	}
 
 	/**
-	 * Exports {@link AgentDescription} based of given {@link InputAgentDescription}.
+	 * Exports {@link MethodDescription} based of given {@link InputMethodDescription}.
 	 * @param inputAgentDescription
 	 * @return
 	 */
-	public AgentDescription exportAgentDescription(InputAgentDescription inputAgentDescription) {
+	public MethodDescription exportAgentDescription(InputMethodDescription inputAgentDescription) {
 		if (inputAgentDescription == null ||
 				! inputAgentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					inputAgentDescription.getClass().getSimpleName() + " is not valid.");
 		}
-		for (AgentDescription agentDescriptionI : this.agentDescriptions) {
-			InputAgentDescription inputAgentDescriptionI =
+		for (MethodDescription agentDescriptionI : this.agentDescriptions) {
+			InputMethodDescription inputAgentDescriptionI =
 					agentDescriptionI.exportInputAgentDescription();
 			if (inputAgentDescriptionI.equals(inputAgentDescription)) {
 				return agentDescriptionI;
@@ -161,27 +161,27 @@ public class AgentDescriptions implements Concept {
 		return null;
 	}
 
-	public boolean remove(AgentDescription agentDescription) {
+	public boolean remove(MethodDescription agentDescription) {
 		return this.agentDescriptions.remove(agentDescription);
 	}
 	
-	public void removeAll(AgentDescriptions agentDescriptions) {
+	public void removeAll(MethodDescriptions agentDescriptions) {
 		this.agentDescriptions.removeAll(
 				agentDescriptions.getAgentDescriptions());
 	}
 
-	public void removeAll(InputAgentDescriptions inputAgentDescriptions) {
+	public void removeAll(InputMethodDescriptions inputAgentDescriptions) {
 				
-		for (InputAgentDescription inputAgentDescriptionI :
+		for (InputMethodDescription inputAgentDescriptionI :
 				inputAgentDescriptions.getInputAgentDescriptions()) {
 			
-			AgentDescription agentDescriptionI =
+			MethodDescription agentDescriptionI =
 					exportAgentDescription(inputAgentDescriptionI);
 			remove(agentDescriptionI);
 		}
 	}
 
-	public AgentDescription export(int index) {
+	public MethodDescription export(int index) {
 		return this.agentDescriptions.get(index);
 	}
 	
@@ -197,7 +197,7 @@ public class AgentDescriptions implements Concept {
 		if (agentDescriptions == null) {
 			return false;
 		}
-		for (AgentDescription agentDescriptionI : agentDescriptions) {
+		for (MethodDescription agentDescriptionI : agentDescriptions) {
 			if (agentDescriptionI == null ||
 					! agentDescriptionI.valid(logger)) {
 				return false;
@@ -210,15 +210,15 @@ public class AgentDescriptions implements Concept {
 	 * Returns clone
 	 * @return
 	 */
-	public AgentDescriptions deepClone() {
+	public MethodDescriptions deepClone() {
 		if (! valid(new TrashLogger())) {
 			return null;
 		}
-		List<AgentDescription> descriptionsClone = new ArrayList<>();
-		for (AgentDescription agentDescriptionI : agentDescriptions) {
+		List<MethodDescription> descriptionsClone = new ArrayList<>();
+		for (MethodDescription agentDescriptionI : agentDescriptions) {
 			descriptionsClone.add(
 					agentDescriptionI.deepClone());
 		}
-		return new AgentDescriptions(descriptionsClone);
+		return new MethodDescriptions(descriptionsClone);
 	}
 }

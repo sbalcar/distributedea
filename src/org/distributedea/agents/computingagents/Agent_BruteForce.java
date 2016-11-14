@@ -3,13 +3,14 @@ package org.distributedea.agents.computingagents;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Arguments;
-import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
@@ -57,7 +58,8 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
 		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
@@ -65,8 +67,8 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 		
 		long generationNumberI = -1;
 		
-		IndividualEvaluated individualEvalI =
-				problemTool.generateFirstIndividualEval(problem, getLogger());
+		IndividualEvaluated individualEvalI = problemTool
+				.generateFirstIndividualEval(problem, pedigreeParams, getLogger());
 
 		processIndividualFromInitGeneration(individualEvalI,
 				generationNumberI, problem, jobID);
@@ -76,9 +78,8 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 			// increment next number of generation
 			generationNumberI++;
 			
-			Individual individualI = individualEvalI.getIndividual();
 			individualEvalI = problemTool.generateNextIndividualEval(problem,
-					individualI, getLogger());
+					individualEvalI, pedigreeParams, getLogger());
 			
 			// save, log and distribute new computed Individual
 			processComputedIndividual(individualEvalI,

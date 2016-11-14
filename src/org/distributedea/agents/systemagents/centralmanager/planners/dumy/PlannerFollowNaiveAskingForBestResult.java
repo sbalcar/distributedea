@@ -10,13 +10,13 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.H
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ComputingAgentService;
@@ -90,26 +90,26 @@ public class PlannerFollowNaiveAskingForBestResult implements Planner {
 			return new InputRePlan(iteration);
 		}
 		
-		InputAgentDescriptions agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				jobRun.exportInputAgentDescriptions();
 
-		InputAgentDescriptions methodsWhichHaveNeverRun =  history
+		InputMethodDescriptions methodsWhichHaveNeverRun =  history
 				.getMethodHistories().exportsMethodsWhichHaveNeverRun(agentDescriptions);
 		
-		InputAgentDescription candidateDescrip = methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
+		InputMethodDescription candidateDescrip = methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
 		
 		if (candidateDescrip != null) {
 			
 			//kill the worst and replace by new Method
-			AgentDescription methodToKill =
+			MethodDescription methodToKill =
 					theWorstIndivWrp.exportAgentDescriptionClone();
 			return new InputRePlan(iteration, methodToKill, candidateDescrip);
 		}
 		
 		//kill the worst and duplicate best Method
-		AgentDescription theBestDescription =
+		MethodDescription theBestDescription =
 				theBestIndivWrp.exportAgentDescriptionClone();
-		AgentDescription theWorstDescription =
+		MethodDescription theWorstDescription =
 				theWorstIndivWrp.exportAgentDescriptionClone();
 		return new InputRePlan(iteration, theWorstDescription,
 				theBestDescription.exportInputAgentDescription());

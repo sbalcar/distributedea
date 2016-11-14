@@ -8,6 +8,7 @@ import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.agents.computingagents.computingagent.evolution.EvolutionPopulationModel;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.ISelector;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.Selector;
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
@@ -17,6 +18,7 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemContinousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -129,7 +131,9 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-				
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
+
 		
 		problemTool.initialization(problem, agentConf, getLogger());
 		state = CompAgentState.COMPUTING;
@@ -141,10 +145,11 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		// generates Individuals
 		List<IndividualEvaluated> individuals = new ArrayList<>();
 		while (individuals.size() < popSize) {
-			IndividualEvaluated individualI = problemTool.
-					generateIndividualEval(problem, getCALogger());
-			if (! individuals.contains(individualI)) {
-				individuals.add(individualI);
+			IndividualEvaluated individualEvalI = problemTool.
+					generateIndividualEval(problem, pedigreeParams, getCALogger());
+			
+			if (! individuals.contains(individualEvalI)) {
+				individuals.add(individualEvalI);
 			}
 		}
 		
@@ -163,14 +168,15 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 						
 			// process cross
 			EvolutionPopulationModel populationNewI = populationI.
-					processCross(crossRate, selector,
-					problemTool, problem, getLogger());
+					processCross(crossRate, selector, problemTool, problem,
+					pedigreeParams, getLogger());
 			
 			// add all generation before mutation
 			populationNewI.addIndividuals(populationI.getIndividuals());
 			
 			// process mutation on each individual in population
-			populationNewI.processMutation(mutationRate, problemTool, problem, getLogger());
+			populationNewI.processMutation(mutationRate, problemTool,
+					problem, pedigreeParams, getLogger());
 			
 			// inserts the best individual from last generation to model
 			populationNewI.addIndividual(bestIndividualI);

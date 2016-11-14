@@ -1,4 +1,4 @@
-package org.distributedea.agents.systemagents.centralmanager.planners.historybased;
+package org.distributedea.agents.systemagents.centralmanager.planners;
 
 import java.util.logging.Level;
 
@@ -8,13 +8,14 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.M
 import org.distributedea.agents.systemagents.centralmanager.structures.methodsstatistics.MethodsStatistics;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.agentdescription.AgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescription;
-import org.distributedea.ontology.agentdescription.inputdescription.InputAgentDescriptions;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 
-public class PlannerTheGreatestQuantityOfGoodMaterial extends PlannerTheGreatestQuantityOfImprovement {
+
+public class PlannerTheGreatestQuantityOfMaterial extends PlannerTheGreatestQuantityOfImprovement {
 
 	@Override
 	protected InputRePlan replanning(Iteration iteration, History history)
@@ -32,22 +33,22 @@ public class PlannerTheGreatestQuantityOfGoodMaterial extends PlannerTheGreatest
 		
 		MethodsStatistics currentMethodsResults = history.exportMethodsResults(iteration);
 		MethodStatistic greatestQuantMethodStatistic = currentMethodsResults.
-				exportMethodAchievedTheGreatestQuantityOfGoodMaterial();
+				exportMethodAchievedTheGreatestQuantityOfType();
 		MethodStatistic leastQuantMethodStatistic = currentMethodsResults.
-				exportMethodAchievedTheLeastQuantityOfGoodMaterial();
+				exportMethodAchievedTheLeastQuantityOfType();
 		
-		AgentDescription methodToKill =
+		MethodDescription methodToKill =
 				leastQuantMethodStatistic.exportAgentDescriptionClone();
-		InputAgentDescription methodGreatestQuant =
+		InputMethodDescription methodGreatestQuant =
 				greatestQuantMethodStatistic.exportInputAgentDescriptionClone();
 		
 		
-		InputAgentDescriptions methodsWhichHaveNeverRun =
+		InputMethodDescriptions methodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(jobRun);
 				
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 			
-			InputAgentDescription candidateMethod =
+			InputMethodDescription candidateMethod =
 					methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
 
 			return new InputRePlan(iteration, methodToKill, candidateMethod);
@@ -63,23 +64,24 @@ public class PlannerTheGreatestQuantityOfGoodMaterial extends PlannerTheGreatest
 		MethodsStatistics currentMethodsResults = history.getMethodHistories()
 				.exportMethodsResults(iteration, history.getJobID());
 		MethodStatistic greatestQuantityMethodStatistic = currentMethodsResults.
-				exportMethodAchievedTheGreatestQuantityOfGoodMaterial();
+				exportMethodAchievedTheGreatestQuantityOfType();
 		MethodStatistic leastQuantityMethodStatistic = currentMethodsResults.
-				exportMethodAchievedTheLeastQuantityOfGoodMaterial();
+				exportMethodAchievedTheLeastQuantityOfType();
 		
 		String minPriorityAgentName = leastQuantityMethodStatistic.
 				getAgentDescription().getAgentConfiguration().exportAgentname();
-		int leastGoodMaterialQuantity = leastQuantityMethodStatistic.
-				getMethodStatisticResult().getNumberOfGoodCreatedMaterial();
+		int leastQuantity = leastQuantityMethodStatistic.
+				getMethodStatisticResult().getNumberOfTypeIndividuals();
 		
-		logger.log(Level.INFO, "The least Quantity : " + minPriorityAgentName + " good material quantity: " + leastGoodMaterialQuantity);
+		logger.log(Level.INFO, "The least Quantity: " + minPriorityAgentName + " quantity of material: " + leastQuantity);
 
 		
 		String maxPriorityAgentName = greatestQuantityMethodStatistic.
 				getAgentDescription().getAgentConfiguration().exportAgentname();
-		int greatestGoodMaterailQuantity = greatestQuantityMethodStatistic.
-				getMethodStatisticResult().getNumberOfGoodCreatedMaterial();
+		int greatestQuantity = greatestQuantityMethodStatistic.
+				getMethodStatisticResult().getNumberOfTypeIndividuals();
 		
-		logger.log(Level.INFO, "The greatest Quantity : " + maxPriorityAgentName + " good material quantity: " + greatestGoodMaterailQuantity);
+		logger.log(Level.INFO, "The greatest Quantity : " + maxPriorityAgentName + " quantity of material: " + greatestQuantity);
 	}
+	
 }
