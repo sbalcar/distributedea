@@ -130,7 +130,7 @@ public class BbobTools {
 		writeToFile(fgenericFileI, codeReplaced);
 	}
 	
-	@SuppressWarnings("rawtypes")
+
 	protected Class<?> getJNIClass(String number) throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
 		String fgenericFileI =  JAVA_DIR + File.separator + JAVA_CLASS.getName()
@@ -178,8 +178,10 @@ public class BbobTools {
 	    field.setAccessible(true);
 		final Unsafe unsafe = (Unsafe) field.get(null);
 
-		@SuppressWarnings("deprecation")
-		final Class aClass = unsafe.defineClass(JAVA_CLASS.getName() + number, bytes, 0, bytes.length);
+
+		int todo = 5;
+//		final Class aClass = unsafe.defineClass(JAVA_CLASS.getName() + number, bytes, 0, bytes.length);
+		final Class aClass = unsafe.defineClass(JAVA_CLASS.getName() + number, bytes, 0, bytes.length, null, null);
 	    
 	    
 	    return aClass;

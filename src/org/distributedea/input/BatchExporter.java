@@ -13,6 +13,12 @@ import org.distributedea.input.batches.BatchHomoComparingTSP;
 import org.distributedea.input.batches.BatchTestTSP;
 import org.distributedea.input.batches.IInputBatch;
 
+/**
+ * Generates Input-Batches to directory "batches". For running Batch
+ * user copy Batch from this directory to queue directory. 
+ * @author stepan
+ *
+ */
 public class BatchExporter {
 	
 	public static void main(String [] args) throws Exception {
@@ -35,7 +41,12 @@ public class BatchExporter {
 		batchesList.add(batchHomoCmpTSP);
 		batchesList.add(batchTestTSP);
 		
+		
+		// creates directory if doesn't exist
 		File batchesDir = new File(FileNames.getDirectoryOfBatches());
+		if (! batchesDir.exists()) {
+			batchesDir.mkdir();
+		}
 		
 		
 		Batches batches = new Batches(batchesList);

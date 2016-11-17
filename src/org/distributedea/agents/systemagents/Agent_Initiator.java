@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
@@ -79,13 +80,22 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		// check java version
 		String javaVersion = System.getProperty("java.version");
-		if (! javaVersion.contains("1.7")) {
-			getLogger().log(Level.INFO, "The system requires java 1.7");
-			System.out.println("The system requires java 1.7");
-			hardKill();
+		String JAVA_VERSION = Configuration.JAVA_VERSION;
+		if (! javaVersion.contains(JAVA_VERSION)) {
+			getLogger().log(Level.INFO, "The system requires java " + JAVA_VERSION);
+			System.out.println("The system requires java " + JAVA_VERSION);
 		}
 		
-		executeUlimit();
+		String hostname = null;
+		try {
+			hostname = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			hardKill();
+		}
+		//configuration at Rotunda laboratory
+		if (hostname.startsWith("u-pl")) {
+			executeUlimit();
+		}
 		
 		File agentConfFile = null;
 		if (isOnMainControler) {
@@ -188,37 +198,6 @@ public class Agent_Initiator extends Agent_DistributedEA {
 
 		//waiting to kill
 		while(true) {}
-	}
-
-	/**
-	 *  Get from hostname Container ID
-	 *  
-	 * @return Number as possible suffix for container
-	 */
-	public double cutFromHosntameContainerID() {
-
-		String containerNumber = "";
-
-		String hosname;
-		try {
-			hosname = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			getLogger().logThrowable("df", e);
-			return -1;
-		}
-
-		for (int charIndex = 0; charIndex < hosname.length(); charIndex++) {
-			char charI = hosname.charAt(charIndex);
-			if ('0' <= charI && charI <= '9') {
-				containerNumber += charI;
-			}
-		}
-
-		try {
-			return Integer.parseInt(containerNumber);
-		} catch (NumberFormatException e) {
-			return Double.NaN;
-		}
 	}
 
 }

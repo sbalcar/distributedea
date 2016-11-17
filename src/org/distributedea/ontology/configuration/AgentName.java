@@ -56,6 +56,10 @@ public class AgentName implements Concept {
 		return agentName;
 	}
 	public void setAgentName(String agentName) {
+		if (agentName == null) {
+			throw new IllegalArgumentException("Argument " + String.class.getSimpleName() +
+					" is not valid");
+		}
 		this.agentName = agentName;
 	}
 	
@@ -63,6 +67,10 @@ public class AgentName implements Concept {
 		return containerID;
 	}
 	public void setContainerID(String containerID) {
+		if (containerID == null) {
+			throw new IllegalArgumentException("Argument " + String.class.getSimpleName() +
+					" is not valid");
+		}
 		this.containerID = containerID;
 	}
 

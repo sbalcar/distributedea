@@ -18,6 +18,7 @@ import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import jade.wrapper.StaleProxyException;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -332,7 +333,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			InputAgentConfiguration configuration, IAgentLogger logger) {
 	
 		// starts another agents
-		String containerID = getNumberOfContainer();
+		String containerID;
+		try {
+			containerID = getIDOfContainer();
+		} catch (UnknownHostException e) {
+			return null;
+		}
 
 		AgentName agentName = new AgentName(configuration.getAgentName());
 		agentName.setContainerID(containerID);

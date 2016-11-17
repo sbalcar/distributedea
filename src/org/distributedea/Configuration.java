@@ -10,23 +10,25 @@ import org.distributedea.agents.systemagents.Agent_Monitor;
 
 public class Configuration {
 
+	public static final String JAVA_VERSION = "1.8";
+	
 	/**
 	 * Char which is used as comment
 	 */
-	public static String COMMENT_CHAR = "#";
+	public static final String COMMENT_CHAR = "#";
 
 	/**
 	 * Agent CentralManager configuration
 	 */
 	/** Period of Scheduler replanning */
-	public static long REPLAN_PERIOD_MS = 70000;
+	public static final long REPLAN_PERIOD_MS = 70000;
 	
 	
 	/**
 	 * Agent ComputingAgent configuration
 	 */
 	/** Period of sending Individual from Computing Agent to another Computing Agents */
-	public static long INDIVIDUAL_BROADCAST_PERIOD_MS = 1000;
+	public static final long INDIVIDUAL_BROADCAST_PERIOD_MS = 1000;
 	
 	
 	/**
@@ -34,9 +36,9 @@ public class Configuration {
 	 *  AID = <AgentName> + <Delimiter> + <AgentID> + <Delimiter> + <ContainerID>
 	 */
 	/** Agent name delimiter followed by agent ID */
-	public static char AGENT_NUMBER_PREFIX = '-';
+	public static final char AGENT_NUMBER_PREFIX = '-';
 	/** Agent name delimiter followed by container ID */
-	public static char CONTAINER_NUMBER_PREFIX = '_';
+	public static final char CONTAINER_NUMBER_PREFIX = '_';
 
 	
 	/**

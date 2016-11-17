@@ -79,18 +79,13 @@ public abstract class Agent_DistributedEA extends Agent {
 	 * Get the number of container where lives this agent
 	 * 
 	 * @return
+	 * @throws UnknownHostException 
 	 */
-	public static final String getNumberOfContainer() {
+	public static final String getIDOfContainer() throws UnknownHostException {
 
 		String containerNumber = "";
 
-		String hosname;
-		try {
-			hosname = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			//getLogger().logThrowable("df", e);
-			return null;
-		}
+		String hosname = InetAddress.getLocalHost().getHostName();
 
 		for (int charIndex = 0; charIndex < hosname.length(); charIndex++) {
 			char charI = hosname.charAt(charIndex);
@@ -103,7 +98,7 @@ public abstract class Agent_DistributedEA extends Agent {
 			int numb = Integer.parseInt(containerNumber);
 			return "" + numb;
 		} catch (NumberFormatException e) {
-			return null;
+			return "";
 		}
 	}
 	
