@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
-import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerType;
+import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.PlannerInfrastructure;
+import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.IPlannerEndCondition;
+import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobID;
@@ -24,8 +25,8 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 	private static final long serialVersionUID = 1L;
 	
 	private JobRun jobRun;
-	private Planner planner;
-	private PlannerType plannerType;
+	private IPlanner planner;
+	private IPlannerEndCondition plannerEndCondition;
 	
 	private IAgentLogger logger;
 	private Agent_CentralManager centralManager;
@@ -34,11 +35,12 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 	 * Constructor
 	 * @param jobRun
 	 * @param planner
-	 * @param plannerType
+	 * @param plannerEndCondition
 	 * @param logger
 	 */
-	public ComputeJobRunBehaviour(JobRun jobRun, Planner planner,
-			PlannerType plannerType, IAgentLogger logger) {
+	public ComputeJobRunBehaviour(JobRun jobRun,
+			IPlannerEndCondition plannerEndCondition, IPlanner planner,
+			IAgentLogger logger) {
 
 		if (logger == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -50,16 +52,16 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		}
 		if (planner == null) {
 			throw new IllegalArgumentException("Argument " +
-					Planner.class.getSimpleName() + " is not valid");
+					IPlanner.class.getSimpleName() + " is not valid");
 		}
-		if (plannerType == null) {
+		if (plannerEndCondition == null) {
 			throw new IllegalArgumentException("Argument " + 
-					PlannerType.class.getSimpleName() + " is not valid");
+					PlannerInfrastructure.class.getSimpleName() + " is not valid");
 		}
 		
 		this.jobRun = jobRun;
 		this.planner = planner;
-		this.plannerType = plannerType;
+		this.plannerEndCondition = plannerEndCondition;
 		
 		this.logger = logger;
 	}
@@ -91,8 +93,9 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 			}
 		}
 		
+		PlannerInfrastructure plannerInfr = new PlannerInfrastructure();
 		try {		
-			plannerType.initialization(centralManager, jobID, logger);
+			plannerInfr.initialization(centralManager, plannerEndCondition, jobID, logger);
 		} catch (Exception e) {
 			logger.logThrowable("Error by initialization " + jobID.toString(), e);
 			centralManager.exit();
@@ -100,7 +103,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		}
 		
 		try {
-			plannerType.run(planner, jobRun);
+			plannerInfr.run(planner, jobRun);
 		} catch (Exception e) {
 			logger.logThrowable("Error by running " + jobID.toString(), e);
 			e.printStackTrace();

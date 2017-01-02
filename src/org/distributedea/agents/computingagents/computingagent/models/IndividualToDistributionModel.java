@@ -6,7 +6,7 @@ import org.distributedea.agents.FitnessTool;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
  * Structure serves as model for {@link Individual}s to send
@@ -21,7 +21,7 @@ public class IndividualToDistributionModel {
 			new IndividualsEvaluated();
 	
 	public synchronized void addIndividual(
-			List<IndividualEvaluated> individuals, Problem problem) {
+			List<IndividualEvaluated> individuals, IProblemDefinition problemDef) {
 		
 		if (individuals == null || individuals.isEmpty()) {
 			return;
@@ -29,11 +29,11 @@ public class IndividualToDistributionModel {
 		
 		individualsSorted.add(individuals);
 		individualsSorted =  individualsSorted.exportNBestSorted(
-				MAX_NUMBER_OF_INDIVIDUAL, problem);
+				MAX_NUMBER_OF_INDIVIDUAL, problemDef);
 	}
 	
 	public synchronized void addIndividual(IndividualEvaluated individualEval,
-			Problem problem) {
+			IProblemDefinition problemDef) {
 		
 		if (individualEval == null) {
 			return;
@@ -42,7 +42,7 @@ public class IndividualToDistributionModel {
 		if (individualsSorted.exportNumberOfIndividuals() +1 <=
 				MAX_NUMBER_OF_INDIVIDUAL) {
 			individualsSorted.add(individualEval);
-			individualsSorted.sortFromTheBestToTheWorst(problem);
+			individualsSorted.sortFromTheBestToTheWorst(problemDef);
 			return;
 		}
 		
@@ -51,14 +51,14 @@ public class IndividualToDistributionModel {
 						individualsSorted.exportNumberOfIndividuals() -1);
 		boolean isNewBetterThanTheWorst = FitnessTool.
 				isFirstIndividualEBetterThanSecond(
-				theWorstIndividualEval, individualEval, problem);
+				theWorstIndividualEval, individualEval, problemDef);
 		if (! isNewBetterThanTheWorst) {
 			return;
 		}
 		
 		individualsSorted.add(individualEval);
 		individualsSorted =  individualsSorted.exportNBestSorted(
-				MAX_NUMBER_OF_INDIVIDUAL, problem);
+				MAX_NUMBER_OF_INDIVIDUAL, problemDef);
 		
 	}
 	

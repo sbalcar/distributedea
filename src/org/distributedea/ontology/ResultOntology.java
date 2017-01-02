@@ -2,6 +2,7 @@ package org.distributedea.ontology;
 
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.computing.AccessesResult;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.SaveBestIndividual;
@@ -9,11 +10,16 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.ontology.pedigree.PedigreeCounter;
+import org.distributedea.ontology.pedigree.Pedigree;
+import org.distributedea.ontology.pedigree.tree.PedVertex;
+import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
@@ -27,11 +33,6 @@ public class ResultOntology extends BeanOntology {
 	
 	private ResultOntology() {
         super("ResultOntology");
-
-        String individualPackage = Individual.class.getPackage().getName();
-        String pedigreePackage = PedigreeCounter.class.getPackage().getName();
-        String helpmatePackage = ReportHelpmate.class.getPackage().getName();
-        String agentDescriptionPackage = MethodDescription.class.getPackage().getName();
         
         try {
         	add(SaveBestIndividual.class);
@@ -48,14 +49,24 @@ public class ResultOntology extends BeanOntology {
         	
         	add(MethodInstanceDescription.class);
         	
-        	add(helpmatePackage);
+        	add(ReportHelpmate.class.getPackage().getName());
         	
             add(IndividualWrapper.class);
-            add(individualPackage);
-            add(pedigreePackage);
-            add(JobID.class);
+            add(Individual.class.getPackage().getName());
             
-            add(agentDescriptionPackage);
+            add(Pedigree.class.getPackage().getName());
+            add(PedVertexFull.class.getPackage().getName());
+            add(PedVertex.class.getPackage().getName());
+            
+            add(JobID.class);
+
+            add(MethodDescriptionNumbers.class);
+            add(MethodDescriptionNumber.class);
+            add(MethodDescription.class);
+            
+            add(MethodDescription.class.getPackage().getName());
+            add(IProblemDefinition.class.getPackage().getName());
+            add(AgentConfiguration.class.getPackage().getName());
         	
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);

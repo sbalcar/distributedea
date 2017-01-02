@@ -11,7 +11,7 @@ import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAg
 import org.distributedea.javaextension.Pair;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 
 /**
  * Data structure of helpmates statistics of all running instances
@@ -140,13 +140,13 @@ public class ModelOfHelpmates {
 		
 		// count priority in global
 		for (StatisticOfHelpmates helpmateListI: getHelpers()) {
-			List<MethodDescriptionCounter> wrappers = helpmateListI.getHelpersDescriptions();
+			List<MethodDescriptionNumber> wrappers = helpmateListI.getHelpersDescriptions();
 
 			// going through all results regarding their helpers
-			for (MethodDescriptionCounter wrapperI : wrappers) {
+			for (MethodDescriptionNumber wrapperI : wrappers) {
 				
 				MethodDescription descriptionI = wrapperI.getDescription();
-				int priorityI = wrapperI.getCounter();
+				int priorityI = wrapperI.getNumber();
 				
 				if (helpmateMapI.containsKey(descriptionI)) {
 					int freqeuency = helpmateMapI.get(descriptionI);

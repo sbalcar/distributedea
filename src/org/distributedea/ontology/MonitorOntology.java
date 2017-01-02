@@ -11,10 +11,14 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
-import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
-import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounters;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
+import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
-import org.distributedea.ontology.pedigree.PedigreeCounter;
+import org.distributedea.ontology.pedigree.Pedigree;
+import org.distributedea.ontology.pedigree.tree.PedVertex;
+import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 
 public class MonitorOntology extends BeanOntology {
@@ -25,21 +29,25 @@ public class MonitorOntology extends BeanOntology {
         super("MonitorOntology");
 
         try {
+        	add(StartMonitoring.class);
             add(JobID.class);
+            add(IProblemDefinition.class.getPackage().getName());
+            add(MethodDescriptions.class);
             
             add(IndividualWrapper.class);
             add(IndividualEvaluated.class);
             add(Individual.class.getPackage().getName());
             
-            add(PedigreeCounter.class.getPackage().getName());
-            add(MethodDescriptionCounters.class);
-            add(MethodDescriptionCounter.class);
+            add(Pedigree.class.getPackage().getName());
+            add(PedVertexFull.class.getPackage().getName());
+            add(PedVertex.class.getPackage().getName());
+            
+            add(MethodDescriptionNumbers.class);
+            add(MethodDescriptionNumber.class);
             add(MethodDescription.class);
-            		
-            add(AgentConfiguration.class.getPackage().getName());
 
             add(Statistic.class.getPackage().getName());
-            add(MethodDescriptions.class);
+            add(AgentConfiguration.class.getPackage().getName());
         	
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);

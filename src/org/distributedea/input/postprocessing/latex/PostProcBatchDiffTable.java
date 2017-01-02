@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
-import org.distributedea.input.batches.BatchHomoComparingTSP;
+import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessing;
 
 public class PostProcBatchDiffTable extends PostProcessing {
@@ -13,13 +13,13 @@ public class PostProcBatchDiffTable extends PostProcessing {
 	public void run(Batch batch) {
 		
 		String NL = "\n";
-		List<Job> jobWrps = batch.getJobs();
+		List<Job> jobs = batch.getJobs();
 		
 		String table =
 		"\\begin{center}" + NL;
 		
 		String tableSchema = "|";
-		for (int i = 0; i < jobWrps.size(); i++) {
+		for (int i = 0; i < jobs.size(); i++) {
 			tableSchema += "c|";
 		}
 		
@@ -30,14 +30,14 @@ public class PostProcBatchDiffTable extends PostProcessing {
 		String jobIDStr = "";
 		String distributionStr = "";
 		String schedulerStr = "";
-		for (int i = 0; i < jobWrps.size(); i++) {
-			Job jobWrpI = jobWrps.get(i);
+		for (int i = 0; i < jobs.size(); i++) {
+			Job jobWrpI = jobs.get(i);
 			
 			jobIDStr += " " + jobWrpI.getJobID() + " ";
 			distributionStr += " " + jobWrpI.isIndividualDistribution() + " ";
 			schedulerStr += " " + jobWrpI.getPlanner().getClass().getSimpleName() + " ";
 			
-			if (i < jobWrps.size() -1) {
+			if (i < jobs.size() -1) {
 				jobIDStr += "&";
 				distributionStr += "&";
 				schedulerStr += "&";
@@ -57,7 +57,7 @@ public class PostProcBatchDiffTable extends PostProcessing {
 
 	public static void main(String [] args) {
 
-		BatchHomoComparingTSP batchHomo = new BatchHomoComparingTSP();
+		BatchHomoMethodsTSP1083 batchHomo = new BatchHomoMethodsTSP1083();
 		Batch batch = batchHomo.batch();
 		
 		PostProcBatchDiffTable ps = new PostProcBatchDiffTable();

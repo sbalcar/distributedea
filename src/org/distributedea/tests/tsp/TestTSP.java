@@ -7,6 +7,7 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.ProblemTSPGPSDef;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
@@ -20,7 +21,7 @@ public class TestTSP {
 		IProblemTool problemToolGPS = new ProblemToolGPSEuc2DSimpleSwap();
 		
 		boolean fitnessGPSNaNResult = false;
-		double fitnessGPSNaN = problemToolGPS.fitness(null, null, null);
+		double fitnessGPSNaN = problemToolGPS.fitness(null, null, null, null);
 		if (Double.isNaN(fitnessGPSNaN)) {
 			fitnessGPSNaNResult = true;
 		}
@@ -41,7 +42,7 @@ public class TestTSP {
 		IProblemTool problemToolPoint = new ProblemToolPointSimpleSwap();
 		
 		boolean fitnessPointNaNResult = false;
-		double fitnessPointNaN = problemToolGPS.fitness(null, null, null);
+		double fitnessPointNaN = problemToolGPS.fitness(null, null, null, null);
 		if (Double.isNaN(fitnessPointNaN)) {
 			fitnessPointNaNResult = true;
 		}
@@ -114,13 +115,14 @@ public class TestTSP {
 		ProblemWrapper problemWrapper = new ProblemWrapper();
 		problemWrapper.importProblemToolClass(problemTool.getClass());
 
+		ProblemTSPGPSDef def = new ProblemTSPGPSDef();
 		
 		File fileOfSolution = new File(inputFileName + ".tour");
 		
 		Individual individual = (IndividualPermutation)
 				problemTool.readSolution(fileOfSolution, null, logger);
 		
-		double value = problemTool.fitness(individual, problem, logger);
+		double value = problemTool.fitness(individual, def, problem, logger);
 		System.out.println("Expected Fitness: " + expectedFitness);
 		System.out.println("Fitness: " + value);
 		

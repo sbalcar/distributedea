@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.distributedea.Configuration;
+import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.models.BestIndividualModel;
 import org.distributedea.agents.computingagents.computingagent.models.HelpersModel;
@@ -50,8 +50,9 @@ import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problems.IProblemTool;
@@ -342,10 +343,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return;
 		}
 		
+		IProblemDefinition problemDef = computingThread.getProblemDefinition();
 		Problem problem = computingThread.getProblem();
 		IProblemTool problemTool = computingThread.getProblemTool();
 		
-		receivedIndividuals.addIndividual(individualWrapper, problem, problemTool, getLogger());
+		receivedIndividuals.addIndividual(individualWrapper, problemDef, problem, problemTool, getLogger());
 	}
 	
 	
@@ -425,14 +427,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return reply;
 		}
 		
-		if (this.state != CompAgentState.INITIALIZED) {
+		try {
+			startComputation(problemWrapper);
+		} catch (Exception e) {
 			ACLMessage reply = request.createReply();
 			reply.setPerformative(ACLMessage.REFUSE);
 			reply.setContent("Agent not intialized");
-			return reply;
-		}
-		
-		startComputation(problemWrapper);
+			return reply;		}
 			
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
@@ -498,7 +499,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 		MethodDescription description = getAgentDescription();
 		
-		List<MethodDescriptionCounter> helpmateList =
+		List<MethodDescriptionNumber> helpmateList =
 				getHelpmateList(newStatisticsForEachQuery);
 		StatisticOfHelpmates statisticOfHelpmates =
 				new StatisticOfHelpmates(description, helpmateList);
@@ -518,12 +519,16 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 
-	private void startComputation(final ProblemWrapper problemWrapper) {
+	private void startComputation(final ProblemWrapper problemWrapper) throws Exception {
+		
+		if (this.state != CompAgentState.INITIALIZED) {
+			throw new Exception("Agent is not initialized");
+		}
 		
 		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
 		
 		// adding cyclic behavior for sending Individual to distribution
-		this.addBehaviour(new TickerBehaviour(this, Configuration.INDIVIDUAL_BROADCAST_PERIOD_MS) {
+		this.addBehaviour(new TickerBehaviour(this, InputConfiguration.getConf().INDIVIDUAL_BROADCAST_PERIOD_MS) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -537,11 +542,16 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 				 
 				 MethodDescription description = getAgentDescription();
 
-				 IndividualWrapper individualWrapper =
-						new IndividualWrapper(problemWrapper.getJobID(), description, individualEval);
+				 IndividualWrapper individualWrapper = new IndividualWrapper(
+						 problemWrapper.getJobID(), description, individualEval);
 				
-				 ComputingAgentService.sendIndividualToNeighbours(Agent_ComputingAgent.this,
-						individualWrapper, getLogger());
+				 if (problemWrapper.isIndividualDistribution()) {
+					 ComputingAgentService.sendIndividualToNeighboursAndToMonitor(
+							 Agent_ComputingAgent.this, individualWrapper, getLogger());
+				 } else {
+					 ComputingAgentService.sendIndividualToMonitor(
+							 Agent_ComputingAgent.this, individualWrapper, getLogger());
+				 }
 			}
 		} );
 
@@ -551,13 +561,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	}
 	
-	private List<MethodDescriptionCounter> getHelpmateList(boolean newStatisticsForEachQuery) {
+	private List<MethodDescriptionNumber> getHelpmateList(boolean newStatisticsForEachQuery) {
 		
-		List<MethodDescriptionCounter> helpmateList = this.helpers.getPrioritiesOfHelpers();
+		List<MethodDescriptionNumber> helpmateList = this.helpers.getPrioritiesOfHelpers();
 		if (newStatisticsForEachQuery) {
 			this.helpers.clean();
 		}
-		
 		return helpmateList;
 	}
 	
@@ -571,47 +580,51 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 
 	protected void distributeIndividualToNeighours(IndividualsEvaluated individualsEval,
-			Problem problem, JobID jobID) {
+			IProblemDefinition problemDef, JobID jobID) {
 		
 		individualsToDistribution.addIndividual(
-				individualsEval.getIndividualsEvaluated(), problem);
+				individualsEval.getIndividualsEvaluated(), problemDef);
 	}
 	
 	protected void distributeIndividualToNeighours(List<IndividualEvaluated> individualsEval,
-			Problem problem, JobID jobID) {
+			IProblemDefinition problemDef, JobID jobID) {
 		
-		individualsToDistribution.addIndividual(individualsEval, problem);
+		individualsToDistribution.addIndividual(individualsEval, problemDef);
 	}
 
 	protected void distributeIndividualToNeighours(IndividualEvaluated individualEval,
-			Problem problem, JobID jobID) {
+			IProblemDefinition problemDef, JobID jobID) {
 		
-		individualsToDistribution.addIndividual(individualEval, problem);
+		individualsToDistribution.addIndividual(individualEval, problemDef);
 	}
 	
 	private MethodDescription getAgentDescription() {
 
+		IProblemDefinition problemDef = null;
 		Class<?> problemToolClass = null;
 		
 		if (computingThread != null) {
-			IProblemTool problemTool = computingThread.getProblemTool();
 			
+			problemDef = computingThread.getProblemDefinition();
+			
+			IProblemTool problemTool = computingThread.getProblemTool();
 			if (problemTool != null) {
 				problemToolClass = problemTool.getClass();
 			}
 		}
 		
 		try {
-			return new MethodDescription(agentConf, problemToolClass);
+			return new MethodDescription(agentConf, problemDef, problemToolClass);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
 	protected void processIndividualFromInitGeneration(IndividualEvaluated individualEval,
-			long generationNumber, Problem problem, JobID jobID) {
+			long generationNumber, IProblemDefinition problemDef, JobID jobID) {
 		
 		if (individualEval == null || ! individualEval.valid(getLogger())) {
+			individualEval.valid(getLogger());
 			throw new IllegalArgumentException();
 		}
 		if (generationNumber != -1) {
@@ -628,12 +641,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
 		MethodDescription description =
-				new MethodDescription(agentConf, problemTool.getClass());
+				new MethodDescription(agentConf, problemDef, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
 
-		this.bestIndividualModel.update(computedIndividualWrp, problem,
+		this.bestIndividualModel.update(computedIndividualWrp, problemDef,
 				generationNumber, getCALogger());
 		
 		// log individual as best result
@@ -641,7 +654,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	protected void processComputedIndividual(IndividualEvaluated individualEval ,
-			long generationNumber, Problem problem, JobID jobID) {
+			long generationNumber, IProblemDefinition problem, JobID jobID) {
 
 		if (generationNumber == -1) {
 			throw new IllegalStateException();
@@ -650,7 +663,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
 		MethodDescription description =
-				new MethodDescription(agentConf, problemTool.getClass());
+				new MethodDescription(agentConf, problem, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
@@ -667,7 +680,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 		// log individual as best solution
 		getCALogger().logBestSolution(individualEval, jobID);
-		
 	}
 		
 	/**
@@ -678,10 +690,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param problem
 	 */
 	protected void processRecievedIndividual(IndividualWrapper individualWrp,
-			long generationNumber, Problem problem) {
+			long generationNumber, IProblemDefinition problem) {
 		
 		if (individualWrp == null || ! individualWrp.valid(getLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					IndividualWrapper.class.getSimpleName() + " is not valid");
 		}
 		if (problem == null || ! problem.valid(getLogger())) {
 			throw new IllegalArgumentException();

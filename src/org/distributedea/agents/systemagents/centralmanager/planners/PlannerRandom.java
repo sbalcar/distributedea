@@ -19,13 +19,13 @@ import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerRandom implements Planner {
+public class PlannerRandom implements IPlanner {
 	
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
 	private IAgentLogger logger;
 	
-	private Planner plannerInit = null;
+	private IPlanner plannerInit = null;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,

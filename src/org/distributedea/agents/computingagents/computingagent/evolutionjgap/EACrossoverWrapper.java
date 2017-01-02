@@ -7,8 +7,8 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemToolException;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.GeneticOperator;
@@ -27,15 +27,18 @@ public class EACrossoverWrapper implements GeneticOperator {
 	private static final long serialVersionUID = 1L;
 
 	private double crossRate;
+	private IProblemDefinition problemDef;
 	private Problem problem;
 	private IProblemTool problemTool;
 	private Configuration conf;
 	private AgentLogger logger;
 	
-	public EACrossoverWrapper(double crossRate, Problem problem,
-			IProblemTool problemTool, Configuration conf, AgentLogger logger) {
+	public EACrossoverWrapper(double crossRate, IProblemDefinition problemDef,
+			Problem problem, IProblemTool problemTool, Configuration conf,
+			AgentLogger logger) {
 		
 		this.crossRate = crossRate;
+		this.problemDef = problemDef;
 		this.problem = problem;
 		this.problemTool = problemTool;
 		this.conf = conf;
@@ -130,17 +133,17 @@ public class EACrossoverWrapper implements GeneticOperator {
 			return null;
 		}
 		
-		double fitness1 = problemTool.fitness(individualPerm1, problem, logger);
-		double fitness2 = problemTool.fitness(individualPerm2, problem, logger);
+		double fitness1 = problemTool.fitness(individualPerm1, problemDef, problem, logger);
+		double fitness2 = problemTool.fitness(individualPerm2, problemDef, problem, logger);
 		
 		IndividualEvaluated[] newIndividuals = null;
 		try {
 			newIndividuals = problemTool.createNewIndividual(
 						new IndividualEvaluated(individualPerm1, fitness1, null),
 						new IndividualEvaluated(individualPerm2, fitness2, null),
-						problem, null, logger);
+						problemDef, problem, null, logger);
 			
-		} catch (ProblemToolException e1) {
+		} catch (Exception e1) {
 			logger.logThrowable("", e1);
 			return null;
 		}

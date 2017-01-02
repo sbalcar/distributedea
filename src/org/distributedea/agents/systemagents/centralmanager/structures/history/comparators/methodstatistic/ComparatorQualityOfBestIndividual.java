@@ -5,13 +5,14 @@ import java.util.Comparator;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.monitor.MethodStatistic;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 public class ComparatorQualityOfBestIndividual implements Comparator<MethodStatistic> {
 
-	private Class<?> problemClass;
+	private IProblemDefinition problemDef;
 	
-	public ComparatorQualityOfBestIndividual(Class<?> problemClass) {
-		this.problemClass = problemClass;
+	public ComparatorQualityOfBestIndividual(IProblemDefinition problemDef) {
+		this.problemDef = problemDef;
 	}
 	
 	@Override
@@ -26,7 +27,7 @@ public class ComparatorQualityOfBestIndividual implements Comparator<MethodStati
 		
 		boolean isFirstBetter = FitnessTool
 				.isFistIndividualEBetterThanSecond(individual1,
-						individual2, problemClass);
+						individual2, problemDef);
 		boolean isFirstWorst = !isFirstBetter;
 		
 		if (isFirstWorst) {

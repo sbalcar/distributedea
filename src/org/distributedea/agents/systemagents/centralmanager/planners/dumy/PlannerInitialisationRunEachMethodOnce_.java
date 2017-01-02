@@ -9,7 +9,7 @@ import jade.core.AID;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
@@ -26,7 +26,7 @@ import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
-public class PlannerInitialisationRunEachMethodOnce_ implements Planner {
+public class PlannerInitialisationRunEachMethodOnce_ implements IPlanner {
 
 	int NODE_INDEX = 0;
 	
@@ -50,7 +50,13 @@ public class PlannerInitialisationRunEachMethodOnce_ implements Planner {
 		}
 		
 		// chooses ProblemTool by index
-		Class<?> problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
+		Class<?> problemToolI;
+		try {
+			problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
+		} catch (IndexOutOfBoundsException e) {
+			throw new IllegalStateException("ProblemTool not available");
+		}
+		
 		
 		List<MethodDescription> createdDescriptions = new ArrayList<>();
 		
@@ -61,8 +67,8 @@ public class PlannerInitialisationRunEachMethodOnce_ implements Planner {
 			AgentConfiguration createdAgentI = ManagerAgentService.sendCreateAgent(
 					centralManager, managerAidI, agentConfigurationI, logger);
 			
-			MethodDescription descriptionI =
-					new MethodDescription(createdAgentI, problemToolI);
+			MethodDescription descriptionI = new MethodDescription(
+					createdAgentI, job.getProblemDefinition(), problemToolI);
 						
 			createdDescriptions.add(descriptionI);
 		}

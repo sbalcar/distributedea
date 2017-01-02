@@ -17,19 +17,6 @@ public class Configuration {
 	 */
 	public static final String COMMENT_CHAR = "#";
 
-	/**
-	 * Agent CentralManager configuration
-	 */
-	/** Period of Scheduler replanning */
-	public static final long REPLAN_PERIOD_MS = 70000;
-	
-	
-	/**
-	 * Agent ComputingAgent configuration
-	 */
-	/** Period of sending Individual from Computing Agent to another Computing Agents */
-	public static final long INDIVIDUAL_BROADCAST_PERIOD_MS = 1000;
-	
 	
 	/**
 	 * Agent ManagerAgent configuration
@@ -40,6 +27,8 @@ public class Configuration {
 	/** Agent name delimiter followed by container ID */
 	public static final char CONTAINER_NUMBER_PREFIX = '_';
 
+	
+	public static int COUNT_OF_METHODS_ON_CORE = 2;
 	
 	/**
 	 * Provides Classes of unique agents which doesn't contain suffix

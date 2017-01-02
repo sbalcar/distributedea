@@ -10,6 +10,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
@@ -18,9 +19,11 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinousOpt;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
@@ -34,6 +37,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
 
+	private String POP_SIZE = "popSize";
 	private int popSize = 50;
 	
 	@Override
@@ -58,7 +62,11 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem == ProblemContinousOpt.class) {
+		} else if (problem == ProblemBinPacking.class) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
+		} else if (problem == ProblemContinuousOpt.class) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
@@ -80,6 +88,10 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	}
 	
 	protected void processArguments(Arguments arguments) throws Exception {
+		
+		// set population size
+		Argument popSizeArg = arguments.exportArgument(POP_SIZE);
+		this.popSize = popSizeArg.exportValueAsInteger();
 	}
 	
 	@Override
@@ -93,10 +105,12 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
+		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
-		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(
+				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
@@ -110,18 +124,18 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		Vector<IndividualEvaluated> population = new Vector<>();
 		for (int i = 0; i < popSize; i++) {
 			IndividualEvaluated individualI = problemTool.
-					generateIndividualEval(problem, pedigreeParams, getCALogger());
+					generateIndividualEval(problemDefinition, problem, pedigreeParams, getCALogger());
 			population.add(individualI);
 		}
 		
 		DifferentialModel model = new DifferentialModel(population);
 		
 		final IndividualEvaluated individualEvalI =
-				model.getBestIndividual(problem, problemTool, getLogger());
+				model.getBestIndividual(problemDefinition, problemTool, getLogger());
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualEvalI,
-				generationNumberI, problem, jobID);
+				generationNumberI, problemDefinition, jobID);
 		
 		
 		while (state == CompAgentState.COMPUTING) {
@@ -140,13 +154,13 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			IndividualEvaluated individual3 = quaternion.individual3;
 			
 									
-			IndividualEvaluated[] individualsNew =
-					problemTool.createNewIndividualEval(individual1,
-							individual2, individual3, problem, pedigreeParams, getCALogger());
+			IndividualEvaluated[] individualsNew = problemTool.
+					createNewIndividualEval(individual1, individual2,
+					individual3, problemDefinition, problem, pedigreeParams, getCALogger());
 			IndividualEvaluated individualEvalNew = individualsNew[0];
 
 			if (FitnessTool.isFirstIndividualEBetterThanSecond(
-							individualEvalNew, individualEvalCandidateI, problem)) {
+							individualEvalNew, individualEvalCandidateI, problemDefinition)) {
 				// switching Individuals
 				model.replaceIndividual(individualEvalCandidateI, individualEvalNew);
 			}
@@ -154,27 +168,27 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalNew, generationNumberI,
-					problem, jobID);
+					problemDefinition, jobID);
 			
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
-				distributeIndividualToNeighours(individualEvalNew, problem, jobID);
+				distributeIndividualToNeighours(individualEvalNew, problemDefinition, jobID);
 			}
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problemDefinition);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalCandidateI, problem) &&
+							recievedIndividualW, individualEvalCandidateI, problemDefinition) &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalNew, problem)) {
+							recievedIndividualW, individualEvalNew, problemDefinition)) {
 				
 				model.replaceIndividual(individualEvalCandidateI,
 						recievedIndividualW.getIndividualEvaluated());
 				
 				// save and log received Individual
-				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
+				processRecievedIndividual(recievedIndividualW, generationNumberI, problemDefinition);
 			}
 		}
 		
@@ -236,7 +250,7 @@ class DifferentialModel {
 		population.add(indivToAdd);
 	}
 			
-	public IndividualEvaluated getBestIndividual(Problem problem,
+	public IndividualEvaluated getBestIndividual(IProblemDefinition problemDef,
 			IProblemTool problemTool, IAgentLogger logger) {
 		
 		if (population.isEmpty()) {
@@ -249,7 +263,7 @@ class DifferentialModel {
 			
 			boolean isIndividualBetter =
 					FitnessTool.isFirstIndividualEBetterThanSecond(
-							individualI, bestIndividual, problem);
+							individualI, bestIndividual, problemDef);
 			if (isIndividualBetter) {
 				bestIndividual = individualI;
 			}

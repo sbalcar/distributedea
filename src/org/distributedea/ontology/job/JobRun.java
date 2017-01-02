@@ -15,8 +15,12 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
+import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problemdefinition.AProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.problems.IProblemTool;
 
 /**
  * Ontology represents one run of {@link Job}
@@ -48,11 +52,22 @@ public class JobRun implements Concept {
 	private ProblemTools problemTools;
 	
 	/**
+	 * Inform about type of Problem to solve
+	 */
+	private IProblemDefinition problemToSolveDefinition;
+	
+	/**
 	 * Problem to solve
 	 */
 	private Problem problem;
 
+	/**
+	 * Specify about type of {@link Pedigree}
+	 */
+	private String pedigreeOfIndividualClassName;
 
+	
+	
 	/**
 	 * Constructor
 	 */
@@ -145,6 +160,24 @@ public class JobRun implements Concept {
 		this.problemTools = problemTools;
 	}
 
+	
+	/**
+	 * Returns {@link IProblemDefinition} to solve
+	 * @return
+	 */
+	public IProblemDefinition getProblemDefinition() {
+		return problemToSolveDefinition;
+	}
+	public void setProblemDefinition(
+			IProblemDefinition problemToSolveDefinition) {
+		if (problemToSolveDefinition == null ||
+				! problemToSolveDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IProblemDefinition.class.getSimpleName() + " is not valid");
+		}
+		this.problemToSolveDefinition = problemToSolveDefinition;
+	}
+
 	/**
 	 * Returns {@link Problem} to solve
 	 * @return
@@ -159,6 +192,42 @@ public class JobRun implements Concept {
 		}
 		this.problem = problem;
 	}
+	
+	@Deprecated	
+	public String getPedigreeOfIndividualClassName() {
+		return pedigreeOfIndividualClassName;
+	}
+	@Deprecated
+	public void setPedigreeOfIndividualClassName(String hisotyOfIndividualClassName) {
+		this.pedigreeOfIndividualClassName = hisotyOfIndividualClassName;
+	}
+
+	/**
+	 * Exports {@link IProblemTool} class
+	 * @param logger
+	 * @return
+	 */
+	public Class<?> exportPedigreeOfIndividual(IAgentLogger logger) {
+		
+		try {
+			return Class.forName(pedigreeOfIndividualClassName);
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	/**
+	 * Import {@link IProblemTool} class
+	 * @param problemToSolve
+	 */
+	public void importPedigreeOfIndividualClassName(Class<?> pedigreeOfIndividual) {
+		
+		if (pedigreeOfIndividual == null) {
+			this.pedigreeOfIndividualClassName = null;
+			return;
+		}
+		this.pedigreeOfIndividualClassName = pedigreeOfIndividual.getName();
+	}
+	
 	
 	/**
 	 * Exports the {@link InputMethodDescriptions}
@@ -179,13 +248,16 @@ public class JobRun implements Concept {
 		
 		JobID jobIDClone = getJobID().deepClone();
 		
+		AProblemDefinition problemDefClone = getProblemDefinition().deepClone();
 		Problem problemClone = getProblem().deepClone();
 		
 		ProblemStruct problemStruct = new ProblemStruct();
 		problemStruct.setJobID(jobIDClone);
 		problemStruct.setIndividualDistribution(getIndividualDistribution());
+		problemStruct.setProblemDefinition(problemDefClone);
 		problemStruct.setProblem(problemClone);
 		problemStruct.importProblemToolClass(problemToolClass);
+		problemStruct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));
 		
 		return problemStruct;
 	}

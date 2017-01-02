@@ -11,7 +11,6 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.c
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfGoodMaterial;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfImprovement;
-import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
@@ -20,8 +19,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
  * Structure represents statistics and results of one Iteration
@@ -302,13 +300,10 @@ public class MethodsStatistics {
 		MethodStatistic method0 = this.methodsStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		Class<?> problemToolClass =
-				agentDescription.exportProblemToolClass();
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, new TrashLogger());	
-		Class<?> problemClass = problemTool.problemWhichSolves();
+		IProblemDefinition problemDefinition =
+				agentDescription.getProblemDefinition();
 
-		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problemClass));
+		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problemDefinition));
 		return methodsStatistics.get(methodsStatistics.size() -1);
 	}
 	
@@ -325,13 +320,10 @@ public class MethodsStatistics {
 		MethodStatistic method0 = this.methodsStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		Class<?> problemToolClass =
-				agentDescription.exportProblemToolClass();
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, new TrashLogger());	
-		Class<?> problemClass = problemTool.problemWhichSolves();
+		IProblemDefinition problemDefinition =
+				agentDescription.getProblemDefinition();
 		
-		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problemClass));
+		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problemDefinition));
 		return methodsStatistics.get(0);
 	}
 
@@ -349,14 +341,8 @@ public class MethodsStatistics {
 		MethodStatistic method0 = this.methodsStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		Class<?> problemToolClass =
-				agentDescription.exportProblemToolClass();
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, new TrashLogger());	
-		Class<?> problemClass = problemTool.problemWhichSolves();
-		
 		Collections.sort(methodsStatistics,
-				new ComparatorQualityOfBestIndividual(problemClass));
+				new ComparatorQualityOfBestIndividual(agentDescription.getProblemDefinition()));
 		
 		return methodsStatistics.get(0);
 	}
@@ -375,14 +361,11 @@ public class MethodsStatistics {
 		MethodStatistic method0 = this.methodsStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		Class<?> problemToolClass =
-				agentDescription.exportProblemToolClass();
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, new TrashLogger());	
-		Class<?> problemClass = problemTool.problemWhichSolves();
+		IProblemDefinition problemDefinition =
+				agentDescription.getProblemDefinition();
 		
 		Collections.sort(methodsStatistics,
-				new ComparatorQualityOfBestIndividual(problemClass));
+				new ComparatorQualityOfBestIndividual(problemDefinition));
 		MethodStatistic methodWithBestIdividual =
 				methodsStatistics.get(methodsStatistics.size() -1);
 		

@@ -13,18 +13,17 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
 import org.distributedea.input.MatlabTool;
-import org.distributedea.input.batches.BatchTestTSP;
 import org.distributedea.input.batches.IInputBatch;
+import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
-import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
- * Shows results of all {@link Job}s of given Batch as course of function
+ * Shows results of all {@link Job}s of given {@link Batch} as course of function
  * depending on {@link Iteration}s. As a result of {@link Job} is selected
  * number of {@link JobRun} with median result.
  * @author stepan
@@ -59,7 +58,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 			
 			JobID jobIDI = processJobIDOfTheBestResult(
 					batchID, jobI.getJobID(), jobI.getNumberOfRuns(),
-					jobI.exportProblemToSolve(new TrashLogger()));
+					jobI.getProblemDefinition());
 			
 			String fileNameI = FileNames.getResultFile(jobIDI);
 			String lineTypeI = lineTypes.get(i % lineTypes.size());
@@ -92,7 +91,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 
 	@SuppressWarnings("unused")
 	private JobID processJobIDOfTheMedianResult(String batchID, String jobID,
-			int numberOfRuns, Class<?> problemClass) throws IOException {
+			int numberOfRuns, IProblemDefinition problemDef) throws IOException {
 
 		Map<JobID, Double> resultsOfJobsMap =
 				FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
@@ -113,18 +112,16 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	}
 	
 	private JobID processJobIDOfTheBestResult(String batchID, String jobID,
-			int numberOfRuns, Class<?> problemClass) throws IOException {
-
-		Problem problem = Problem.createProblem(problemClass);
+			int numberOfRuns, IProblemDefinition problemDef) throws IOException {
 		
 		Map<JobID, Double> resultsOfJobsMap =
 				FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
 		
-		return getBestJobID(resultsOfJobsMap, problem);
+		return getBestJobID(resultsOfJobsMap, problemDef);
 	}
 	
 	protected JobID getBestJobID(Map<JobID, Double> resultsOfJobsMap,
-			Problem problem) {
+			IProblemDefinition problemDef) {
 		
 		if (resultsOfJobsMap == null || resultsOfJobsMap.isEmpty()) {
 			return null;
@@ -142,7 +139,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 			Double fitnessValueI = entry.getValue();
 		    
 			boolean isBetter = FitnessTool.isFistFitnessBetterThanSecond(
-					fitnessValueI, bestFitnessValue, problem);
+					fitnessValueI, bestFitnessValue, problemDef);
 			
 			if (isBetter) {
 				bestJobID = jobIDI;
@@ -156,7 +153,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-		IInputBatch batchCmp = new BatchTestTSP();
+		IInputBatch batchCmp = new BatchSingleMethodsTSP1083();
 		Batch batch = batchCmp.batch();
 		
 		PostProcessing p = new PostProcInvestigationOfMedianJobRun();

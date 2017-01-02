@@ -10,8 +10,8 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
 import org.distributedea.input.MatlabTool;
-import org.distributedea.input.batches.BatchTestTSP;
 import org.distributedea.input.batches.IInputBatch;
+import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
@@ -37,8 +37,8 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		
 		for (Job jobI : jobWrps) {
 				
-			String jobIDI = jobI.getJobID();
-			legends.add(jobIDI);
+			String jobDescrI = jobI.getDescription();
+			legends.add(jobDescrI);
 			
 			String columbI = processJob(jobI, batchID);
 			matrix.add(columbI);
@@ -65,11 +65,13 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		"M=" + matrixStr + NL +
 		"Mtrans = M.'" + NL +
 		"boxplot(Mtrans," + legendStr + ")" + NL +
-		"title('" + description + "')" + NL;
+		"title('" + description + "')" + NL +
+		"set(gca,'XTickLabelRotation', -40);" + NL;
 		
 		matlabCode +=
 		"hold off" + NL +
-		"saveas(h, '" + OUTPUT_FILE + "','jpg');" + NL +
+		"saveas(h, '" + OUTPUT_FILE + "','bmp');" + NL +
+		"saveas(h, '" + OUTPUT_FILE + "','pdf');" + NL +
 		"exit;";
 		
 		System.out.println(matlabCode);
@@ -89,13 +91,13 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		List<Double> resultsOfJobs = new ArrayList<>(resultsOfJobsMap.values());
 		
 		return MatlabTool.convertDoublesToMatlamArray(resultsOfJobs);
-		
 	}
 	
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-		IInputBatch batchCmp = new BatchTestTSP();
+//		IInputBatch batchCmp = new BatchSingleMethodsTSP1083();
+		IInputBatch batchCmp = new BatchHomoMethodsTSP1083();
 		Batch batch = batchCmp.batch();
 		
 		PostProcBoxplot p = new PostProcBoxplot();

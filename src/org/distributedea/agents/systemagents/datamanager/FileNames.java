@@ -27,10 +27,17 @@ public class FileNames {
 	/**
 	 *  Directory with {@link Agent_CentralManager} configuration
 	 */
-	private static String getDirectoryOfConfiguration() {
+	public static String getDirectoryOfConfiguration() {
 		
 		return "configuration";
 	}
+	
+	public static String getInputConfigurationFile() {
+
+		return getDirectoryOfConfiguration() + File.separator +
+				"inputConfiguration.xml";
+	}
+	
 	/**
 	 * Provides way to system agents required to run master node
 	 * @return name of the file with relative path

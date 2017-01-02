@@ -14,8 +14,9 @@ import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.Statistic;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problemdefinition.AProblemDefinition;
 import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemTool;
 
 /**
  * Internal data structure for {@link Agent_Monitor}.
@@ -27,7 +28,7 @@ public class MonitorStatisticModel {
 
 	private JobID jobID;
 	
-	private Class<?> problemToSolveClass;
+	private IProblemDefinition problemToSolve;
 	
 	private IndividualEvaluated bestIndividualEvaluated;
 	
@@ -41,18 +42,18 @@ public class MonitorStatisticModel {
 	 * Constructor - structure is initialized by set of
 	 * received {@link IndividualWrapper}
 	 * @param jobID
-	 * @param problemToSolveClass
+	 * @param problemToSolve
 	 * @param resultOfComputing
 	 */
-	public MonitorStatisticModel(JobID jobID, Class<?> problemToSolveClass,
+	public MonitorStatisticModel(JobID jobID, IProblemDefinition problemDef,
 			IndividualsWrappers resultOfComputing) {
 		if (jobID == null || ! jobID.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					JobID.class.getSimpleName() + " is not valid");
 		}
-		if (problemToSolveClass == null) {
+		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Class.class.getSimpleName() + " is not valid");
+					AProblemDefinition.class.getSimpleName() + " is not valid");
 		}
 		if (resultOfComputing == null || ! resultOfComputing.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -60,7 +61,7 @@ public class MonitorStatisticModel {
 		}
 		
 		this.jobID = jobID;
-		this.problemToSolveClass = problemToSolveClass;
+		this.problemToSolve = problemDef;
 		
 		List<IndividualWrapper> bestResultsFromPrevIteration =
 				resultOfComputing.getIndividualsWrappers();
@@ -75,18 +76,23 @@ public class MonitorStatisticModel {
 		}
 	}
 	
-	public MonitorStatisticModel(JobID jobID, Class<?> problemToSolveClass) {
+	/**
+	 * Constructor
+	 * @param jobID
+	 * @param problemDef
+	 */
+	public MonitorStatisticModel(JobID jobID, IProblemDefinition problemDef) {
 		if (jobID == null || ! jobID.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					JobID.class.getSimpleName() + " is not valid");
 		}
-		if (problemToSolveClass == null) {
+		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Class.class.getSimpleName() + " is not valid");
+					IProblemDefinition.class.getSimpleName() + " is not valid");
 		}
 		
 		this.jobID = jobID;
-		this.problemToSolveClass = problemToSolveClass;
+		this.problemToSolve = problemDef;
 	}
 	
 	/**
@@ -101,8 +107,8 @@ public class MonitorStatisticModel {
 	 * Returns {@link IProblemTool} class
 	 * @return
 	 */
-	public Class<?> getProblemToSolveClass() {
-		return problemToSolveClass;
+	public IProblemDefinition getProblemToSolve() {
+		return problemToSolve;
 	}
 	
 	/**
@@ -137,13 +143,11 @@ public class MonitorStatisticModel {
 	}
 	
 	private MethodStatisticModel getMethodStatisticModel(MethodDescription description) {
-		
-		String agentName = description.exportMethodName();
-		
+				
 		for (MethodStatisticModel modelI : methods) {
 			
 			MethodDescription descriptionI = modelI.getAgentDescription();
-			if (descriptionI.exportMethodName().equals(agentName)) {
+			if (descriptionI.equals(description)) {
 				return modelI;
 			}
 		}
@@ -163,16 +167,9 @@ public class MonitorStatisticModel {
 				individualWrp.getIndividualEvaluated();
 		
 		// check initialization of problem Class
-		if (problemToSolveClass == null) {
-			Class<?> problemToolClass =
-					agentDescInput.exportProblemToolClass();
-			IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-					problemToolClass, new TrashLogger());
-			Class<?> problemClass = problemTool.problemWhichSolves();
-			
-			problemToSolveClass = problemClass;
+		if (problemToSolve == null) {
+			problemToSolve = agentDescInput.getProblemDefinition();
 		}
-
 		
 		// adding Individual to concrete method model
 		MethodStatisticModel methodModel = getMethodStatisticModel(agentDescInput);
@@ -246,7 +243,7 @@ public class MonitorStatisticModel {
 		
 		return FitnessTool
 				.isFistIndividualEBetterThanSecond(individual1,
-						individual2, problemToSolveClass);
+						individual2, problemToSolve);
 	}
 	
 	/**

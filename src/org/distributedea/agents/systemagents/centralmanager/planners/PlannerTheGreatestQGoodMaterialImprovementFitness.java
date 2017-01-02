@@ -13,11 +13,11 @@ import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
-public class PlannerTheGreatestQGoodMaterialImprovementFitness implements Planner {
+public class PlannerTheGreatestQGoodMaterialImprovementFitness implements IPlanner {
 	
-	private Planner plannerGoodMaterial;
-	private Planner plannerImprovement;
-	private Planner plannerFitAverage;
+	private IPlanner plannerGoodMaterial;
+	private IPlanner plannerImprovement;
+	private IPlanner plannerFitAverage;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -27,7 +27,7 @@ public class PlannerTheGreatestQGoodMaterialImprovementFitness implements Planne
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 		
 		
-		Planner plannerInit = new PlannerInitialisationOneMethodPerCore();
+		IPlanner plannerInit = new PlannerInitialisationOneMethodPerCore();
 		Plan initPlan = plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
 		
 		plannerGoodMaterial = new PlannerTheGreatestQuantityOfGoodMaterial();

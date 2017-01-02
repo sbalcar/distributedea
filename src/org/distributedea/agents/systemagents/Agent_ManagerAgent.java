@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.logging.FileLogger;
@@ -149,7 +150,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		reply.setLanguage(codec.getName());
 		reply.setOntology(ManagementOntology.getInstance().getName());
 		
-		int cores = Runtime.getRuntime().availableProcessors();
+		int cores = Configuration.COUNT_OF_METHODS_ON_CORE * Runtime.getRuntime().availableProcessors();
 		
 		AID [] localComputingAgentAIDs =
 				searchLocalContainerDF(Agent_ComputingAgent.class.getName());

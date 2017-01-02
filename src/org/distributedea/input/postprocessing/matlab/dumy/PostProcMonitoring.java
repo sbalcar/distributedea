@@ -1,7 +1,6 @@
 package org.distributedea.input.postprocessing.matlab.dumy;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +11,8 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.MatlabTool;
-import org.distributedea.input.batches.BatchTestTSP;
 import org.distributedea.input.batches.IInputBatch;
+import org.distributedea.input.batches.tsp.BatchTestTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.job.JobID;
@@ -39,7 +38,7 @@ public class PostProcMonitoring extends PostProcessingMatlab {
 		}
 	}
 	
-	private void processJobRun(JobID jobID) throws IOException {
+	private void processJobRun(JobID jobID) throws Exception {
 		
 		String monitoringDirNameI = FileNames.getResultDirectoryMonitoringDirectory(jobID);
 		File monitoringDirI = new File(monitoringDirNameI);

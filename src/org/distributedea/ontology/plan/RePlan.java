@@ -158,7 +158,7 @@ public class RePlan implements Concept {
 		if (agentsToKill == null) {
 			return false;
 		}
-		return agentsToKill.containsAgentDescription(agentToKill);
+		return agentsToKill.containsMethodDescription(agentToKill);
 	}
 	
 	/**
@@ -204,7 +204,7 @@ public class RePlan implements Concept {
 		if (agentsToCreate == null) {
 			return false;
 		}
-		return agentsToCreate.containsAgentDescription(agentToCreate);
+		return agentsToCreate.containsMethodDescription(agentToCreate);
 	}
 	
 	public boolean isEmpty() {

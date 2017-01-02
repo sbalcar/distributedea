@@ -33,7 +33,14 @@ public abstract class PostProcessingMatlab extends PostProcessing {
 		}
 		
 		
-		if (InputConfiguration.runPostProcessing) {
+		boolean runPostProc = false;
+		try {
+			runPostProc = InputConfiguration.getConf().runPostProcessing;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (runPostProc) {
 			executeMatlabScript(bashScriptFileName);
 		}
 	

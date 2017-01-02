@@ -1,7 +1,6 @@
 package org.distributedea.problems.tsp.point.permutation;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
@@ -11,14 +10,17 @@ import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.ontology.problem.tsp.PositionPoint;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.ProblemToolException;
 import org.distributedea.problems.tsp.gps.permutation.IProblemTSPPermutationTool;
-import org.distributedea.problems.tsp.gps.permutation.AProblemToolTSPGPSEuc2DPermutation;
-import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
-import org.distributedea.problems.tsp.gps.permutation.operators.SinglePointCrossover;
+import org.distributedea.problems.tsp.gps.permutation.tools.ToolNextPermutationTSPGPS;
 import org.distributedea.problems.tsp.point.ProblemTSPPointTool;
-import org.distributedea.problems.tsp.point.permutation.tools.PermutationTool;
+import org.distributedea.problems.tsp.point.permutation.tools.ToolDistanceTSPPoint;
+import org.distributedea.problems.tsp.point.permutation.tools.ToolFitnessTSPPoint;
+import org.distributedea.problems.tsp.point.permutation.tools.ToolGenerateIndividualForTSPPoint;
+import org.distributedea.problems.tsp.point.permutation.tools.ToolReadProblemTSPPoint;
+import org.distributedea.problems.tsp.point.permutation.tools.ToolReadSolutionTSPPoints;
+
 
 /**
  * Abstract {@link ProblemTool} for {@link ProblemTSPPoint} using permutation
@@ -29,57 +31,80 @@ import org.distributedea.problems.tsp.point.permutation.tools.PermutationTool;
 public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointTool implements IProblemTSPPermutationTool {
 
 	@Override
+	public Class<?> problemWhichSolves() {
+
+		return ProblemTSPPoint.class;
+	}
+	
+	@Override
 	public Class<?> reprezentationWhichUses() {
 
 		return IndividualPermutation.class;
 	}
 	
 	@Override
-	public Individual generateFirstIndividual(Problem problem,
-			IAgentLogger logger) {
+	public Individual generateFirstIndividual(IProblemDefinition probleDef,
+			Problem problem, IAgentLogger logger) {
 		
-		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.generateFirstIndividual(problem, logger);
+		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint)problem;
+		
+		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
 	}
 	
 	@Override
-	public Individual generateIndividual(Problem problem, IAgentLogger logger) {
+	public Individual generateIndividual(IProblemDefinition problemDef,
+			Problem problem, IAgentLogger logger) {
 		
-		ProblemTSPPoint problemTSP = (ProblemTSPPoint) problem;
+		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint) problem;
 		
-		List<Position> positions = new ArrayList<Position>();
-		for (PositionPoint positionI : problemTSP.getPositions()) {
-			positions.add(positionI);
-		}
-		
-		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.generateIndividual(positions);
+		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
+
 	}
 	
 	@Override
-	public Individual generateNextIndividual(Problem problem,
-			Individual individual, IAgentLogger logger) {
+	public Individual generateNextIndividual(IProblemDefinition problemDef,
+			Problem problem, Individual individual, IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		List<Integer> perm = individualPerm.getPermutation();
 		
-		List<Integer> permNew = PermutationTool.nextPermutation(perm);
+		List<Integer> permNew = ToolNextPermutationTSPGPS.nextPermutation(perm);
 		
 		return new IndividualPermutation(permNew);
 	}
 	
 	@Override
-	public double fitness(Individual individual, Problem problem,
-			IAgentLogger logger) {
+	public double fitness(Individual individual, IProblemDefinition problemDef,
+			Problem problem, IAgentLogger logger) {
 		
 		IndividualPermutation individualPermutation =
 				(IndividualPermutation) individual;
-		ProblemTSPPoint problemTSPGPS =
-				(ProblemTSPPoint) problem;
+		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint) problem;
 		
-		return AProblemToolTSPGPSEuc2DPermutation.fitnessPermutation(
-				individualPermutation, problemTSPGPS, this, logger);
+		return ToolFitnessTSPPoint.fitness(individualPermutation, problemTSPPoint, this, logger);
+	}
+	
+	@Override
+	public Problem readProblem(File problemFile, IAgentLogger logger) {
+
+		return ToolReadProblemTSPPoint.readProblem(problemFile, logger);
+	}
+	
+	@Override
+	public Individual readSolution(File fileOfSolution, Problem problem,
+			IAgentLogger logger) {
 		
+		return ToolReadSolutionTSPPoints.readSolutionTSP(fileOfSolution, logger);		
+	}
+	
+	@Override
+	public Individual getNeighbor(Individual individual,
+			IProblemDefinition problemDef, Problem problem,
+			long neighborIndex, IAgentLogger logger) throws Exception {
+		
+		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint) problem;
+		
+		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
 	}
 	
 	@Override
@@ -89,53 +114,7 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 		PositionPoint positionPoint1 = (PositionPoint) position1;
 		PositionPoint positionPoint2 = (PositionPoint) position2;
 		
-		double deltaX = Math.abs(
-				positionPoint1.getCoordinateX() -
-				positionPoint2.getCoordinateX() );
-		double deltaY = Math.abs(
-				positionPoint1.getCoordinateY() -
-				positionPoint2.getCoordinateY() );
-		
-		double distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
-		return Math.round(distance);
-	}
-	
-	@Override
-	public Individual readSolution(File fileOfSolution, Problem problem,
-			IAgentLogger logger) {
-		
-		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.readSolution(fileOfSolution, problem, logger);
-	}
-	
-	@Override
-	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Problem problem, IAgentLogger logger)
-			throws ProblemToolException {
-		
-		IndividualPermutation ind1 = (IndividualPermutation) individual1;
-		IndividualPermutation ind2 = (IndividualPermutation) individual2;
-		
-		return SinglePointCrossover.crossover(ind1, ind2);
-	}
-	
-	@Override
-	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Individual individual3, Problem problem,
-			IAgentLogger logger) throws ProblemToolException {
-		
-		IndividualPermutation ind1 = (IndividualPermutation) individual1;
-		IndividualPermutation ind2 = (IndividualPermutation) individual2;
-		
-		return SinglePointCrossover.crossover(ind1, ind2);
-	}
-	
-	@Override
-	public Individual getNeighbor(Individual individual, Problem problem,
-			long neighborIndex, IAgentLogger logger) throws ProblemToolException {
-		
-		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.generateIndividual(problem, logger);
+		return ToolDistanceTSPPoint.distanceBetween(positionPoint1, positionPoint2, logger);
 	}
 	
 }

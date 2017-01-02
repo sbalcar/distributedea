@@ -23,6 +23,7 @@ import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
  * Creates the structure of services offering all descendants
@@ -40,7 +41,7 @@ public class MonitorService {
 	 * @param logger
 	 */
 	public static void startsMonitoring(Agent_DistributedEA agent,
-			JobID jobID, Class<?> problemToSolveClass,
+			JobID jobID, IProblemDefinition problemToSolve,
 			MethodDescriptions agentsToMonitor, IAgentLogger logger) {
 		
 		if (agent == null) {
@@ -51,7 +52,7 @@ public class MonitorService {
 			throw new IllegalArgumentException("Argument " +
 					JobID.class.getSimpleName() + " is not valid");
 		}
-		if (problemToSolveClass == null) {
+		if (problemToSolve == null || ! problemToSolve.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
 					Class.class.getSimpleName() + " is not valid");
 		}
@@ -75,13 +76,10 @@ public class MonitorService {
 		msgStartStatistic.setOntology(ontology.getName());
 
 		
-		StartMonitoring getStatistic = new StartMonitoring(jobID,
-				problemToSolveClass, agentsToMonitor);
-		if (! getStatistic.valid(logger)) {
-			throw new IllegalStateException();
-		}
+		StartMonitoring startMonitoring = new StartMonitoring(jobID,
+				problemToSolve, agentsToMonitor);
 		
-		Action action = new Action(agent.getAID(), getStatistic);
+		Action action = new Action(agent.getAID(), startMonitoring);
 		
 		try {
 			agent.getContentManager().fillContent(msgStartStatistic, action);

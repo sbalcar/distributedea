@@ -5,7 +5,7 @@ import jade.core.AID;
 import java.util.List;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputPlan;
@@ -21,7 +21,7 @@ import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerInitialisationRandom implements Planner {
+public class PlannerInitialisationRandom implements IPlanner {
 
 	private Agent_CentralManager centralManager;
 	private IAgentLogger logger;

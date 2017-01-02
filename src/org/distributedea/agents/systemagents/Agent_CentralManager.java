@@ -85,8 +85,18 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 			return;
 		}
 		
+		boolean automaticStart;
+		try {
+			automaticStart = InputConfiguration.getConf().automaticStart;
+		} catch (Exception e) {
+			getLogger().log(Level.INFO, "Can not load input configuration - automatic start");
+			CentralLogerService.logMessage(this, "Can not load input configuration - automatic start", getLogger());
+			ManagerAgentService.killAllContainers(this, getLogger());
+			return;
+		}
+		
 		// adding Behaviour for computing
-		if (InputConfiguration.automaticStart) {
+		if (automaticStart) {
 
 			addBehaviour(new ComputeBatchesBehaviour(batches, getLogger()));
 		} else {

@@ -141,8 +141,8 @@ public class Agent_DataManager extends Agent_DistributedEA {
 
 	protected ACLMessage respondToSaveResults(ACLMessage request, Action action) {
 		
-		SaveResultOfIteration saveResults = (SaveResultOfIteration)action.getAction();
-		ResultOfIteration results = saveResults.getResults();
+		SaveResultOfIteration saveResult = (SaveResultOfIteration)action.getAction();
+		ResultOfIteration results = saveResult.getResults();
 		
 		if (results == null || ! results.valid(getLogger())) {
 			getLogger().log(Level.WARNING, "Received " +
@@ -152,9 +152,14 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		String monitoringDirName = FileNames.
 				getResultDirectoryMonitoringDirectory(results.getJobID());
 		
+		File dir = new File(monitoringDirName);
+		if (! dir.isDirectory()) {
+			dir.mkdir();
+		}
+		
 		try {
 			results.exportXML(new File(monitoringDirName));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			getLogger().logThrowable("", e);
 		}
 		

@@ -5,14 +5,14 @@ import java.util.Comparator;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 public class ComparatorQualitiOfFitnessAverage implements Comparator<MethodStatistic>{
 
-	private Class<?> problemClass;
+	private IProblemDefinition problemDef;
 	
-	public ComparatorQualitiOfFitnessAverage(Class<?> problemClass) {
-		this.problemClass = problemClass;
+	public ComparatorQualitiOfFitnessAverage(IProblemDefinition problemDef) {
+		this.problemDef = problemDef;
 	}
 	
 	@Override
@@ -30,10 +30,9 @@ public class ComparatorQualitiOfFitnessAverage implements Comparator<MethodStati
 			return 0;
 		}
 		
-		Problem problem = Problem.createProblem(problemClass);
 		boolean isFirstWorse = FitnessTool
 				.isFistFitnessWorseThanSecond(fitnessAverage1,
-						fitnessAverage2, problem);
+						fitnessAverage2, problemDef);
 
 		if (isFirstWorse) {
 			return -1;

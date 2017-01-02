@@ -19,15 +19,15 @@ import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
-public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements Planner {
+public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements IPlanner {
 	
 	private Agent_CentralManager centralManager;
 	private IAgentLogger logger;
 	private JobRun jobRun;
 	
-	private Planner plannerQuantityMaterial;
-	private Planner plannerGoodMaterial;
-	private Planner plannerImprovement;
+	private IPlanner plannerQuantityMaterial;
+	private IPlanner plannerGoodMaterial;
+	private IPlanner plannerImprovement;
 	
 	private boolean doMethodSwitch = true;
 	
@@ -45,7 +45,7 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements Plann
 		this.doMethodSwitch = true;
 		
 		
-		Planner plannerInit = new PlannerInitialisationOneMethodPerCore();
+		IPlanner plannerInit = new PlannerInitialisationOneMethodPerCore();
 		Plan initPlan = plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
 
 		plannerQuantityMaterial = new PlannerTheGreatestQuantityOfMaterial();

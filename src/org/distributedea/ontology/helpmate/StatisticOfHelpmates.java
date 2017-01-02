@@ -6,7 +6,7 @@ import java.util.List;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 
 import jade.content.Concept;
 
@@ -27,7 +27,7 @@ public class StatisticOfHelpmates implements Concept {
 	/**
 	 * Descriptions of helpers
 	 */
-	private List<MethodDescriptionCounter> helpersDescriptions;
+	private List<MethodDescriptionNumber> helpersDescriptions;
 
 	
 	@Deprecated
@@ -41,7 +41,7 @@ public class StatisticOfHelpmates implements Concept {
 	 * @param helpersDescriptions
 	 */
 	public StatisticOfHelpmates(MethodDescription description,
-			List<MethodDescriptionCounter> helpersDescriptions) {
+			List<MethodDescriptionNumber> helpersDescriptions) {
 		if (description == null || ! description.valid(new TrashLogger())) {
 			throw new IllegalArgumentException();
 		}
@@ -58,24 +58,24 @@ public class StatisticOfHelpmates implements Concept {
 		this.description = description;
 	}
 
-	public List<MethodDescriptionCounter> getHelpersDescriptions() {
+	public List<MethodDescriptionNumber> getHelpersDescriptions() {
 		if (helpersDescriptions == null) {
-			return new ArrayList<MethodDescriptionCounter>();
+			return new ArrayList<MethodDescriptionNumber>();
 		}
 		return helpersDescriptions;
 	}
 	@Deprecated
-	public void setHelpersDescriptions(List<MethodDescriptionCounter> descriptions) {
+	public void setHelpersDescriptions(List<MethodDescriptionNumber> descriptions) {
 		this.helpersDescriptions = descriptions;
 	} 
 	
-	public void addHelperDescription(MethodDescriptionCounter agentDescriptionWrapper) {
+	public void addHelperDescription(MethodDescriptionNumber agentDescriptionWrapper) {
 		if (agentDescriptionWrapper == null || ! agentDescriptionWrapper.valid(new TrashLogger())) {
 			throw new IllegalArgumentException();
 		}
 		
 		if (helpersDescriptions == null) {
-			this.helpersDescriptions = new ArrayList<MethodDescriptionCounter>();
+			this.helpersDescriptions = new ArrayList<MethodDescriptionNumber>();
 		}
 		helpersDescriptions.add(agentDescriptionWrapper);
 	}
@@ -91,7 +91,7 @@ public class StatisticOfHelpmates implements Concept {
 		if (helpersDescriptions == null) {
 			return false;
 		}
-		for (MethodDescriptionCounter descriptionI : helpersDescriptions) {
+		for (MethodDescriptionNumber descriptionI : helpersDescriptions) {
 			if (! descriptionI.valid(logger)) {
 				return false;
 			}

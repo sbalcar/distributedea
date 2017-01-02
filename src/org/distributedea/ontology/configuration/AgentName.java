@@ -19,14 +19,17 @@ public class AgentName implements Concept {
 
 	private String agentName;
 
-	private String containerID = "";
+	private String containerID;
 	
-	private int numberOfContainer = 0;
-	private int numberOfAgent = 0;
+	private int numberOfContainer;
+	private int numberOfAgent;
 	
 	
 	@Deprecated
 	public AgentName() {   // only for Jade
+		this.containerID = "";
+		this.numberOfContainer = 0;
+		this.numberOfAgent = 0;
 	}
 	
 	/**
@@ -35,6 +38,9 @@ public class AgentName implements Concept {
 	 */
 	public AgentName(String agentName) {
 		this.agentName = agentName;
+		this.containerID = "";
+		this.numberOfContainer = 0;
+		this.numberOfAgent = 0;
 	}
 	
 	/**

@@ -1,14 +1,19 @@
 package org.distributedea.ontology.pedigree;
 
+import java.util.List;
+
+import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounters;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
 
 
 /**
- * Ontology represents pedigree of one {@link Individual}
+ * Ontology represents pedigree of one {@link Individual}.
+ * Pedigree does not directly include tree but only counts
+ * of methods, which has adjusted the result.
  * @author stepan
  *
  */
@@ -16,14 +21,55 @@ public class PedigreeCounter extends Pedigree {
 
 	private static final long serialVersionUID = 1L;
 	
-	private MethodDescriptionCounters counters;
+	private MethodDescriptionNumbers counters;
 
 	
 	/**
 	 * Constructor
 	 */
+	@Deprecated
 	public PedigreeCounter() {
-		this.counters = new MethodDescriptionCounters();
+		this.counters = new MethodDescriptionNumbers();
+	}
+
+	/**
+	 * Constructor
+	 * @param methodCounters
+	 */
+	public PedigreeCounter(MethodDescriptionNumbers methodCounters) {
+		if (methodCounters == null || ! methodCounters.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					PedigreeCounter.class.getSimpleName() + " is not valid");			
+		}
+		this.counters = methodCounters;
+	}
+	
+	PedigreeCounter(PedigreeParameters parameters) {
+		this.counters = new MethodDescriptionNumbers();
+		this.counters.incrementCounterOf(parameters.methodDescription);
+	}
+
+	PedigreeCounter(List<Pedigree> pedigrees,
+			PedigreeParameters pedParams) {
+		if (pedigrees == null || pedigrees.isEmpty() || pedigrees.size() > 3) {
+			throw new IllegalArgumentException("Argument " +
+					PedigreeCounter.class.getSimpleName() + " is not valid");
+		}
+		for (Pedigree pedigreeI : pedigrees) {
+			if (pedigreeI == null || ! pedigreeI.valid(new TrashLogger())) {
+				throw new IllegalArgumentException("Argument " +
+						PedigreeCounter.class.getSimpleName() + " is not valid");
+			}			
+		}
+
+		MethodDescriptionNumbers numbers = new MethodDescriptionNumbers();
+		for (Pedigree pedigreeI : pedigrees) {
+			PedigreeCounter pedigCounterI = (PedigreeCounter) pedigreeI;
+			MethodDescriptionNumbers countersI =
+					pedigCounterI.getCounters();
+			numbers.addMetDescNumbersAsCounters(countersI.getMethDescNumbers());
+		}
+		this.counters = numbers;
 	}
 	
 	/**
@@ -40,14 +86,14 @@ public class PedigreeCounter extends Pedigree {
 
 	
 	
-	public MethodDescriptionCounters getCounters() {
+	public MethodDescriptionNumbers getCounters() {
 		return counters;
 	}
 	@Deprecated
-	public void setCounters(MethodDescriptionCounters counters) {
+	public void setCounters(MethodDescriptionNumbers counters) {
 		if (counters == null || ! counters.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					MethodDescriptionCounters.class.getSimpleName() + " is not valid");			
+					MethodDescriptionNumbers.class.getSimpleName() + " is not valid");			
 		}
 		this.counters = counters;
 	}
@@ -74,6 +120,12 @@ public class PedigreeCounter extends Pedigree {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public MethodDescriptionNumbers exportCreditsOfMethodDescriptions() {
+		
+		return this.getCounters().deepClone();
 	}
 	
 }

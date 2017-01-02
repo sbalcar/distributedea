@@ -3,7 +3,7 @@ package org.distributedea.agents.systemagents.centralmanager.planners.dumy;
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
@@ -23,13 +23,13 @@ import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerFollowNaiveAskingForBestResult implements Planner {
+public class PlannerFollowNaiveAskingForBestResult implements IPlanner {
 	
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
 	private IAgentLogger logger;
 	
-	private Planner plannerInit = null; 
+	private IPlanner plannerInit = null; 
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -75,9 +75,9 @@ public class PlannerFollowNaiveAskingForBestResult implements Planner {
 				ComputingAgentService.sendAccessesResult_(centralManager, logger);
 		
 		IndividualWrapper theBestIndivWrp = resultOfComputing
-				.exportBestResultOfComputing(jobRun.getProblem());
+				.exportBestResultOfComputing(jobRun.getProblemDefinition());
 		IndividualWrapper theWorstIndivWrp = resultOfComputing
-				.exportWorstResultOfComputing(jobRun.getProblem());
+				.exportWorstResultOfComputing(jobRun.getProblemDefinition());
 
 		printLog(theBestIndivWrp, theWorstIndivWrp, logger);
 		

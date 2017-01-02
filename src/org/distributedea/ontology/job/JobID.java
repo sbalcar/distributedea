@@ -155,7 +155,7 @@ public class JobID implements Concept {
 	 * 
 	 * @throws IOException 
 	 */
-	public void exportXML(File dir) throws IOException {
+	public void exportXML(File dir) throws Exception {
 
 		if (dir == null || ! dir.isDirectory()) {
 			throw new IllegalArgumentException("Argument " +
@@ -176,7 +176,7 @@ public class JobID implements Concept {
 	/**
 	 * Exports to the XML String
 	 */
-	public String exportXML() {
+	private String exportXML() {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
@@ -190,7 +190,7 @@ public class JobID implements Concept {
 	 * @throws FileNotFoundException
 	 */
 	public static JobID importXML(File file)
-			throws IOException {
+			throws Exception {
 
 		if (file == null || ! file.isFile()) {
 			throw new IllegalArgumentException("Argument " +
@@ -208,7 +208,7 @@ public class JobID implements Concept {
 	/**
 	 * Import the {@link JobID} from the String
 	 */
-	public static JobID importXML(String xml) {
+	private static JobID importXML(String xml) {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);

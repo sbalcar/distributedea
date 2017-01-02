@@ -23,6 +23,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.MonitorOntology;
 import org.distributedea.ontology.ResultOntology;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
@@ -30,6 +31,7 @@ import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
  * Agent which used to monitor computation of all running instances
@@ -179,22 +181,11 @@ public class Agent_Monitor extends Agent_DistributedEA {
 			getLogger().log(Level.INFO, "Received wrong " + IndividualWrapper.class.getSimpleName());
 			return;
 		}
-/*	
-		JobID jobID = individualWrp.getJobID().deepClone();
 		
-		// if received Indindividual from another Job
-		if (model == null || ! model.getJobID().equals(jobID)) {
-			IndividualsWrappers resultOfComputingAgents =
-					ComputingAgentService.sendAccessesResult_(this, getLogger());
-			Class<?> problemToSolveClass =
-					resultOfComputingAgents.exportProblemToSolveClass();
-			
-			if (problemToSolveClass != null) {
-				model = new MonitorStatisticModel(jobID, problemToSolveClass,
-		    		resultOfComputingAgents);
-			}
-		}
-*/
+		MethodDescription descr = individualWrp.getAgentDescription();
+		AgentConfiguration conf = descr.getAgentConfiguration();
+		getLogger().log(Level.INFO, "Individual from : " + conf.exportAgentname());
+		
 		if (model != null) 	{
 			model.addIndividualWrp(individualWrp);
 		}
@@ -204,10 +195,10 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		
 		StartMonitoring startMonitoring = (StartMonitoring) action.getAction();
 		JobID jobID = startMonitoring.getJobID();
-		Class<?> problemToSolveClass = startMonitoring.exportProblemToSolveClass();
+		IProblemDefinition problemToSolve = startMonitoring.getProblemToSolve();
 		MethodDescriptions agentsToMonitor = startMonitoring.getAgentsToMonitor();	
 		
-		this.model = new MonitorStatisticModel(jobID, problemToSolveClass);
+		this.model = new MonitorStatisticModel(jobID, problemToSolve);
 		this.agentsToMonitor = agentsToMonitor;
 		
 		return null;
@@ -240,6 +231,9 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		}
 		
 		MethodDescriptions monitoredAgents = statistic.exportAgentDescriptions();
+		for (MethodDescription descriptionI : monitoredAgents.getAgentDescriptions()) {
+			this.getLogger().log(Level.INFO, descriptionI.exportMethodName());
+		}
 		MethodDescriptions agentsToMonitorClone = this.agentsToMonitor.deepClone();
 		
 		agentsToMonitorClone.removeAll(monitoredAgents);

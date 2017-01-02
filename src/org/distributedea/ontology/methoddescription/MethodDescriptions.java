@@ -126,7 +126,7 @@ public class MethodDescriptions implements Concept {
 	 * @param agentDescription
 	 * @return
 	 */
-	public boolean containsAgentDescription(MethodDescription agentDescription) {
+	public boolean containsMethodDescription(MethodDescription agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +

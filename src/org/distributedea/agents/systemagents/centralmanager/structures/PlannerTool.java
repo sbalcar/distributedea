@@ -20,6 +20,7 @@ import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
@@ -30,23 +31,23 @@ public class PlannerTool {
 	/**
 	 * Creates and runs given given {@link Agent_ComputingAgent}s in plan
 	 * @param centralManager
-	 * @param job
+	 * @param jobRun
 	 * @param plan
 	 * @param logger
 	 * @return
 	 */
 	public static Plan createAndRunAgents(Agent_CentralManager centralManager,
-			JobRun job, InputPlan plan, IAgentLogger logger) {
+			JobRun jobRun, InputPlan plan, IAgentLogger logger) {
 		
 		Plan createdAgents =
-				createAgents(centralManager, plan, logger);
-		runAgents(centralManager, createdAgents.getNewAgents(), job, logger);
+				createAgents(centralManager, plan, jobRun.getProblemDefinition(), logger);
+		runAgents(centralManager, createdAgents.getNewAgents(), jobRun, logger);
 		
 		return createdAgents;
 	}
 
 	public static Plan createAgents(Agent_CentralManager centralManager,
-			InputPlan inputPlan, IAgentLogger logger) {
+			InputPlan inputPlan, IProblemDefinition problemDef, IAgentLogger logger) {
 		
 		List<MethodDescription> createdAgents = new ArrayList<>();
 		//create computing agents
@@ -64,7 +65,7 @@ public class PlannerTool {
 					managerAgentOfEmptyCoreAIDI, agentConfigurationI, logger);
 			
 			MethodDescription createdAgentDescriptionI =
-					new MethodDescription(createdAgentI, problemToolClass);
+					new MethodDescription(createdAgentI, problemDef, problemToolClass);
 						
 			createdAgents.add(createdAgentDescriptionI);
 		}
@@ -129,8 +130,8 @@ public class PlannerTool {
 			AgentConfiguration createdAC = killAndCreateAgent(centralManager,
 					agentTokillAID, newConfiguration, problemStruct, logger);
 			
-			MethodDescription createdAD =
-					new MethodDescription(createdAC, problemToolClass);
+			MethodDescription createdAD = new MethodDescription(createdAC,
+					jobRun.getProblemDefinition(), problemToolClass);
 			
 			agentsCreated.add(createdAD);
 		}

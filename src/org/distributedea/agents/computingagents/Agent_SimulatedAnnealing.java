@@ -6,12 +6,14 @@ import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 
@@ -25,10 +27,12 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 	private static final long serialVersionUID = 1L;
 
     // initial temperature
-	private double TEMPERATURE = 10000;
+	private String TEMPERATURE = "temperature";
+	private double temperature = 10000;
 
     // cooling rate
-	private double COOLING_RATE = 0.002;
+	private String COOLING_RATE = "coolingRate";
+	private double coolingRate = 0.002;
 	
 	
 
@@ -50,7 +54,15 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		return description;
 	}
 
-	protected void processArguments(Arguments args) throws Exception {
+	protected void processArguments(Arguments arguments) throws Exception {
+		
+		// set temperature value
+		Argument temperatureArg = arguments.exportArgument(TEMPERATURE);
+		this.temperature = temperatureArg.exportValueAsInteger();
+		
+		// set cooling rate value
+		Argument coolingRateArg = arguments.exportArgument(COOLING_RATE);
+		this.coolingRate = coolingRateArg.exportValueAsInteger();
 	}
 	
    	@Override
@@ -64,10 +76,12 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
+		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
-		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(
+				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
@@ -76,14 +90,14 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		long generationNumberI = -1;
 
 		IndividualEvaluated individualEvalI =
-				problemTool.generateIndividualEval(problem, pedigreeParams, getCALogger());
+				problemTool.generateIndividualEval(problemDefinition, problem, pedigreeParams, getCALogger());
 		
 		//saves data in Agent DataManager
 		processIndividualFromInitGeneration(individualEvalI,
-    			generationNumberI, problem, jobID);
+    			generationNumberI, problemDefinition, jobID);
 		
-		double temperatureI = TEMPERATURE;
-        double coolingRateI = COOLING_RATE;
+		double temperatureI = temperature;
+        double coolingRateI = coolingRate;
         
 		while (state == CompAgentState.COMPUTING) {
 			
@@ -91,41 +105,41 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 			generationNumberI++;
 			
 			if (temperatureI <= 1) {
-				temperatureI = TEMPERATURE;
+				temperatureI = temperature;
 			}
 			
 			IndividualEvaluated individualEvalNewI = 
-					problemTool.improveIndividualEval(individualEvalI, problem,
+					problemTool.improveIndividualEval(individualEvalI, problemDefinition, problem,
 					pedigreeParams, getCALogger());
 	
             // decide on the acceptance the neighbour
 			double acceptanceProbability = acceptanceProbability(individualEvalI,
-					individualEvalNewI, temperatureI, problem);
+					individualEvalNewI, temperatureI, problemDefinition);
             if (acceptanceProbability > Math.random()) {
             	individualEvalI = individualEvalNewI;
             }
             
 			//saves data in Agent DataManager
             processComputedIndividual(individualEvalI,
-        			generationNumberI, problem, jobID);
+        			generationNumberI, problemDefinition, jobID);
             
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
-				distributeIndividualToNeighours(individualEvalI, problem, jobID);
+				distributeIndividualToNeighours(individualEvalI, problemDefinition, jobID);
 			}
             
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problemDefinition);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalI, problem)) {
+							recievedIndividualW, individualEvalI, problemDefinition)) {
 								
 				// update if better that actual
 				individualEvalI = recievedIndividualW.getIndividualEvaluated();
 				
 				// save and log received Individual
-				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
+				processRecievedIndividual(recievedIndividualW, generationNumberI, problemDefinition);
 			}
 			
             // cooling
@@ -137,12 +151,12 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 
    	
 	private double acceptanceProbability(IndividualEvaluated individual, IndividualEvaluated individualNew,
-    		double temperature, Problem problem) {
+    		double temperature, IProblemDefinition problemDef) {
 		
 		double energy = individual.getFitness();
 		double newEnergy = individualNew.getFitness();
 		
-		return acceptanceProbability(energy, newEnergy, temperature, problem);
+		return acceptanceProbability(energy, newEnergy, temperature, problemDef);
 	}
 	
 	/**
@@ -153,10 +167,10 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 	 * @return
 	 */
     private double acceptanceProbability(double energy, double newEnergy,
-    		double temperature, Problem problem) {
+    		double temperature, IProblemDefinition problemDef) {
     	
         // accept the new better solution
-        if (FitnessTool.isFistFitnessBetterThanSecond(newEnergy, energy, problem)) {
+        if (FitnessTool.isFistFitnessBetterThanSecond(newEnergy, energy, problemDef)) {
             return 1.0;
         }
         // for worse solution calculates an acceptance probability

@@ -9,7 +9,8 @@ import java.util.Random;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problemdefinition.AProblemDefinition;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
@@ -107,22 +108,30 @@ public class IndividualsEvaluated  implements Concept {
 	 * Sorts {@link IndividualEvaluated}s from the best to the worst
 	 * @param problem
 	 */
-	public void sortFromTheBestToTheWorst(Problem problem) {
+	public void sortFromTheBestToTheWorst(IProblemDefinition problemDef) {
+		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AProblemDefinition.class.getSimpleName() + " is not valid");
+		}
 		
 		Collections.sort(individualsEvaluated,
-				new CmpIndividualEvaluated(problem));
+				new CmpIndividualEvaluated(problemDef));
 	}
 	
 	/**
 	 * Exports sorted list of {@link IndividualEvaluated} - from best to worst
-	 * @param problem
+	 * @param problemDef
 	 * @return
 	 */
-	public List<IndividualEvaluated> exportSortedFromBestToWorst(Problem problem) {
+	public List<IndividualEvaluated> exportSortedFromBestToWorst(IProblemDefinition problemDef) {
+		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AProblemDefinition.class.getSimpleName() + " is not valid");
+		}
 		
 		List<IndividualEvaluated> individualsCopy =
 				new ArrayList<IndividualEvaluated>(individualsEvaluated);
-		Collections.sort(individualsCopy, new CmpIndividualEvaluated(problem));
+		Collections.sort(individualsCopy, new CmpIndividualEvaluated(problemDef));
 
 		return individualsCopy;
 	}
@@ -133,11 +142,16 @@ public class IndividualsEvaluated  implements Concept {
 	 * @param problem
 	 * @return
 	 */
-	public IndividualsEvaluated exportNBestSorted(int numberOfIndividuals, Problem problem) {
+	public IndividualsEvaluated exportNBestSorted(int numberOfIndividuals,
+			IProblemDefinition problemDef) {
+		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AProblemDefinition.class.getSimpleName() + " is not valid");
+		}
 		
 		List<IndividualEvaluated> newList =
 				new ArrayList<IndividualEvaluated>(individualsEvaluated);
-		Collections.sort(newList, new CmpIndividualEvaluated(problem));
+		Collections.sort(newList, new CmpIndividualEvaluated(problemDef));
 				
 		List<IndividualEvaluated> sublist = newList.subList(
 				0, Math.min(numberOfIndividuals,newList.size()));
@@ -182,9 +196,14 @@ public class IndividualsEvaluated  implements Concept {
 	 * @param problem
 	 * @return
 	 */
-	public IndividualEvaluated exportTheBestIndividual(Problem problem) {
+	public IndividualEvaluated exportTheBestIndividual(IProblemDefinition problemDef) {
+		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AProblemDefinition.class.getSimpleName() + " is not valid");
+		}
+
 		return Collections.min(individualsEvaluated,
-				new CmpIndividualEvaluated(problem));
+				new CmpIndividualEvaluated(problemDef));
 	}
 	
 	/**
@@ -192,12 +211,16 @@ public class IndividualsEvaluated  implements Concept {
 	 * @param problem
 	 * @return
 	 */
-	public List<IndividualEvaluated> exportIndividualsFromBestToWorst(Problem problem) {
+	public List<IndividualEvaluated> exportIndividualsFromBestToWorst(AProblemDefinition problemDef) {
+		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					AProblemDefinition.class.getSimpleName() + " is not valid");
+		}
 		
 		ArrayList<IndividualEvaluated> individualsList =
 				new ArrayList<IndividualEvaluated>(individualsEvaluated);
 		
-		Collections.sort(individualsList, new CmpIndividualEvaluated(problem));
+		Collections.sort(individualsList, new CmpIndividualEvaluated(problemDef));
 		
 		return individualsList;
 	}

@@ -2,6 +2,9 @@
 <configuration>
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_DifferentialEvolution" name="Agent_DifferentialEvolution">
+            <arguments>
+                <argument key="popSize" value="50" sendOnlyValue="false" />
+            </arguments>
         </agent>
     </agents>
 </configuration>

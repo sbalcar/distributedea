@@ -135,7 +135,7 @@ public class MethodInstanceDescription implements Concept {
 	public MethodInstanceDescription exportClone() {
 		
 		MethodInstanceDescription clone = new MethodInstanceDescription();
-		clone.setMethodType(methodType.exportClone());
+		clone.setMethodType(methodType.deepClone());
 		clone.setInstanceNumber(instanceNumber);
 		return clone;
 	}

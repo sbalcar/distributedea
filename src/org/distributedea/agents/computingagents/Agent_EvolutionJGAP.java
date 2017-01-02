@@ -22,9 +22,11 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinousOpt;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
@@ -71,7 +73,11 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem == ProblemContinousOpt.class) {
+		} else if (problem == ProblemBinPacking.class) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
+		} else if (problem == ProblemContinuousOpt.class) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
@@ -110,9 +116,10 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
+		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
 		
 		
@@ -126,7 +133,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		List<IndividualEvaluated> individuals = new ArrayList<>();
 		for (int i = 0; i < popSize; i++) {
 			IndividualEvaluated individualI = problemTool.generateIndividualEval(
-					problem, pedigreeParams, getCALogger());
+					problemDefinition, problem, pedigreeParams, getCALogger());
 			individuals.add(individualI);
 		}		
 		
@@ -140,13 +147,13 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		}
 		
 		if (individualDistribution) {
-			distributeIndividualToNeighours(individuals, problem, jobID);
+			distributeIndividualToNeighours(individuals, problemDefinition, jobID);
 		}
 
 		
 		conf.setSampleChromosome(population.getChromosome(0));
 		conf.setFitnessFunction(
-				new EAFitnessWrapper(conf, problem, problemTool, getCALogger()));
+				new EAFitnessWrapper(conf, problem, problemDefinition, problemTool, getCALogger()));
 		conf.setPopulationSize(popSize);
 		
         //conf.removeNaturalSelectors(false);
@@ -157,7 +164,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		conf.addGeneticOperator(
 				new EAMutationWrapper(mutationRate, problem, problemTool, conf, getCALogger()));
 		conf.addGeneticOperator(
-				new EACrossoverWrapper(crossRate, problem, problemTool, conf, getCALogger()));
+				new EACrossoverWrapper(crossRate, problemDefinition, problem, problemTool, conf, getCALogger()));
 		conf.addNaturalSelector(new StandardPostSelector(conf), false);
 		
 		Genotype pop = new Genotype(conf, population);
@@ -169,12 +176,12 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		IChromosome choosenChromosomeI = pop.getFittestChromosome();
 		Individual individualI = Convertor.convertToIndividual(
 				choosenChromosomeI, problem, problemTool, conf);
-		double fitnessI = problemTool.fitness(individualI, problem, getCALogger());
+		double fitnessI = problemTool.fitness(individualI, problemDefinition, problem, getCALogger());
 		IndividualEvaluated individualEvalI = new IndividualEvaluated(individualI, fitnessI, null);
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualEvalI,
-				generationNumberI, problem, jobID);
+				generationNumberI, problemDefinition, jobID);
 
 		while (state == CompAgentState.COMPUTING) {
 			// increment next number of generation
@@ -193,28 +200,28 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 			choosenChromosomeI = pop.getFittestChromosome();
 			individualI = Convertor.convertToIndividual(choosenChromosomeI,
 					problem, problemTool, conf);
-			fitnessI = problemTool.fitness(individualI, problem, getCALogger());
+			fitnessI = problemTool.fitness(individualI, problemDefinition, problem, getCALogger());
 			IndividualEvaluated individualEvalI_ = new IndividualEvaluated(individualI, fitnessI, null);
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI_,
-					generationNumberI, problem, jobID);
+					generationNumberI, problemDefinition, jobID);
 			
 			List<IndividualEvaluated> populationOntol =
-					convertPopulationToOntology(pop.getPopulation(), problem,
+					convertPopulationToOntology(pop.getPopulation(), problemDefinition, problem,
 					problemTool, conf);
 			
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
-				distributeIndividualToNeighours(populationOntol, problem, jobID);
+				distributeIndividualToNeighours(populationOntol, problemDefinition, jobID);
 			}
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problemDefinition);
 			
 			if (individualDistribution &&
 					FitnessTool.isFirstIndividualWBetterThanSecond(
-							recievedIndividualW, fitnessI, problem)) {
+							recievedIndividualW, fitnessI, problemDefinition)) {
 				
 				IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
 				
@@ -222,7 +229,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 						.convertToIChromosome(recievedIndividual.getIndividual(), problem, conf);
 				pop.getPopulation().addChromosome(recievedChromI);
 				
-				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
+				processRecievedIndividual(recievedIndividualW, generationNumberI, problemDefinition);
 			}
 
 		}
@@ -231,8 +238,9 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 	}
 
 
-	private List<IndividualEvaluated> convertPopulationToOntology(Population population, Problem problem,
-			IProblemTool problemTool, Configuration conf) throws InvalidConfigurationException {
+	private List<IndividualEvaluated> convertPopulationToOntology(Population population,
+			IProblemDefinition problemDef, Problem problem, IProblemTool problemTool,
+			Configuration conf) throws InvalidConfigurationException {
 		
 		List<IndividualEvaluated> individuals = new ArrayList<>();
 		
@@ -242,8 +250,8 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 			Individual individualI = Convertor.convertToIndividual(
 					iChromosomeI, problem, problemTool, conf);
 			
-			double fitnessI = problemTool.fitness(individualI, problem,
-					getCALogger());
+			double fitnessI = problemTool.fitness(individualI, problemDef,
+					problem, getCALogger());
 			
 			IndividualEvaluated individualEvalI =
 					new IndividualEvaluated(individualI, fitnessI, null);

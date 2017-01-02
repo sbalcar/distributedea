@@ -23,13 +23,13 @@ import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerTheGreatestQuantityOfImprovement implements Planner {
+public class PlannerTheGreatestQuantityOfImprovement implements IPlanner {
 
 	protected Agent_CentralManager centralManager;
 	protected JobRun jobRun;
 	protected IAgentLogger logger;
 	
-	protected Planner plannerInit = null;
+	protected IPlanner plannerInit = null;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,

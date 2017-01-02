@@ -5,7 +5,7 @@ import jade.core.AID;
 import java.util.List;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.PlannerTool;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputPlan;
@@ -21,7 +21,7 @@ import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerInitialisationRunEachMethodOnce implements Planner {
+public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -54,7 +54,7 @@ public class PlannerInitialisationRunEachMethodOnce implements Planner {
 	}
 
 	public Plan agentInitialisationOnlyCreateAgents(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun job, IAgentLogger logger) throws Exception {
+			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws Exception {
 		
 		NodeInfosWrapper availableNodes =
 				ManagerAgentService.getAvailableNodes(centralManager, logger);
@@ -62,7 +62,7 @@ public class PlannerInitialisationRunEachMethodOnce implements Planner {
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
 		InputMethodDescriptions agentDescriptions =
-				job.exportInputAgentDescriptions();
+				jobRun.exportInputAgentDescriptions();
 		
 		
 		InputPlan inputPlan = new InputPlan(iteration);
@@ -78,7 +78,7 @@ public class PlannerInitialisationRunEachMethodOnce implements Planner {
 		}
 		
 		return PlannerTool.createAgents(centralManager,
-				inputPlan, logger);
+				inputPlan, jobRun.getProblemDefinition(), logger);
 	}
 	
 	@Override

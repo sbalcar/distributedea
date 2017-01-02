@@ -8,7 +8,9 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
 
@@ -38,10 +40,20 @@ public class ProblemStruct implements Concept {
 	private String problemToolClass;
 	
 	/**
+	 * Problem to solve definition
+	 */
+	private IProblemDefinition problemToSolveDefinition;
+	
+	/**
 	 * Problem to solve
 	 */
 	private Problem problem;
 
+	/**
+	 * Specify about type of {@link Pedigree}
+	 */
+	private String pedigreeOfIndividualClassName;
+	
 	
 	
 	/**
@@ -56,7 +68,8 @@ public class ProblemStruct implements Concept {
 	public ProblemStruct(ProblemStruct problemStruct) {
 		
 		if (problemStruct == null || ! problemStruct.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					ProblemStruct.class.getSimpleName() + " is not valid");
 		}
 		
 		JobID jobIDClone = problemStruct.getJobID().deepClone();
@@ -64,12 +77,19 @@ public class ProblemStruct implements Concept {
 				problemStruct.getIndividualDistribution();
 		Class<?> problemToolClassClone =
 				problemStruct.exportProblemToolClass(new TrashLogger());
+		IProblemDefinition problemDefinitionClone =
+				problemStruct.getProblemDefinition().deepClone();
 		Problem problemClone = problemStruct.getProblem().deepClone();
+		Class<?> pedigreeOfIndividualClassClone = 
+				problemStruct.exportPedigreeOfIndividual(new TrashLogger());
+		
 		
 		this.setJobID(jobIDClone);
 		this.setIndividualDistribution(individualDistributionClone);
 		this.importProblemToolClass(problemToolClassClone);
+		this.setProblemDefinition(problemDefinitionClone);
 		this.setProblem(problemClone);
+		this.importPedigreeOfIndividualClassName(pedigreeOfIndividualClassClone);
 	}
 	
 	/**
@@ -144,6 +164,25 @@ public class ProblemStruct implements Concept {
 		this.problemToolClass = problemToolClass.getName();
 	}
 	
+	
+	/**
+	 * Returns problem to solve definition
+	 * @return
+	 */
+	public IProblemDefinition getProblemDefinition() {
+		return problemToSolveDefinition;
+	}
+
+	public void setProblemDefinition(
+			IProblemDefinition problemToSolveDefinition) {
+		if (problemToSolveDefinition == null ||
+				! problemToSolveDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IProblemDefinition.class.getSimpleName() + " is not valid");
+		}
+		this.problemToSolveDefinition = problemToSolveDefinition;
+	}
+
 	/**
 	 * Returns {@link Problem} to solve
 	 * @return
@@ -152,8 +191,50 @@ public class ProblemStruct implements Concept {
 		return problem;
 	}
 	public void setProblem(Problem problem) {
+		if (problem == null ||
+				! problem.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					Problem.class.getSimpleName() + " is not valid");
+		}
 		this.problem = problem;
 	}
+	
+	
+	@Deprecated	
+	public String getPedigreeOfIndividualClassName() {
+		return pedigreeOfIndividualClassName;
+	}
+	@Deprecated
+	public void setPedigreeOfIndividualClassName(String hisotyOfIndividualClassName) {
+		this.pedigreeOfIndividualClassName = hisotyOfIndividualClassName;
+	}
+
+	/**
+	 * Exports {@link IProblemTool} class
+	 * @param logger
+	 * @return
+	 */
+	public Class<?> exportPedigreeOfIndividual(IAgentLogger logger) {
+		
+		try {
+			return Class.forName(pedigreeOfIndividualClassName);
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	/**
+	 * Import {@link IProblemTool} class
+	 * @param problemToSolve
+	 */
+	public void importPedigreeOfIndividualClassName(Class<?> pedigreeOfIndividual) {
+		
+		if (pedigreeOfIndividual == null) {
+			this.pedigreeOfIndividualClassName = null;
+			return;
+		}
+		this.pedigreeOfIndividualClassName = pedigreeOfIndividual.getName();
+	}
+	
 	
 	/**
 	 * Exports Problem wrapper
@@ -165,14 +246,17 @@ public class ProblemStruct implements Concept {
 		}
 		JobID jobIDCone = jobID.deepClone();
 		boolean individualDistributionClone = individualDistribution;
+		IProblemDefinition problemDefClone = problemToSolveDefinition.deepClone();
 		File problemFileClone = getProblem().exportProblemFile();
 		Class<?> problemToolClass = exportProblemToolClass(new TrashLogger());
 		
 		ProblemWrapper wrapper = new ProblemWrapper();
 		wrapper.setJobID(jobIDCone);
 		wrapper.setIndividualDistribution(individualDistributionClone);
+		wrapper.setProblemDefinition(problemDefClone);
 		wrapper.importProblemFile(problemFileClone);
 		wrapper.importProblemToolClass(problemToolClass);
+		wrapper.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));
 		return wrapper;
 	}
 	
@@ -195,6 +279,9 @@ public class ProblemStruct implements Concept {
 			return false;
 		}
 		if (exportProblemToolClass(logger) == null) {
+			return false;
+		}
+		if (problemToSolveDefinition == null || ! problemToSolveDefinition.valid(logger)) {
 			return false;
 		}
 		if (problem == null || ! problem.valid(logger)) {

@@ -10,8 +10,6 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemTool;
 
 /**
  * Structure represents model for one Method
@@ -21,8 +19,6 @@ import org.distributedea.problems.ProblemTool;
 public class MethodStatisticModel {
 	
 	private final MethodDescription agentDescription;
-	
-	private final Class<?> problemToSolveClass;
 	
 	private IndividualEvaluated bestIndividual;
 	
@@ -48,14 +44,6 @@ public class MethodStatisticModel {
 		}
 		
 		this.agentDescription = agentDescription;
-		
-		Class<?> problemToolClass =
-				agentDescription.exportProblemToolClass();
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, new TrashLogger());	
-		Class<?> problemClass = problemTool.problemWhichSolves();
-		
-		this.problemToSolveClass = problemClass;
 	}
 	
 	public MethodDescription getAgentDescription() {
@@ -150,9 +138,8 @@ public class MethodStatisticModel {
 	private boolean isFistIndividualWBetterThanSecond(
 			IndividualEvaluated individual1, IndividualEvaluated individual2) {
 		
-		return FitnessTool
-				.isFistIndividualEBetterThanSecond(individual1,
-						individual2, problemToSolveClass);
+		return FitnessTool.isFistIndividualEBetterThanSecond(individual1,
+						individual2, agentDescription.getProblemDefinition());
 	}
 	
 	public MethodStatistic exportMethodStatistic() {

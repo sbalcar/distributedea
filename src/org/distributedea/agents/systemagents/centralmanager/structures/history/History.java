@@ -469,7 +469,7 @@ public class History {
 	 * @param dir
 	 * @throws IOException
 	 */
-	public void exportToXML(File dir) throws IOException {
+	public void exportToXML(File dir) throws Exception {
 		 
 		if (dir == null || ! dir.isDirectory()) {
 			throw new IllegalArgumentException("Argument " +
@@ -512,9 +512,9 @@ public class History {
 	 * Imports {@link History} from XML
 	 * @param jobID
 	 * @return
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public static History importXML(File dir) throws IOException {
+	public static History importXML(File dir) throws Exception {
 		
 		if (dir == null || ! dir.isDirectory()) {
 			throw new IllegalArgumentException("Argument " +

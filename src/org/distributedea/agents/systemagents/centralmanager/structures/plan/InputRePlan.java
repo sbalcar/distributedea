@@ -156,7 +156,7 @@ public class InputRePlan implements Concept {
 		if (agentsToKill == null) {
 			return false;
 		}
-		return agentsToKill.containsAgentDescription(agentToKill);
+		return agentsToKill.containsMethodDescription(agentToKill);
 	}
 	
 	/**

@@ -9,8 +9,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinousOpt;
-import org.distributedea.ontology.problem.continousoptimalization.Interval;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.continuousoptimization.Interval;
 import org.distributedea.problems.IProblemTool;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
@@ -48,8 +48,8 @@ public class Convertor {
 			IndividualPoint individualPoint =
 					(IndividualPoint)individual;
 			
-			ProblemContinousOpt problemCO =
-					(ProblemContinousOpt)problem;
+			ProblemContinuousOpt problemCO =
+					(ProblemContinuousOpt)problem;
 			
 			return convertToIChromosome(individualPoint, problemCO, conf);
 		}
@@ -89,7 +89,7 @@ public class Convertor {
 	}
 
 	private static Chromosome convertToIChromosome(
-			IndividualPoint individual, ProblemContinousOpt problem,
+			IndividualPoint individual, ProblemContinuousOpt problem,
 			Configuration conf)
 			throws InvalidConfigurationException {
 		

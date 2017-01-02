@@ -21,13 +21,13 @@ import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerTheBestHelper implements Planner {
+public class PlannerTheBestHelper implements IPlanner {
 
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
 	private IAgentLogger logger;
 	
-	private Planner plannerInit = null;
+	private IPlanner plannerInit = null;
 	
 	private boolean NEW_STATISTICS_FOR_EACH_QUERY = true;
 	
@@ -44,8 +44,7 @@ public class PlannerTheBestHelper implements Planner {
 		this.logger = logger;
 		
 		plannerInit = new PlannerInitialisationOneMethodPerCore();
-		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
-		
+		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);		
 	}
 
 	

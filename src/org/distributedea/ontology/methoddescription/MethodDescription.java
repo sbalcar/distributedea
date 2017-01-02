@@ -15,6 +15,7 @@ import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methodtype.MethodType;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
@@ -36,6 +37,11 @@ public class MethodDescription implements Concept {
 	private AgentConfiguration agentConfiguration;
 	
 	/**
+	 * Problem to solve definition
+	 */
+	private IProblemDefinition problemDefinition;
+	
+	/**
 	 * Problem Tool to use for solving Problem 
 	 */
 	private String problemToolClass;
@@ -50,17 +56,43 @@ public class MethodDescription implements Concept {
 	 * @param agentConfiguration
 	 * @param problemToolClass
 	 */
-	public MethodDescription(AgentConfiguration agentConfiguration, Class<?> problemToolClass) {
+	public MethodDescription(AgentConfiguration agentConfiguration,
+			IProblemDefinition problemDef, Class<?> problemToolClass) {
 		if (agentConfiguration == null ||
 				! agentConfiguration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					AgentConfiguration.class.getSimpleName() + " is not valid");
 		}
 	
-		this.agentConfiguration = agentConfiguration;
-		this.importProblemToolClass(problemToolClass);
+		setAgentConfiguration(agentConfiguration);
+		setProblemDefinition(problemDef);
+		importProblemToolClass(problemToolClass);
 	}
 
+	/**
+	 * Copy constructor
+	 * @param methodDescription
+	 */
+	public MethodDescription(MethodDescription methodDescription) {
+		if (methodDescription == null ||
+				! methodDescription.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					MethodDescription.class.getSimpleName() + " is not valid");
+		}
+
+		AgentConfiguration agentConfigurationClone =
+				methodDescription.getAgentConfiguration().deepClone();
+		IProblemDefinition problemDefinitionClone =
+				methodDescription.getProblemDefinition().deepClone();
+		Class<?> problemToolClassClone =
+				methodDescription.exportProblemToolClass();
+		
+		setAgentConfiguration(agentConfigurationClone);
+		setProblemDefinition(problemDefinitionClone);
+		importProblemToolClass(problemToolClassClone);
+
+	}
+	
 	public AgentConfiguration getAgentConfiguration() {
 		return agentConfiguration;
 	}
@@ -70,6 +102,18 @@ public class MethodDescription implements Concept {
 			throw new IllegalArgumentException();
 		}
 		this.agentConfiguration = agentConfiguration;
+	}
+	
+	public IProblemDefinition getProblemDefinition() {
+		return problemDefinition;
+	}
+	@Deprecated
+	public void setProblemDefinition(IProblemDefinition problemDefinition) {
+		if (problemDefinition == null || ! problemDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IProblemDefinition.class.getSimpleName() + " is not vlid");
+		}
+		this.problemDefinition = problemDefinition;
 	}
 	
 	public String getProblemToolClass() {
@@ -276,9 +320,6 @@ public class MethodDescription implements Concept {
 	 */
 	public MethodDescription deepClone() {
 		
-		AgentConfiguration confClone = agentConfiguration.deepClone();
-		Class<?> problemToolClassClone = this.exportProblemToolClass();
-		
-		return new MethodDescription(confClone, problemToolClassClone);
+		return new MethodDescription(this);
 	}
 }

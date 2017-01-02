@@ -3,7 +3,7 @@ package org.distributedea.agents;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
  * Tool for comparing fitness of {@link Individual}s. This tool
@@ -15,7 +15,7 @@ import org.distributedea.ontology.problem.Problem;
 public class FitnessTool {
 
 	public static boolean isFistIndividualWBetterThanSecond(IndividualWrapper individual1,
-			IndividualWrapper individual2, Problem problem) {
+			IndividualWrapper individual2, IProblemDefinition problemDef) {
 		
 		if (individual1 == null) {
 			return false;
@@ -26,11 +26,11 @@ public class FitnessTool {
 		IndividualEvaluated indivEv1 = individual1.getIndividualEvaluated();
 		IndividualEvaluated indivEv2 = individual2.getIndividualEvaluated();
 		
-		return isFirstIndividualEBetterThanSecond(indivEv1, indivEv2, problem);
+		return isFirstIndividualEBetterThanSecond(indivEv1, indivEv2, problemDef);
 	}
 	
 	public static boolean isFistIndividualWBetterThanSecond(IndividualWrapper individualWrp1,
-			IndividualEvaluated individualEval2, Problem problem) {
+			IndividualEvaluated individualEval2, IProblemDefinition problemDef) {
 		
 		if (individualWrp1 == null) {
 			return false;
@@ -38,11 +38,11 @@ public class FitnessTool {
 		IndividualEvaluated individualEval1 = individualWrp1.getIndividualEvaluated();
 		
 		return isFirstIndividualEBetterThanSecond(individualEval1,
-				individualEval2, problem);
+				individualEval2, problemDef);
 	}
 	
 	public static boolean isFirstIndividualWBetterThanSecond(IndividualWrapper individual1,
-			double fitness2, Problem problem) {
+			double fitness2, IProblemDefinition problemDef) {
 		
 		if (individual1 == null) {
 			return false;
@@ -51,11 +51,11 @@ public class FitnessTool {
 		IndividualEvaluated individualE1 = individual1.getIndividualEvaluated();
 		
 		return isFistFitnessBetterThanSecond(
-				individualE1.getFitness(), fitness2, problem);
+				individualE1.getFitness(), fitness2, problemDef);
 	}
 	
 	public static boolean isFistIndividualEBetterThanSecond(IndividualEvaluated individualEval1,
-			IndividualEvaluated individualEval2, Class<?> problemClass) {
+			IndividualEvaluated individualEval2, IProblemDefinition problemDef) {
 		
 		if (individualEval1 == null) {
 			return false;
@@ -64,14 +64,12 @@ public class FitnessTool {
 			return true;
 		}
 
-		Problem problem = Problem.createProblem(problemClass);
-
 		return isFirstIndividualEBetterThanSecond(individualEval1,
-				individualEval2, problem);
+				individualEval2, problemDef);
 	}
 	
 	public static boolean isFirstIndividualEBetterThanSecond(IndividualEvaluated individualEval1,
-			IndividualEvaluated individualEval2, Problem problem) {
+			IndividualEvaluated individualEval2, IProblemDefinition problemDef) {
 		
 		if (individualEval1 == null) {
 			return false;
@@ -83,11 +81,11 @@ public class FitnessTool {
 		double fitness1 = individualEval1.getFitness();
 		double fitness2 = individualEval2.getFitness();
 		
-		return isFistFitnessBetterThanSecond(fitness1, fitness2, problem);
+		return isFistFitnessBetterThanSecond(fitness1, fitness2, problemDef);
 	}
 	
 	public static boolean isFirstIndividualEWorseThanSecond(IndividualEvaluated individualEval1,
-			IndividualEvaluated individualEval2, Problem problem) {
+			IndividualEvaluated individualEval2, IProblemDefinition problemDef) {
 		
 		if (individualEval1 == null) {
 			return false;
@@ -99,16 +97,16 @@ public class FitnessTool {
 		double fitness1 = individualEval1.getFitness();
 		double fitness2 = individualEval2.getFitness();
 		
-		return isFistFitnessWorseThanSecond(fitness1, fitness2, problem);
+		return isFistFitnessWorseThanSecond(fitness1, fitness2, problemDef);
 	}
 	
 	public static boolean isFistFitnessWorseThanSecond(double fitness1,
-			double fitness2,  Problem problem) {
+			double fitness2,  IProblemDefinition problemDef) {
 		
 		boolean isBetter = isFistFitnessBetterThanSecond(fitness1,
-				fitness2, problem);
+				fitness2, problemDef);
 		boolean isEqual = isFistFitnessEqualToSecond(fitness1,
-				fitness2, problem);
+				fitness2, problemDef);
 		
 		if ( (! isBetter) && (! isEqual) ) {
 			return true;
@@ -118,14 +116,14 @@ public class FitnessTool {
 	}
 	
 	private static boolean isFistFitnessEqualToSecond(double fintess1,
-			double fitness2, Problem problem) {
+			double fitness2, IProblemDefinition problemDef) {
 		return (fintess1 == fitness2);
 	}
 	
 	public static boolean isFistFitnessBetterThanSecond(double fitness1,
-			double fitness2, Problem problem) {
+			double fitness2, IProblemDefinition problemDef) {
 		
-		if (problem.isMaximizationProblem()) {
+		if (problemDef.exportIsMaximizationProblem()) {
 			if (fitness1 > fitness2) {
 				return true;
 			}

@@ -17,9 +17,10 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problemdefinition.ProblemContinuousOptDef;
 import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemToolException;
-import org.distributedea.problems.continuousoptimization.ProblemToolRandomMove;
+import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
@@ -29,32 +30,34 @@ import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
 public class TestCO {
 
 	@SuppressWarnings("unused")
-	private void test1() throws ProblemToolException {
+	private void test1() throws Exception {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		File fileOfInput = new File(inputFileName);
 		
-		IProblemTool tool = new ProblemToolRandomMove();
+		IProblemDefinition problemDef = new ProblemContinuousOptDef(true);
+		IProblemTool tool = new ProblemToolCORandomMove();
 		
 		Problem problem = tool.readProblem(fileOfInput, null);
 		tool.initialization(problem, null, null);
 		
-		IndividualEvaluated individual = tool.generateIndividualEval(problem, null, null);
+		IndividualEvaluated individual = tool.generateIndividualEval(problemDef, problem, null, null);
 		
-		double fitness = tool.fitness(individual.getIndividual(), problem, null);
+		double fitness = tool.fitness(individual.getIndividual(), problemDef, problem, null);
 		System.out.println(fitness);
 		
 		tool.exit();
 	}
 	
 	@SuppressWarnings("unused")
-	private void test2() throws ProblemToolException {
+	private void test2() throws Exception {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		File fileOfInput = new File(inputFileName);
 		
-		IProblemTool tool1 = new ProblemToolRandomMove();
+		IProblemTool tool1 = new ProblemToolCORandomMove();
 		
+		IProblemDefinition problemDef = new ProblemContinuousOptDef(true);
 		Problem problem1 = tool1.readProblem(fileOfInput, null);
 		tool1.initialization(problem1, null, null);
 
@@ -63,24 +66,24 @@ public class TestCO {
 		} catch (InterruptedException e) {
 		}
 		
-		IProblemTool tool2 = new ProblemToolRandomMove();
+		IProblemTool tool2 = new ProblemToolCORandomMove();
 		
 		Problem problem2 = tool2.readProblem(fileOfInput, null);
 		tool2.initialization(problem2, null, null);
 		
 		
 		for (int i = 0; i < 10; i++) {
-			IndividualEvaluated individualEval1 = tool1.generateIndividualEval(problem1, null, null);
+			IndividualEvaluated individualEval1 = tool1.generateIndividualEval(problemDef, problem1, null, null);
 			Individual individual1 = individualEval1.getIndividual();
 			
-			double fitness1 = tool1.fitness(individualEval1.getIndividual(), problem1, null);
+			double fitness1 = tool1.fitness(individualEval1.getIndividual(), problemDef, problem1, null);
 			System.out.println(" fitness1: " + fitness1);		
 	
 			
-			IndividualEvaluated individualEval2 = tool2.generateIndividualEval(problem2, null, null);
+			IndividualEvaluated individualEval2 = tool2.generateIndividualEval(problemDef, problem2, null, null);
 			Individual individual2 = individualEval2.getIndividual();
 			
-			double fitness2 = tool2.fitness(individual2, problem2, null);
+			double fitness2 = tool2.fitness(individual2, problemDef, problem2, null);
 			System.out.println(" fitness2: " + fitness2);
 		}
 		
@@ -91,16 +94,18 @@ public class TestCO {
 	}
 
 	@SuppressWarnings("unused")
-	private void test3() throws BbobException, ProblemToolException {
+	private void test3() throws BbobException, Exception {
 	    
 	    String inputFileName = "inputs" + File.separator + "f01.co";
 	    File fileOfInput = new File(inputFileName);
 	    
-	    IProblemTool tool = new ProblemToolRandomMove();
+		IProblemDefinition problemDef = new ProblemContinuousOptDef(true);
+		
+	    IProblemTool tool = new ProblemToolCORandomMove();
 		Problem problem = tool.readProblem(fileOfInput, null);
 		tool.initialization(problem, null, null);
 		
-		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problem, null, null);
+		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problemDef, problem, null, null);
 		Individual individual1 = individualEval1.getIndividual();
 		
 		IndividualPoint individualPoint1 = (IndividualPoint) individual1;
@@ -112,7 +117,7 @@ public class TestCO {
 		double[] coordinates1 = ArrayUtils.toPrimitive(coordinatesArray1);
 		
 		
-		IndividualEvaluated individualEval2 = tool.generateIndividualEval(problem, null, null);
+		IndividualEvaluated individualEval2 = tool.generateIndividualEval(problemDef, problem, null, null);
 		Individual individual2 = individualEval2.getIndividual();
 		
 		IndividualPoint individualPoint2 = (IndividualPoint) individual2;
@@ -160,7 +165,7 @@ public class TestCO {
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		File fileOfInput = new File(inputFileName);
 		
-		IProblemTool problemTool = new ProblemToolRandomMove();
+		IProblemTool problemTool = new ProblemToolCORandomMove();
 		Problem problem = problemTool.readProblem(fileOfInput, null);
 		
 		
@@ -168,7 +173,7 @@ public class TestCO {
 				File.separator + "Agent_Evolution_14.rslt";
 		File fileOfSolution = new File(solutionFileName);
 		
-		ProblemToolRandomMove tool = new ProblemToolRandomMove();
+		ProblemToolCORandomMove tool = new ProblemToolCORandomMove();
 		
 		Individual individual = tool.readSolution(fileOfSolution, problem, null);
 	}
@@ -176,17 +181,19 @@ public class TestCO {
 	
 	private void test5() {
 		
+		IProblemDefinition problemDef = new ProblemContinuousOptDef(true);
+		
 		Map<MethodDescription, Integer> map = new HashMap<MethodDescription, Integer>();
-			
+		
 		AgentConfiguration ac1 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		MethodDescription a1 =
-				new MethodDescription(ac1, ProblemToolRandomMove.class);
+				new MethodDescription(ac1, problemDef, ProblemToolCORandomMove.class);
 		
 		AgentConfiguration ac2 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		MethodDescription a2 =
-				new MethodDescription(ac2, ProblemToolRandomMove.class);
+				new MethodDescription(ac2, problemDef, ProblemToolCORandomMove.class);
 		
 		map.put(a1, 1);
 		map.put(a2, 2);

@@ -40,9 +40,4 @@ public abstract class ProblemTSP extends Problem {
 		return minValue;
 	}
 	
-	@Override
-	public boolean isMaximizationProblem() {
-		return false;
-	}
-	
 }

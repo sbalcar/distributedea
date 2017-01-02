@@ -29,13 +29,13 @@ import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerAgentInfo implements Planner {
+public class PlannerAgentInfo implements IPlanner {
 
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
 	private IAgentLogger logger;
 	
-	private Planner plannerInit;
+	private IPlanner plannerInit;
 	
 	private AgentInfosWrapper knownMethods;
 	

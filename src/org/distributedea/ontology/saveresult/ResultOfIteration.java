@@ -3,7 +3,6 @@ package org.distributedea.ontology.saveresult;
 import jade.content.Concept;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,9 +148,9 @@ public class ResultOfIteration implements Concept {
 	/**
 	 * Exports to XML
 	 * @param dir
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void exportXML(File dir) throws IOException {
+	public void exportXML(File dir) throws Exception {
 		
 		if (dir == null || (! dir.isDirectory())) {
 			throw new IllegalArgumentException("Argument " +

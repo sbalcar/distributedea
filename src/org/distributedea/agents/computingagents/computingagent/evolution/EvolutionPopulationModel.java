@@ -9,8 +9,8 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemToolException;
 
 /**
  * Structure for representation model of individuals for evolution algorithm
@@ -80,12 +80,12 @@ public class EvolutionPopulationModel {
 	
 	/**
 	 * Returns the best {@link IndividualEvaluated} in model
-	 * @param problem
+	 * @param problemDef
 	 * @return
 	 */
-	public IndividualEvaluated getBestIndividual(Problem problem) {
+	public IndividualEvaluated getBestIndividual(IProblemDefinition problemDef) {
 		
-		return individuals.exportTheBestIndividual(problem);
+		return individuals.exportTheBestIndividual(problemDef);
 	}
 	
 	/**
@@ -98,8 +98,8 @@ public class EvolutionPopulationModel {
 	 * @throws ProblemToolException
 	 */
 	public EvolutionPopulationModel processMutation(double probOfMutation,
-			IProblemTool tool, Problem problem, PedigreeParameters pedigreeParams,
-			IAgentLogger logger) throws ProblemToolException {
+			IProblemTool tool, IProblemDefinition problemDef, Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
 		List<IndividualEvaluated> improvedIndividuals = new ArrayList<>();
 		
@@ -110,7 +110,7 @@ public class EvolutionPopulationModel {
 			
 			if (Math.random() < probOfMutation) {
 				newIndividualEvalI = tool.improveIndividualEval(
-						individualEvalI, problem, pedigreeParams, logger);
+						individualEvalI, problemDef, problem, pedigreeParams, logger);
 			}
 			improvedIndividuals.add(newIndividualEvalI);
 		}
@@ -123,24 +123,24 @@ public class EvolutionPopulationModel {
 	 * @param probOfCross
 	 * @param selector
 	 * @param tool
-	 * @param problem
+	 * @param problemDef
 	 * @param logger
 	 * @return
 	 * @throws ProblemToolException
 	 */
 	public EvolutionPopulationModel processCross(double probOfCross, ISelector selector,
-			IProblemTool tool, Problem problem, PedigreeParameters pedigreeParams,
-			IAgentLogger logger) throws ProblemToolException {
+			IProblemTool tool, IProblemDefinition problemDef, Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
 		List<IndividualEvaluated> individualsCopy = new ArrayList<>();
 		
 		for (int i = 0; i < individuals.size(); i++) {
 			
-			IndividualEvaluated indivEval1 = selector.select(individuals, problem);
-			IndividualEvaluated indivEval2 = selector.select(individuals, problem);
+			IndividualEvaluated indivEval1 = selector.select(individuals, problemDef);
+			IndividualEvaluated indivEval2 = selector.select(individuals, problemDef);
 			
 			IndividualEvaluated[] indivEvalNew = tool.createNewIndividual(
-					indivEval1, indivEval2, problem, pedigreeParams, logger);
+					indivEval1, indivEval2, problemDef, problem, pedigreeParams, logger);
 			
 			individualsCopy.add(indivEvalNew[0]);
 		}
@@ -151,15 +151,15 @@ public class EvolutionPopulationModel {
 	/**
 	 * Correct Model to given size. Function removes duplicities and
 	 * the set of worst individuals
-	 * @param problem
+	 * @param problemDef
 	 * @param popSize
 	 */
-	public void correctedPopulationModel(Problem problem, int popSize) {
+	public void correctedPopulationModel(IProblemDefinition problemDef, int popSize) {
 		
 		individuals.removeDuplicates();
 		
 		List<IndividualEvaluated> individualsCopy =
-				individuals.exportSortedFromBestToWorst(problem);
+				individuals.exportSortedFromBestToWorst(problemDef);
 
 		this.individuals = new IndividualsEvaluated(
 				individualsCopy.subList(0, popSize));

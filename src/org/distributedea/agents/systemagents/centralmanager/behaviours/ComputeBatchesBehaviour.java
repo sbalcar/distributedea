@@ -1,14 +1,15 @@
 package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
-import org.distributedea.agents.systemagents.centralmanager.plannertype.PlannerType;
+import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.IPlannerEndCondition;
+import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobRun;
+
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
 
@@ -89,15 +90,16 @@ public class ComputeBatchesBehaviour extends OneShotBehaviour {
 	private void processJob(Job job, String batchID) {
 		
 		int numberOfRuns = job.getNumberOfRuns();
-		Planner planner = job.getPlanner();
-		PlannerType plannerType = job.getPlannerType();
 
+		IPlannerEndCondition endCondition = job.getPlannerEndCondition();
+		IPlanner planner = job.getPlanner();
+		
 		for (int runNumberI = 0; runNumberI < numberOfRuns; runNumberI++) {
 			
 			JobRun jobRunI = job.exportJobRun(batchID, runNumberI, logger);
 
 			ComputeJobRunBehaviour jobRunBehaviourI =
-					new ComputeJobRunBehaviour(jobRunI, planner, plannerType, logger);
+					new ComputeJobRunBehaviour(jobRunI, endCondition, planner, logger);
 			centralManager.computingBehaviours.add(jobRunBehaviourI);
 			centralManager.addBehaviour(jobRunBehaviourI);
 		}

@@ -7,7 +7,9 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
 
@@ -33,15 +35,25 @@ public class ProblemWrapper implements Concept {
 	private boolean individualDistribution;
 	
 	/**
-	 * Problem Tool to use for solving Problem 
+	 * Problem definition
 	 */
-	private String problemToolClass;
+	private IProblemDefinition problemDefinition;
 	
 	/**
 	 * File with problem
 	 */
 	private String problemFileName;
 	
+	/**
+	 * Problem Tool to use for solving Problem 
+	 */
+	private String problemToolClass;
+	
+	/**
+	 * Specify about type of {@link Pedigree}
+	 */
+	private String pedigreeOfIndividualClassName;
+
 	
 	/**
 	 * Constructor
@@ -54,12 +66,16 @@ public class ProblemWrapper implements Concept {
 	 */
 	public ProblemWrapper(ProblemWrapper problemWrapper) {
 		if (problemWrapper == null || ! problemWrapper.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					ProblemWrapper.class.getSimpleName() + " is not valid");
 		}
 		jobID = problemWrapper.getJobID().deepClone();
 		individualDistribution = problemWrapper.isIndividualDistribution();
+		setProblemDefinition(problemWrapper.getProblemDefinition().deepClone());
+		importProblemFile(problemWrapper.exportProblemFile());
 		importProblemToolClass(problemWrapper.exportProblemToolClass());
-		problemFileName = problemWrapper.getProblemFileName();
+		importPedigreeOfIndividualClassName(
+				problemWrapper.exportPedigreeOfIndividual(new TrashLogger()));
 	}
 	
 	/**
@@ -93,34 +109,23 @@ public class ProblemWrapper implements Concept {
 		this.individualDistribution = individualDistribution;
 	}
 	
-
-	@Deprecated
-	public String getProblemToolClass() {
-		return problemToolClass;
-	}
-	@Deprecated
-	public void setProblemToolClass(String problemToolClass) {
-		this.problemToolClass = problemToolClass;
-	}
+	
 	/**
-	 * Import {@link IProblemTool} class
-	 * @param problemToolClass
-	 */
-	public void importProblemToolClass(Class<?> problemToolClass) {
-		this.problemToolClass = problemToolClass.getName();
-	}
-	/**
-	 * Export {@link IProblemTool} class
+	 * Returns definition of Problem to solve
 	 * @return
 	 */
-	public Class<?> exportProblemToolClass() {
-		try {
-			return Class.forName(problemToolClass);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
+	public IProblemDefinition getProblemDefinition() {
+		return problemDefinition;
 	}
-	
+
+	public void setProblemDefinition(IProblemDefinition problemDefinition) {
+		if (problemDefinition == null || ! problemDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IProblemDefinition.class.getSimpleName() + " is not valid");
+		}
+		this.problemDefinition = problemDefinition;
+	}
+
 	@Deprecated
 	public String getProblemFileName() {
 		File file = exportProblemFile();
@@ -159,6 +164,33 @@ public class ProblemWrapper implements Concept {
 		this.problemFileName = problemFile.getAbsolutePath();
 	}
 
+	@Deprecated
+	public String getProblemToolClass() {
+		return problemToolClass;
+	}
+	@Deprecated
+	public void setProblemToolClass(String problemToolClass) {
+		this.problemToolClass = problemToolClass;
+	}
+	/**
+	 * Import {@link IProblemTool} class
+	 * @param problemToolClass
+	 */
+	public void importProblemToolClass(Class<?> problemToolClass) {
+		this.problemToolClass = problemToolClass.getName();
+	}
+	/**
+	 * Export {@link IProblemTool} class
+	 * @return
+	 */
+	public Class<?> exportProblemToolClass() {
+		try {
+			return Class.forName(problemToolClass);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+	}
+	
 	/**
 	 * Export Problem from from given problem file
 	 * @param logger
@@ -176,19 +208,59 @@ public class ProblemWrapper implements Concept {
 		return problemTool.readProblem(exportProblemFile(), logger);
 	}
 	
+	
+	@Deprecated	
+	public String getPedigreeOfIndividualClassName() {
+		return pedigreeOfIndividualClassName;
+	}
+	@Deprecated
+	public void setPedigreeOfIndividualClassName(String hisotyOfIndividualClassName) {
+		this.pedigreeOfIndividualClassName = hisotyOfIndividualClassName;
+	}
+
+	/**
+	 * Exports {@link IProblemTool} class
+	 * @param logger
+	 * @return
+	 */
+	public Class<?> exportPedigreeOfIndividual(IAgentLogger logger) {
+		
+		try {
+			return Class.forName(pedigreeOfIndividualClassName);
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	/**
+	 * Import {@link IProblemTool} class
+	 * @param problemToSolve
+	 */
+	public void importPedigreeOfIndividualClassName(Class<?> pedigreeOfIndividual) {
+		
+		if (pedigreeOfIndividual == null) {
+			this.pedigreeOfIndividualClassName = null;
+			return;
+		}
+		this.pedigreeOfIndividualClassName = pedigreeOfIndividual.getName();
+	}
+	
 	/**
 	 * Exports {@link ProblemStruct}
 	 * @param logger
 	 * @return
 	 */
 	public ProblemStruct exportProblemStruct(IAgentLogger logger) {
+		if (! valid(logger)) {
+			return null;
+		}
 		
 		ProblemStruct struct = new ProblemStruct();
 		struct.setJobID(getJobID());
 		struct.setIndividualDistribution(individualDistribution);
-		struct.importProblemToolClass(exportProblemToolClass());
+		struct.setProblemDefinition(problemDefinition.deepClone());
 		struct.setProblem(exportProblem(logger));
-		
+		struct.importProblemToolClass(exportProblemToolClass());
+		struct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(logger));
 		return struct;
 	}
 	

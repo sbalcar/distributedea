@@ -2,6 +2,9 @@
 <configuration>
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_TabuSearch" name="Agent_TabuSearch">
+            <arguments>
+                <argument key="tabuModelSize" value="500" sendOnlyValue="false" />
+            </arguments>
         </agent>
     </agents>
 </configuration>

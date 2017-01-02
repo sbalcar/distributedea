@@ -8,8 +8,8 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.AProblemDefinition;
 import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemToolException;
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.GeneticOperator;
@@ -27,6 +27,7 @@ public class EAMutationWrapper implements GeneticOperator {
 	private static final long serialVersionUID = 1L;
 
 	private double mutationRate;
+	private AProblemDefinition problemDef;
 	private Problem problem;
 	private IProblemTool problemTool;
 	private Configuration conf;
@@ -108,15 +109,15 @@ public class EAMutationWrapper implements GeneticOperator {
 			return null;
 		}
 		
-		double fitness = problemTool.fitness(individual, problem, logger);
+		double fitness = problemTool.fitness(individual, problemDef, problem, logger);
 		
 		// call the mutation
 		IndividualEvaluated individualNew;
 		try {
 			individualNew = problemTool.improveIndividualEval(
 					new IndividualEvaluated(individual, fitness, null),
-					problem, null, logger);
-		} catch (ProblemToolException e1) {
+					problemDef, problem, null, logger);
+		} catch (Exception e1) {
 			return null;
 		}
 		

@@ -8,6 +8,7 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
  * Interface for {@link ProblemTool} implemntation
@@ -36,13 +37,13 @@ public interface IProblemTool {
 	 * @throws ProblemToolException
 	 */
 	public void initialization(Problem problem, AgentConfiguration agentConf,
-			IAgentLogger logger) throws ProblemToolException;
+			IAgentLogger logger) throws Exception;
 	
 	/**
 	 * Exit of {@link ProblemTool}
 	 * @throws ProblemToolException
 	 */
-	public void exit() throws ProblemToolException;
+	public void exit() throws Exception;
 	
 	/**
 	 * Reads instance of the Problem from the file,
@@ -71,8 +72,8 @@ public interface IProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public double fitness(Individual individual, Problem problem,
-			IAgentLogger logger);
+	public double fitness(Individual individual, IProblemDefinition problemDef,
+			Problem problem, IAgentLogger logger);
 	
 	/**
 	 * Generated random {@link Individual} as solution for given {@link Problem}
@@ -80,14 +81,14 @@ public interface IProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public IndividualEvaluated generateIndividualEval(Problem problem,
-			PedigreeParameters pedigreeParams, IAgentLogger logger);
+	public IndividualEvaluated generateIndividualEval(IProblemDefinition problemDef,
+			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
-	public IndividualEvaluated generateFirstIndividualEval(Problem problem,
-			PedigreeParameters pedigreeParams, IAgentLogger logger);
+	public IndividualEvaluated generateFirstIndividualEval(IProblemDefinition problemDef,
+			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
-	public IndividualEvaluated generateNextIndividualEval(Problem problem,
-			IndividualEvaluated individual, PedigreeParameters pedigreeParams,
+	public IndividualEvaluated generateNextIndividualEval(IProblemDefinition problemDef,
+			Problem problem, IndividualEvaluated individual, PedigreeParameters pedigreeParams,
 			IAgentLogger logger);
 	
 	
@@ -99,21 +100,22 @@ public interface IProblemTool {
 	 * @return
 	 * @throws ProblemToolException
 	 */  
-	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual, Problem problem,
-			PedigreeParameters pedigreeParams, IAgentLogger logger) throws ProblemToolException;
+	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual,
+			IProblemDefinition problemDef, Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
 	
 	public IndividualEvaluated getNeighborEval(IndividualEvaluated individual,
-			Problem problem, long neighborIndex, PedigreeParameters pedigreeParams,
-			IAgentLogger logger) throws ProblemToolException;
+			IProblemDefinition problemDef, Problem problem, long neighborIndex,
+			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
 	
 	public IndividualEvaluated[] createNewIndividual(IndividualEvaluated individualEval1,
-			IndividualEvaluated individualEval2, Problem problem,
-			PedigreeParameters pedigreeParams, IAgentLogger logger)
-			throws ProblemToolException;
+			IndividualEvaluated individualEval2, IProblemDefinition problemDef,
+			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger)
+			throws Exception;
 	
 
 	public IndividualEvaluated[] createNewIndividualEval(IndividualEvaluated individual1, 
 			IndividualEvaluated individual2, IndividualEvaluated individual3,
-			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger)
-			throws ProblemToolException;	
+			IProblemDefinition problemDef, Problem problem,
+			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;	
 }

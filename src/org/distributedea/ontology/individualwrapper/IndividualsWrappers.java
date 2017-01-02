@@ -8,7 +8,7 @@ import java.util.List;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
 
@@ -115,10 +115,10 @@ public class IndividualsWrappers implements Concept {
 	
 	/**
 	 * Exports the best {@link IndividualWrapper}
-	 * @param problem
+	 * @param problemDef
 	 * @return
 	 */
-	public IndividualWrapper exportBestResultOfComputing(Problem problem) {
+	public IndividualWrapper exportBestResultOfComputing(IProblemDefinition problemDef) {
 		
 		if (individualsWrappers == null || individualsWrappers.isEmpty()) {
 			return null;
@@ -133,7 +133,7 @@ public class IndividualsWrappers implements Concept {
 			
 			boolean isNewIndividualBetter = FitnessTool.
 					isFirstIndividualEBetterThanSecond(individualEvalI,
-							bestResult.getIndividualEvaluated(), problem);
+							bestResult.getIndividualEvaluated(), problemDef);
 			
 			if (isNewIndividualBetter) {
 				bestResult = resultOfComputingI;
@@ -145,10 +145,10 @@ public class IndividualsWrappers implements Concept {
 
 	/**
 	 * Exports the worst {@link IndividualWrapper}
-	 * @param problem
+	 * @param problemDef
 	 * @return
 	 */
-	public IndividualWrapper exportWorstResultOfComputing(Problem problem) {
+	public IndividualWrapper exportWorstResultOfComputing(IProblemDefinition problemDef) {
 		
 		if (individualsWrappers == null || individualsWrappers.isEmpty()) {
 			return null;
@@ -163,7 +163,7 @@ public class IndividualsWrappers implements Concept {
 			
 			boolean isNewIndividualWorse = FitnessTool.
 					isFirstIndividualEWorseThanSecond(individualEvalI,
-							worstResult.getIndividualEvaluated(), problem);
+							worstResult.getIndividualEvaluated(), problemDef);
 			if (isNewIndividualWorse) {
 				worstResult = resultOfComputingI;
 			}

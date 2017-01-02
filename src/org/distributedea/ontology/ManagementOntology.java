@@ -8,9 +8,6 @@ import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.agentinfo.AgentInfoWrapper;
 import org.distributedea.ontology.agentinfo.GetAgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.AgentName;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
@@ -43,12 +40,8 @@ public class ManagementOntology extends BeanOntology {
             add(KillAgent.class);
             add(KillContainer.class);
             
-            add(InputAgentConfiguration.class);
-            add(AgentConfiguration.class);
-            add(AgentName.class);
-            add(Arguments.class);
-            add(Argument.class);
-
+            add(InputAgentConfiguration.class.getPackage().getName());
+            add(AgentConfiguration.class.getPackage().getName());
 
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);

@@ -216,7 +216,7 @@ public class MethodType implements Concept {
 	 * Exports clone
 	 * @return
 	 */
-	public MethodType exportClone() {
+	public MethodType deepClone() {
 		
 		return new MethodType(this);
 	}

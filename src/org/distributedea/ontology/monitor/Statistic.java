@@ -14,8 +14,7 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 import jade.content.Concept;
 
@@ -146,14 +145,10 @@ public class Statistic implements Concept {
 		MethodStatistic method0 = this.methodStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		Class<?> problemToolClass =
-				agentDescription.exportProblemToolClass();		
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, new TrashLogger());	
-		Class<?> problemClass = problemTool.problemWhichSolves();
+		IProblemDefinition problemDef = agentDescription.getProblemDefinition();
 		
 		Collections.sort(methodStatistics,
-				new ComparatorQualityOfBestIndividual(problemClass));
+				new ComparatorQualityOfBestIndividual(problemDef));
 		MethodStatistic methodWithBestIdividual =
 				methodStatistics.get(methodStatistics.size() -1);
 		
@@ -207,6 +202,7 @@ public class Statistic implements Concept {
 		for (MethodDescription agentDescrI :
 				agentDescriptions.getAgentDescriptions()) {
 			if (! containsAgentDescriptions(agentDescrI)) {
+				containsAgentDescriptions(agentDescrI);
 				return false;
 			}
 		}

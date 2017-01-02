@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.methoddescriptioncounter.MethodDescriptionCounter;
+import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 
 /**
  * Structure represents model of computation-helpers
@@ -36,17 +36,17 @@ public class HelpersModel {
 	 * Returns priorities of helpers
 	 * @return
 	 */
-	public List<MethodDescriptionCounter> getPrioritiesOfHelpers() {
+	public List<MethodDescriptionNumber> getPrioritiesOfHelpers() {
 		
-		List<MethodDescriptionCounter> helpmateList = new ArrayList<>();
+		List<MethodDescriptionNumber> helpmateList = new ArrayList<>();
 		
         for (Map.Entry<MethodDescription, Integer> entryI: this.helpers.entrySet()) {
 			
         	MethodDescription descriptionI = entryI.getKey();
         	Integer valueI = entryI.getValue();
         	
-        	MethodDescriptionCounter wrapperI =
-        			new MethodDescriptionCounter(descriptionI, valueI);
+        	MethodDescriptionNumber wrapperI =
+        			new MethodDescriptionNumber(descriptionI, valueI);
         	
         	helpmateList.add(wrapperI);
         }

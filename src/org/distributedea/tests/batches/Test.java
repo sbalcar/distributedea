@@ -5,14 +5,14 @@ import java.io.File;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
-import org.distributedea.input.batches.BatchHeteroComparingTSP;
 import org.distributedea.input.batches.IInputBatch;
+import org.distributedea.input.batches.tsp.cities1083.BatchHeteroMethodsTSP1083;
 
 public class Test {
 
 	public static void test() {
 		
-		IInputBatch inputBatch = new BatchHeteroComparingTSP();
+		IInputBatch inputBatch = new BatchHeteroMethodsTSP1083();
 		Batch batch = inputBatch.batch();
 		
 		Batches batches = new Batches(batch);

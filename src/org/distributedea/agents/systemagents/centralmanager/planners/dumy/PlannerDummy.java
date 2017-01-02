@@ -5,7 +5,7 @@ import jade.core.AID;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
-import org.distributedea.agents.systemagents.centralmanager.planners.Planner;
+import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
@@ -26,7 +26,7 @@ import org.distributedea.services.ManagerAgentService;
  * one Computing Agent with one ProblemTool
  *
  */
-public class PlannerDummy implements Planner {
+public class PlannerDummy implements IPlanner {
 	
 	int NODE_INDEX = 0;
 	
@@ -38,7 +38,7 @@ public class PlannerDummy implements Planner {
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun job, IAgentLogger logger) throws Exception {
+			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws Exception {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
 				Agent_ManagerAgent.class.getName());
@@ -52,7 +52,7 @@ public class PlannerDummy implements Planner {
 		}
 		
 
-		InputAgentConfigurations configurations = job.getAgentConfigurations();
+		InputAgentConfigurations configurations = jobRun.getAgentConfigurations();
 		
 		// chooses agent configuration
 		InputAgentConfiguration agentConfiguration;
@@ -68,7 +68,7 @@ public class PlannerDummy implements Planner {
 		
 		
 		// chooses ProblemTool
-		Class<?> problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
+		Class<?> problemToolI = jobRun.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
 		
 		// assumes the existence of only one Computing Agent
 		AID [] aidComputingAgents = centralManager.searchDF(
@@ -76,14 +76,14 @@ public class PlannerDummy implements Planner {
 		
 		AID computingAgent = aidComputingAgents[0];
 		
-		ProblemStruct problemStruct = job.exportProblemStruct(problemToolI);
+		ProblemStruct problemStruct = jobRun.exportProblemStruct(problemToolI);
 		
 		ComputingAgentService.sendStartComputing(
 				centralManager, computingAgent, problemStruct, logger);
 		
 
-		MethodDescription createdDescription =
-				new MethodDescription(createdAgent, problemToolI);
+		MethodDescription createdDescription = new MethodDescription(
+				createdAgent, jobRun.getProblemDefinition(), problemToolI);
 		
 		return new Plan(iteration, createdDescription);
 	}

@@ -16,13 +16,14 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinousOpt;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.ProblemToolException;
 
 /**
  * Agent represents Hill Climbing Algorithm Method
@@ -55,12 +56,15 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem == ProblemContinousOpt.class) {
+		} else if (problem == ProblemBinPacking.class) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}			
+		} else if (problem == ProblemContinuousOpt.class) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
-		}
-		
+		}		
 		return isAble;
 	}
 
@@ -90,10 +94,12 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
+		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
 		Problem problem = problemStruct.getProblem();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemTool.getClass());
-		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
+		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
+		PedigreeParameters pedigreeParams = new PedigreeParameters(
+				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
 		
 		problemTool.initialization(problem, agentConf, getLogger());
@@ -103,10 +109,11 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 
 		// save, log and distribute computed Individual
 		IndividualEvaluated individualEvalI = problemTool
-				.generateIndividualEval(problem, pedigreeParams, getCALogger());
+				.generateIndividualEval(problemDefinition, problem,
+				pedigreeParams, getCALogger());
 
 		processIndividualFromInitGeneration(individualEvalI,
-				generationNumberI, problem, jobID);
+				generationNumberI, problemDefinition, jobID);
 		
 		
 		while (state == CompAgentState.COMPUTING) {
@@ -115,11 +122,11 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			generationNumberI++;
 						
 			IndividualEvaluated individualEvalNew = getNewIndividual(
-					individualEvalI, problem, problemTool, pedigreeParams);
+					individualEvalI, problemDefinition, problem, problemTool, pedigreeParams);
 			
 			boolean isNewIndividualBetter =
 					FitnessTool.isFirstIndividualEBetterThanSecond(
-							individualEvalNew, individualEvalI, problem);
+							individualEvalNew, individualEvalI, problemDefinition);
 
 			if (isNewIndividualBetter) {
 				getCALogger().log(Level.INFO, "JUMP");
@@ -128,25 +135,25 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI,
-					generationNumberI, problem, jobID);
+					generationNumberI, problemDefinition, jobID);
 			
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
-				distributeIndividualToNeighours(individualEvalI, problem, jobID);
+				distributeIndividualToNeighours(individualEvalI, problemDefinition, jobID);
 			}
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problemDefinition);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalI, problem)) {
+							recievedIndividualW, individualEvalI, problemDefinition)) {
 				
 				// update if better that actual
 				individualEvalI = recievedIndividualW.getIndividualEvaluated();
 				
 				// save and log received Individual
-				processRecievedIndividual(recievedIndividualW, generationNumberI, problem);
+				processRecievedIndividual(recievedIndividualW, generationNumberI, problemDefinition);
 			}
 			
 		}
@@ -155,10 +162,11 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	protected IndividualEvaluated getNewIndividual(IndividualEvaluated individualEval,
-			Problem problem, IProblemTool problemTool,
-			PedigreeParameters pedigreeParams) throws ProblemToolException {
+			IProblemDefinition problemDef, Problem problem, IProblemTool problemTool,
+			PedigreeParameters pedigreeParams) throws Exception {
 		
-		return problemTool.improveIndividualEval(individualEval, problem, pedigreeParams, getCALogger());
+		return problemTool.improveIndividualEval(individualEval, problemDef,
+				problem, pedigreeParams, getCALogger());
 	}
 	
 }

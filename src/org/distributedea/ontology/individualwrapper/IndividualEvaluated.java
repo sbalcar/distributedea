@@ -7,6 +7,7 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 
 /**
@@ -78,15 +79,15 @@ public class IndividualEvaluated implements Concept {
 		this.pedigree = pedigree;
 	}
 	
-	public boolean validation(Problem problem, IProblemTool problemTool,
-			IAgentLogger logger) {
+	public boolean validation(IProblemDefinition problemDef, Problem problem,
+			IProblemTool problemTool, IAgentLogger logger) {
 
 		if (! individual.valid(logger)) {
 			return false;
 		}
 
 		double fitnessValue = problemTool
-				.fitness(individual, problem, logger);
+				.fitness(individual, problemDef, problem, logger);
 		
 		if (fitness != fitnessValue) {
 			return false;

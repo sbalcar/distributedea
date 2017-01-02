@@ -9,6 +9,7 @@ import jade.content.Concept;
 
 /**
  * Ontology which represents assignment of problem to solve
+ * @author stepan
  */
 public abstract class Problem implements Concept {
 
@@ -29,7 +30,7 @@ public abstract class Problem implements Concept {
 	 * Reports whether it is a maximization or minimization Problem
 	 * @return True for maximization Problem
 	 */
-	public abstract boolean isMaximizationProblem();
+//	public abstract boolean isMaximizationProblem();
 	
 	/**
 	 * Tests whether the Individual is valid solution of the Problem

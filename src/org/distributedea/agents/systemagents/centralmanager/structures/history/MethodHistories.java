@@ -490,7 +490,7 @@ public class MethodHistories {
 			MethodType methodTypeI = instanceI.getMethodType();
 			
 			if (! methodTypes.contains(methodTypeI)) {
-				methodTypes.add(methodTypeI.exportClone());
+				methodTypes.add(methodTypeI.deepClone());
 			}
 		}
 		

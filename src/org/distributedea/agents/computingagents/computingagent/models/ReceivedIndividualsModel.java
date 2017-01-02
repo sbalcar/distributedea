@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.Problem;
+import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
+import org.distributedea.structures.comparators.CmpIndividualWrapper;
 
 /**
- * Model for a set of received Individuals from distribution
+ * Model for a set of received {@link IndividualWrapper} from distribution
  * @author stepan
  *
  */
@@ -23,53 +24,44 @@ public class ReceivedIndividualsModel {
 			Collections.synchronizedList(new ArrayList<IndividualWrapper>());
 	
 	/**
-	 * Add Received Individual to Model
+	 * Add Received {@link IndividualWrapper} to Model
 	 * @param individualW
+	 * @param problemDef
+	 * @param problem
+	 * @param problemTool
 	 * @param logger
 	 */
 	public synchronized void addIndividual(IndividualWrapper individualW,
-			Problem problem, IProblemTool problemTool, IAgentLogger logger) {
+			IProblemDefinition problemDef, Problem problem,
+			IProblemTool problemTool, IAgentLogger logger) {
 		
-		if (individualW == null || (! individualW.validation(problem, problemTool, logger))) {
-			Exception exception = new IllegalStateException("Recieved Individual is not valid");
-			logger.logThrowable("", exception);
-			return;
+		if (individualW == null || (! individualW.validation(problemDef, problem, problemTool, logger))) {
+			throw new IllegalStateException("Recieved Individual is not valid");
 		}
 		
 		// resize model to the max-defined size
 		while (receivedIndividuals.size() > MAX_NUMBER_OF_INDIVIDUAL) {
-			receivedIndividuals.remove(0);
+			receivedIndividuals.remove(receivedIndividuals.size() -1);
 		}
 		
 		receivedIndividuals.add(individualW);
+		
+		Collections.sort(receivedIndividuals, new CmpIndividualWrapper(problemDef));
 	}
-
+	
 	/**
-	 * Get the best Individual from Model 
-	 * @param problem
+	 * Get the best {@link IndividualWrapper} from Model 
+	 * @param problemDef
 	 * @return
 	 */
-	public synchronized IndividualWrapper getBestIndividual(Problem problem) {
+	public synchronized IndividualWrapper getBestIndividual(IProblemDefinition problemDef) {
 		
 		if (receivedIndividuals.isEmpty()) {
 			return null;
 		}
 		
-		IndividualWrapper bestIndividual = receivedIndividuals.get(0);
-		for (IndividualWrapper indWrapI : receivedIndividuals) {
-			
-			boolean isIndividualIBetter =
-					FitnessTool.isFirstIndividualEBetterThanSecond(
-							indWrapI.getIndividualEvaluated(),
-							bestIndividual.getIndividualEvaluated(),
-							problem);
-			
-			if (isIndividualIBetter) {
-				bestIndividual = indWrapI;
-			}
-		}
-		
-		return bestIndividual;
+		// list is sorted from the best to the worst
+		return receivedIndividuals.get(0);
 	}
 
 }
