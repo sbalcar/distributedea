@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.ProblemBinPacking;
 
 public class ToolGenerateIndividualBinPacking {
 
-	public static IndividualPermutation generateIndividual(ProblemBinPacking problemBP,
+	public static IndividualPermutation generateIndividual(DatasetBinPacking problemBP,
 			IAgentLogger logger) {
 		
 		int numOfObjects = problemBP.getObjects().size();

@@ -4,9 +4,9 @@ import java.io.File;
 
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.logging.AgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.ProblemTSPGPSDef;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problems.IProblemTool;
@@ -111,7 +111,7 @@ public class TestTSP {
 				File.separator + inputFileName + ".tsp";
 		File fileOfProblem = new File(problemFileName);
 		
-		Problem problem = problemTool.readProblem(fileOfProblem, logger);
+		Dataset dataset = problemTool.readDataset(fileOfProblem, logger);
 		ProblemWrapper problemWrapper = new ProblemWrapper();
 		problemWrapper.importProblemToolClass(problemTool.getClass());
 
@@ -122,7 +122,7 @@ public class TestTSP {
 		Individual individual = (IndividualPermutation)
 				problemTool.readSolution(fileOfSolution, null, logger);
 		
-		double value = problemTool.fitness(individual, def, problem, logger);
+		double value = problemTool.fitness(individual, def, dataset, logger);
 		System.out.println("Expected Fitness: " + expectedFitness);
 		System.out.println("Fitness: " + value);
 		

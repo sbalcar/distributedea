@@ -2,7 +2,7 @@ package org.distributedea.ontology.problemdefinition;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.dataset.DatasetBinPacking;
 
 /**
  * Ontology for definition Bin Packing problem
@@ -59,7 +59,7 @@ public class ProblemBinPackingDef extends AProblemDefinition {
 	@Override
 	public Class<?> exportDatasetClass() {
 
-		return ProblemBinPacking.class;
+		return DatasetBinPacking.class;
 	}
 	
 	@Override

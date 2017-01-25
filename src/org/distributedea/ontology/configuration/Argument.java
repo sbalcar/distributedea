@@ -41,7 +41,6 @@ public class Argument implements Concept {
 		
 		setName(argument.getName());
 		setValue(argument.getValue());
-		setSendOnlyValue(argument.getSendOnlyValue());
 	}
 
 	public String getName() {
@@ -56,13 +55,6 @@ public class Argument implements Concept {
 	}
 	public void setValue(String value) {
 		this.value = value;
-	}
-	
-	public Boolean getSendOnlyValue() {
-		return sendOnlyValue;
-	}
-	public void setSendOnlyValue(Boolean sendOnlyValue) {
-		this.sendOnlyValue = sendOnlyValue;
 	}
 
 	/**
@@ -108,11 +100,8 @@ public class Argument implements Concept {
 	    		this.getName().equals(argumentOuther.getName());
 	    boolean areAgentValuesEqual =
 	    		this.getValue().equals(argumentOuther.getValue());
-	    boolean areSendOnlyValuesEqual =
-	    		this.getSendOnlyValue().equals(argumentOuther.getSendOnlyValue());
 	    
-	    return areAgentNameEqual && areAgentValuesEqual && 
-	    		areSendOnlyValuesEqual;
+	    return areAgentNameEqual && areAgentValuesEqual;
 	}
 	
     @Override

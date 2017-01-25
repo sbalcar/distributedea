@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.AProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.jgap.Configuration;
@@ -28,16 +28,16 @@ public class EAMutationWrapper implements GeneticOperator {
 
 	private double mutationRate;
 	private AProblemDefinition problemDef;
-	private Problem problem;
+	private Dataset dataset;
 	private IProblemTool problemTool;
 	private Configuration conf;
-	private AgentLogger logger;
+	private IAgentLogger logger;
 	
-	public EAMutationWrapper(double mutationRate, Problem problem,
-			IProblemTool problemTool, Configuration conf, AgentLogger logger) {
+	public EAMutationWrapper(double mutationRate, Dataset dataset,
+			IProblemTool problemTool, Configuration conf, IAgentLogger logger) {
 		
 		this.mutationRate = mutationRate;
-		this.problem = problem;
+		this.dataset = dataset;
 		this.problemTool = problemTool;
 		this.conf = conf;
 		this.logger = logger;
@@ -103,20 +103,20 @@ public class EAMutationWrapper implements GeneticOperator {
 		Individual individual = null;
 		try {
 			individual = Convertor.convertToIndividual(
-					chromosume, problem, problemTool, conf);
+					chromosume, dataset, problemTool, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Chromosome to Individual", e);
 			return null;
 		}
 		
-		double fitness = problemTool.fitness(individual, problemDef, problem, logger);
+		double fitness = problemTool.fitness(individual, problemDef, dataset, logger);
 		
 		// call the mutation
 		IndividualEvaluated individualNew;
 		try {
 			individualNew = problemTool.improveIndividualEval(
 					new IndividualEvaluated(individual, fitness, null),
-					problemDef, problem, null, logger);
+					problemDef, dataset, null, logger);
 		} catch (Exception e1) {
 			return null;
 		}
@@ -125,7 +125,7 @@ public class EAMutationWrapper implements GeneticOperator {
 		IChromosome newChromosumeI = null;
 		try {
 			newChromosumeI = Convertor.convertToIChromosome(
-					individualNew.getIndividual(), problem, conf);
+					individualNew.getIndividual(), dataset, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Individual to Chromosome", e);
 			return null;

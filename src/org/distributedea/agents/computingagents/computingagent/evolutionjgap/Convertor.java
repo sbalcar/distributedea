@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.ontology.problem.continuousoptimization.Interval;
 import org.distributedea.problems.IProblemTool;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
@@ -35,7 +35,7 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	public static IChromosome convertToIChromosome(Individual individual,
-			Problem problem, Configuration conf) throws InvalidConfigurationException {
+			Dataset dataset, Configuration conf) throws InvalidConfigurationException {
 	
 		if (individual instanceof IndividualPermutation) {
 			
@@ -48,8 +48,8 @@ public class Convertor {
 			IndividualPoint individualPoint =
 					(IndividualPoint)individual;
 			
-			ProblemContinuousOpt problemCO =
-					(ProblemContinuousOpt)problem;
+			DatasetContinuousOpt problemCO =
+					(DatasetContinuousOpt)dataset;
 			
 			return convertToIChromosome(individualPoint, problemCO, conf);
 		}
@@ -65,7 +65,7 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	private static Chromosome convertToIChromosome(
-			IndividualPermutation individual, Problem problem,
+			IndividualPermutation individual, Dataset dataset,
 			Configuration conf)
 			throws InvalidConfigurationException {
 		
@@ -89,7 +89,7 @@ public class Convertor {
 	}
 
 	private static Chromosome convertToIChromosome(
-			IndividualPoint individual, ProblemContinuousOpt problem,
+			IndividualPoint individual, DatasetContinuousOpt problem,
 			Configuration conf)
 			throws InvalidConfigurationException {
 		
@@ -124,7 +124,7 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	public static Individual convertToIndividual(IChromosome chromosome,
-			Problem problem, IProblemTool problemTool, Configuration conf) throws InvalidConfigurationException {
+			Dataset dataset, IProblemTool problemTool, Configuration conf) throws InvalidConfigurationException {
 	
 		Individual convertedIndividual = null;
 		

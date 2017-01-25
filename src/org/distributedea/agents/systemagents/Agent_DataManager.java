@@ -63,7 +63,7 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		//cleans result dir
 		try {
 			FilesystemInitTool.clearResultDir(getLogger());
-		} catch (IOException e1) {
+		} catch (Exception e1) {
 			getLogger().logThrowable("Can not clear result directory", e1);
 		}
 		

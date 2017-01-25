@@ -1,15 +1,15 @@
-package org.distributedea.ontology.problem;
+package org.distributedea.ontology.dataset;
 
 import java.util.List;
 
-import org.distributedea.ontology.problem.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.Position;
 
 /**
- * Ontology represents abstract class for TSP Problem
+ * Ontology represents abstract class for TSP {@link Dataset}
  * @author stepan
  *
  */
-public abstract class ProblemTSP extends Problem {
+public abstract class DatasetTSP extends Dataset {
 
 	private static final long serialVersionUID = 1L;
 

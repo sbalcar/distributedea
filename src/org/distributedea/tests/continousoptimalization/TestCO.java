@@ -12,11 +12,11 @@ import org.distributedea.agents.computingagents.Agent_EvolutionJGAP;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemdefinition.ProblemContinuousOptDef;
 import org.distributedea.problems.IProblemTool;
@@ -38,12 +38,12 @@ public class TestCO {
 		IProblemDefinition problemDef = new ProblemContinuousOptDef(true);
 		IProblemTool tool = new ProblemToolCORandomMove();
 		
-		Problem problem = tool.readProblem(fileOfInput, null);
-		tool.initialization(problem, null, null);
+		Dataset dataset = tool.readDataset(fileOfInput, null);
+		tool.initialization(dataset, null, null);
 		
-		IndividualEvaluated individual = tool.generateIndividualEval(problemDef, problem, null, null);
+		IndividualEvaluated individual = tool.generateIndividualEval(problemDef, dataset, null, null);
 		
-		double fitness = tool.fitness(individual.getIndividual(), problemDef, problem, null);
+		double fitness = tool.fitness(individual.getIndividual(), problemDef, dataset, null);
 		System.out.println(fitness);
 		
 		tool.exit();
@@ -58,8 +58,8 @@ public class TestCO {
 		IProblemTool tool1 = new ProblemToolCORandomMove();
 		
 		IProblemDefinition problemDef = new ProblemContinuousOptDef(true);
-		Problem problem1 = tool1.readProblem(fileOfInput, null);
-		tool1.initialization(problem1, null, null);
+		Dataset dataset1 = tool1.readDataset(fileOfInput, null);
+		tool1.initialization(dataset1, null, null);
 
 		try {
 			Thread.sleep(1000);
@@ -68,22 +68,22 @@ public class TestCO {
 		
 		IProblemTool tool2 = new ProblemToolCORandomMove();
 		
-		Problem problem2 = tool2.readProblem(fileOfInput, null);
-		tool2.initialization(problem2, null, null);
+		Dataset dataset2 = tool2.readDataset(fileOfInput, null);
+		tool2.initialization(dataset2, null, null);
 		
 		
 		for (int i = 0; i < 10; i++) {
-			IndividualEvaluated individualEval1 = tool1.generateIndividualEval(problemDef, problem1, null, null);
+			IndividualEvaluated individualEval1 = tool1.generateIndividualEval(problemDef, dataset1, null, null);
 			Individual individual1 = individualEval1.getIndividual();
 			
-			double fitness1 = tool1.fitness(individualEval1.getIndividual(), problemDef, problem1, null);
+			double fitness1 = tool1.fitness(individualEval1.getIndividual(), problemDef, dataset1, null);
 			System.out.println(" fitness1: " + fitness1);		
 	
 			
-			IndividualEvaluated individualEval2 = tool2.generateIndividualEval(problemDef, problem2, null, null);
+			IndividualEvaluated individualEval2 = tool2.generateIndividualEval(problemDef, dataset2, null, null);
 			Individual individual2 = individualEval2.getIndividual();
 			
-			double fitness2 = tool2.fitness(individual2, problemDef, problem2, null);
+			double fitness2 = tool2.fitness(individual2, problemDef, dataset2, null);
 			System.out.println(" fitness2: " + fitness2);
 		}
 		
@@ -102,10 +102,10 @@ public class TestCO {
 		IProblemDefinition problemDef = new ProblemContinuousOptDef(true);
 		
 	    IProblemTool tool = new ProblemToolCORandomMove();
-		Problem problem = tool.readProblem(fileOfInput, null);
-		tool.initialization(problem, null, null);
+	    Dataset dataset = tool.readDataset(fileOfInput, null);
+		tool.initialization(dataset, null, null);
 		
-		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problemDef, problem, null, null);
+		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problemDef, dataset, null, null);
 		Individual individual1 = individualEval1.getIndividual();
 		
 		IndividualPoint individualPoint1 = (IndividualPoint) individual1;
@@ -117,7 +117,7 @@ public class TestCO {
 		double[] coordinates1 = ArrayUtils.toPrimitive(coordinatesArray1);
 		
 		
-		IndividualEvaluated individualEval2 = tool.generateIndividualEval(problemDef, problem, null, null);
+		IndividualEvaluated individualEval2 = tool.generateIndividualEval(problemDef, dataset, null, null);
 		Individual individual2 = individualEval2.getIndividual();
 		
 		IndividualPoint individualPoint2 = (IndividualPoint) individual2;
@@ -166,7 +166,7 @@ public class TestCO {
 		File fileOfInput = new File(inputFileName);
 		
 		IProblemTool problemTool = new ProblemToolCORandomMove();
-		Problem problem = problemTool.readProblem(fileOfInput, null);
+		Dataset dataset = problemTool.readDataset(fileOfInput, null);
 		
 		
 		String solutionFileName = "log" + File.separator + "result" +
@@ -175,7 +175,7 @@ public class TestCO {
 		
 		ProblemToolCORandomMove tool = new ProblemToolCORandomMove();
 		
-		Individual individual = tool.readSolution(fileOfSolution, problem, null);
+		Individual individual = tool.readSolution(fileOfSolution, dataset, null);
 	}
 	
 	

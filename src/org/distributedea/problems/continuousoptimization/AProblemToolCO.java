@@ -4,11 +4,12 @@ import java.io.File;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problemdefinition.ProblemContinuousOptDef;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
@@ -33,8 +34,13 @@ public abstract class AProblemToolCO extends ProblemTool {
 	
 	
 	@Override
-	public Class<?> problemWhichSolves() {
-		return ProblemContinuousOpt.class;
+	public Class<?> datasetReprezentation() {
+		return DatasetContinuousOpt.class;
+	}
+	
+	@Override
+	public Class<?> problemReprezentation() {
+		return ProblemContinuousOptDef.class;
 	}
 
 	@Override
@@ -43,10 +49,10 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 
 	@Override
-	public void initialization(Problem problem, AgentConfiguration agentConf,
+	public void initialization(Dataset dataset, AgentConfiguration agentConf,
 			IAgentLogger logger) throws Exception {
 ////////////////////	
-    	ProblemContinuousOpt problemContinousOpt = (ProblemContinuousOpt)problem;
+    	DatasetContinuousOpt problemContinousOpt = (DatasetContinuousOpt)dataset;
 
     	String functionID = problemContinousOpt.getFunctionID();
     	
@@ -67,11 +73,11 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 	
 	@Override
-	public double fitness(Individual individual, IProblemDefinition problemDef, Problem problem,
+	public double fitness(Individual individual, IProblemDefinition problemDef, Dataset dataset,
 			IAgentLogger logger) {
 ////////////////////		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
-		ProblemContinuousOpt problemContinousOpt = (ProblemContinuousOpt) problem;
+		DatasetContinuousOpt problemContinousOpt = (DatasetContinuousOpt) dataset;
 
     	String functionID = problemContinousOpt.getFunctionID();
     	
@@ -83,22 +89,22 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 	
 	@Override
-	public Problem readProblem(File fileOfProblem, IAgentLogger logger) {
+	public Dataset readDataset(File fileOfProblem, IAgentLogger logger) {
 		
 		return ToolReadProblemCO.readProblem(fileOfProblem, logger);
 	}
 	
 	@Override
 	public Individual generateIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 
-		ProblemContinuousOpt problemContinousOpt = (ProblemContinuousOpt) problem;
+		DatasetContinuousOpt problemContinousOpt = (DatasetContinuousOpt) dataset;
 		
 		return ToolGenerateIndividualCO.generateIndividual(problemContinousOpt, logger);
 	}
 	
 	@Override
-	public Individual readSolution(File fileOfSolution, Problem problem,
+	public Individual readSolution(File fileOfSolution, Dataset dataset,
 			IAgentLogger logger) {
 		
 		return ToolReadSolutionCO.readSolution(fileOfSolution, logger);

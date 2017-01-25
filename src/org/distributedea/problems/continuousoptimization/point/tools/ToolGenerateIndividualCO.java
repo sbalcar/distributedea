@@ -1,14 +1,14 @@
 package org.distributedea.problems.continuousoptimization.point.tools;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.ontology.problem.continuousoptimization.Interval;
 
 public class ToolGenerateIndividualCO {
 
-	public static Individual generateIndividual(ProblemContinuousOpt problemContinousOpt,
+	public static Individual generateIndividual(DatasetContinuousOpt problemContinousOpt,
 			IAgentLogger logger) {
 				
 		IndividualPoint individual = new IndividualPoint();

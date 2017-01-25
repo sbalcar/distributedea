@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem.continuousoptimization;
+package org.distributedea.ontology.dataset.continuousoptimization;
 
 import jade.content.Concept;
 

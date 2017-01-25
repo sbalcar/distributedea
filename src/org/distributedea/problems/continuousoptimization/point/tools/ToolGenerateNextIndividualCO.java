@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.ontology.problem.continuousoptimization.Interval;
 
 public class ToolGenerateNextIndividualCO {
 
 	private static double maxStep = 0.005;
 	
-	public static Individual create(Problem problem,
+	public static Individual create(Dataset dataset,
 			Individual individual, IAgentLogger logger) {
 		
-		ProblemContinuousOpt problemCO = (ProblemContinuousOpt) problem;
+		DatasetContinuousOpt problemCO = (DatasetContinuousOpt) dataset;
 		IndividualPoint individualP = (IndividualPoint) individual;
 		
 		List<Interval> intervals = problemCO.getIntervals();

@@ -9,5 +9,5 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch
  */
 public interface IInputBatch {
 
-	public Batch batch();
+	public Batch batch() throws Exception;
 }

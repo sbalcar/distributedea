@@ -2,9 +2,9 @@ package org.distributedea.problems.tsp;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionGPS;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.problems.ProblemTool;
 
 /**
@@ -15,7 +15,7 @@ import org.distributedea.problems.ProblemTool;
 public abstract class ProblemTSPTool extends ProblemTool {
 	
 	@Override
-	public void initialization(Problem problem, AgentConfiguration agentConf, IAgentLogger logger) {
+	public void initialization(Dataset dataset, AgentConfiguration agentConf, IAgentLogger logger) {
 	}
 
 	@Override

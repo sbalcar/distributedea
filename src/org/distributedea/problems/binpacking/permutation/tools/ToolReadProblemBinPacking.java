@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.ProblemBinPacking;
-import org.distributedea.ontology.problem.binpacking.ObjectBinPack;
+import org.distributedea.ontology.dataset.DatasetBinPacking;
+import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
 
 public class ToolReadProblemBinPacking {
 
-	public static ProblemBinPacking readProblem(File problemFile, IAgentLogger logger) {
+	public static DatasetBinPacking readProblem(File problemFile, IAgentLogger logger) {
 		
 		List<ObjectBinPack> objectsOfBinPack = new ArrayList<>();
 		
@@ -49,7 +49,7 @@ public class ToolReadProblemBinPacking {
 			}
 		}
 		
-		return new ProblemBinPacking(objectsOfBinPack, problemFile);
+		return new DatasetBinPacking(objectsOfBinPack, problemFile);
 	}
 	
 }

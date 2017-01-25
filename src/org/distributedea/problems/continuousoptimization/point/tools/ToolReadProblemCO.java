@@ -10,8 +10,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.ontology.problem.continuousoptimization.Interval;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 
 public class ToolReadProblemCO {
 
-	public static ProblemContinuousOpt readProblem(File fileOfProblem, IAgentLogger logger) {
+	public static DatasetContinuousOpt readProblem(File fileOfProblem, IAgentLogger logger) {
 		
 		if (fileOfProblem == null || ! fileOfProblem.isFile()) {
 			throw new IllegalArgumentException("Argument " +
@@ -102,7 +102,7 @@ public class ToolReadProblemCO {
 			return null;
 		}
 		
-		ProblemContinuousOpt problem = new ProblemContinuousOpt();
+		DatasetContinuousOpt problem = new DatasetContinuousOpt();
 		problem.importProblemFile(fileOfProblem);
 		problem.setFunctionID(functionID);
 		problem.setDimension(dimension);

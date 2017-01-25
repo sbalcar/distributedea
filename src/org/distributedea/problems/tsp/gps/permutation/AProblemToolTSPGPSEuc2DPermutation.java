@@ -3,13 +3,12 @@ package org.distributedea.problems.tsp.gps.permutation;
 import java.io.File;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetTSPGPS;
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionGPS;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.gps.ProblemTSPGPSTool;
@@ -35,21 +34,21 @@ public abstract class AProblemToolTSPGPSEuc2DPermutation extends ProblemTSPGPSTo
 	
 	@Override
 	public Individual generateIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 		
-		ProblemTSPGPS problemTSP = (ProblemTSPGPS) problem;
+		DatasetTSPGPS problemTSP = (DatasetTSPGPS) dataset;
 		
 		return ToolGenerateIndividualTSPGPS.generateIndividual(problemTSP, logger);
 	}
 	
 	@Override
-	public Problem readProblem(File problemFile, IAgentLogger logger) {
+	public Dataset readDataset(File problemFile, IAgentLogger logger) {
 
-		return ToolReadProblemTSPGPS.readProblem(problemFile, logger);
+		return ToolReadProblemTSPGPS.readDataset(problemFile, logger);
 	}
 	
 	@Override
-	public Individual readSolution(File fileOfSolution, Problem problem,
+	public Individual readSolution(File fileOfSolution, Dataset dataset,
 			IAgentLogger logger) {
 
 		return ToolReadSolutionTSPGPS.readSolution(fileOfSolution, logger);
@@ -57,10 +56,10 @@ public abstract class AProblemToolTSPGPSEuc2DPermutation extends ProblemTSPGPSTo
 	
 	@Override
 	public double fitness(Individual individual, IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
-		ProblemTSPGPS problemTSP = (ProblemTSPGPS) problem;
+		DatasetTSPGPS problemTSP = (DatasetTSPGPS) dataset;
 
 	    return ToolFitnessTSPGPS.evaluate(individualPerm, problemTSP, this, logger);
 	}

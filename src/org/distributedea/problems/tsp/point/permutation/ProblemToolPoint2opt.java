@@ -1,9 +1,9 @@
 package org.distributedea.problems.tsp.point.permutation;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.operators.Operator2Opt;
@@ -29,7 +29,7 @@ public class ProblemToolPoint2opt extends AProblemToolTSPPointPermutation {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) throws Exception {
+			Dataset dataset, IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
 		IndividualPermutation ind2 = (IndividualPermutation) individual2;
@@ -40,7 +40,7 @@ public class ProblemToolPoint2opt extends AProblemToolTSPPointPermutation {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;

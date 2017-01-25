@@ -10,7 +10,7 @@ import org.distributedea.input.batches.tsp.cities1083.BatchHeteroMethodsTSP1083;
 
 public class Test {
 
-	public static void test() {
+	public static void test() throws Exception {
 		
 		IInputBatch inputBatch = new BatchHeteroMethodsTSP1083();
 		Batch batch = inputBatch.batch();
@@ -39,7 +39,7 @@ public class Test {
 		System.out.println(importedBatch.getPostProcessings().size());
 	}
 	
-	public static void main(String [] args) {
+	public static void main(String [] args) throws Exception {
 		
 		test();
 	}

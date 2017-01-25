@@ -1,7 +1,7 @@
 package org.distributedea.ontology.problemdefinition;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.dataset.DatasetTSPPoint;
 
 /**
  * Ontology for definition TSP Point problem
@@ -21,7 +21,7 @@ public class ProblemTSPPointDef extends AProblemDefinition {
 	@Override
 	public Class<?> exportDatasetClass() {
 
-		return ProblemTSPPoint.class;
+		return DatasetTSPPoint.class;
 	}
 	
 	@Override

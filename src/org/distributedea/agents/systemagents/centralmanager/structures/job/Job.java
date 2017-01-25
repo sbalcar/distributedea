@@ -17,7 +17,7 @@ import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructur
 import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
-import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomImpr;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomGuaranteeChance;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestAverageOfFitness;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestResult;
@@ -34,11 +34,14 @@ import org.distributedea.agents.systemagents.centralmanager.structures.problemto
 import org.distributedea.agents.systemagents.initiator.XmlConfigurationProvider;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.configuration.Argument;
+import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 
@@ -77,14 +80,14 @@ public class Job implements Concept, Serializable {
 	private IProblemDefinition problemToSolveDefinition;
 	
 	/**
-	 * Defines the filename with the input Problem
+	 * Defines the filename with the input {@link Dataset}
 	 */
-	private String problemFileName;
+	private String datasetFileName;
 	
 	/**
-	 * Defines the filename with method(agent types)
+	 * Defines the methods
 	 */
-	private String methodsFileName;
+	private InputAgentConfigurations methods;
 	
 	/**
 	 * Declares the set of available {@link ProblemTools} for computation
@@ -131,8 +134,8 @@ public class Job implements Concept, Serializable {
 		this.numberOfRuns = job.getNumberOfRuns();
 		this.description = job.getDescription();
 		this.problemToSolveDefinition = job.getProblemDefinition();
-		this.problemFileName = job.getProblemFileName();
-		this.methodsFileName = job.getMethodsFileName();
+		this.datasetFileName = job.getProblemFileName();
+		this.methods = job.getMethods().deepClone();
 		this.problemTools = job.getProblemTools().deepClone();
 		this.individualDistribution = job.isIndividualDistribution();
 		this.planners = job.planners;
@@ -171,7 +174,7 @@ public class Job implements Concept, Serializable {
 
 	@Deprecated
 	public String getProblemFileName() {
-		File file = exportProblemFile();
+		File file = exportDatasetFile();
 		if (file == null) {
 			return null;
 		}
@@ -180,63 +183,57 @@ public class Job implements Concept, Serializable {
 	@Deprecated
 	public void setProblemFileName(String fileName) {
 		try {
-			importProblemFile(new File(fileName));
+			importDatasetFile(new File(fileName));
 		} catch(Exception e) {
 			throw new IllegalArgumentException();
 		}
 	}
 	/**
-	 * Exports {@link File} with {@link Problem} assignment
+	 * Exports {@link File} with {@link Dataset} assignment
 	 */
-	public File exportProblemFile() {
-		if (problemFileName == null) {
+	public File exportDatasetFile() {
+		if (datasetFileName == null) {
 			return null;
 		}
-		return new File(problemFileName);
+		return new File(datasetFileName);
 	}
 	/**
-	 * Imports {@link File} with {@link Problem} assignment
+	 * Imports {@link File} with {@link Dataset} assignment
 	 */
-	public void importProblemFile(File problemFile) {
-		if (problemFile == null || ! problemFile.isFile()) {
+	public void importDatasetFile(File datasetFile) {
+		if (datasetFile == null || ! datasetFile.isFile()) {
 			throw new IllegalArgumentException();
 		}
-		this.problemFileName = problemFile.getAbsolutePath();
+		this.datasetFileName = datasetFile.getAbsolutePath();
 	}
 
 	/**
-	 * Exports {@link File} with methods assignment
-	 */
-	public File exportMethodsFile() {
-		if (methodsFileName == null) {
-			return null;
-		}
-		return new File(methodsFileName);
-	}
-	/**
 	 * Imports {@link File} with methods assignment
+	 * @throws IOException 
 	 */
-	public void importMethodsFile(File methodsFile) {
+	public void importMethodsFile(File methodsFile, IAgentLogger logger) throws IOException {
 		if (methodsFile == null || ! methodsFile.isFile()) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
 		}
-		this.methodsFileName = methodsFile.getAbsolutePath();
+		
+		// AgentConfigurations - Methods reading
+		InputAgentConfigurations agentConfigurations =
+				XmlConfigurationProvider.getConfiguration(methodsFile, logger);
+		
+		if (agentConfigurations == null || ! agentConfigurations.valid(logger)) {
+			throw new IOException("Can not read AgetConfigurations");
+		}
+
+		this.methods = agentConfigurations;
+
 	}
-	@Deprecated
-	public String getMethodsFileName() {
-		File file = exportMethodsFile();
-		if (file == null) {
-			return null;
-		}
-		return file.getAbsolutePath();
+
+	public InputAgentConfigurations getMethods() {
+		return this.methods;
 	}
-	@Deprecated
-	public void setMethodsFileName(String methodsFileName) {
-		try {
-			importMethodsFile(new File(methodsFileName));
-		} catch(Exception e) {
-			throw new IllegalArgumentException();
-		}
+	public void setMethods(InputAgentConfigurations methods) {
+		this.methods = methods;
 	}
 	
 	public ProblemTools getProblemTools() {
@@ -345,10 +342,10 @@ public class Job implements Concept, Serializable {
 		if (problemToSolveDefinition == null || ! problemToSolveDefinition.valid(logger)) {
 			return false;
 		}
-		if (exportProblemFile() == null) {
+		if (exportDatasetFile() == null) {
 			return false;
 		}
-		if (exportMethodsFile() == null) {
+		if (getMethods() == null || ! getMethods().valid(logger)) {
 			return false;
 		}
 		if (problemTools == null ||
@@ -374,15 +371,6 @@ public class Job implements Concept, Serializable {
 	 */
 	public JobRun exportJobRun(String batchID, int runNumber, IAgentLogger logger) {
 				
-		// AgentConfigurations - Methods reading
-		InputAgentConfigurations agentConfigurations =
-				XmlConfigurationProvider.getConfiguration(exportMethodsFile(), logger);
-		if (agentConfigurations == null) {
-			Exception throwable = new IOException("Can not read AgetConfigurations");
-			logger.logThrowable("Error by exporting JobRun", throwable);
-			return null;
-		}
-				
 		// Problem reading and testing
 		List<Class<?>> problemToolClasses = problemTools.getProblemTools();
 		if (problemToolClasses == null || problemToolClasses.isEmpty()) {
@@ -399,16 +387,16 @@ public class Job implements Concept, Serializable {
 			return null;
 		}
 		
-		File fileOfProblem = exportProblemFile();
-		Problem problem = problemTool.readProblem(fileOfProblem, logger);
+		File fileOfProblem = exportDatasetFile();
+		Dataset dataset = problemTool.readDataset(fileOfProblem, logger);
 		
 		
 		
 		JobRun jobRun = new JobRun();
 		jobRun.setIndividualDistribution(individualDistribution);
-		jobRun.setAgentConfigurations(agentConfigurations);
+		jobRun.setAgentConfigurations(methods.deepClone());
 		jobRun.setProblemDefinition(problemToSolveDefinition.deepClone());
-		jobRun.setProblem(problem);
+		jobRun.setDataset(dataset);
 		jobRun.setProblemTools(problemTools);
 		
 		jobRun.setJobID(new JobID(batchID, jobID, runNumber));
@@ -485,6 +473,10 @@ public class Job implements Concept, Serializable {
 	private static void processAliases(XStream xstream) {
 		
 		xstream.alias("job", Job.class);
+		xstream.alias("inputAgentConfigurations", InputAgentConfigurations.class);
+		xstream.alias("inputAgentConfiguration", InputAgentConfiguration.class);
+		xstream.alias("arguments", Arguments.class);
+		xstream.alias("argument", Argument.class);
 		
 		xstream.alias("plannerInitialisationOneMethodPerCore", PlannerInitialisationOneMethodPerCore.class);
 		xstream.alias("plannerInitialisationRandom", PlannerInitialisationRandom.class);
@@ -492,7 +484,7 @@ public class Job implements Concept, Serializable {
 		
 		xstream.alias("plannerAgentInfo", PlannerAgentInfo.class);
 		xstream.alias("plannerRandom", PlannerRandom.class);
-		xstream.alias("plannerRandomImpr", PlannerRandomImpr.class);
+		xstream.alias("plannerRandomImpr", PlannerRandomGuaranteeChance.class);
 		xstream.alias("plannerTheBestAverageOfFitness", PlannerTheBestAverageOfFitness.class);
 		xstream.alias("plannerTheBestHelper", PlannerTheBestHelper.class);
 		xstream.alias("plannerTheBestResult", PlannerTheBestResult.class);

@@ -28,6 +28,15 @@ public class InputAgentConfiguration implements Concept {
 	public InputAgentConfiguration() {   // only for Jade
 		this.arguments = new Arguments(new ArrayList<Argument>());
 	}
+
+	/**
+	 * Constructor
+	 * @param agentClass
+	 * @param arguments
+	 */
+	public InputAgentConfiguration(Class<?> agentClass, Arguments arguments) {
+		this(agentClass.getSimpleName(), agentClass, arguments);
+	}
 	
 	/**
 	 * Constructor

@@ -1,8 +1,10 @@
 package org.distributedea.input.batches.tsp.cities1083;
 
+import java.io.IOException;
+
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
-import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomImpr;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomGuaranteeChance;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestAverageOfFitness;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestResult;
@@ -27,7 +29,7 @@ import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedi
 public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 
 	@Override
-	public Batch batch() {
+	public Batch batch() throws IOException {
 		
 		Batch batch = new Batch();
 		batch.setBatchID("heteroMethodsTSP1083");
@@ -56,7 +58,7 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		Job job4 = InputTSP.test06();
 		job4.setJobID("randomImproved");
 		job4.setDescription("Random Kill & Random Run");
-		job4.setPlanner(new PlannerRandomImpr());
+		job4.setPlanner(new PlannerRandomGuaranteeChance());
 		
 		Job job5 = InputTSP.test06();
 		job5.setJobID("theBestAverageOfFitness");

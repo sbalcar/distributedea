@@ -101,7 +101,7 @@ public class IndividualsWrappers implements Concept {
 		Class<?> problemToolClass = exportProblemToolClass();
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				problemToolClass, new TrashLogger());
-		return problemTool.problemWhichSolves();
+		return problemTool.datasetReprezentation();
 	}
 	
 	public boolean exportContainsMoreThanOneMethod() {

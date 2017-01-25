@@ -118,9 +118,6 @@ public class XmlConfigurationProvider {
 				String value = argElement.getAttribute(VALUE);
 				
 				Argument argument = new Argument(key, value);
-				if (argElement.hasAttribute(SENDONLYVALUE)) {
-					argument.setSendOnlyValue(true);
-				}
 				arguments.add(argument);
 			}
 		}

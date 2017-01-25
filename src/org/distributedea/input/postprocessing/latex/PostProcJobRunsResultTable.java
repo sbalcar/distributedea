@@ -13,7 +13,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemTool;
 import org.distributedea.input.batches.IInputBatch;
-import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
+import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.ontology.job.JobID;
 
@@ -94,8 +94,8 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-//		IInputBatch batchCmp = new BatchSingleMethodsTSP1083();
-		IInputBatch batchCmp = new BatchHomoMethodsTSP1083();
+		IInputBatch batchCmp = new BatchSingleMethodsTSP1083();
+//		IInputBatch batchCmp = new BatchHomoMethodsTSP1083();
 		
 		Batch batch = batchCmp.batch();
 		

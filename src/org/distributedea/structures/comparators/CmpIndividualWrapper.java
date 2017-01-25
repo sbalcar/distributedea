@@ -5,7 +5,6 @@ import java.util.Comparator;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
@@ -25,7 +24,7 @@ public class CmpIndividualWrapper implements Comparator<IndividualWrapper> {
 	public CmpIndividualWrapper(IProblemDefinition problemDef) {
 		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Problem.class.getSimpleName() + " is not valid");
+					IProblemDefinition.class.getSimpleName() + " is not valid");
 		}
 		this.problemDef = problemDef;
 	}

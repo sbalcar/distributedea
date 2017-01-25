@@ -18,7 +18,7 @@ public class FilesystemTool {
 		
 		if (file == null || ! file.isFile()) {
 			throw new IllegalArgumentException("Argument " +
-					File.class.getSimpleName() + "is not valid");
+					File.class.getSimpleName() + " is not valid");
 		}
 		List<Double> vectors = new ArrayList<>();
 		

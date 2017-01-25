@@ -4,11 +4,11 @@ import java.io.File;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
@@ -196,7 +196,7 @@ public class ProblemWrapper implements Concept {
 	 * @param logger
 	 * @return
 	 */
-	public Problem exportProblem(IAgentLogger logger) {
+	public Dataset exportDataset(IAgentLogger logger) {
 		
 		if (! valid(logger)) {
 			return null;
@@ -205,7 +205,7 @@ public class ProblemWrapper implements Concept {
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				exportProblemToolClass(), logger);
 		
-		return problemTool.readProblem(exportProblemFile(), logger);
+		return problemTool.readDataset(exportProblemFile(), logger);
 	}
 	
 	
@@ -258,7 +258,7 @@ public class ProblemWrapper implements Concept {
 		struct.setJobID(getJobID());
 		struct.setIndividualDistribution(individualDistribution);
 		struct.setProblemDefinition(problemDefinition.deepClone());
-		struct.setProblem(exportProblem(logger));
+		struct.setDataset(exportDataset(logger));
 		struct.importProblemToolClass(exportProblemToolClass());
 		struct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(logger));
 		return struct;

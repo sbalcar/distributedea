@@ -143,7 +143,7 @@ public class ProblemTools {
 					createInstanceOfProblemTool(problemToolClassI, logger);
 			
 			if (problemToolI == null ||
-					problemToolI.problemWhichSolves() != problemToSolve) {
+					problemToolI.datasetReprezentation() != problemToSolve) {
 				logger.log(Level.INFO, IProblemTool.class.getSimpleName() +
 						" " + problemToolI.getClass().getSimpleName() +
 						"doesn't solve " + problemToSolve.getSimpleName() +

@@ -1,7 +1,7 @@
 package org.distributedea.ontology.problemdefinition;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.dataset.DatasetTSPGPS;
 
 /**
  * Ontology for definition TSP GPS problem
@@ -21,7 +21,7 @@ public class ProblemTSPGPSDef extends AProblemDefinition {
 	@Override
 	public Class<?> exportDatasetClass() {
 
-		return ProblemTSPGPS.class;
+		return DatasetTSPGPS.class;
 	}
 	
 	@Override

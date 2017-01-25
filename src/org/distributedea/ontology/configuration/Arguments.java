@@ -3,6 +3,7 @@ package org.distributedea.ontology.configuration;
 import jade.content.Concept;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
@@ -26,6 +27,45 @@ public class Arguments implements Concept {
 		this.arguments = new ArrayList<Argument>();
 	}
 
+	/**
+	 * Constructor
+	 * @param argument
+	 */
+	public Arguments(Argument argument) {
+		this(Arrays.asList(argument));
+	}
+	
+	/**
+	 * Constructor
+	 * @param argument0
+	 * @param argument1
+	 */
+	public Arguments(Argument argument0, Argument argument1) {
+		this(Arrays.asList(argument0, argument1));
+	}
+
+	/**
+	 * Constructor
+	 * @param argument0
+	 * @param argument1
+	 * @param argument2
+	 */
+	public Arguments(Argument argument0, Argument argument1, Argument argument2) {
+		this(Arrays.asList(argument0, argument1, argument2));
+	}
+
+	/**
+	 * Constructor
+	 * @param argument0
+	 * @param argument1
+	 * @param argument2
+	 * @param argument3
+	 */
+	public Arguments(Argument argument0, Argument argument1, Argument argument2,
+			Argument argument3) {
+		this(Arrays.asList(argument0, argument1, argument2, argument3));
+	}
+	
 	/**
 	 * Constructor
 	 * @param arguments
@@ -107,6 +147,24 @@ public class Arguments implements Concept {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Exports {@link Arguments} as string
+	 * @return
+	 */
+	public String exportToString() {
+		
+		if (this.arguments.isEmpty()) {
+			return "";
+		}
+		
+		String argumentsString = "";
+		
+		for (Argument argumentI : this.arguments) {
+			argumentsString += argumentI.getName() + "=" + argumentI.getValue() + ", ";
+		}
+		return argumentsString.substring(0, argumentsString.length() -2);
 	}
 	
 	/**

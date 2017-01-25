@@ -3,10 +3,10 @@ package org.distributedea.problems.binpacking.permutation;
 import java.io.File;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.binpacking.ProblemBinPackingTool;
 import org.distributedea.problems.binpacking.permutation.tools.ToolFitnessBinPacking;
@@ -25,49 +25,49 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 	}
 
 	@Override
-	public Problem readProblem(File fileOfProblem, IAgentLogger logger) {
+	public Dataset readDataset(File fileOfProblem, IAgentLogger logger) {
 
 		return ToolReadProblemBinPacking.readProblem(fileOfProblem, logger);
 	}
 
 	@Override
-	public Individual readSolution(File fileOfSolution, Problem problem,
+	public Individual readSolution(File fileOfSolution, Dataset dataset,
 			IAgentLogger logger) {
 
 		return ToolReadSolutionBinPacking.readSolution(fileOfSolution, logger);
 	}
 
 	@Override
-	public double fitness(Individual individual, IProblemDefinition problemDef, Problem problem,
+	public double fitness(Individual individual, IProblemDefinition problemDef, Dataset dataset,
 			IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
-		ProblemBinPacking problemBinPacking = (ProblemBinPacking) problem;
+		DatasetBinPacking problemBinPacking = (DatasetBinPacking) dataset;
 		
 		return ToolFitnessBinPacking.evaluate(individualPerm, problemBinPacking, logger);
 	}
 
 	@Override
 	protected Individual generateIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 
-		ProblemBinPacking problemBinPacking = (ProblemBinPacking) problem;
+		DatasetBinPacking problemBinPacking = (DatasetBinPacking) dataset;
 		
 		return ToolGenerateIndividualBinPacking.generateIndividual(problemBinPacking, logger);
 	}
 
 	@Override
 	protected Individual generateFirstIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 
-		ProblemBinPacking problemBinPacking = (ProblemBinPacking) problem;
+		DatasetBinPacking problemBinPacking = (DatasetBinPacking) dataset;
 
 		return ToolGenerateFirstIndividualBinPacking.generateFirstIndividual(problemBinPacking, logger);
 	}
 
 	@Override
 	protected Individual generateNextIndividual(IProblemDefinition problemDef,
-			Problem problem, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, IAgentLogger logger) {
 
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		

@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetTSPPoint;
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionPoint;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionPoint;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.IProblemTSPPermutationTool;
@@ -31,9 +31,9 @@ import org.distributedea.problems.tsp.point.permutation.tools.ToolReadSolutionTS
 public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointTool implements IProblemTSPPermutationTool {
 
 	@Override
-	public Class<?> problemWhichSolves() {
+	public Class<?> datasetReprezentation() {
 
-		return ProblemTSPPoint.class;
+		return DatasetTSPPoint.class;
 	}
 	
 	@Override
@@ -44,18 +44,18 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	
 	@Override
 	public Individual generateFirstIndividual(IProblemDefinition probleDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 		
-		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint)problem;
+		DatasetTSPPoint problemTSPPoint = (DatasetTSPPoint)dataset;
 		
 		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
 	}
 	
 	@Override
 	public Individual generateIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 		
-		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint) problem;
+		DatasetTSPPoint problemTSPPoint = (DatasetTSPPoint) dataset;
 		
 		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
 
@@ -63,7 +63,7 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	
 	@Override
 	public Individual generateNextIndividual(IProblemDefinition problemDef,
-			Problem problem, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		List<Integer> perm = individualPerm.getPermutation();
@@ -75,23 +75,23 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	
 	@Override
 	public double fitness(Individual individual, IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 		
 		IndividualPermutation individualPermutation =
 				(IndividualPermutation) individual;
-		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint) problem;
+		DatasetTSPPoint datasetTSPPoint = (DatasetTSPPoint) dataset;
 		
-		return ToolFitnessTSPPoint.fitness(individualPermutation, problemTSPPoint, this, logger);
+		return ToolFitnessTSPPoint.fitness(individualPermutation, datasetTSPPoint, this, logger);
 	}
 	
 	@Override
-	public Problem readProblem(File problemFile, IAgentLogger logger) {
+	public Dataset readDataset(File problemFile, IAgentLogger logger) {
 
-		return ToolReadProblemTSPPoint.readProblem(problemFile, logger);
+		return ToolReadProblemTSPPoint.readDataset(problemFile, logger);
 	}
 	
 	@Override
-	public Individual readSolution(File fileOfSolution, Problem problem,
+	public Individual readSolution(File fileOfSolution, Dataset dataset,
 			IAgentLogger logger) {
 		
 		return ToolReadSolutionTSPPoints.readSolutionTSP(fileOfSolution, logger);		
@@ -99,12 +99,12 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	
 	@Override
 	public Individual getNeighbor(Individual individual,
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			long neighborIndex, IAgentLogger logger) throws Exception {
 		
-		ProblemTSPPoint problemTSPPoint = (ProblemTSPPoint) problem;
+		DatasetTSPPoint datasetTSPPoint = (DatasetTSPPoint) dataset;
 		
-		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
+		return ToolGenerateIndividualForTSPPoint.generate(datasetTSPPoint);
 	}
 	
 	@Override

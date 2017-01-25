@@ -2,6 +2,9 @@
 <configuration>
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_HillClimbing" name="Agent_HillClimbing">
+            <arguments>
+                <argument key="numberOfNeighbors" value="10" sendOnlyValue="false" />
+            </arguments>
         </agent>
 
         <agent type="org.distributedea.agents.computingagents.Agent_RandomSearch" name="Agent_RandomSearch">

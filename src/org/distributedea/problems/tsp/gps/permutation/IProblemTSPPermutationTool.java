@@ -1,7 +1,7 @@
 package org.distributedea.problems.tsp.gps.permutation;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.Position;
 
 public interface IProblemTSPPermutationTool {
 

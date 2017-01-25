@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem;
+package org.distributedea.ontology.dataset;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,15 +6,14 @@ import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.problem.binpacking.ObjectBinPack;
+import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
 
 /**
- * Ontology prepresents Bin packing problem
+ * Ontology prepresents Bin packing problem {@link Dataset}
  * @author stepan
  *
  */
-public class ProblemBinPacking extends Problem {
+public class DatasetBinPacking extends Dataset {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +25,7 @@ public class ProblemBinPacking extends Problem {
 	
 	
 	@Deprecated
-	public ProblemBinPacking() {
+	public DatasetBinPacking() {
 		this.objects = new ArrayList<>();
 	}
 
@@ -35,7 +34,7 @@ public class ProblemBinPacking extends Problem {
 	 * @param objects
 	 * @param problemFileName
 	 */
-	public ProblemBinPacking(List<ObjectBinPack> objects, File problemFile) {
+	public DatasetBinPacking(List<ObjectBinPack> objects, File problemFile) {
 		setObjects(objects);
 		importProblemFile(problemFile);
 	}
@@ -44,10 +43,10 @@ public class ProblemBinPacking extends Problem {
 	 * Copy constructor
 	 * @param problemBinPacking
 	 */
-	public ProblemBinPacking(ProblemBinPacking problemBinPacking) {
+	public DatasetBinPacking(DatasetBinPacking problemBinPacking) {
 		if (problemBinPacking == null || ! problemBinPacking.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					ProblemBinPacking.class.getSimpleName() + " is not valid");
+					DatasetBinPacking.class.getSimpleName() + " is not valid");
 		}
 		
 		this.objects = new ArrayList<>();
@@ -117,12 +116,6 @@ public class ProblemBinPacking extends Problem {
 	}
 
 	@Override
-	public boolean testIsIGivenIndividualSolutionOfTheProblem(
-			Individual individual, IAgentLogger logger) {
-		return true;
-	}
-
-	@Override
 	public boolean valid(IAgentLogger logger) {
 		if (exportProblemFile() == null) {
 			return false;
@@ -140,8 +133,8 @@ public class ProblemBinPacking extends Problem {
 	}
 
 	@Override
-	public Problem deepClone() {
-		return new ProblemBinPacking(this);
+	public Dataset deepClone() {
+		return new DatasetBinPacking(this);
 	}
 
 }

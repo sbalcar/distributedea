@@ -1,33 +1,32 @@
-package org.distributedea.ontology.problem;
+package org.distributedea.ontology.dataset;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionGPS;
-
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionPoint;
 /**
- * Ontology represents TSP-GPS {@link Problem}
+ * Ontology represent one TSP 2D Point Problem
  * @author stepan
  *
  */
-public class ProblemTSPGPS extends ProblemTSP {
+public class DatasetTSPPoint extends DatasetTSP {
 
 	private static final long serialVersionUID = 1L;
 
-	/** List of TSP-GPS points */
-	private List<PositionGPS> positions;
+	/** List of TSP points */
+	private List<PositionPoint> positions;
 	
 	/** Problem File */
 	private String problemFileName;
-
-
+	
+	
+	
 	@Deprecated
-	public ProblemTSPGPS() { // only for Jade
-		this.positions = new ArrayList<PositionGPS>();
+	public DatasetTSPPoint() { // only for Jade
+		this.positions = new ArrayList<>();
 	}
 	
 	/**
@@ -35,37 +34,33 @@ public class ProblemTSPGPS extends ProblemTSP {
 	 * @param positions
 	 * @param problemFileName
 	 */
-	public ProblemTSPGPS(List<PositionGPS> positions, File problemFile) {
+	public DatasetTSPPoint(List<PositionPoint> positions,
+			File fileOfProblem) {
 		this.positions = positions;
-		this.importProblemFile(problemFile);
+		this.importProblemFile(fileOfProblem);
 	}
 	
 	/**
 	 * Copy Constructor
 	 * @param problem
 	 */
-	public ProblemTSPGPS(ProblemTSPGPS problem) {
+	public DatasetTSPPoint(DatasetTSPPoint dataset) {
 		
-		if (problem == null) {
-			throw new IllegalArgumentException();
-		}
-		
-		List<PositionGPS> positionsClone = new ArrayList<>();
-		for (PositionGPS positionI : problem.getPositions()) {
-			PositionGPS positionCloneI =
-					new PositionGPS(positionI);
+		List<PositionPoint> positionsClone = new ArrayList<>();
+		for (PositionPoint positionI : positions) {
+			PositionPoint positionCloneI =
+					new PositionPoint(positionI);
 			positionsClone.add(positionCloneI);
 		}
-		setPositions(positionsClone);
 		
-		setProblemFileName(problem.getProblemFileName());
+		setPositions(positionsClone);
+		setProblemFileName(dataset.getProblemFileName());
 	}
 	
-	public List<PositionGPS> getPositions() {
+	public List<PositionPoint> getPositions() {
 		return positions;
 	}
-	@Deprecated
-	public void setPositions(List<PositionGPS> positions) {
+	public void setPositions(List<PositionPoint> positions) {
 		this.positions = positions;
 	}
 
@@ -73,24 +68,24 @@ public class ProblemTSPGPS extends ProblemTSP {
 	public List<Position> exportPositions() {
 		
 		List<Position> positionsList = new ArrayList<Position>();
-		for (PositionGPS positionGPSI : positions) {
-			positionsList.add(positionGPSI);
+		for (PositionPoint positionPointI : positions) {
+			positionsList.add(positionPointI);
 		}
 		
 		return positionsList;
 	}
 	
-	public PositionGPS exportPosition(int itemNumber) {
+	@Override
+	public Position exportPosition(int itemNumber) {
 		
-		for (PositionGPS positionI : positions) {
+		for (PositionPoint positionI : positions) {
 			if (positionI.getNumber() == itemNumber) {
 				return positionI;
 			}
 		}
-		
 		return null;
 	}
-	
+
 	@Deprecated
 	public String getProblemFileName() {
 		File file = exportProblemFile();
@@ -125,22 +120,18 @@ public class ProblemTSPGPS extends ProblemTSP {
 		if (problemFile == null) {
 			throw new IllegalArgumentException();
 		}
-		if ((! problemFile.exists()) || (! problemFile.isFile())) {
+		if (! problemFile.exists() || ! problemFile.isFile()) {
 			throw new IllegalArgumentException();
 		}
 		this.problemFileName = problemFile.getAbsolutePath();
 	}
 	
+	@Override
 	public int numberOfPositions() {
 		return positions.size();
 	}
 
-	@Override
-	public boolean testIsIGivenIndividualSolutionOfTheProblem(
-			Individual individual, IAgentLogger logger) {
-		return true;
-	}
-	
+
 	/**
 	 * Tests validity
 	 */
@@ -148,7 +139,7 @@ public class ProblemTSPGPS extends ProblemTSP {
 		if (positions == null || positions.isEmpty()) {
 			return false;
 		}
-		for (PositionGPS positionI : positions) {
+		for (PositionPoint positionI : positions) {
 			if (! positionI.valid(logger)) {
 				return false;
 			}
@@ -157,8 +148,9 @@ public class ProblemTSPGPS extends ProblemTSP {
 	}
 	
 	@Override
-	public Problem deepClone() {
-		return new ProblemTSPGPS(this);
+	public DatasetTSPPoint deepClone() {
+		
+		return new DatasetTSPPoint(this);
 	}
-
+	
 }

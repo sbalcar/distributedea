@@ -23,7 +23,7 @@ import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
 
-public class PlannerRandomImpr implements IPlanner {
+public class PlannerRandomGuaranteeChance implements IPlanner {
 	
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;

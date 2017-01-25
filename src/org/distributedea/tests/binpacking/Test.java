@@ -7,9 +7,9 @@ import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.batches.binpacking.objects1000.BatchSingleMethodsBPP1000;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemdefinition.ProblemBinPackingDef;
 import org.distributedea.problems.ProblemTool;
@@ -17,15 +17,15 @@ import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSi
 
 public class Test {
 
-	public static void main(String [ ] args) {
+	public static void main(String [ ] args) throws Exception {
 	
 		IInputBatch iInputBatch = new BatchSingleMethodsBPP1000();
 		Batch batch = iInputBatch.batch();
 		
 		ProblemTool tool = new ProblemToolBinPackingSimpleShift();
 		
-		File file = batch.getJobs().get(0).exportProblemFile();
-		Problem problem = tool.readProblem(file, new TrashLogger());
+		File file = batch.getJobs().get(0).exportDatasetFile();
+		Dataset problem = tool.readDataset(file, new TrashLogger());
 		
 		IProblemDefinition def = new ProblemBinPackingDef(1);
 		

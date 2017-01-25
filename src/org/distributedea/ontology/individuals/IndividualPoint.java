@@ -152,7 +152,7 @@ public class IndividualPoint  extends Individual {
 	/**
 	 * Returns clone
 	 */
-	public Individual deepClone() {
+	public IndividualPoint deepClone() {
 		return new IndividualPoint(this);
 	}
 }

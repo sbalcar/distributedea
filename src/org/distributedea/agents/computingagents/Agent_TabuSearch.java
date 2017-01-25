@@ -6,16 +6,17 @@ import java.util.Queue;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
@@ -76,20 +77,21 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
-		Problem problem = problemStruct.getProblem();
+		Dataset dataset = problemStruct.getDataset();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
 		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
+		this.localSaver = new LocalSaver(this, jobID);
 		
-		problemTool.initialization(problem, agentConf, getLogger());
-		state = CompAgentState.COMPUTING;
+		problemTool.initialization(dataset, agentConf, getLogger());
+		this.state = CompAgentState.COMPUTING;
         
 		long generationNumberI = -1;
 		
 		IndividualEvaluated individualEvalI = problemTool
-				.generateFirstIndividualEval(problemDefinition, problem, pedigreeParams, getCALogger());
+				.generateFirstIndividualEval(problemDefinition, dataset, pedigreeParams, getCALogger());
 
 		
 		// add actual individual in the Tabu Set
@@ -110,7 +112,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 				generationNumberI++;
 				
 				neighborJ = problemTool.getNeighborEval(individualEvalI,
-						problemDefinition, problem, neighborIndex, pedigreeParams, getCALogger());
+						problemDefinition, dataset, neighborIndex, pedigreeParams, getCALogger());
 				
 				// not available next better neighbor 
 				if (neighborJ == null) {
@@ -138,7 +140,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			// generate new individual in local extreme
 			if (individualEvalI == null) {
 				individualEvalI = problemTool.generateFirstIndividualEval(
-						problemDefinition, problem, pedigreeParams, getCALogger());
+						problemDefinition, dataset, pedigreeParams, getCALogger());
 			}
 			
 			// add actual individual in the Tabu Set
@@ -146,7 +148,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI,
-					generationNumberI, problemDefinition, jobID);
+					generationNumberI, problemDefinition, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
@@ -154,7 +156,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			}
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problemDefinition);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problemDefinition);
 			
 			boolean isReceivedBetter =
 					FitnessTool.isFistIndividualWBetterThanSecond(
@@ -163,21 +165,22 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			if (individualDistribution &&
 					(! tabu.contains(recievedIndividualW)) &&
 					isReceivedBetter) {
-								
+				
+				// save and log received Individual
+				processRecievedIndividual(individualEvalI, recievedIndividualW,
+						generationNumberI, problemDefinition, localSaver);
+				
 				// update if better that actual
 				individualEvalI = recievedIndividualW.getIndividualEvaluated();
 				
 				tabu.offer(individualEvalI);
-				
-				// save and log received Individual
-				processRecievedIndividual(recievedIndividualW,
-						generationNumberI, problemDefinition);
 			}
 			
 		}
 		
 		problemTool.exit();
 
+		this.localSaver.closeFiles();
 	}
 
 }

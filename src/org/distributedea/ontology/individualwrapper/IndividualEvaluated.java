@@ -4,9 +4,9 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 
@@ -79,7 +79,7 @@ public class IndividualEvaluated implements Concept {
 		this.pedigree = pedigree;
 	}
 	
-	public boolean validation(IProblemDefinition problemDef, Problem problem,
+	public boolean validation(IProblemDefinition problemDef, Dataset dataset,
 			IProblemTool problemTool, IAgentLogger logger) {
 
 		if (! individual.valid(logger)) {
@@ -87,7 +87,7 @@ public class IndividualEvaluated implements Concept {
 		}
 
 		double fitnessValue = problemTool
-				.fitness(individual, problemDef, problem, logger);
+				.fitness(individual, problemDef, dataset, logger);
 		
 		if (fitness != fitnessValue) {
 			return false;

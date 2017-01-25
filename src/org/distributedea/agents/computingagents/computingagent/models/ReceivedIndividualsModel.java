@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.structures.comparators.CmpIndividualWrapper;
@@ -19,9 +19,10 @@ import org.distributedea.structures.comparators.CmpIndividualWrapper;
 public class ReceivedIndividualsModel {
 
 	private int MAX_NUMBER_OF_INDIVIDUAL = 10;
-	
+	//4614
 	private List<IndividualWrapper> receivedIndividuals =
-			Collections.synchronizedList(new ArrayList<IndividualWrapper>());
+//			Collections.synchronizedList(new ArrayList<IndividualWrapper>());
+			new ArrayList<IndividualWrapper>();
 	
 	/**
 	 * Add Received {@link IndividualWrapper} to Model
@@ -31,11 +32,11 @@ public class ReceivedIndividualsModel {
 	 * @param problemTool
 	 * @param logger
 	 */
-	public synchronized void addIndividual(IndividualWrapper individualW,
-			IProblemDefinition problemDef, Problem problem,
+	public void addIndividual(IndividualWrapper individualW,
+			IProblemDefinition problemDef, Dataset dataset,
 			IProblemTool problemTool, IAgentLogger logger) {
 		
-		if (individualW == null || (! individualW.validation(problemDef, problem, problemTool, logger))) {
+		if (individualW == null || (! individualW.validation(problemDef, dataset, problemTool, logger))) {
 			throw new IllegalStateException("Recieved Individual is not valid");
 		}
 		
@@ -54,7 +55,7 @@ public class ReceivedIndividualsModel {
 	 * @param problemDef
 	 * @return
 	 */
-	public synchronized IndividualWrapper getBestIndividual(IProblemDefinition problemDef) {
+	public IndividualWrapper removeTheBestIndividual(IProblemDefinition problemDef) {
 		
 		if (receivedIndividuals.isEmpty()) {
 			return null;

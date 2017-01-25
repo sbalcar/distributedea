@@ -6,23 +6,24 @@ import java.util.Vector;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetBinPacking;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.dataset.DatasetTSPGPS;
+import org.distributedea.ontology.dataset.DatasetTSPPoint;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemBinPacking;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
@@ -48,25 +49,25 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				problemToolClass, getLogger());
 		
-		Class<?> problem = problemStruct.getProblem().getClass();
+		Class<?> dataset = problemStruct.getDataset().getClass();
 		Class<?> representation = problemTool.reprezentationWhichUses();
 		
 		boolean isAble = false;
 		
 		
-		if (problem == ProblemTSPGPS.class) {
+		if (dataset == DatasetTSPGPS.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem == ProblemTSPPoint.class) {
+		} else if (dataset == DatasetTSPPoint.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem == ProblemBinPacking.class) {
+		} else if (dataset == DatasetBinPacking.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem == ProblemContinuousOpt.class) {
+		} else if (dataset == DatasetContinuousOpt.class) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
@@ -106,15 +107,16 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
-		Problem problem = problemStruct.getProblem();
+		Dataset dataset = problemStruct.getDataset();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
 		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
+		this.localSaver = new LocalSaver(this, jobID);
 		
-		problemTool.initialization(problem, agentConf, getLogger());
-		state = CompAgentState.COMPUTING;
+		problemTool.initialization(dataset, agentConf, getLogger());
+		this.state = CompAgentState.COMPUTING;
 		
 		
 		long generationNumberI = -1;
@@ -124,7 +126,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		Vector<IndividualEvaluated> population = new Vector<>();
 		for (int i = 0; i < popSize; i++) {
 			IndividualEvaluated individualI = problemTool.
-					generateIndividualEval(problemDefinition, problem, pedigreeParams, getCALogger());
+					generateIndividualEval(problemDefinition, dataset, pedigreeParams, getCALogger());
 			population.add(individualI);
 		}
 		
@@ -156,7 +158,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 									
 			IndividualEvaluated[] individualsNew = problemTool.
 					createNewIndividualEval(individual1, individual2,
-					individual3, problemDefinition, problem, pedigreeParams, getCALogger());
+					individual3, problemDefinition, dataset, pedigreeParams, getCALogger());
 			IndividualEvaluated individualEvalNew = individualsNew[0];
 
 			if (FitnessTool.isFirstIndividualEBetterThanSecond(
@@ -168,7 +170,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalNew, generationNumberI,
-					problemDefinition, jobID);
+					problemDefinition, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
@@ -176,7 +178,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			}
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problemDefinition);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problemDefinition);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
@@ -184,16 +186,18 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 					FitnessTool.isFistIndividualWBetterThanSecond(
 							recievedIndividualW, individualEvalNew, problemDefinition)) {
 				
-				model.replaceIndividual(individualEvalCandidateI,
-						recievedIndividualW.getIndividualEvaluated());
-				
 				// save and log received Individual
-				processRecievedIndividual(recievedIndividualW, generationNumberI, problemDefinition);
+				processRecievedIndividual(individualEvalNew, recievedIndividualW,
+						generationNumberI, problemDefinition, localSaver);
+
+				model.replaceIndividual(individualEvalCandidateI,
+						recievedIndividualW.getIndividualEvaluated());				
 			}
 		}
 		
 		problemTool.exit();
 		
+		this.localSaver.closeFiles();
 	}
 
 }

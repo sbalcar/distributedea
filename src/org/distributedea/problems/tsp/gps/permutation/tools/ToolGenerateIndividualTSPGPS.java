@@ -5,21 +5,20 @@ import java.util.List;
 import java.util.Random;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.dataset.DatasetTSPGPS;
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionGPS;
 import org.jgap.impl.StockRandomGenerator;
 
 
 public class ToolGenerateIndividualTSPGPS {
 
-	public static Individual generateIndividual(ProblemTSPGPS problemTSP,
+	public static IndividualPermutation generateIndividual(DatasetTSPGPS datasetTSP,
 			IAgentLogger logger) {
 		
 		List<Position> positions = new ArrayList<Position>();
-		for (PositionGPS positionI : problemTSP.getPositions()) {
+		for (PositionGPS positionI : datasetTSP.getPositions()) {
 			positions.add(positionI);
 		}
 		return generateIndividual(positions);

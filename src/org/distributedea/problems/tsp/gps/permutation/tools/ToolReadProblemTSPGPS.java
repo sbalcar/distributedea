@@ -9,21 +9,21 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionGPS;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetTSPGPS;
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionGPS;
 
 public class ToolReadProblemTSPGPS {
 
-	public static ProblemTSPGPS readProblem(File problemFile, IAgentLogger logger) {
+	public static DatasetTSPGPS readDataset(File problemFile, IAgentLogger logger) {
 
 		List<Position> positions;
 		try {
 			positions = readProblemTSP(problemFile, logger);
 		} catch (Exception e) {
 			logger.logThrowable("Can not read " +
-					Problem.class.getSimpleName(), e);
+					Dataset.class.getSimpleName(), e);
 			return null;
 		}
 		
@@ -32,7 +32,7 @@ public class ToolReadProblemTSPGPS {
 			positionsGPS.add((PositionGPS) positionI);
 		}
 		
-		return new ProblemTSPGPS(positionsGPS, problemFile);
+		return new DatasetTSPGPS(positionsGPS, problemFile);
 	}
 	
 	/**

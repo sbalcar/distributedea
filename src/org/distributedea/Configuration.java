@@ -28,7 +28,7 @@ public class Configuration {
 	public static final char CONTAINER_NUMBER_PREFIX = '_';
 
 	
-	public static int COUNT_OF_METHODS_ON_CORE = 2;
+	public static double COUNT_OF_METHODS_ON_CORE = 0.5;
 	
 	/**
 	 * Provides Classes of unique agents which doesn't contain suffix

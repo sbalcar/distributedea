@@ -3,10 +3,10 @@ package org.distributedea.agents.computingagents.computingagent.evolutionjgap;
 import java.util.List;
 import java.util.Random;
 
-import org.distributedea.logging.AgentLogger;
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.jgap.Chromosome;
@@ -28,18 +28,18 @@ public class EACrossoverWrapper implements GeneticOperator {
 
 	private double crossRate;
 	private IProblemDefinition problemDef;
-	private Problem problem;
+	private Dataset dataset;
 	private IProblemTool problemTool;
 	private Configuration conf;
-	private AgentLogger logger;
+	private IAgentLogger logger;
 	
 	public EACrossoverWrapper(double crossRate, IProblemDefinition problemDef,
-			Problem problem, IProblemTool problemTool, Configuration conf,
-			AgentLogger logger) {
+			Dataset dataset, IProblemTool problemTool, Configuration conf,
+			IAgentLogger logger) {
 		
 		this.crossRate = crossRate;
 		this.problemDef = problemDef;
-		this.problem = problem;
+		this.dataset = dataset;
 		this.problemTool = problemTool;
 		this.conf = conf;
 		this.logger = logger;
@@ -117,7 +117,7 @@ public class EACrossoverWrapper implements GeneticOperator {
 		Individual individualPerm1 = null;
 		try {
 			individualPerm1 = Convertor.convertToIndividual(
-					chromosome1, problem, problemTool, conf);
+					chromosome1, dataset, problemTool, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Chromosome to Individual", e);
 			return null;
@@ -127,21 +127,21 @@ public class EACrossoverWrapper implements GeneticOperator {
 		Individual individualPerm2 = null;
 		try {
 			individualPerm2 = Convertor.convertToIndividual(
-					chromosome2, problem, problemTool, conf);
+					chromosome2, dataset, problemTool, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Chromosome to Individual", e);
 			return null;
 		}
 		
-		double fitness1 = problemTool.fitness(individualPerm1, problemDef, problem, logger);
-		double fitness2 = problemTool.fitness(individualPerm2, problemDef, problem, logger);
+		double fitness1 = problemTool.fitness(individualPerm1, problemDef, dataset, logger);
+		double fitness2 = problemTool.fitness(individualPerm2, problemDef, dataset, logger);
 		
 		IndividualEvaluated[] newIndividuals = null;
 		try {
 			newIndividuals = problemTool.createNewIndividual(
 						new IndividualEvaluated(individualPerm1, fitness1, null),
 						new IndividualEvaluated(individualPerm2, fitness2, null),
-						problemDef, problem, null, logger);
+						problemDef, dataset, null, logger);
 			
 		} catch (Exception e1) {
 			logger.logThrowable("", e1);
@@ -152,9 +152,9 @@ public class EACrossoverWrapper implements GeneticOperator {
 		IChromosome chromosomeNewB = null;
 		try {
 			chromosomeNewA = Convertor.convertToIChromosome(
-					newIndividuals[0].getIndividual(), problem,  conf);
+					newIndividuals[0].getIndividual(), dataset,  conf);
 			chromosomeNewB = Convertor.convertToIChromosome(
-					newIndividuals[1].getIndividual(), problem, conf);
+					newIndividuals[1].getIndividual(), dataset, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Individual to Chromosome", e);
 			return null;

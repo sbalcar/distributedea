@@ -150,7 +150,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		reply.setLanguage(codec.getName());
 		reply.setOntology(ManagementOntology.getInstance().getName());
 		
-		int cores = Configuration.COUNT_OF_METHODS_ON_CORE * Runtime.getRuntime().availableProcessors();
+		double coresDouble = Configuration.COUNT_OF_METHODS_ON_CORE * (double) Runtime.getRuntime().availableProcessors();
+		int cores = (int) coresDouble;
 		
 		AID [] localComputingAgentAIDs =
 				searchLocalContainerDF(Agent_ComputingAgent.class.getName());

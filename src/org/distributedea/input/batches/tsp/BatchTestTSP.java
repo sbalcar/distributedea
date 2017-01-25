@@ -1,5 +1,7 @@
 package org.distributedea.input.batches.tsp;
 
+import java.io.IOException;
+
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfImprovement;
@@ -22,7 +24,7 @@ import org.distributedea.ontology.pedigree.PedigreeTreeFull;
 public class BatchTestTSP implements IInputBatch {
 
 	@Override
-	public Batch batch() {
+	public Batch batch() throws IOException {
 		
 		Batch batch = new Batch();
 		batch.setBatchID("testTSP");

@@ -1,5 +1,7 @@
 package org.distributedea.input.batches.co;
 
+import java.io.IOException;
+
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerFollowNaiveAskingForBestResult;
@@ -17,7 +19,7 @@ import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedi
 public class BatchHeteroComparingCO implements IInputBatch {
 
 	@Override
-	public Batch batch() {
+	public Batch batch() throws IOException {
 
 		Batch batch = new Batch();
 		batch.setBatchID("heteroComparingCO");

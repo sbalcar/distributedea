@@ -1,8 +1,8 @@
 package org.distributedea.problems.tsp.point.permutation.tools;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionPoint;
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionPoint;
 
 public class ToolDistanceTSPPoint {
 

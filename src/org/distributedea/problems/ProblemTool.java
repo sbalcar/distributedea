@@ -2,10 +2,10 @@ package org.distributedea.problems;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
@@ -17,39 +17,39 @@ public abstract class ProblemTool implements IProblemTool {
 
 	
 	protected abstract Individual generateIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger);
+			Dataset dataset, IAgentLogger logger);
 	
 	protected abstract Individual generateFirstIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger);
+			Dataset dataset, IAgentLogger logger);
 	
 	protected abstract Individual generateNextIndividual(IProblemDefinition problemDef,
-			Problem problem, Individual individual, IAgentLogger logger);
+			Dataset dataset, Individual individual, IAgentLogger logger);
 	
 	protected abstract Individual improveIndividual(Individual individual,
 			IProblemDefinition problemDef, IAgentLogger logger) throws Exception;
 
 	protected abstract Individual getNeighbor(Individual individual,
-			IProblemDefinition problemDef, Problem problem, long neighborIndex,
+			IProblemDefinition problemDef, Dataset dataset, long neighborIndex,
 			IAgentLogger logger) throws Exception;
 	
 	protected abstract Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger)
+			Dataset dataset, IAgentLogger logger)
 			throws Exception;
 	
 	protected abstract Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			IProblemDefinition problemDef, Problem problem, IAgentLogger logger)
+			IProblemDefinition problemDef, Dataset dataset, IAgentLogger logger)
 			throws Exception;
 	
 	
 	
 	public final IndividualEvaluated generateIndividualEval(
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) {
 		
-		Individual individualNew = generateIndividual(problemDef, problem, logger);
-		double fitness = fitness(individualNew, problemDef, problem, logger);
+		Individual individualNew = generateIndividual(problemDef, dataset, logger);
+		double fitness = fitness(individualNew, problemDef, dataset, logger);
 		
 		Pedigree pedigree = Pedigree.create(pedigreeParams);
 		
@@ -57,11 +57,11 @@ public abstract class ProblemTool implements IProblemTool {
 	}
 	
 	public final IndividualEvaluated generateFirstIndividualEval(
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) {
 		
-		Individual individualNew = generateFirstIndividual(problemDef, problem, logger);
-		double fitness = fitness(individualNew, problemDef, problem, logger);
+		Individual individualNew = generateFirstIndividual(problemDef, dataset, logger);
+		double fitness = fitness(individualNew, problemDef, dataset, logger);
 		
 		Pedigree pedigree = Pedigree.create(pedigreeParams);
 		
@@ -69,12 +69,12 @@ public abstract class ProblemTool implements IProblemTool {
 	}
 	
 	public final IndividualEvaluated generateNextIndividualEval(
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			IndividualEvaluated individual, PedigreeParameters pedigreeParams,
 			IAgentLogger logger) {
 		
-		Individual individualNew = generateNextIndividual(problemDef, problem, individual.getIndividual(), logger);
-		double fitness = fitness(individualNew, problemDef, problem, logger);
+		Individual individualNew = generateNextIndividual(problemDef, dataset, individual.getIndividual(), logger);
+		double fitness = fitness(individualNew, problemDef, dataset, logger);
 		
 		Pedigree pedigree = Pedigree.create(pedigreeParams);
 		
@@ -82,12 +82,12 @@ public abstract class ProblemTool implements IProblemTool {
 	}
 	
 	public final IndividualEvaluated getNeighborEval(IndividualEvaluated individual,
-			IProblemDefinition problemDef, Problem problem, long neighborIndex,
+			IProblemDefinition problemDef, Dataset dataset, long neighborIndex,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
 		Individual individualNew = getNeighbor(individual.getIndividual(),
-				problemDef, problem, neighborIndex, logger);
-		double fitness = fitness(individualNew, problemDef, problem, logger);
+				problemDef, dataset, neighborIndex, logger);
+		double fitness = fitness(individualNew, problemDef, dataset, logger);
 		
 		Pedigree pedigree = Pedigree.create(pedigreeParams);
 		
@@ -96,7 +96,7 @@ public abstract class ProblemTool implements IProblemTool {
 	
 	public final IndividualEvaluated[] createNewIndividual(IndividualEvaluated individualEval1,
 			IndividualEvaluated individualEval2, IProblemDefinition problemDef,
-			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger)
+			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger)
 			throws Exception {
 		
 		Individual individual1 = individualEval1.getIndividual();
@@ -107,7 +107,7 @@ public abstract class ProblemTool implements IProblemTool {
 		
 		
 		Individual[] individualNew = createNewIndividual(individual1,
-				individual2, problemDef, problem, logger);
+				individual2, problemDef, dataset, logger);
 		Pedigree pedigreeNew = Pedigree.update(pedigree1, pedigree2, pedigreeParams);
 		
 		
@@ -115,7 +115,7 @@ public abstract class ProblemTool implements IProblemTool {
 		for (int i = 0; i < individualNew.length; i++) {
 			
 			Individual individualNewI = individualNew[i];
-			double fitnessI = fitness(individualNewI, problemDef, problem, logger);
+			double fitnessI = fitness(individualNewI, problemDef, dataset, logger);
 			list[i] = new IndividualEvaluated(individualNewI, fitnessI, pedigreeNew);
 		}
 		return list;
@@ -123,7 +123,7 @@ public abstract class ProblemTool implements IProblemTool {
 			
 	public final IndividualEvaluated[] createNewIndividualEval(IndividualEvaluated individualEval1, 
 			IndividualEvaluated individualEval2, IndividualEvaluated individualEval3,
-			IProblemDefinition problemDef, Problem problem, PedigreeParameters
+			IProblemDefinition problemDef, Dataset dataset, PedigreeParameters
 			pedigreeParams, IAgentLogger logger) throws Exception {
 		
 		Individual individual1 = individualEval1.getIndividual();
@@ -137,7 +137,7 @@ public abstract class ProblemTool implements IProblemTool {
 		
 		
 		Individual[] individualNew = createNewIndividual(individual1, 
-				individual2, individual3, problemDef, problem, logger);
+				individual2, individual3, problemDef, dataset, logger);
 		Pedigree pedigreeNew = Pedigree.update(pedigree1, pedigree2, pedigree3,
 				pedigreeParams);
 		
@@ -145,7 +145,7 @@ public abstract class ProblemTool implements IProblemTool {
 		for (int i = 0; i < individualNew.length; i++) {
 			
 			Individual individualNewI = individualNew[i];
-			double fitnessI = fitness(individualNewI, problemDef, problem, logger);
+			double fitnessI = fitness(individualNewI, problemDef, dataset, logger);
 			list[i] = new IndividualEvaluated(individualNewI, fitnessI, pedigreeNew);
 		}
 		return list;
@@ -153,14 +153,14 @@ public abstract class ProblemTool implements IProblemTool {
 	
 	
 	public final IndividualEvaluated improveIndividualEval(IndividualEvaluated individualEval1,
-			IProblemDefinition problemDef, Problem problem, PedigreeParameters pedigreeParams,
+			IProblemDefinition problemDef, Dataset dataset, PedigreeParameters pedigreeParams,
 			IAgentLogger logger) throws Exception {
 		
 		Individual individual1 = individualEval1.getIndividual();
 		Pedigree pedigree1 = individualEval1.getPedigree();
 		
 		Individual individualNew = improveIndividual(individual1, problemDef, logger);
-		double fitness = fitness(individualNew, problemDef, problem, logger);
+		double fitness = fitness(individualNew, problemDef, dataset, logger);
 		
 		Pedigree pedigreeNew = Pedigree.update(pedigree1, pedigreeParams);
 		

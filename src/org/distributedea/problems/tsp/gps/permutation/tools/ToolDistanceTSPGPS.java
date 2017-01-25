@@ -1,7 +1,7 @@
 package org.distributedea.problems.tsp.gps.permutation.tools;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.problem.tsp.PositionGPS;
+import org.distributedea.ontology.dataset.tsp.PositionGPS;
 
 public class ToolDistanceTSPGPS {
 

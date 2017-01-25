@@ -2,7 +2,7 @@ package org.distributedea.ontology.problemdefinition;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 
 /**
  * Ontology for definition Continuous optimization problem
@@ -59,7 +59,7 @@ public class ProblemContinuousOptDef extends AProblemDefinition {
 	@Override
 	public Class<?> exportDatasetClass() {
 
-		return ProblemContinuousOpt.class;
+		return DatasetContinuousOpt.class;
 	}	
 
 	@Override

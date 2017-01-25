@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem;
+package org.distributedea.ontology.dataset;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,16 +6,14 @@ import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problem.continuousoptimization.Interval;
+import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 
 /**
- * Ontology represents Continuous Optimization Problem
+ * Ontology represents Continuous Optimization Dataset
  * @author stepan
  * 
  */
-public class ProblemContinuousOpt extends Problem {
+public class DatasetContinuousOpt extends Dataset {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -32,7 +30,7 @@ public class ProblemContinuousOpt extends Problem {
 	private String problemFileName;
 	
 	
-	public ProblemContinuousOpt() {
+	public DatasetContinuousOpt() {
 		this.intervals = new ArrayList<>();
 	}
 	
@@ -40,10 +38,10 @@ public class ProblemContinuousOpt extends Problem {
 	 * Copy Constructor
 	 * @param problem
 	 */
-	public ProblemContinuousOpt(ProblemContinuousOpt problem) {
+	public DatasetContinuousOpt(DatasetContinuousOpt problem) {
 		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					ProblemContinuousOpt.class.getSimpleName() + " is not valid");
+					DatasetContinuousOpt.class.getSimpleName() + " is not valid");
 		}
 		
 		setFunctionID(problem.getFunctionID());
@@ -118,34 +116,7 @@ public class ProblemContinuousOpt extends Problem {
 		}
 		this.problemFileName = problemFile.getAbsolutePath();
 	}
-	
-	@Override
-	public boolean testIsIGivenIndividualSolutionOfTheProblem(
-			Individual individual, IAgentLogger logger) {
 		
-		if (! (individual instanceof IndividualPoint)) {
-			return false;
-		}
-		
-		IndividualPoint individualPoint = (IndividualPoint)individual;
-		List<Double> coordinates = individualPoint.getCoordinates();
-		
-		for (int i = 0; i < coordinates.size(); i++) {
-			
-			Double coordinateI = coordinates.get(i);
-			Interval intervalI = intervals.get(i);
-			
-			boolean isCoordinateValid = 
-					intervalI.getMin() <= coordinateI &&
-					coordinateI <= intervalI.getMax();
-			if (! isCoordinateValid) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
 	/**
 	 * Tests validity
 	 */
@@ -164,8 +135,8 @@ public class ProblemContinuousOpt extends Problem {
 	}
 	
 	@Override
-	public Problem deepClone() {
-		return new ProblemContinuousOpt(this);
+	public Dataset deepClone() {
+		return new DatasetContinuousOpt(this);
 	}
 	
 }

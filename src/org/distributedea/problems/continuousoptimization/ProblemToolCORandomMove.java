@@ -1,30 +1,36 @@
 package org.distributedea.problems.continuousoptimization;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.problems.continuousoptimization.point.operators.OperatorMoveInTheMiddle;
+import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.continuousoptimization.point.operators.OperatorDifferential;
 import org.distributedea.problems.continuousoptimization.point.operators.OperatorRandomMove;
 import org.distributedea.problems.continuousoptimization.point.operators.OperatorMoveToSomewhereInTheMiddle;
 import org.distributedea.problems.continuousoptimization.point.tools.ToolGenerateNextIndividualCO;
 
+/**
+ * Random move {@link ProblemTool}
+ * @author stepan
+ *
+ */
 public class ProblemToolCORandomMove extends AProblemToolCO {
 
 	@Override
 	public Individual generateFirstIndividual(IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 		
-		return generateIndividual(problemDef, problem, logger);
+		return generateIndividual(problemDef, dataset, logger);
 	}
 
 	@Override
 	public Individual generateNextIndividual(IProblemDefinition problemDef,
-			Problem problem, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, IAgentLogger logger) {
 
-		ProblemContinuousOpt probelmCO = (ProblemContinuousOpt) problem;
+		DatasetContinuousOpt probelmCO = (DatasetContinuousOpt) dataset;
 		IndividualPoint individualPoint = (IndividualPoint) individual;
 		
 		return ToolGenerateNextIndividualCO.create(probelmCO, individualPoint, logger);
@@ -41,7 +47,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 
 	@Override
 	public Individual getNeighbor(Individual individual,
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			long neighborIndex, IAgentLogger logger) throws Exception {
 
 		IndividualPoint individualPoint = (IndividualPoint) individual;
@@ -52,7 +58,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger) throws Exception {
+			Dataset dataset, IAgentLogger logger) throws Exception {
 		
 		IndividualPoint individualP1 = (IndividualPoint) individual1;
 		IndividualPoint individualP2 = (IndividualPoint) individual2;
@@ -64,15 +70,18 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			IAgentLogger logger) throws Exception {
 		
 		IndividualPoint individualP1 = (IndividualPoint) individual1;
 		IndividualPoint individualP2 = (IndividualPoint) individual2;
 		IndividualPoint individualP3 = (IndividualPoint) individual3;
 		
-		return OperatorMoveInTheMiddle.create(individualP1, individualP2,
-				individualP3, problem, logger);
+		Individual[] individual = new Individual[1];
+		individual[0] = OperatorDifferential.create(individualP1, individualP2,
+				individualP3, 1, dataset, logger);
+		
+		return individual;
 	}
 
 }

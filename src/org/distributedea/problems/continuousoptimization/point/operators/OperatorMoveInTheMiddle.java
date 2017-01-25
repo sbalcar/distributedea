@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problem.Problem;
-import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.ontology.problem.continuousoptimization.Interval;
 
 public class OperatorMoveInTheMiddle {
 
 	public static Individual[] create(IndividualPoint individualP1,
 			IndividualPoint individualP2, IndividualPoint individualP3,
-			Problem problem, IAgentLogger logger)
+			Dataset dataset, IAgentLogger logger)
 			throws Exception {
 		
 		double F = 1.0;
 		
-		ProblemContinuousOpt problemCO = (ProblemContinuousOpt) problem;
+		DatasetContinuousOpt problemCO = (DatasetContinuousOpt) dataset;
 		
 		List<Double> coordinates = new ArrayList<Double>();
 		for (int i = 0; i < individualP1.getCoordinates().size(); i++) {

@@ -11,12 +11,12 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.AgentConfigurations;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemdefinition.AProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
@@ -57,9 +57,9 @@ public class JobRun implements Concept {
 	private IProblemDefinition problemToSolveDefinition;
 	
 	/**
-	 * Problem to solve
+	 * Dataset
 	 */
-	private Problem problem;
+	private Dataset dataset;
 
 	/**
 	 * Specify about type of {@link Pedigree}
@@ -91,14 +91,14 @@ public class JobRun implements Concept {
 				jobRun.getAgentConfigurations().deepClone();
 		ProblemTools problemToolsClone =
 				jobRun.getProblemTools().deepClone();
-		Problem problemClone =
-				jobRun.getProblem().deepClone();
+		Dataset datasetClone =
+				jobRun.getDataset().deepClone();
 		
 		setJobID(jobIDClone);
 		setIndividualDistribution(individualDistributionClone);
 		setAgentConfigurations(agentConfigurationsClone);
 		setProblemTools(problemToolsClone);
-		setProblem(problemClone);
+		setDataset(datasetClone);
 		
 	}
 	
@@ -182,15 +182,15 @@ public class JobRun implements Concept {
 	 * Returns {@link Problem} to solve
 	 * @return
 	 */
-	public Problem getProblem() {
-		return problem;
+	public Dataset getDataset() {
+		return dataset;
 	}
-	public void setProblem(Problem problem) {
-		if (problem == null || ! problem.valid(new TrashLogger())) {
+	public void setDataset(Dataset dataset) {
+		if (dataset == null || ! dataset.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Problem.class.getSimpleName() + " is not valid");
+					Dataset.class.getSimpleName() + " is not valid");
 		}
-		this.problem = problem;
+		this.dataset = dataset;
 	}
 	
 	@Deprecated	
@@ -249,13 +249,13 @@ public class JobRun implements Concept {
 		JobID jobIDClone = getJobID().deepClone();
 		
 		AProblemDefinition problemDefClone = getProblemDefinition().deepClone();
-		Problem problemClone = getProblem().deepClone();
+		Dataset datasetClone = getDataset().deepClone();
 		
 		ProblemStruct problemStruct = new ProblemStruct();
 		problemStruct.setJobID(jobIDClone);
 		problemStruct.setIndividualDistribution(getIndividualDistribution());
 		problemStruct.setProblemDefinition(problemDefClone);
-		problemStruct.setProblem(problemClone);
+		problemStruct.setDataset(datasetClone);
 		problemStruct.importProblemToolClass(problemToolClass);
 		problemStruct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));
 		
@@ -306,12 +306,12 @@ public class JobRun implements Concept {
 			return false;
 		}
 		
-		if (problem == null || ! problem.valid(logger)) {
-			logger.log(Level.WARNING, Problem.class.getSimpleName() + " is not valid");
+		if (dataset == null || ! dataset.valid(logger)) {
+			logger.log(Level.WARNING, Dataset.class.getSimpleName() + " is not valid");
 			return false;
 		}
 		
-		if (problemTools == null || ! problemTools.valid(problem.getClass(), logger)) {
+		if (problemTools == null || ! problemTools.valid(dataset.getClass(), logger)) {
 			logger.log(Level.WARNING, ProblemTools.class.getSimpleName() + " are not valid");
 			return false;
 		}

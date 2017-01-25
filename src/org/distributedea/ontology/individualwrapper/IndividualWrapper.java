@@ -3,9 +3,9 @@ package org.distributedea.ontology.individualwrapper;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 
@@ -97,14 +97,14 @@ public class IndividualWrapper implements Concept {
 	}
 	
 	
-	public boolean validation(IProblemDefinition problemDef, Problem problem,
+	public boolean validation(IProblemDefinition problemDef, Dataset dataset,
 			IProblemTool problemTool, IAgentLogger logger) {
 		
-		if (problem == null) {
+		if (dataset == null) {
 			return false;
 		}
 		
-		return individualEvaluated.validation(problemDef, problem, problemTool, logger);	
+		return individualEvaluated.validation(problemDef, dataset, problemTool, logger);	
 	}
 	
 	/**

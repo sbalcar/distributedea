@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.DatasetBinPacking;
+import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.ProblemBinPacking;
-import org.distributedea.ontology.problem.binpacking.ObjectBinPack;
 
 public class ToolFitnessBinPacking {
 
 	public static double evaluate(IndividualPermutation individual,
-			ProblemBinPacking problem, IAgentLogger logger) {
+			DatasetBinPacking problem, IAgentLogger logger) {
 		
 		if (individual == null) {
 			return Double.NaN;

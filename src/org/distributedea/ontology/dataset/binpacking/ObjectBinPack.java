@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem.binpacking;
+package org.distributedea.ontology.dataset.binpacking;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;

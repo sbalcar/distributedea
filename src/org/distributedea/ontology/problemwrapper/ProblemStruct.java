@@ -6,10 +6,10 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
@@ -47,7 +47,7 @@ public class ProblemStruct implements Concept {
 	/**
 	 * Problem to solve
 	 */
-	private Problem problem;
+	private Dataset dataset;
 
 	/**
 	 * Specify about type of {@link Pedigree}
@@ -79,7 +79,7 @@ public class ProblemStruct implements Concept {
 				problemStruct.exportProblemToolClass(new TrashLogger());
 		IProblemDefinition problemDefinitionClone =
 				problemStruct.getProblemDefinition().deepClone();
-		Problem problemClone = problemStruct.getProblem().deepClone();
+		Dataset datasetClone = problemStruct.getDataset().deepClone();
 		Class<?> pedigreeOfIndividualClassClone = 
 				problemStruct.exportPedigreeOfIndividual(new TrashLogger());
 		
@@ -88,7 +88,7 @@ public class ProblemStruct implements Concept {
 		this.setIndividualDistribution(individualDistributionClone);
 		this.importProblemToolClass(problemToolClassClone);
 		this.setProblemDefinition(problemDefinitionClone);
-		this.setProblem(problemClone);
+		this.setDataset(datasetClone);
 		this.importPedigreeOfIndividualClassName(pedigreeOfIndividualClassClone);
 	}
 	
@@ -187,16 +187,16 @@ public class ProblemStruct implements Concept {
 	 * Returns {@link Problem} to solve
 	 * @return
 	 */
-	public Problem getProblem() {
-		return problem;
+	public Dataset getDataset() {
+		return dataset;
 	}
-	public void setProblem(Problem problem) {
-		if (problem == null ||
-				! problem.valid(new TrashLogger())) {
+	public void setDataset(Dataset dataset) {
+		if (dataset == null ||
+				! dataset.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Problem.class.getSimpleName() + " is not valid");
+					Dataset.class.getSimpleName() + " is not valid");
 		}
-		this.problem = problem;
+		this.dataset = dataset;
 	}
 	
 	
@@ -247,7 +247,7 @@ public class ProblemStruct implements Concept {
 		JobID jobIDCone = jobID.deepClone();
 		boolean individualDistributionClone = individualDistribution;
 		IProblemDefinition problemDefClone = problemToSolveDefinition.deepClone();
-		File problemFileClone = getProblem().exportProblemFile();
+		File problemFileClone = getDataset().exportProblemFile();
 		Class<?> problemToolClass = exportProblemToolClass(new TrashLogger());
 		
 		ProblemWrapper wrapper = new ProblemWrapper();
@@ -284,16 +284,16 @@ public class ProblemStruct implements Concept {
 		if (problemToSolveDefinition == null || ! problemToSolveDefinition.valid(logger)) {
 			return false;
 		}
-		if (problem == null || ! problem.valid(logger)) {
+		if (dataset == null || ! dataset.valid(logger)) {
 			return false;
 		}
 		
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				exportProblemToolClass(logger), logger);
 		
-		Class<?> problemClass = problemTool.problemWhichSolves();
+		Class<?> problemClass = problemTool.datasetReprezentation();
 		// if problemTool can solve the problem
-		if (getProblem().getClass() != problemClass) {
+		if (getDataset().getClass() != problemClass) {
 			return false;
 		}
 		

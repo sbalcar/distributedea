@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem.tsp;
+package org.distributedea.ontology.dataset.tsp;
 
 import org.distributedea.logging.IAgentLogger;
 

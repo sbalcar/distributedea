@@ -1,5 +1,6 @@
 package org.distributedea.input.postprocessing.latex;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
@@ -55,7 +56,7 @@ public class PostProcBatchDiffTable extends PostProcessing {
 		System.out.println(table);
 	}
 
-	public static void main(String [] args) {
+	public static void main(String [] args) throws IOException {
 
 		BatchHomoMethodsTSP1083 batchHomo = new BatchHomoMethodsTSP1083();
 		Batch batch = batchHomo.batch();

@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.DatasetTSP;
+import org.distributedea.ontology.dataset.tsp.Position;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.ProblemTSP;
-import org.distributedea.ontology.problem.tsp.Position;
 import org.distributedea.problems.tsp.gps.permutation.IProblemTSPPermutationTool;
 
 public class ToolFitnessTSPGPS {
 
 	public static double evaluate(IndividualPermutation individual,
-			ProblemTSP problem, IProblemTSPPermutationTool tool,
+			DatasetTSP problem, IProblemTSPPermutationTool tool,
 			IAgentLogger logger) {
 		
 		if (individual == null) {

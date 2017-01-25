@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.dataset.DatasetTSP;
+import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.ProblemTSP;
 
 public class ToolGenerateFirstIndividualTSPGPS {
 
-	public static IndividualPermutation generateFirstIndividual(ProblemTSP problemTSP,
+	public static IndividualPermutation generateFirstIndividual(DatasetTSPGPS datasetTSP,
+			IAgentLogger logger) {
+		return ToolGenerateIndividualTSPGPS.generateIndividual(datasetTSP, logger);
+	}
+	
+	@SuppressWarnings("unused")
+	private  static IndividualPermutation generateFirstIndividual_(DatasetTSP problemTSP,
 			IAgentLogger logger) {
 		
 		int minValue = problemTSP.minOfPositionNumbers();

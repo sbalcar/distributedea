@@ -22,11 +22,12 @@ import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.computingagents.computingagent.models.BestIndividualModel;
 import org.distributedea.agents.computingagents.computingagent.models.HelpersModel;
 import org.distributedea.agents.computingagents.computingagent.models.IndividualToDistributionModel;
 import org.distributedea.agents.computingagents.computingagent.models.ReceivedIndividualsModel;
-import org.distributedea.logging.AgentComputingLogger;
+import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
@@ -40,6 +41,7 @@ import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.AgentName;
 import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
@@ -51,7 +53,6 @@ import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
@@ -69,6 +70,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
 
+	private final static boolean DEBUG = false;
+	
 	protected CompAgentState state = CompAgentState.INITIALIZATION;
 	
 	// configuration of this agent
@@ -76,6 +79,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 	// logger for Computing Agent
 	private IAgentLogger logger = null;
+	
+	protected LocalSaver localSaver = null;
 	
 	private BestIndividualModel bestIndividualModel = new BestIndividualModel();
 	
@@ -157,12 +162,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	public IAgentLogger getLogger() {
 		
 		if (logger == null) {
-			this.logger = new AgentComputingLogger(this);
+			this.logger = new FileLogger(this);
 		}
 		return logger;
 	}
-	public AgentComputingLogger getCALogger() {
-		return (AgentComputingLogger) getLogger();
+	public IAgentLogger getCALogger() {
+		return getLogger();
 	}
 	
 	
@@ -344,10 +349,10 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		IProblemDefinition problemDef = computingThread.getProblemDefinition();
-		Problem problem = computingThread.getProblem();
+		Dataset dataset = computingThread.getDataset();
 		IProblemTool problemTool = computingThread.getProblemTool();
 		
-		receivedIndividuals.addIndividual(individualWrapper, problemDef, problem, problemTool, getLogger());
+		receivedIndividuals.addIndividual(individualWrapper, problemDef, dataset, problemTool, getLogger());
 	}
 	
 	
@@ -364,7 +369,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		//active waiting for some result
 		IndividualWrapper resultOfComputing =
-				bestIndividualModel.exportBestIndividualWrp();
+				bestIndividualModel.exportTheBestIndividualWrp();
 		
 		if (resultOfComputing == null || ! resultOfComputing.valid(getLogger())) {
 			reply.setPerformative(ACLMessage.REFUSE);
@@ -526,6 +531,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
+		final IProblemDefinition problemDef = problemStruct.getProblemDefinition();
 		
 		// adding cyclic behavior for sending Individual to distribution
 		this.addBehaviour(new TickerBehaviour(this, InputConfiguration.getConf().INDIVIDUAL_BROADCAST_PERIOD_MS) {
@@ -534,7 +540,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 			protected void onTick() {
 				 getLogger().log(Level.INFO, "Tick to send individual");
-				 IndividualEvaluated individualEval = individualsToDistribution.getIndividual();
+				 IndividualEvaluated individualEval = individualsToDistribution.getIndividual(problemDef);
 				 if (individualEval == null) {
 					 getLogger().log(Level.WARNING, "Any Individual to send availible");
 					 return;
@@ -647,15 +653,19 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 				new IndividualWrapper(jobID, description, individualEval);
 
 		this.bestIndividualModel.update(computedIndividualWrp, problemDef,
-				generationNumber, getCALogger());
+				getCALogger());
 		
-		// log individual as best result
-		getCALogger().logBestSolution(individualEval, jobID);
+		//log fitness as result
+		localSaver.logComputedFitnessResult(individualEval, generationNumber);
+
+		// log individual as solution
+		localSaver.logSolution(individualEval);
 	}
 
 	protected void processComputedIndividual(IndividualEvaluated individualEval ,
-			long generationNumber, IProblemDefinition problem, JobID jobID) {
-
+			long generationNumber, IProblemDefinition problemDef, JobID jobID,
+			LocalSaver localSaver) {
+		
 		if (generationNumber == -1) {
 			throw new IllegalStateException();
 		}
@@ -663,23 +673,25 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
 		MethodDescription description =
-				new MethodDescription(agentConf, problem, problemTool.getClass());
+				new MethodDescription(agentConf, problemDef, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
 		
-		if (this.bestIndividualModel.isNewBetter(computedIndividualWrp,
-				problem, getCALogger())) {
-			
-			this.bestIndividualModel.update(computedIndividualWrp, problem,
-					generationNumber, getCALogger());
+
+		// log only better individuals
+		if (bestIndividualModel.update(computedIndividualWrp, problemDef, getLogger())) {
+	
+			//log fitness as result
+//			if (DEBUG) {
+//				localSaver.logComputedFitnessResult(individualEval, generationNumber);
+//			}
+	
+			// log individual as solution
+//			if (DEBUG) {
+//				localSaver.logSolution(individualEval);
+//			}
 		}
-
-		//log finess as result
-		getCALogger().logComputedResult(individualEval, generationNumber, jobID);
-
-		// log individual as best solution
-		getCALogger().logBestSolution(individualEval, jobID);
 	}
 		
 	/**
@@ -689,28 +701,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param generationNumber
 	 * @param problem
 	 */
-	protected void processRecievedIndividual(IndividualWrapper individualWrp,
-			long generationNumber, IProblemDefinition problem) {
+	protected void processRecievedIndividual(IndividualEvaluated currentIndiv,
+			IndividualWrapper receivedIndividualWrp, long generationNumber,
+			IProblemDefinition problem, LocalSaver localSaver) {
 		
-		if (individualWrp == null || ! individualWrp.valid(getLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					IndividualWrapper.class.getSimpleName() + " is not valid");
-		}
-		if (problem == null || ! problem.valid(getLogger())) {
-			throw new IllegalArgumentException();
-		}
-		
-		MethodDescription description =
-				individualWrp.getAgentDescription();
-		
-		if (bestIndividualModel.isNewBetter(individualWrp, problem,
-				getCALogger())) {
-			
-			helpers.addHelper(description);
-			
-			bestIndividualModel.update(individualWrp, problem,
-					generationNumber, getCALogger());
-		}
+//		if (DEBUG) {
+//			localSaver.logDiffImprovementOfDistribution(receivedIndividualWrp,
+//					generationNumber, currentIndiv);
+//		}
 	}
 	
 }

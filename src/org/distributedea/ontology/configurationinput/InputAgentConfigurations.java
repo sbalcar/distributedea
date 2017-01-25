@@ -31,7 +31,22 @@ public class InputAgentConfigurations implements Concept {
 	public InputAgentConfigurations() { // only for Jade
 		this.agentConfigurations = new ArrayList<>();
 	}
-	
+
+	/**
+	 * Constructor
+	 * @param agentConfiguration
+	 */
+	public InputAgentConfigurations(InputAgentConfiguration agentConfiguration) {
+		if (agentConfiguration == null ||
+				! agentConfiguration.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputAgentConfiguration.class.getSimpleName() + " can not be null");
+		}
+
+		this.agentConfigurations = new ArrayList<>();
+		this.agentConfigurations.add(agentConfiguration);
+	}
+
 	/**
 	 * Constructor
 	 * @param agentConfigurations

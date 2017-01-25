@@ -5,9 +5,9 @@ import java.io.File;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 
 /**
@@ -21,7 +21,13 @@ public interface IProblemTool {
 	 * Returns Class of {@link Problem} which this {@link ProblemTool} serves
 	 * @return
 	 */
-	public Class<?> problemWhichSolves();
+	public Class<?> problemReprezentation();
+	
+	/**
+	 * Returns Class of {@link Dataset} which this {@link ProblemTool} serves
+	 * @return
+	 */
+	public Class<?> datasetReprezentation();
 	
 	/**
 	 * Returns Class of {@link Individual} for which provides tool operations
@@ -31,12 +37,12 @@ public interface IProblemTool {
 	
 	/**
 	 * Initialization of {@link ProblemTool}
-	 * @param problem
+	 * @param dataset
 	 * @param agentConf
 	 * @param logger
 	 * @throws ProblemToolException
 	 */
-	public void initialization(Problem problem, AgentConfiguration agentConf,
+	public void initialization(Dataset dataset, AgentConfiguration agentConf,
 			IAgentLogger logger) throws Exception;
 	
 	/**
@@ -52,43 +58,43 @@ public interface IProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public Problem readProblem(File fileOfProblem, IAgentLogger logger);
+	public Dataset readDataset(File fileOfProblem, IAgentLogger logger);
 	
 	/**
 	 * Reads instance of the Solution(Individual) from the file,
 	 * for the illegal input file name returns null
 	 * @param fileName
-	 * @param problem
+	 * @param dataset
 	 * @param logger
 	 * @return
 	 */
-	public Individual readSolution(File fileOfSolution, Problem problem,
+	public Individual readSolution(File fileOfSolution, Dataset dataset,
 			IAgentLogger logger);
 	
 	/**
 	 * Evaluates given {@link Individual} as solution of given {@link Problem}
 	 * @param individual
-	 * @param problem
+	 * @param dataset
 	 * @param logger
 	 * @return
 	 */
 	public double fitness(Individual individual, IProblemDefinition problemDef,
-			Problem problem, IAgentLogger logger);
+			Dataset dataset, IAgentLogger logger);
 	
 	/**
 	 * Generated random {@link Individual} as solution for given {@link Problem}
-	 * @param problem
+	 * @param dataset
 	 * @param logger
 	 * @return
 	 */
 	public IndividualEvaluated generateIndividualEval(IProblemDefinition problemDef,
-			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger);
+			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
 	public IndividualEvaluated generateFirstIndividualEval(IProblemDefinition problemDef,
-			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger);
+			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
 	public IndividualEvaluated generateNextIndividualEval(IProblemDefinition problemDef,
-			Problem problem, IndividualEvaluated individual, PedigreeParameters pedigreeParams,
+			Dataset dataset, IndividualEvaluated individual, PedigreeParameters pedigreeParams,
 			IAgentLogger logger);
 	
 	
@@ -101,21 +107,21 @@ public interface IProblemTool {
 	 * @throws ProblemToolException
 	 */  
 	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual,
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
 	
 	public IndividualEvaluated getNeighborEval(IndividualEvaluated individual,
-			IProblemDefinition problemDef, Problem problem, long neighborIndex,
+			IProblemDefinition problemDef, Dataset dataset, long neighborIndex,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
 	
 	public IndividualEvaluated[] createNewIndividual(IndividualEvaluated individualEval1,
 			IndividualEvaluated individualEval2, IProblemDefinition problemDef,
-			Problem problem, PedigreeParameters pedigreeParams, IAgentLogger logger)
+			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger)
 			throws Exception;
 	
 
 	public IndividualEvaluated[] createNewIndividualEval(IndividualEvaluated individual1, 
 			IndividualEvaluated individual2, IndividualEvaluated individual3,
-			IProblemDefinition problemDef, Problem problem,
+			IProblemDefinition problemDef, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;	
 }

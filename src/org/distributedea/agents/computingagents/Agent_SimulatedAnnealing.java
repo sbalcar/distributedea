@@ -3,16 +3,17 @@ package org.distributedea.agents.computingagents;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
+import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problem.Problem;
 import org.distributedea.ontology.problemdefinition.IProblemDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
@@ -77,20 +78,21 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
-		Problem problem = problemStruct.getProblem();
+		Dataset dataset = problemStruct.getDataset();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
 		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
+		this.localSaver = new LocalSaver(this, jobID);
 		
-		problemTool.initialization(problem, agentConf, getLogger());
-		state = CompAgentState.COMPUTING;
+		problemTool.initialization(dataset, agentConf, getLogger());
+		this.state = CompAgentState.COMPUTING;
 		
 		long generationNumberI = -1;
 
 		IndividualEvaluated individualEvalI =
-				problemTool.generateIndividualEval(problemDefinition, problem, pedigreeParams, getCALogger());
+				problemTool.generateIndividualEval(problemDefinition, dataset, pedigreeParams, getCALogger());
 		
 		//saves data in Agent DataManager
 		processIndividualFromInitGeneration(individualEvalI,
@@ -109,7 +111,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 			}
 			
 			IndividualEvaluated individualEvalNewI = 
-					problemTool.improveIndividualEval(individualEvalI, problemDefinition, problem,
+					problemTool.improveIndividualEval(individualEvalI, problemDefinition, dataset,
 					pedigreeParams, getCALogger());
 	
             // decide on the acceptance the neighbour
@@ -121,7 +123,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
             
 			//saves data in Agent DataManager
             processComputedIndividual(individualEvalI,
-        			generationNumberI, problemDefinition, jobID);
+        			generationNumberI, problemDefinition, jobID, localSaver);
             
 			// send new Individual to distributed neighbors
 			if (individualDistribution) {
@@ -129,17 +131,18 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 			}
             
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.getBestIndividual(problemDefinition);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problemDefinition);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
 							recievedIndividualW, individualEvalI, problemDefinition)) {
-								
-				// update if better that actual
-				individualEvalI = recievedIndividualW.getIndividualEvaluated();
 				
 				// save and log received Individual
-				processRecievedIndividual(recievedIndividualW, generationNumberI, problemDefinition);
+				processRecievedIndividual(individualEvalI, recievedIndividualW,
+						generationNumberI, problemDefinition, localSaver);
+				
+				// update if better that actual
+				individualEvalI = recievedIndividualW.getIndividualEvaluated();
 			}
 			
             // cooling
@@ -147,6 +150,8 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		}
 		
 		problemTool.exit();
+		
+		this.localSaver.closeFiles();
 	}
 
    	

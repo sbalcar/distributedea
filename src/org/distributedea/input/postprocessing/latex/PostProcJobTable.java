@@ -1,12 +1,13 @@
 package org.distributedea.input.postprocessing.latex;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessing;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 
 public class PostProcJobTable extends PostProcessing {
 
@@ -26,14 +27,12 @@ public class PostProcJobTable extends PostProcessing {
 		
 		String problemToSolve = job.getProblemDefinition().getClass().getSimpleName();
 		String isIndividualDistribution = job.isIndividualDistribution() ? "ano" : "ne" ;
-		String problemFileName = job.exportProblemFile().getName();
+		String problemFileName = job.exportDatasetFile().getName();
 		String scheduler = job.getPlanner().getClass().getSimpleName();
 		int numberOfIteration = 50;
 		int numberOfRuns = job.getNumberOfRuns();
 		String description = job.getDescription();
 		String jobID = job.getJobID();
-		File methodsFile = job.exportMethodsFile();
-		String methodsFileName = methodsFile.getName().endsWith("methods.xml") ? "všechny" : methodsFile.getName();
 		
 		String jobTableCode =
 		"\\begin{table} [hh]" + NL +
@@ -49,7 +48,7 @@ public class PostProcJobTable extends PostProcessing {
 		"Počet přeplánování:   & " + numberOfIteration + " \\\\" + NL +
 		"Počet běhů:           & " + numberOfRuns + " \\\\" + NL +
 		"Dataset:              & " + problemFileName + " \\\\" + NL +
-		"Metody:               & " + methodsFileName + " \\\\" + NL +
+		"Metody:               & " + "" + " \\\\" + NL +
 		"ProblemTool nástroj:  & 2-OPT \\\\" + NL +
 		"\\hline" + NL +
 		"\\end{tabular}" + NL +
@@ -59,9 +58,32 @@ public class PostProcJobTable extends PostProcessing {
 
 		System.out.println(jobTableCode);
 		System.out.println();
+		
+		String jobAlgorithmTableCode =
+		"\\begin{table} [hh]" + NL +
+		"\\centering" + NL +
+		"\\begin{tabular}{|>{\\bfseries}l||l|}" + NL +
+		"\\hline" + NL +
+		"\\multicolumn{2}{|c|}{Výpočetní metody: " + description + "} \\\\" + NL +
+		"\\hline\\hline" + NL;
+		
+		for(InputAgentConfiguration confI : job.getMethods().getAgentConfigurations()) {
+			jobAlgorithmTableCode +=
+			confI.exportAgentClass().getSimpleName() + ":        & " + confI.getArguments().exportToString() + " \\\\" + NL;
+		}
+		jobAlgorithmTableCode +=
+		"\\hline" + NL +
+		"\\end{tabular}" + NL +
+		"\\caption{Job struktura}" + NL +
+		"\\label{tab:template}" + NL +
+		"\\end{table}";
+		
+		System.out.println(jobAlgorithmTableCode);
+		System.out.println();
+		System.out.println();
 	}
 
-	public static void main(String [] args) {
+	public static void main(String [] args) throws IOException {
 		
 		BatchHomoMethodsTSP1083 batchCmp = new BatchHomoMethodsTSP1083(); 
 		Batch batch = batchCmp.batch();

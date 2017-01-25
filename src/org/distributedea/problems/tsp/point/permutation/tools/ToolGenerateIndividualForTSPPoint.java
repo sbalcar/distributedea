@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.distributedea.ontology.dataset.DatasetTSPPoint;
+import org.distributedea.ontology.dataset.tsp.Position;
+import org.distributedea.ontology.dataset.tsp.PositionPoint;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.ontology.problem.tsp.Position;
-import org.distributedea.ontology.problem.tsp.PositionPoint;
 import org.jgap.impl.StockRandomGenerator;
 
 public class ToolGenerateIndividualForTSPPoint {
 
-	public static IndividualPermutation generate(ProblemTSPPoint problem) {
+	public static IndividualPermutation generate(DatasetTSPPoint dataset) {
 				
 		List<Position> positions = new ArrayList<Position>();
-		for (PositionPoint positionI : problem.getPositions()) {
+		for (PositionPoint positionI : dataset.getPositions()) {
 			positions.add(positionI);
 		}
 		return generateIndividual(positions);

@@ -14,6 +14,10 @@ public class FileLogger implements IAgentLogger {
 	String fileName;
 	
 	public FileLogger(Agent_DistributedEA agent) {
+		if (agent == null) {
+			throw new IllegalArgumentException("Argument " +
+					Agent_DistributedEA.class.getSimpleName() + " is not valid");
+		}
 		this.fileName = FileNames.
 				getGeneralLogDirectoryForComputingAgent(agent.getAID());
 	}
