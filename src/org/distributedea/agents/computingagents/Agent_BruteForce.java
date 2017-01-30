@@ -13,7 +13,7 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 
@@ -58,10 +58,10 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
-		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
+		IProblem problem = problemStruct.getProblem();
 		Dataset dataset = problemStruct.getDataset();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
+		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
@@ -73,39 +73,38 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 		long generationNumberI = -1;
 		
 		IndividualEvaluated individualEvalI = problemTool
-				.generateFirstIndividualEval(problemDefinition, dataset,
+				.generateFirstIndividualEval(problem, dataset,
 				pedigreeParams, getLogger());
 
 		processIndividualFromInitGeneration(individualEvalI,
-				generationNumberI, problemDefinition, jobID);
+				generationNumberI, problem, jobID);
 		
 		while (individualEvalI != null && state == CompAgentState.COMPUTING) {
 			
 			// increment next number of generation
 			generationNumberI++;
 			
-			individualEvalI = problemTool.generateNextIndividualEval(problemDefinition,
+			individualEvalI = problemTool.generateNextIndividualEval(problem,
 					dataset, individualEvalI, pedigreeParams, getLogger());
 			
 			// save, log and distribute new computed Individual
 			processComputedIndividual(individualEvalI,
-					generationNumberI, problemDefinition, jobID, localSaver);
+					generationNumberI, problem, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
-			if (individualDistribution) {
-				distributeIndividualToNeighours(individualEvalI, problemDefinition, jobID);
-			}
+			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+			
 			
 			// take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problemDefinition);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problem);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalI, problemDefinition)) {
+							recievedIndividualW, individualEvalI, problem)) {
 				
 				// save and log received Individual
 				processRecievedIndividual(individualEvalI, recievedIndividualW,
-						generationNumberI, problemDefinition, localSaver);
+						generationNumberI, problem, localSaver);
 
 				// update if better that actual
 				individualEvalI = recievedIndividualW.getIndividualEvaluated();				

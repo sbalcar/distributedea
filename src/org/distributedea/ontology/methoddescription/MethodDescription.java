@@ -15,7 +15,7 @@ import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methodtype.MethodType;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
@@ -39,7 +39,7 @@ public class MethodDescription implements Concept {
 	/**
 	 * Problem to solve definition
 	 */
-	private IProblemDefinition problemDefinition;
+	private IProblem problemDefinition;
 	
 	/**
 	 * Problem Tool to use for solving Problem 
@@ -57,7 +57,7 @@ public class MethodDescription implements Concept {
 	 * @param problemToolClass
 	 */
 	public MethodDescription(AgentConfiguration agentConfiguration,
-			IProblemDefinition problemDef, Class<?> problemToolClass) {
+			IProblem problem, Class<?> problemToolClass) {
 		if (agentConfiguration == null ||
 				! agentConfiguration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -65,7 +65,7 @@ public class MethodDescription implements Concept {
 		}
 	
 		setAgentConfiguration(agentConfiguration);
-		setProblemDefinition(problemDef);
+		setProblemDefinition(problem);
 		importProblemToolClass(problemToolClass);
 	}
 
@@ -82,13 +82,13 @@ public class MethodDescription implements Concept {
 
 		AgentConfiguration agentConfigurationClone =
 				methodDescription.getAgentConfiguration().deepClone();
-		IProblemDefinition problemDefinitionClone =
+		IProblem problemClone =
 				methodDescription.getProblemDefinition().deepClone();
 		Class<?> problemToolClassClone =
 				methodDescription.exportProblemToolClass();
 		
 		setAgentConfiguration(agentConfigurationClone);
-		setProblemDefinition(problemDefinitionClone);
+		setProblemDefinition(problemClone);
 		importProblemToolClass(problemToolClassClone);
 
 	}
@@ -104,16 +104,16 @@ public class MethodDescription implements Concept {
 		this.agentConfiguration = agentConfiguration;
 	}
 	
-	public IProblemDefinition getProblemDefinition() {
+	public IProblem getProblemDefinition() {
 		return problemDefinition;
 	}
 	@Deprecated
-	public void setProblemDefinition(IProblemDefinition problemDefinition) {
-		if (problemDefinition == null || ! problemDefinition.valid(new TrashLogger())) {
+	public void setProblemDefinition(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					IProblemDefinition.class.getSimpleName() + " is not vlid");
+					IProblem.class.getSimpleName() + " is not vlid");
 		}
-		this.problemDefinition = problemDefinition;
+		this.problemDefinition = problem;
 	}
 	
 	public String getProblemToolClass() {

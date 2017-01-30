@@ -9,7 +9,7 @@ import org.distributedea.ontology.dataset.tsp.Position;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.gps.ProblemTSPGPSTool;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolDistanceTSPGPS;
@@ -33,7 +33,7 @@ public abstract class AProblemToolTSPGPSEuc2DPermutation extends ProblemTSPGPSTo
 	}
 	
 	@Override
-	public Individual generateIndividual(IProblemDefinition problemDef,
+	public Individual generateIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 		
 		DatasetTSPGPS problemTSP = (DatasetTSPGPS) dataset;
@@ -55,7 +55,7 @@ public abstract class AProblemToolTSPGPSEuc2DPermutation extends ProblemTSPGPSTo
 	}
 	
 	@Override
-	public double fitness(Individual individual, IProblemDefinition problemDef,
+	public double fitness(Individual individual, IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;

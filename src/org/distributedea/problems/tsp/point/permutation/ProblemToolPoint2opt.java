@@ -4,7 +4,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.operators.Operator2Opt;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorSinglePointCrossover;
@@ -18,7 +18,7 @@ import org.distributedea.problems.tsp.gps.permutation.operators.OperatorSinglePo
 public class ProblemToolPoint2opt extends AProblemToolTSPPointPermutation {
 
 	@Override
-	public Individual improveIndividual(Individual individual, IProblemDefinition problemDef,
+	public Individual improveIndividual(Individual individual, IProblem problem,
 			IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
@@ -28,7 +28,7 @@ public class ProblemToolPoint2opt extends AProblemToolTSPPointPermutation {
 	
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, IProblemDefinition problemDef,
+			Individual individual2, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;
@@ -40,7 +40,7 @@ public class ProblemToolPoint2opt extends AProblemToolTSPPointPermutation {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation ind1 = (IndividualPermutation) individual1;

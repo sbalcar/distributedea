@@ -4,6 +4,8 @@
         <agent type="org.distributedea.agents.systemagents.Agent_ManagerAgent" name="ManagerAgent">
         </agent>
 
+        <!-- Comment of Sniffer -->
+
         <!--
         <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
             <arguments>

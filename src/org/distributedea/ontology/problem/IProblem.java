@@ -1,10 +1,10 @@
-package org.distributedea.ontology.problemdefinition;
+package org.distributedea.ontology.problem;
 
 import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 
-public interface IProblemDefinition extends Concept {
+public interface IProblem extends Concept {
 
 	/**
 	 * Exports type (maximization/minimization) problem
@@ -28,7 +28,7 @@ public interface IProblemDefinition extends Concept {
 	 * Returns clone
 	 * @return
 	 */
-	public AProblemDefinition deepClone();
+	public AProblem deepClone();
 	
 	
 	public boolean equals(Object other);

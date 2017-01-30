@@ -5,14 +5,14 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
 
 public class ToolFitnessBbobCO {
 
 	public static double evaluate(IndividualPoint individualPoint,
-			IProblemDefinition problem, IJNIfgeneric fgeneric,
+			IProblem problem, IJNIfgeneric fgeneric,
 			BbobTools bbobTools, IAgentLogger logger) {
 		
 		if (individualPoint == null) {

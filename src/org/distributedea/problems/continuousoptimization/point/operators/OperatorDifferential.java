@@ -14,7 +14,7 @@ public class OperatorDifferential {
 	 * @param individualP2
 	 * @param individualP3
 	 * @param differentialWeight [0,2]
-	 * @param problem
+	 * @param dataset
 	 * @param logger
 	 * @return
 	 * @throws Exception

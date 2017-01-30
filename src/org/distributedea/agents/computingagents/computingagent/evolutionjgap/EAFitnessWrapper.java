@@ -3,7 +3,7 @@ package org.distributedea.agents.computingagents.computingagent.evolutionjgap;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
 import org.jgap.Configuration;
 import org.jgap.FitnessFunction;
@@ -21,16 +21,16 @@ public class EAFitnessWrapper extends FitnessFunction {
 	
 	private Configuration conf;
 	private Dataset dataset;
-	private IProblemDefinition problemDef;
+	private IProblem problem;
 	private IProblemTool problemTool;
 	private IAgentLogger logger;
 	
 	public EAFitnessWrapper(Configuration conf, Dataset dataset,
-			IProblemDefinition problemDef, IProblemTool problemTool,
+			IProblem problem, IProblemTool problemTool,
 			IAgentLogger logger) {
 		this.conf = conf;
 		this.dataset = dataset;
-		this.problemDef = problemDef;
+		this.problem = problem;
 		this.problemTool = problemTool;
 		this.logger = logger;
 	}
@@ -46,10 +46,10 @@ public class EAFitnessWrapper extends FitnessFunction {
 			return -1;
 		}
 		
-		if (problemDef.exportIsMaximizationProblem()) {
-			return problemTool.fitness(individual, problemDef, dataset, logger);
+		if (problem.exportIsMaximizationProblem()) {
+			return problemTool.fitness(individual, problem, dataset, logger);
 		} else {
-			return 1 / problemTool.fitness(individual, problemDef, dataset, logger);
+			return 1 / problemTool.fitness(individual, problem, dataset, logger);
 		}
 	}
 

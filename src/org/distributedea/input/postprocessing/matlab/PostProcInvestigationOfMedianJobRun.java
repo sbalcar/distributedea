@@ -20,7 +20,7 @@ import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Shows results of all {@link Job}s of given {@link Batch} as course of function
@@ -58,7 +58,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 			
 			JobID jobIDI = processJobIDOfTheBestResult(
 					batchID, jobI.getJobID(), jobI.getNumberOfRuns(),
-					jobI.getProblemDefinition());
+					jobI.getProblem());
 			
 			String fileNameI = FileNames.getResultFile(jobIDI);
 			String lineTypeI = lineTypes.get(i % lineTypes.size());
@@ -91,7 +91,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 
 	@SuppressWarnings("unused")
 	private JobID processJobIDOfTheMedianResult(String batchID, String jobID,
-			int numberOfRuns, IProblemDefinition problemDef) throws IOException {
+			int numberOfRuns, IProblem problem) throws IOException {
 
 		Map<JobID, Double> resultsOfJobsMap =
 				FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
@@ -112,16 +112,16 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	}
 	
 	private JobID processJobIDOfTheBestResult(String batchID, String jobID,
-			int numberOfRuns, IProblemDefinition problemDef) throws IOException {
+			int numberOfRuns, IProblem problem) throws IOException {
 		
 		Map<JobID, Double> resultsOfJobsMap =
 				FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
 		
-		return getBestJobID(resultsOfJobsMap, problemDef);
+		return getBestJobID(resultsOfJobsMap, problem);
 	}
 	
 	protected JobID getBestJobID(Map<JobID, Double> resultsOfJobsMap,
-			IProblemDefinition problemDef) {
+			IProblem problem) {
 		
 		if (resultsOfJobsMap == null || resultsOfJobsMap.isEmpty()) {
 			return null;
@@ -139,7 +139,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 			Double fitnessValueI = entry.getValue();
 		    
 			boolean isBetter = FitnessTool.isFistFitnessBetterThanSecond(
-					fitnessValueI, bestFitnessValue, problemDef);
+					fitnessValueI, bestFitnessValue, problem);
 			
 			if (isBetter) {
 				bestJobID = jobIDI;

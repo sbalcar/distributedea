@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
@@ -23,7 +23,7 @@ public class IndividualToDistributionModel {
 	private List<IndividualEvaluated> individualsNoSorted2 = new ArrayList<>();
 	
 	public void addIndividual(
-			List<IndividualEvaluated> individuals, IProblemDefinition problemDef) {
+			List<IndividualEvaluated> individuals, IProblem problem) {
 		
 		if (individuals == null || individuals.isEmpty()) {
 			return;
@@ -33,7 +33,7 @@ public class IndividualToDistributionModel {
 	}
 	
 	public void addIndividual(IndividualEvaluated individualEval,
-			IProblemDefinition problemDef) {
+			IProblem problem) {
 		
 		if (individualEval == null) {
 			return;
@@ -53,7 +53,7 @@ public class IndividualToDistributionModel {
 				
 	}
 	
-	public IndividualEvaluated getIndividual(IProblemDefinition problemDef) {
+	public IndividualEvaluated getIndividual(IProblem problem) {
 		if (individualsNoSorted.isEmpty()) {
 			return null;
 		}
@@ -61,7 +61,7 @@ public class IndividualToDistributionModel {
 		// queue contains some individuals
 		if (individualsNoSorted2.size() > MAX_NUMBER_OF_INDIVIDUAL / 2) {
 			
-			Collections.sort(individualsNoSorted, new CmpIndividualEvaluated(problemDef));
+			Collections.sort(individualsNoSorted, new CmpIndividualEvaluated(problem));
 			IndividualEvaluated result = individualsNoSorted.get(0);
 			
 			individualsNoSorted = individualsNoSorted2;
@@ -75,7 +75,7 @@ public class IndividualToDistributionModel {
 						individualsNoSorted2.remove(0));
 			}
 			
-			Collections.sort(individualsNoSorted, new CmpIndividualEvaluated(problemDef));
+			Collections.sort(individualsNoSorted, new CmpIndividualEvaluated(problem));
 			return individualsNoSorted.remove(0);
 		}
 	}

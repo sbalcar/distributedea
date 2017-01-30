@@ -65,7 +65,7 @@ public class BatchHomoMethodsTSP1083 implements IInputBatch {
 		jobW4.setJobID("homoTabusearch");
 		jobW4.setDescription("Homo-TabuSearch");
 		jobW4.setMethods(new InputAgentConfigurations(
-				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "500")))
+				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))
 				 ));
 		
 		Job jobW5 = InputTSP.test05();

@@ -26,7 +26,7 @@ import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbe
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 public class ComputingOntology extends BeanOntology {
@@ -52,14 +52,14 @@ public class ComputingOntology extends BeanOntology {
             add(MethodDescription.class);
             
             add(MethodDescription.class);
-            add(IProblemDefinition.class.getPackage().getName());
+            add(IProblem.class.getPackage().getName());
             add(InputAgentConfiguration.class.getPackage().getName());
             add(AgentConfiguration.class.getPackage().getName());
             
             add(JobID.class);
             
             
-            add(IProblemDefinition.class.getPackage().getName());
+            add(IProblem.class.getPackage().getName());
             add(Dataset.class);
             
             add(DatasetTSPGPS.class);

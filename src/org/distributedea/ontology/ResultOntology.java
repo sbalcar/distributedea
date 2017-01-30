@@ -19,7 +19,7 @@ import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
@@ -65,7 +65,7 @@ public class ResultOntology extends BeanOntology {
             add(MethodDescription.class);
             
             add(MethodDescription.class.getPackage().getName());
-            add(IProblemDefinition.class.getPackage().getName());
+            add(IProblem.class.getPackage().getName());
             add(AgentConfiguration.class.getPackage().getName());
         	
         } catch (Exception e) {

@@ -5,7 +5,7 @@ import java.util.Comparator;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Comparator from the best(first in list) to the worst(last in list)
@@ -15,18 +15,18 @@ import org.distributedea.ontology.problemdefinition.IProblemDefinition;
  */
 public class CmpIndividualWrapper implements Comparator<IndividualWrapper> {
 
-	private IProblemDefinition problemDef;
+	private IProblem problem;
 
 	/**
 	 * Constructor
 	 * @param problem
 	 */
-	public CmpIndividualWrapper(IProblemDefinition problemDef) {
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+	public CmpIndividualWrapper(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					IProblemDefinition.class.getSimpleName() + " is not valid");
+					IProblem.class.getSimpleName() + " is not valid");
 		}
-		this.problemDef = problemDef;
+		this.problem = problem;
 	}
 	
 	@Override
@@ -40,7 +40,7 @@ public class CmpIndividualWrapper implements Comparator<IndividualWrapper> {
 		}
 		
 		boolean isFistFitnessBetterThanSecond = FitnessTool.
-				isFistFitnessBetterThanSecond(fitness1, fitness2, problemDef);
+				isFistFitnessBetterThanSecond(fitness1, fitness2, problem);
 		
 		if (isFistFitnessBetterThanSecond) {
 			return -1;

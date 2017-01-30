@@ -42,7 +42,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
@@ -77,7 +77,7 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Inform about type of Problem to solve
 	 */
-	private IProblemDefinition problemToSolveDefinition;
+	private IProblem problem;
 	
 	/**
 	 * Defines the filename with the input {@link Dataset}
@@ -133,7 +133,7 @@ public class Job implements Concept, Serializable {
 		this.jobID = job.getJobID();
 		this.numberOfRuns = job.getNumberOfRuns();
 		this.description = job.getDescription();
-		this.problemToSolveDefinition = job.getProblemDefinition();
+		this.problem = job.getProblem();
 		this.datasetFileName = job.getProblemFileName();
 		this.methods = job.getMethods().deepClone();
 		this.problemTools = job.getProblemTools().deepClone();
@@ -164,12 +164,12 @@ public class Job implements Concept, Serializable {
 		this.description = description;
 	}
 	
-	public IProblemDefinition getProblemDefinition() {
-		return problemToSolveDefinition;
+	public IProblem getProblem() {
+		return problem;
 	}
-	public void setProblemDefinition(
-			IProblemDefinition problemToSolveDefinition) {
-		this.problemToSolveDefinition = problemToSolveDefinition;
+	public void setProblem(
+			IProblem problemToSolveDefinition) {
+		this.problem = problemToSolveDefinition;
 	}
 
 	@Deprecated
@@ -339,7 +339,7 @@ public class Job implements Concept, Serializable {
 		if (description == null) {
 			return false;
 		}
-		if (problemToSolveDefinition == null || ! problemToSolveDefinition.valid(logger)) {
+		if (problem == null || ! problem.valid(logger)) {
 			return false;
 		}
 		if (exportDatasetFile() == null) {
@@ -349,7 +349,7 @@ public class Job implements Concept, Serializable {
 			return false;
 		}
 		if (problemTools == null ||
-				! problemTools.valid(problemToSolveDefinition.exportDatasetClass(), logger)) {
+				! problemTools.valid(problem.exportDatasetClass(), logger)) {
 			return false;
 		}
 		if (getPlannerEndCondition() == null) {
@@ -395,7 +395,7 @@ public class Job implements Concept, Serializable {
 		JobRun jobRun = new JobRun();
 		jobRun.setIndividualDistribution(individualDistribution);
 		jobRun.setAgentConfigurations(methods.deepClone());
-		jobRun.setProblemDefinition(problemToSolveDefinition.deepClone());
+		jobRun.setProblemDefinition(problem.deepClone());
 		jobRun.setDataset(dataset);
 		jobRun.setProblemTools(problemTools);
 		

@@ -10,7 +10,7 @@ import org.distributedea.ontology.dataset.tsp.Position;
 import org.distributedea.ontology.dataset.tsp.PositionPoint;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.IProblemTSPPermutationTool;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolNextPermutationTSPGPS;
@@ -43,26 +43,26 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	}
 	
 	@Override
-	public Individual generateFirstIndividual(IProblemDefinition probleDef,
+	public Individual generateFirstIndividual(IProblem proble,
 			Dataset dataset, IAgentLogger logger) {
 		
-		DatasetTSPPoint problemTSPPoint = (DatasetTSPPoint)dataset;
+		DatasetTSPPoint datasetTSPPoint = (DatasetTSPPoint)dataset;
 		
-		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
+		return ToolGenerateIndividualForTSPPoint.generate(datasetTSPPoint);
 	}
 	
 	@Override
-	public Individual generateIndividual(IProblemDefinition problemDef,
+	public Individual generateIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 		
-		DatasetTSPPoint problemTSPPoint = (DatasetTSPPoint) dataset;
+		DatasetTSPPoint datasetTSPPoint = (DatasetTSPPoint) dataset;
 		
-		return ToolGenerateIndividualForTSPPoint.generate(problemTSPPoint);
+		return ToolGenerateIndividualForTSPPoint.generate(datasetTSPPoint);
 
 	}
 	
 	@Override
-	public Individual generateNextIndividual(IProblemDefinition problemDef,
+	public Individual generateNextIndividual(IProblem problem,
 			Dataset dataset, Individual individual, IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
@@ -74,7 +74,7 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	}
 	
 	@Override
-	public double fitness(Individual individual, IProblemDefinition problemDef,
+	public double fitness(Individual individual, IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 		
 		IndividualPermutation individualPermutation =
@@ -85,9 +85,9 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	}
 	
 	@Override
-	public Dataset readDataset(File problemFile, IAgentLogger logger) {
+	public Dataset readDataset(File datasetFile, IAgentLogger logger) {
 
-		return ToolReadProblemTSPPoint.readDataset(problemFile, logger);
+		return ToolReadProblemTSPPoint.readDataset(datasetFile, logger);
 	}
 	
 	@Override
@@ -99,7 +99,7 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	
 	@Override
 	public Individual getNeighbor(Individual individual,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			long neighborIndex, IAgentLogger logger) throws Exception {
 		
 		DatasetTSPPoint datasetTSPPoint = (DatasetTSPPoint) dataset;

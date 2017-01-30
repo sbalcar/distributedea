@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problemdefinition;
+package org.distributedea.ontology.problem;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
@@ -9,20 +9,20 @@ import org.distributedea.ontology.dataset.DatasetBinPacking;
  * @author stepan
  *
  */
-public class ProblemBinPackingDef extends AProblemDefinition {
+public class ProblemBinPacking extends AProblem {
 
 	private static final long serialVersionUID = 1L;
 	
 	private int sizeOfBin;
 	
 	@Deprecated
-	public ProblemBinPackingDef() {} // only for JADE
+	public ProblemBinPacking() {} // only for JADE
 	
 	/**
 	 * Constructor
 	 * @param sizeOfBin
 	 */
-	public ProblemBinPackingDef(int sizeOfBin) {
+	public ProblemBinPacking(int sizeOfBin) {
 		setSizeOfBin(sizeOfBin);
 	}
 	
@@ -30,10 +30,10 @@ public class ProblemBinPackingDef extends AProblemDefinition {
 	 * Copy constructor
 	 * @param problem
 	 */
-	public ProblemBinPackingDef(ProblemBinPackingDef problem) {
+	public ProblemBinPacking(ProblemBinPacking problem) {
 		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					ProblemBinPackingDef.class.getSimpleName() + " is not valid");			
+					ProblemBinPacking.class.getSimpleName() + " is not valid");			
 		}
 		setSizeOfBin(sizeOfBin);
 	}
@@ -71,19 +71,19 @@ public class ProblemBinPackingDef extends AProblemDefinition {
 	}
 
 	@Override
-	public ProblemBinPackingDef deepClone() {
+	public ProblemBinPacking deepClone() {
 		
-		return new ProblemBinPackingDef(this);
+		return new ProblemBinPacking(this);
 	}
 
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof ProblemBinPackingDef)) {
+	    if (!(other instanceof ProblemBinPacking)) {
 	        return false;
 	    }
 	    
-	    ProblemBinPackingDef otherBP = (ProblemBinPackingDef)other;
+	    ProblemBinPacking otherBP = (ProblemBinPacking)other;
 	    
 	    return getSizeOfBin() == otherBP.getSizeOfBin();
 	}

@@ -14,8 +14,8 @@ import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.Statistic;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.AProblemDefinition;
+import org.distributedea.ontology.problem.AProblem;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
 
 /**
@@ -28,7 +28,7 @@ public class MonitorStatisticModel {
 
 	private JobID jobID;
 	
-	private IProblemDefinition problemToSolve;
+	private IProblem problemToSolve;
 	
 	private IndividualEvaluated bestIndividualEvaluated;
 	
@@ -45,15 +45,15 @@ public class MonitorStatisticModel {
 	 * @param problemToSolve
 	 * @param resultOfComputing
 	 */
-	public MonitorStatisticModel(JobID jobID, IProblemDefinition problemDef,
+	public MonitorStatisticModel(JobID jobID, IProblem problem,
 			IndividualsWrappers resultOfComputing) {
 		if (jobID == null || ! jobID.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					JobID.class.getSimpleName() + " is not valid");
 		}
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AProblemDefinition.class.getSimpleName() + " is not valid");
+					AProblem.class.getSimpleName() + " is not valid");
 		}
 		if (resultOfComputing == null || ! resultOfComputing.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -61,7 +61,7 @@ public class MonitorStatisticModel {
 		}
 		
 		this.jobID = jobID;
-		this.problemToSolve = problemDef;
+		this.problemToSolve = problem;
 		
 		List<IndividualWrapper> bestResultsFromPrevIteration =
 				resultOfComputing.getIndividualsWrappers();
@@ -79,20 +79,20 @@ public class MonitorStatisticModel {
 	/**
 	 * Constructor
 	 * @param jobID
-	 * @param problemDef
+	 * @param problem
 	 */
-	public MonitorStatisticModel(JobID jobID, IProblemDefinition problemDef) {
+	public MonitorStatisticModel(JobID jobID, IProblem problem) {
 		if (jobID == null || ! jobID.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					JobID.class.getSimpleName() + " is not valid");
 		}
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					IProblemDefinition.class.getSimpleName() + " is not valid");
+					IProblem.class.getSimpleName() + " is not valid");
 		}
 		
 		this.jobID = jobID;
-		this.problemToSolve = problemDef;
+		this.problemToSolve = problem;
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class MonitorStatisticModel {
 	 * Returns {@link IProblemTool} class
 	 * @return
 	 */
-	public IProblemDefinition getProblemToSolve() {
+	public IProblem getProblemToSolve() {
 		return problemToSolve;
 	}
 	

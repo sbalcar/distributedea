@@ -12,8 +12,8 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.problemdefinition.ProblemTSPGPSDef;
-import org.distributedea.ontology.problemdefinition.ProblemTSPPointDef;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 import org.distributedea.problems.tsp.point.permutation.ProblemToolPoint2opt;
 
@@ -28,7 +28,7 @@ public class InputTSP {
 		job.setJobID("tsp01");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemTSPGPSDef());
+		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("simpleTest.tsp")));
 		job.importMethodsFile(new File(
@@ -48,7 +48,7 @@ public class InputTSP {
 		job.setJobID("tsp02");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemTSPGPSDef());
+		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("wi29.tsp")));
 		job.importMethodsFile(new File(
@@ -68,7 +68,7 @@ public class InputTSP {
 		job.setJobID("tsp03");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemTSPPointDef());
+		job.setProblem(new ProblemTSPPoint());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("djb2036.tsp")));
 		job.importMethodsFile(new File(
@@ -88,7 +88,7 @@ public class InputTSP {
 		job.setJobID("tsp04");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemTSPGPSDef());
+		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));
 		job.importMethodsFile(new File(
@@ -107,7 +107,7 @@ public class InputTSP {
 		Job job = new Job();
 		job.setNumberOfRuns(3);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemTSPGPSDef());
+		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));
 		job.importMethodsFile(new File(
@@ -126,7 +126,7 @@ public class InputTSP {
 		Job job = new Job();
 		job.setNumberOfRuns(3);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemTSPGPSDef());
+		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));
 		job.importMethodsFile(new File(

@@ -7,7 +7,7 @@ import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.ProblemTSPGPSDef;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
@@ -115,14 +115,14 @@ public class TestTSP {
 		ProblemWrapper problemWrapper = new ProblemWrapper();
 		problemWrapper.importProblemToolClass(problemTool.getClass());
 
-		ProblemTSPGPSDef def = new ProblemTSPGPSDef();
+		ProblemTSPGPS problem = new ProblemTSPGPS();
 		
 		File fileOfSolution = new File(inputFileName + ".tour");
 		
 		Individual individual = (IndividualPermutation)
 				problemTool.readSolution(fileOfSolution, null, logger);
 		
-		double value = problemTool.fitness(individual, def, dataset, logger);
+		double value = problemTool.fitness(individual, problem, dataset, logger);
 		System.out.println("Expected Fitness: " + expectedFitness);
 		System.out.println("Fitness: " + value);
 		

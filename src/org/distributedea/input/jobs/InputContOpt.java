@@ -12,7 +12,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.problemdefinition.ProblemContinuousOptDef;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
 
 /**
@@ -26,7 +26,7 @@ public class InputContOpt {
 		job.setJobID("co01");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(false);
-		job.setProblemDefinition(new ProblemContinuousOptDef(true));
+		job.setProblem(new ProblemContinuousOpt(true));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("f01.co")));
 		job.importMethodsFile(new File(
@@ -46,7 +46,7 @@ public class InputContOpt {
 		job.setJobID("co02");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemContinuousOptDef(true));
+		job.setProblem(new ProblemContinuousOpt(true));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("f01.co")));
 		job.importMethodsFile(new File(
@@ -66,7 +66,7 @@ public class InputContOpt {
 		job.setJobID("co03");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
-		job.setProblemDefinition(new ProblemContinuousOptDef(true));
+		job.setProblem(new ProblemContinuousOpt(true));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("f01.co")));
 		job.importMethodsFile(new File(
@@ -86,7 +86,7 @@ public class InputContOpt {
 		job.setJobID("f2");
 		job.setNumberOfRuns(3);
 		job.setIndividualDistribution(false);
-		job.setProblemDefinition(new ProblemContinuousOptDef(false));
+		job.setProblem(new ProblemContinuousOpt(false));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("f2.co")));
 		job.importMethodsFile(new File(

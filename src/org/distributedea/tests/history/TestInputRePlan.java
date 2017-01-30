@@ -7,7 +7,7 @@ import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.problemdefinition.ProblemTSPGPSDef;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 
 public class TestInputRePlan {
@@ -19,9 +19,9 @@ public class TestInputRePlan {
 		AgentConfiguration agentConfiguration = new AgentConfiguration(
 				Agent_HillClimbing.class.getSimpleName(), Agent_HillClimbing.class, new Arguments());
 		
-		ProblemTSPGPSDef def = new ProblemTSPGPSDef();
+		ProblemTSPGPS problem = new ProblemTSPGPS();
 		
-		MethodDescription agentToKill = new MethodDescription(agentConfiguration, def, ProblemToolGPSEuc2D2opt.class);
+		MethodDescription agentToKill = new MethodDescription(agentConfiguration, problem, ProblemToolGPSEuc2D2opt.class);
 		
 		InputMethodDescription agentToCreate = agentToKill.exportInputAgentDescription();
 		

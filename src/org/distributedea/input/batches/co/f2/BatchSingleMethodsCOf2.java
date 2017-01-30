@@ -71,7 +71,7 @@ public class BatchSingleMethodsCOf2 implements IInputBatch {
 		job4.setJobID("singleTabusearch");
 		job4.setDescription("Single-TabuSearch");
 		job4.setMethods(new InputAgentConfigurations(
-				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "500")))
+				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))
 				 ));
 		
 		Job job5 = jobI.deepClone();

@@ -5,8 +5,8 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.AProblemDefinition;
+import org.distributedea.ontology.problem.AProblem;
+import org.distributedea.ontology.problem.IProblem;
 
 import jade.content.AgentAction;
 
@@ -20,7 +20,7 @@ public class StartMonitoring implements AgentAction {
 	private static final long serialVersionUID = 1L;
 	
 	private JobID jobID;
-	private IProblemDefinition problemToSolve;
+	private IProblem problemToSolve;
 	private MethodDescriptions agentsToMonitor;
 	
 	
@@ -31,7 +31,7 @@ public class StartMonitoring implements AgentAction {
 	 * Constructor
 	 * @param jobID
 	 */
-	public StartMonitoring(JobID jobID, IProblemDefinition problemToSolve,
+	public StartMonitoring(JobID jobID, IProblem problemToSolve,
 			MethodDescriptions agentDescriptions) {
 		setJobID(jobID);
 		setProblemToSolve(problemToSolve);
@@ -48,7 +48,7 @@ public class StartMonitoring implements AgentAction {
 					StartMonitoring.class.getSimpleName() + " is not valid");
 		}
 		JobID jobIDClone = startMonitoring.getJobID().deepClone();
-		AProblemDefinition problemToSolveClone =
+		AProblem problemToSolveClone =
 				startMonitoring.getProblemToSolve().deepClone();
 		MethodDescriptions agentDescriptionsClone =
 				startMonitoring.getAgentsToMonitor().deepClone();
@@ -78,14 +78,14 @@ public class StartMonitoring implements AgentAction {
 	 * Returns Problem to solve
 	 * @return
 	 */
-	public IProblemDefinition getProblemToSolve() {
+	public IProblem getProblemToSolve() {
 		return problemToSolve;
 	}
 	@Deprecated
-	public void setProblemToSolve(IProblemDefinition problemToSolve) {
+	public void setProblemToSolve(IProblem problemToSolve) {
 		if (problemToSolve == null || ! problemToSolve.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AProblemDefinition.class.getSimpleName() + " is not valid");
+					AProblem.class.getSimpleName() + " is not valid");
 		}
 		this.problemToSolve = problemToSolve;
 	}	

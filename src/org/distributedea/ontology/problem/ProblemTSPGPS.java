@@ -1,14 +1,14 @@
-package org.distributedea.ontology.problemdefinition;
+package org.distributedea.ontology.problem;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.dataset.DatasetTSPPoint;
+import org.distributedea.ontology.dataset.DatasetTSPGPS;
 
 /**
- * Ontology for definition TSP Point problem
+ * Ontology for definition TSP GPS problem
  * @author stepan
  *
  */
-public class ProblemTSPPointDef extends AProblemDefinition {
+public class ProblemTSPGPS extends AProblem {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,25 +21,25 @@ public class ProblemTSPPointDef extends AProblemDefinition {
 	@Override
 	public Class<?> exportDatasetClass() {
 
-		return DatasetTSPPoint.class;
+		return DatasetTSPGPS.class;
 	}
 	
 	@Override
 	public boolean valid(IAgentLogger logger) {
-		
+
 		return true;
 	}
 
 	@Override
-	public AProblemDefinition deepClone() {
-		
-		return new ProblemTSPPointDef();
+	public AProblem deepClone() {
+
+		return new ProblemTSPGPS();
 	}
 
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof ProblemTSPPointDef)) {
+	    if (!(other instanceof ProblemTSPGPS)) {
 	        return false;
 	    }
 	    

@@ -9,7 +9,7 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
 
@@ -37,12 +37,12 @@ public class ProblemWrapper implements Concept {
 	/**
 	 * Problem definition
 	 */
-	private IProblemDefinition problemDefinition;
+	private IProblem problem;
 	
 	/**
-	 * File with problem
+	 * Data set
 	 */
-	private String problemFileName;
+	private String datasetFileName;
 	
 	/**
 	 * Problem Tool to use for solving Problem 
@@ -71,8 +71,8 @@ public class ProblemWrapper implements Concept {
 		}
 		jobID = problemWrapper.getJobID().deepClone();
 		individualDistribution = problemWrapper.isIndividualDistribution();
-		setProblemDefinition(problemWrapper.getProblemDefinition().deepClone());
-		importProblemFile(problemWrapper.exportProblemFile());
+		setProblem(problemWrapper.getProblem().deepClone());
+		importDatasetFile(problemWrapper.exportDatasetFile());
 		importProblemToolClass(problemWrapper.exportProblemToolClass());
 		importPedigreeOfIndividualClassName(
 				problemWrapper.exportPedigreeOfIndividual(new TrashLogger()));
@@ -114,54 +114,54 @@ public class ProblemWrapper implements Concept {
 	 * Returns definition of Problem to solve
 	 * @return
 	 */
-	public IProblemDefinition getProblemDefinition() {
-		return problemDefinition;
+	public IProblem getProblem() {
+		return problem;
 	}
 
-	public void setProblemDefinition(IProblemDefinition problemDefinition) {
-		if (problemDefinition == null || ! problemDefinition.valid(new TrashLogger())) {
+	public void setProblem(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					IProblemDefinition.class.getSimpleName() + " is not valid");
+					IProblem.class.getSimpleName() + " is not valid");
 		}
-		this.problemDefinition = problemDefinition;
+		this.problem = problem;
 	}
 
 	@Deprecated
-	public String getProblemFileName() {
-		File file = exportProblemFile();
+	public String getDatasetFileName() {
+		File file = exportDatasetFile();
 		if (file == null) {
 			return null;
 		}
 		return file.getAbsolutePath();
 	}
 	@Deprecated
-	public void setProblemFileName(String fileName) {
+	public void setDatasetFileName(String fileName) {
 		try {
-			importProblemFile(new File(fileName));
+			importDatasetFile(new File(fileName));
 		} catch(Exception e) {
 			throw new IllegalArgumentException();
 		}
 	}
 	/**
-	 * Exports File with {@link Problem} assignment
+	 * Exports File with {@link Dataset} assignment
 	 */
-	public File exportProblemFile() {
-		if (problemFileName == null) {
+	public File exportDatasetFile() {
+		if (datasetFileName == null) {
 			return null;
 		}
-		return new File(problemFileName);
+		return new File(datasetFileName);
 	}
 	/**
-	 * Imports File with {@link Problem} assignment
+	 * Imports File with {@link Dataset} assignment
 	 */
-	public void importProblemFile(File problemFile) {
-		if (problemFile == null) {
+	public void importDatasetFile(File datasetFile) {
+		if (datasetFile == null) {
 			throw new IllegalArgumentException();
 		}
-		if (! problemFile.exists() || ! problemFile.isFile()) {
+		if (! datasetFile.exists() || ! datasetFile.isFile()) {
 			throw new IllegalArgumentException();
 		}
-		this.problemFileName = problemFile.getAbsolutePath();
+		this.datasetFileName = datasetFile.getAbsolutePath();
 	}
 
 	@Deprecated
@@ -205,7 +205,7 @@ public class ProblemWrapper implements Concept {
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				exportProblemToolClass(), logger);
 		
-		return problemTool.readDataset(exportProblemFile(), logger);
+		return problemTool.readDataset(exportDatasetFile(), logger);
 	}
 	
 	
@@ -257,7 +257,7 @@ public class ProblemWrapper implements Concept {
 		ProblemStruct struct = new ProblemStruct();
 		struct.setJobID(getJobID());
 		struct.setIndividualDistribution(individualDistribution);
-		struct.setProblemDefinition(problemDefinition.deepClone());
+		struct.setProblem(problem.deepClone());
 		struct.setDataset(exportDataset(logger));
 		struct.importProblemToolClass(exportProblemToolClass());
 		struct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(logger));
@@ -278,7 +278,7 @@ public class ProblemWrapper implements Concept {
 		if (exportProblemToolClass() == null) {
 			return false;
 		}
-		File problemFile = exportProblemFile();
+		File problemFile = exportDatasetFile();
 		if (problemFile == null || ! problemFile.isFile()) {
 			return false;
 		}

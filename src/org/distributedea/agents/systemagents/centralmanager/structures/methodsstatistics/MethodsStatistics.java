@@ -19,7 +19,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Structure represents statistics and results of one Iteration
@@ -300,10 +300,10 @@ public class MethodsStatistics {
 		MethodStatistic method0 = this.methodsStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		IProblemDefinition problemDefinition =
+		IProblem problem =
 				agentDescription.getProblemDefinition();
 
-		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problemDefinition));
+		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problem));
 		return methodsStatistics.get(methodsStatistics.size() -1);
 	}
 	
@@ -320,10 +320,10 @@ public class MethodsStatistics {
 		MethodStatistic method0 = this.methodsStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		IProblemDefinition problemDefinition =
+		IProblem problem =
 				agentDescription.getProblemDefinition();
 		
-		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problemDefinition));
+		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problem));
 		return methodsStatistics.get(0);
 	}
 
@@ -361,11 +361,11 @@ public class MethodsStatistics {
 		MethodStatistic method0 = this.methodsStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		IProblemDefinition problemDefinition =
+		IProblem problem =
 				agentDescription.getProblemDefinition();
 		
 		Collections.sort(methodsStatistics,
-				new ComparatorQualityOfBestIndividual(problemDefinition));
+				new ComparatorQualityOfBestIndividual(problem));
 		MethodStatistic methodWithBestIdividual =
 				methodsStatistics.get(methodsStatistics.size() -1);
 		

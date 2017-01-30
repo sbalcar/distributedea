@@ -3,11 +3,11 @@ package org.distributedea.agents.computingagents.computingagent.evolution.select
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 public class CompareTwoSelector implements ISelector {
 
-	public IndividualEvaluated select(IndividualsEvaluated individuals, IProblemDefinition problemDef) {
+	public IndividualEvaluated select(IndividualsEvaluated individuals, IProblem problem) {
 		
 		IndividualEvaluated individual1 =
 				individuals.exportRandomIndividualEvaluated();
@@ -16,7 +16,7 @@ public class CompareTwoSelector implements ISelector {
 		
 		boolean isFirstIndividualBetter =
 				FitnessTool.isFirstIndividualEBetterThanSecond(
-						individual1, individual2, problemDef);
+						individual1, individual2, problem);
 		
 		if (isFirstIndividualBetter) {
 			

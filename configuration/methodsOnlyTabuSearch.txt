@@ -3,7 +3,8 @@
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_TabuSearch" name="Agent_TabuSearch">
             <arguments>
-                <argument key="tabuModelSize" value="500" sendOnlyValue="false" />
+                <argument key="tabuModelSize" value="50" />
+                <argument key="numberOfNeighbors" value="10" />
             </arguments>
         </agent>
     </agents>

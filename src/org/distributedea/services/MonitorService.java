@@ -23,7 +23,7 @@ import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Creates the structure of services offering all descendants
@@ -41,7 +41,7 @@ public class MonitorService {
 	 * @param logger
 	 */
 	public static void startsMonitoring(Agent_DistributedEA agent,
-			JobID jobID, IProblemDefinition problemToSolve,
+			JobID jobID, IProblem problemToSolve,
 			MethodDescriptions agentsToMonitor, IAgentLogger logger) {
 		
 		if (agent == null) {

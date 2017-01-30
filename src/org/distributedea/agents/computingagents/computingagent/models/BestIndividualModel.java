@@ -3,7 +3,7 @@ package org.distributedea.agents.computingagents.computingagent.models;
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 public class BestIndividualModel {
 
@@ -30,27 +30,27 @@ public class BestIndividualModel {
 		}
 	}
 	
-	public boolean isGivenindividualBetter(IndividualWrapper iIndividualWpr, IProblemDefinition problemDef,
+	public boolean isGivenindividualBetter(IndividualWrapper iIndividualWpr, IProblem problem,
 			IAgentLogger logger) {
 		
 		if (iIndividualWpr == null || ! iIndividualWpr.valid(logger)) {
 			throw new IllegalArgumentException();
 		}
-		if (problemDef == null || ! problemDef.valid(logger)) {
+		if (problem == null || ! problem.valid(logger)) {
 			throw new IllegalArgumentException();
 		}
 		
 		return FitnessTool.isFistIndividualWBetterThanSecond(
-						iIndividualWpr, bestIndividualWrp, problemDef);
+						iIndividualWpr, bestIndividualWrp, problem);
 	}
 	
-	public boolean update(IndividualWrapper individualWpr, IProblemDefinition problemDef,
+	public boolean update(IndividualWrapper individualWpr, IProblem problem,
 			IAgentLogger logger) {
 		
 //		if (individualWpr == null || ! individualWpr.valid(logger)) {
 //			throw new IllegalArgumentException();
 //		}
-//		if (problemDef == null || ! problemDef.valid(logger)) {
+//		if (problem == null || ! problem.valid(logger)) {
 //			throw new IllegalArgumentException();
 //		}
 		
@@ -61,7 +61,7 @@ public class BestIndividualModel {
 		
 		boolean isNewIndividualBetter =
 				FitnessTool.isFistIndividualWBetterThanSecond(
-						individualWpr, bestIndividualWrp, problemDef);
+						individualWpr, bestIndividualWrp, problem);
 		
 		if (isNewIndividualBetter) {
 			this.bestIndividualWrp = individualWpr;			

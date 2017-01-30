@@ -25,7 +25,7 @@ public class PostProcJobTable extends PostProcessing {
 		
 		String NL = "\n";
 		
-		String problemToSolve = job.getProblemDefinition().getClass().getSimpleName();
+		String problemToSolve = job.getProblem().getClass().getSimpleName();
 		String isIndividualDistribution = job.isIndividualDistribution() ? "ano" : "ne" ;
 		String problemFileName = job.exportDatasetFile().getName();
 		String scheduler = job.getPlanner().getClass().getSimpleName();

@@ -11,7 +11,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 
@@ -57,10 +57,10 @@ public class Agent_RandomSearch extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
-		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
+		IProblem problem = problemStruct.getProblem();
 		Dataset dataset = problemStruct.getDataset();
 
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
+		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
@@ -78,13 +78,14 @@ public class Agent_RandomSearch extends Agent_ComputingAgent {
 			generationNumberI++;
 			
 			IndividualEvaluated individualEvalI = problemTool.generateIndividualEval(
-					problemDefinition, dataset, pedigreeParams, getLogger());
+					problem, dataset, pedigreeParams, getLogger());
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI,
-					generationNumberI, problemDefinition, jobID, localSaver);
+					generationNumberI, problem, jobID, localSaver);
 			
-			distributeIndividualToNeighours(individualEvalI, problemDefinition, jobID);
+			// send new Individual to distributed neighbors
+			distributeIndividualToNeighours(individualEvalI, problem, jobID);
 		}
 	
 		problemTool.exit();

@@ -1,5 +1,6 @@
 package org.distributedea.agents.computingagents;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -17,9 +18,10 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
+import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
  * Agent represents TabuSearch Algorithm Method
@@ -32,10 +34,12 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	
 	
 	private String TABU_MODEL_SIZE = "tabuModelSize";
-	private int tabuModelSize = 500;
+	private int tabuModelSize = 50;
 	
+    // initial number of neighbors
+	private String NUMBER_OF_NEIGHBORS = "numberOfNeighbors";
+	private int numberOfNeighbors = 10;
 	
-	private TabuModel tabu = new TabuModel(tabuModelSize);
 	
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
@@ -60,9 +64,10 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		// set Tabu model max size
 		Argument tabuModelSizeArg = arguments.exportArgument(TABU_MODEL_SIZE);
 		this.tabuModelSize = tabuModelSizeArg.exportValueAsInteger();
-		
-		// update model
-		tabu = new TabuModel(tabuModelSize);
+
+	    // initial number of neighbors
+		Argument numberOfNeighborsArg = arguments.exportArgument(NUMBER_OF_NEIGHBORS);
+		this.numberOfNeighbors = numberOfNeighborsArg.exportValueAsInteger();
 	}
 	
 	@Override
@@ -76,10 +81,10 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
-		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
+		IProblem problem = problemStruct.getProblem();
 		Dataset dataset = problemStruct.getDataset();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
+		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
@@ -89,9 +94,10 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		this.state = CompAgentState.COMPUTING;
         
 		long generationNumberI = -1;
+		TabuModel tabu = new TabuModel(tabuModelSize);
 		
 		IndividualEvaluated individualEvalI = problemTool
-				.generateFirstIndividualEval(problemDefinition, dataset, pedigreeParams, getCALogger());
+				.generateFirstIndividualEval(problem, dataset, pedigreeParams, getCALogger());
 
 		
 		// add actual individual in the Tabu Set
@@ -99,68 +105,48 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		
 		// save, log and distribute computed Individual
 		processIndividualFromInitGeneration(individualEvalI,
-				generationNumberI, problemDefinition, jobID);
+				generationNumberI, problem, jobID);
 		
 		while (state == CompAgentState.COMPUTING) {
-			
-			// going through neighbors
-			IndividualEvaluated neighborJ = null;
-			
-			long neighborIndex = 0;
-			while (state == CompAgentState.COMPUTING) {
-				// increment next number of generation
-				generationNumberI++;
-				
-				neighborJ = problemTool.getNeighborEval(individualEvalI,
-						problemDefinition, dataset, neighborIndex, pedigreeParams, getCALogger());
-				
-				// not available next better neighbor 
-				if (neighborJ == null) {
-					break;
-				}
-				
-				// send new Individual to distributed neighbors
-				if (individualDistribution) {
-					distributeIndividualToNeighours(neighborJ, problemDefinition, jobID);
-				}
-				
-				boolean isNeighborlBetter =
-						FitnessTool.isFirstIndividualEBetterThanSecond(
-								neighborJ, individualEvalI, problemDefinition);
-				
-				// new better individual found
-				if (isNeighborlBetter && (! tabu.contains(neighborJ)) ) {
-					break;
-				}
-				
-				neighborIndex++;
-			}
-			individualEvalI = neighborJ;
 
-			// generate new individual in local extreme
-			if (individualEvalI == null) {
-				individualEvalI = problemTool.generateFirstIndividualEval(
-						problemDefinition, dataset, pedigreeParams, getCALogger());
+			// increment next number of generation
+			generationNumberI++;
+
+			IndividualEvaluated[] neighbours = getNeighbours(
+					individualEvalI, problem, dataset, problemTool,
+					numberOfNeighbors, pedigreeParams); 
+
+			Arrays.sort(neighbours, new CmpIndividualEvaluated(problem));
+			IndividualEvaluated neighbor = neighbours[0];
+			
+			boolean isNeighborlBetter =
+					FitnessTool.isFirstIndividualEBetterThanSecond(
+							neighbor, individualEvalI, problem);
+
+
+			if (isNeighborlBetter && (! tabu.contains(neighbor)) ) {
+//				getCALogger().log(Level.INFO, "JUMP " + individualEvalNew.getFitness());
+				individualEvalI = neighbor;
 			}
+			
+			// send new Individual to distributed neighbors
+			distributeIndividualToNeighours(neighbor, problem, jobID);
+			
 			
 			// add actual individual in the Tabu Set
 			tabu.offer(individualEvalI);
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI,
-					generationNumberI, problemDefinition, jobID, localSaver);
+					generationNumberI, problem, jobID, localSaver);
 			
-			// send new Individual to distributed neighbors
-			if (individualDistribution) {
-				distributeIndividualToNeighours(individualEvalI, problemDefinition, jobID);
-			}
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problemDefinition);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problem);
 			
 			boolean isReceivedBetter =
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalI, problemDefinition);
+							recievedIndividualW, individualEvalI, problem);
 
 			if (individualDistribution &&
 					(! tabu.contains(recievedIndividualW)) &&
@@ -168,7 +154,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 				
 				// save and log received Individual
 				processRecievedIndividual(individualEvalI, recievedIndividualW,
-						generationNumberI, problemDefinition, localSaver);
+						generationNumberI, problem, localSaver);
 				
 				// update if better that actual
 				individualEvalI = recievedIndividualW.getIndividualEvaluated();
@@ -183,6 +169,29 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		this.localSaver.closeFiles();
 	}
 
+	
+	
+	protected IndividualEvaluated[] getNeighbours(IndividualEvaluated individualEval,
+			IProblem problem, Dataset dataset, IProblemTool problemTool,
+			int numberOfNeighbors, PedigreeParameters pedigreeParams) throws Exception {
+		
+		IndividualEvaluated[] neighbours = new IndividualEvaluated[numberOfNeighbors];
+				
+		for (int i = 0; i < numberOfNeighbors; i++) {
+			
+			IndividualEvaluated indivI = problemTool.improveIndividualEval(individualEval,
+					problem, dataset, pedigreeParams, getCALogger());
+			neighbours[i] = indivI;
+			
+			if (state != CompAgentState.COMPUTING) {
+				IndividualEvaluated [] shortedNeighbours = new IndividualEvaluated[i+1];
+				System.arraycopy(neighbours, 0, shortedNeighbours, 0, i+1);
+				return shortedNeighbours;
+			}
+		}
+		
+		return neighbours;
+	}
 }
 
 

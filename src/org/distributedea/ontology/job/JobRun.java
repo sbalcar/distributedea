@@ -17,8 +17,8 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.AProblemDefinition;
+import org.distributedea.ontology.problem.AProblem;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 
@@ -54,7 +54,7 @@ public class JobRun implements Concept {
 	/**
 	 * Inform about type of Problem to solve
 	 */
-	private IProblemDefinition problemToSolveDefinition;
+	private IProblem problemToSolveDefinition;
 	
 	/**
 	 * Dataset
@@ -162,18 +162,18 @@ public class JobRun implements Concept {
 
 	
 	/**
-	 * Returns {@link IProblemDefinition} to solve
+	 * Returns {@link IProblem} to solve
 	 * @return
 	 */
-	public IProblemDefinition getProblemDefinition() {
+	public IProblem getProblemDefinition() {
 		return problemToSolveDefinition;
 	}
 	public void setProblemDefinition(
-			IProblemDefinition problemToSolveDefinition) {
+			IProblem problemToSolveDefinition) {
 		if (problemToSolveDefinition == null ||
 				! problemToSolveDefinition.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					IProblemDefinition.class.getSimpleName() + " is not valid");
+					IProblem.class.getSimpleName() + " is not valid");
 		}
 		this.problemToSolveDefinition = problemToSolveDefinition;
 	}
@@ -248,13 +248,13 @@ public class JobRun implements Concept {
 		
 		JobID jobIDClone = getJobID().deepClone();
 		
-		AProblemDefinition problemDefClone = getProblemDefinition().deepClone();
+		AProblem problemClone = getProblemDefinition().deepClone();
 		Dataset datasetClone = getDataset().deepClone();
 		
 		ProblemStruct problemStruct = new ProblemStruct();
 		problemStruct.setJobID(jobIDClone);
 		problemStruct.setIndividualDistribution(getIndividualDistribution());
-		problemStruct.setProblemDefinition(problemDefClone);
+		problemStruct.setProblem(problemClone);
 		problemStruct.setDataset(datasetClone);
 		problemStruct.importProblemToolClass(problemToolClass);
 		problemStruct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));

@@ -1,5 +1,8 @@
 package org.distributedea.agents.computingagents;
 
+import java.util.Arrays;
+import java.util.logging.Level;
+
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
@@ -12,19 +15,19 @@ import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
-import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.dataset.DatasetTSPPoint;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
+import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
  * Agent represents Hill Climbing Algorithm Method
@@ -42,29 +45,31 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 
+		IProblem problem = problemStruct.getProblem();
+		
 		Class<?> problemToolClass =
 				problemStruct.exportProblemToolClass(getLogger());
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				problemToolClass, getLogger());
 		
-		Class<?> dataset = problemStruct.getDataset().getClass();
+		//Class<?> dataset = problemStruct.getDataset().getClass();
 		Class<?> representation = problemTool.reprezentationWhichUses();
 		
 		boolean isAble = false;
 		
-		if (dataset == DatasetTSPGPS.class) {
+		if (problem.getClass() == ProblemTSPGPS.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}	
-		} else if (dataset == DatasetTSPPoint.class) {
+		} else if (problem.getClass() == DatasetTSPPoint.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (dataset == DatasetBinPacking.class) {
+		} else if (problem.getClass() == DatasetBinPacking.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}			
-		} else if (dataset == DatasetContinuousOpt.class) {
+		} else if (problem.getClass() == DatasetContinuousOpt.class) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
@@ -102,10 +107,10 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
-		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
+		IProblem problem = problemStruct.getProblem();
 		Dataset dataset = problemStruct.getDataset();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
+		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
 		
@@ -118,55 +123,52 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 
 		// save, log and distribute computed Individual
 		IndividualEvaluated individualEvalI = problemTool
-				.generateIndividualEval(problemDefinition, dataset,
+				.generateIndividualEval(problem, dataset,
 				pedigreeParams, getCALogger());
 
 		processIndividualFromInitGeneration(individualEvalI,
-				generationNumberI, problemDefinition, jobID);
+				generationNumberI, problem, jobID);
 		
 		while (state == CompAgentState.COMPUTING) {
 			
 			// increment next number of generation
 			generationNumberI++;
-									
-			IndividualsEvaluated neighbours = getNeighbours(
-					individualEvalI, problemDefinition, dataset, problemTool,
+	
+			IndividualEvaluated [] neighbours = getNeighbours(
+					individualEvalI, problem, dataset, problemTool,
 					numberOfNeighbors, pedigreeParams); 
-			
-			IndividualEvaluated individualEvalNew =
-					neighbours.exportTheBestIndividual(problemDefinition);
-			
-//			IndividualEvaluated individualEvalNew =
-//					getNewIndividual(individualEvalI, problemDefinition, dataset, problemTool, pedigreeParams); 
+
+			Arrays.sort(neighbours, new CmpIndividualEvaluated(problem));
+			IndividualEvaluated individualEvalNew = neighbours[0];
 			
 			boolean isNewIndividualBetter =
 					FitnessTool.isFirstIndividualEBetterThanSecond(
-							individualEvalNew, individualEvalI, problemDefinition);
+							individualEvalNew, individualEvalI, problem);
 
 			if (isNewIndividualBetter) {
-//				getCALogger().log(Level.INFO, "JUMP " + individualEvalNew.getFitness());
+				getCALogger().log(Level.INFO, "JUMP new COMPUTED solution " + individualEvalNew.getFitness());
 				individualEvalI = individualEvalNew;
 			}
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI,
-					generationNumberI, problemDefinition, jobID, localSaver);
+					generationNumberI, problem, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
-			if (individualDistribution) {
-				distributeIndividualToNeighours(individualEvalI, problemDefinition, jobID);
-			}
+			distributeIndividualToNeighours(individualEvalI, problem, jobID);
 
 
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problemDefinition);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problem);
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalI, problemDefinition)) {
+							recievedIndividualW, individualEvalI, problem)) {
 
+				getCALogger().log(Level.INFO, "JUMP new RECEIVED solution " + individualEvalNew.getFitness());
+				
 				// save and log received Individual
 				processRecievedIndividual(individualEvalI, recievedIndividualW,
-						generationNumberI, problemDefinition, localSaver);
+						generationNumberI, problem, localSaver);
 				
 				// update if better that actual
 				individualEvalI = recievedIndividualW.getIndividualEvaluated();
@@ -179,28 +181,26 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		this.localSaver.closeFiles();
 	}
 
-	protected IndividualsEvaluated getNeighbours(IndividualEvaluated individualEval,
-			IProblemDefinition problemDef, Dataset dataset, IProblemTool problemTool,
+	protected IndividualEvaluated[] getNeighbours(IndividualEvaluated individualEval,
+			IProblem problem, Dataset dataset, IProblemTool problemTool,
 			int numberOfNeighbors, PedigreeParameters pedigreeParams) throws Exception {
 		
-		IndividualsEvaluated neighbours = new IndividualsEvaluated();
-		
+		IndividualEvaluated[] neighbours = new IndividualEvaluated[numberOfNeighbors];
+				
 		for (int i = 0; i < numberOfNeighbors; i++) {
 			
-			IndividualEvaluated indivI = getNewIndividual(individualEval,
-					problemDef, dataset, problemTool, pedigreeParams);
-			neighbours.add(indivI);
+			IndividualEvaluated indivI = problemTool.improveIndividualEval(individualEval,
+					problem, dataset, pedigreeParams, getCALogger());
+			neighbours[i] = indivI;
+			
+			if (state != CompAgentState.COMPUTING) {
+				IndividualEvaluated [] shortedNeighbours = new IndividualEvaluated[i+1];
+				System.arraycopy(neighbours, 0, shortedNeighbours, 0, i+1);
+				return shortedNeighbours;
+			}
 		}
 		
 		return neighbours;
-	}
-
-	protected IndividualEvaluated getNewIndividual(IndividualEvaluated individualEval,
-			IProblemDefinition problemDef, Dataset dataset, IProblemTool problemTool,
-			PedigreeParameters pedigreeParams) throws Exception {
-		
-		return problemTool.improveIndividualEval(individualEval, problemDef,
-				dataset, pedigreeParams, getCALogger());
 	}
 	
 }

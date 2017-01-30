@@ -9,8 +9,8 @@ import java.util.Random;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.AProblemDefinition;
+import org.distributedea.ontology.problem.AProblem;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
@@ -108,30 +108,30 @@ public class IndividualsEvaluated  implements Concept {
 	 * Sorts {@link IndividualEvaluated}s from the best to the worst
 	 * @param problem
 	 */
-	public void sortFromTheBestToTheWorst(IProblemDefinition problemDef) {
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+	public void sortFromTheBestToTheWorst(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AProblemDefinition.class.getSimpleName() + " is not valid");
+					AProblem.class.getSimpleName() + " is not valid");
 		}
 		
 		Collections.sort(individualsEvaluated,
-				new CmpIndividualEvaluated(problemDef));
+				new CmpIndividualEvaluated(problem));
 	}
 	
 	/**
 	 * Exports sorted list of {@link IndividualEvaluated} - from best to worst
-	 * @param problemDef
+	 * @param problem
 	 * @return
 	 */
-	public List<IndividualEvaluated> exportSortedFromBestToWorst(IProblemDefinition problemDef) {
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+	public List<IndividualEvaluated> exportSortedFromBestToWorst(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AProblemDefinition.class.getSimpleName() + " is not valid");
+					AProblem.class.getSimpleName() + " is not valid");
 		}
 		
 		List<IndividualEvaluated> individualsCopy =
 				new ArrayList<IndividualEvaluated>(individualsEvaluated);
-		Collections.sort(individualsCopy, new CmpIndividualEvaluated(problemDef));
+		Collections.sort(individualsCopy, new CmpIndividualEvaluated(problem));
 
 		return individualsCopy;
 	}
@@ -143,15 +143,15 @@ public class IndividualsEvaluated  implements Concept {
 	 * @return
 	 */
 	public IndividualsEvaluated exportNBestSorted(int numberOfIndividuals,
-			IProblemDefinition problemDef) {
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+			IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AProblemDefinition.class.getSimpleName() + " is not valid");
+					AProblem.class.getSimpleName() + " is not valid");
 		}
 		
 		List<IndividualEvaluated> newList =
 				new ArrayList<IndividualEvaluated>(individualsEvaluated);
-		Collections.sort(newList, new CmpIndividualEvaluated(problemDef));
+		Collections.sort(newList, new CmpIndividualEvaluated(problem));
 				
 		List<IndividualEvaluated> sublist = newList.subList(
 				0, Math.min(numberOfIndividuals,newList.size()));
@@ -196,14 +196,14 @@ public class IndividualsEvaluated  implements Concept {
 	 * @param problem
 	 * @return
 	 */
-	public IndividualEvaluated exportTheBestIndividual(IProblemDefinition problemDef) {
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+	public IndividualEvaluated exportTheBestIndividual(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AProblemDefinition.class.getSimpleName() + " is not valid");
+					AProblem.class.getSimpleName() + " is not valid");
 		}
 
 		return Collections.min(individualsEvaluated,
-				new CmpIndividualEvaluated(problemDef));
+				new CmpIndividualEvaluated(problem));
 	}
 	
 	/**
@@ -211,16 +211,16 @@ public class IndividualsEvaluated  implements Concept {
 	 * @param problem
 	 * @return
 	 */
-	public List<IndividualEvaluated> exportIndividualsFromBestToWorst(AProblemDefinition problemDef) {
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+	public List<IndividualEvaluated> exportIndividualsFromBestToWorst(AProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					AProblemDefinition.class.getSimpleName() + " is not valid");
+					AProblem.class.getSimpleName() + " is not valid");
 		}
 		
 		ArrayList<IndividualEvaluated> individualsList =
 				new ArrayList<IndividualEvaluated>(individualsEvaluated);
 		
-		Collections.sort(individualsList, new CmpIndividualEvaluated(problemDef));
+		Collections.sort(individualsList, new CmpIndividualEvaluated(problem));
 		
 		return individualsList;
 	}

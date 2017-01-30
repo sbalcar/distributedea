@@ -20,7 +20,7 @@ import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.services.DataManagerService;
 import org.distributedea.services.MonitorService;
@@ -89,7 +89,7 @@ public final class PlannerInfrastructure {
 		}
 		
 		JobID jobID = jobRun.getJobID();
-		IProblemDefinition problemDef = jobRun.getProblemDefinition();
+		IProblem problem = jobRun.getProblemDefinition();
 		
 		
 		Plan plan = planner.agentInitialisation(centralManager,
@@ -110,7 +110,7 @@ public final class PlannerInfrastructure {
 					history.exportRunningMethods();
 			
 			MonitorService.startsMonitoring(centralManager, jobID,
-					problemDef, currentlyRunningAgents, logger);
+					problem, currentlyRunningAgents, logger);
 
 			
 			// sleep

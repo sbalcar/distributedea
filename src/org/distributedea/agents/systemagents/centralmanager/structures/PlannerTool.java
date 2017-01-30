@@ -20,7 +20,7 @@ import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
@@ -47,7 +47,7 @@ public class PlannerTool {
 	}
 
 	public static Plan createAgents(Agent_CentralManager centralManager,
-			InputPlan inputPlan, IProblemDefinition problemDef, IAgentLogger logger) {
+			InputPlan inputPlan, IProblem problem, IAgentLogger logger) {
 		
 		List<MethodDescription> createdAgents = new ArrayList<>();
 		//create computing agents
@@ -65,7 +65,7 @@ public class PlannerTool {
 					managerAgentOfEmptyCoreAIDI, agentConfigurationI, logger);
 			
 			MethodDescription createdAgentDescriptionI =
-					new MethodDescription(createdAgentI, problemDef, problemToolClass);
+					new MethodDescription(createdAgentI, problem, problemToolClass);
 						
 			createdAgents.add(createdAgentDescriptionI);
 		}

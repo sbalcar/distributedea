@@ -15,17 +15,17 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
-import org.distributedea.ontology.dataset.DatasetBinPacking;
-import org.distributedea.ontology.dataset.DatasetContinuousOpt;
-import org.distributedea.ontology.dataset.DatasetTSPGPS;
-import org.distributedea.ontology.dataset.DatasetTSPPoint;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
@@ -55,29 +55,31 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
 
+		IProblem problem = problemStruct.getProblem();
+		
 		Class<?> problemToolClass =
 				problemStruct.exportProblemToolClass(getLogger());
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				problemToolClass, getLogger());
 		
-		Class<?> dataset = problemStruct.getDataset().getClass();
+		//Class<?> dataset = problemStruct.getDataset().getClass();
 		Class<?> representation = problemTool.reprezentationWhichUses();
 		
 		boolean isAble = false;
 		
-		if (dataset == DatasetTSPGPS.class) {
+		if (problem.getClass() == ProblemTSPGPS.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (dataset == DatasetTSPPoint.class) {
+		} else if (problem.getClass() == ProblemTSPPoint.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (dataset == DatasetBinPacking.class) {
+		} else if (problem.getClass() == ProblemBinPacking.class) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (dataset == DatasetContinuousOpt.class) {
+		} else if (problem.getClass() == ProblemContinuousOpt.class) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
@@ -136,7 +138,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		
 		JobID jobID = problemStruct.getJobID();
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
-		IProblemDefinition problemDefinition = problemStruct.getProblemDefinition();
+		IProblem problemDefinition = problemStruct.getProblem();
 		Dataset dataset = problemStruct.getDataset();
 		boolean individualDistribution = problemStruct.getIndividualDistribution();
 		MethodDescription methodDescription = new MethodDescription(agentConf, problemDefinition, problemTool.getClass());
@@ -167,10 +169,9 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		
 		IndividualEvaluated bestIndividualI = populationI.getBestIndividual(problemDefinition);
 		
-		
-		if (individualDistribution) {
-			distributeIndividualToNeighours(populationI.getIndividuals(), problemDefinition, jobID);
-		}
+		// send new Individual to distributed neighbors
+		distributeIndividualToNeighours(populationI.getIndividuals(), problemDefinition, jobID);
+
 		
 		while (state == CompAgentState.COMPUTING) {
 			
@@ -192,9 +193,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			populationNewI.addIndividual(bestIndividualI);
 			
 			// distribute individuals to another islands
-			if (individualDistribution) {
-				distributeIndividualToNeighours(populationNewI.getIndividuals(), problemDefinition, jobID);
-			}
+			distributeIndividualToNeighours(populationNewI.getIndividuals(), problemDefinition, jobID);
 			
 			//take received individual to new generation
 			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problemDefinition);

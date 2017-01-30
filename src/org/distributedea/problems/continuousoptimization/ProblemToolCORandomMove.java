@@ -5,11 +5,11 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.continuousoptimization.point.operators.OperatorDifferential;
-import org.distributedea.problems.continuousoptimization.point.operators.OperatorRandomMove;
 import org.distributedea.problems.continuousoptimization.point.operators.OperatorMoveToSomewhereInTheMiddle;
+import org.distributedea.problems.continuousoptimization.point.operators.OperatorRandomMove;
 import org.distributedea.problems.continuousoptimization.point.tools.ToolGenerateNextIndividualCO;
 
 /**
@@ -20,14 +20,14 @@ import org.distributedea.problems.continuousoptimization.point.tools.ToolGenerat
 public class ProblemToolCORandomMove extends AProblemToolCO {
 
 	@Override
-	public Individual generateFirstIndividual(IProblemDefinition problemDef,
+	public Individual generateFirstIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 		
-		return generateIndividual(problemDef, dataset, logger);
+		return generateIndividual(problem, dataset, logger);
 	}
 
 	@Override
-	public Individual generateNextIndividual(IProblemDefinition problemDef,
+	public Individual generateNextIndividual(IProblem problem,
 			Dataset dataset, Individual individual, IAgentLogger logger) {
 
 		DatasetContinuousOpt probelmCO = (DatasetContinuousOpt) dataset;
@@ -37,7 +37,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 	}
 
 	@Override
-	public Individual improveIndividual(Individual individual, IProblemDefinition problemDef,
+	public Individual improveIndividual(Individual individual, IProblem problem,
 			IAgentLogger logger) throws Exception {
 		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
@@ -47,7 +47,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 
 	@Override
 	public Individual getNeighbor(Individual individual,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			long neighborIndex, IAgentLogger logger) throws Exception {
 
 		IndividualPoint individualPoint = (IndividualPoint) individual;
@@ -57,7 +57,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, IProblemDefinition problemDef,
+			Individual individual2, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 		
 		IndividualPoint individualP1 = (IndividualPoint) individual1;
@@ -70,7 +70,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 	@Override
 	public Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			IAgentLogger logger) throws Exception {
 		
 		IndividualPoint individualP1 = (IndividualPoint) individual1;

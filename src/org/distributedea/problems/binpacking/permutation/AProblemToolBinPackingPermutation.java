@@ -7,7 +7,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.binpacking.ProblemBinPackingTool;
 import org.distributedea.problems.binpacking.permutation.tools.ToolFitnessBinPacking;
 import org.distributedea.problems.binpacking.permutation.tools.ToolGenerateFirstIndividualBinPacking;
@@ -38,7 +38,7 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 	}
 
 	@Override
-	public double fitness(Individual individual, IProblemDefinition problemDef, Dataset dataset,
+	public double fitness(Individual individual, IProblem problem, Dataset dataset,
 			IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
@@ -48,7 +48,7 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 	}
 
 	@Override
-	protected Individual generateIndividual(IProblemDefinition problemDef,
+	protected Individual generateIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 
 		DatasetBinPacking problemBinPacking = (DatasetBinPacking) dataset;
@@ -57,7 +57,7 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 	}
 
 	@Override
-	protected Individual generateFirstIndividual(IProblemDefinition problemDef,
+	protected Individual generateFirstIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 
 		DatasetBinPacking problemBinPacking = (DatasetBinPacking) dataset;
@@ -66,7 +66,7 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 	}
 
 	@Override
-	protected Individual generateNextIndividual(IProblemDefinition problemDef,
+	protected Individual generateNextIndividual(IProblem problem,
 			Dataset dataset, Individual individual, IAgentLogger logger) {
 
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;

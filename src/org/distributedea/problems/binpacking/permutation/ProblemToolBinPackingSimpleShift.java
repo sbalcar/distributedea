@@ -4,7 +4,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.binpacking.permutation.operators.OperatorSimpleShift;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorCrossPermutation;
 
@@ -13,7 +13,7 @@ public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPerm
 
 	@Override
 	protected Individual improveIndividual(Individual individual,
-			IProblemDefinition problemDef, IAgentLogger logger) throws Exception {
+			IProblem problem, IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		
@@ -21,7 +21,7 @@ public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPerm
 	}
 
 	@Override
-	protected Individual getNeighbor(Individual individual, IProblemDefinition problemDef,
+	protected Individual getNeighbor(Individual individual, IProblem problem,
 			Dataset dataset, long neighborIndex, IAgentLogger logger) throws Exception {
 
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
@@ -31,7 +31,7 @@ public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPerm
 
 	@Override
 	protected Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, IProblemDefinition problemDef,
+			Individual individual2, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 
 		IndividualPermutation individualPerm1 = (IndividualPermutation) individual1;
@@ -48,10 +48,10 @@ public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPerm
 
 	@Override
 	protected Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Individual individual3, IProblemDefinition problemDef,
+			Individual individual2, Individual individual3, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 		
-		return createNewIndividual(individual1, individual2, problemDef, dataset, logger);
+		return createNewIndividual(individual1, individual2, problem, dataset, logger);
 	}
 
 }

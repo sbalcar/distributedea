@@ -4,14 +4,14 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorSimpleSwap;
 
 public class ProblemToolBinPackingSimpleSwap extends ProblemToolBinPackingSimpleShift {
 
 	@Override
 	protected Individual improveIndividual(Individual individual,
-			IProblemDefinition problemDef, IAgentLogger logger) throws Exception {
+			IProblem problem, IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		
@@ -20,7 +20,7 @@ public class ProblemToolBinPackingSimpleSwap extends ProblemToolBinPackingSimple
 	
 	@Override
 	protected Individual getNeighbor(Individual individual,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			long neighborIndex, IAgentLogger logger) throws Exception {
 
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;

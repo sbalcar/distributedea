@@ -5,7 +5,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.tsp.gps.permutation.operators.Operator2Opt;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorCrossPermutation;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolGenerateFirstIndividualTSPGPS;
@@ -14,7 +14,7 @@ import org.distributedea.problems.tsp.gps.permutation.tools.ToolNextPermutationT
 public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation implements IProblemTSPPermutationTool {
 
 	@Override
-	protected Individual generateFirstIndividual(IProblemDefinition problemDef,
+	protected Individual generateFirstIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 		
 		DatasetTSPGPS datasetTSPGPS =  (DatasetTSPGPS) dataset;
@@ -23,7 +23,7 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 	}
 
 	@Override
-	protected Individual generateNextIndividual(IProblemDefinition problemDef,
+	protected Individual generateNextIndividual(IProblem problem,
 			Dataset dataset, Individual individual, IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
@@ -33,7 +33,7 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 
 	@Override
 	protected Individual improveIndividual(Individual individual,
-			IProblemDefinition problemDef, IAgentLogger logger) throws Exception {
+			IProblem problem, IAgentLogger logger) throws Exception {
 
 		IndividualPermutation indivPerm = (IndividualPermutation) individual;
 		
@@ -42,17 +42,17 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 
 	@Override
 	protected Individual getNeighbor(Individual individual,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			long neighborIndex, IAgentLogger logger) throws Exception {
 
-		return generateIndividual(problemDef, dataset, logger);
+		return generateIndividual(problem, dataset, logger);
 	}
 
 	@Override
 	protected Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, IProblemDefinition problemDef,
+			Individual individual2, IProblem problem,
 			Dataset dataset, IAgentLogger logger)throws Exception {
-		
+
 		IndividualPermutation individualPerm1 = (IndividualPermutation) individual1;
 		IndividualPermutation individualPerm2 = (IndividualPermutation) individual2;
 		
@@ -67,10 +67,16 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 
 	@Override
 	protected Individual[] createNewIndividual(Individual individual1,
-			Individual individual2, Individual individual3, IProblemDefinition problemDef,
+			Individual individual2, Individual individual3, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 
-		return createNewIndividual(individual1, individual2, problemDef, dataset, logger);
+//		return createNewIndividual(individual1, individual2, problem, dataset, logger);		
+		int todo;
+		Individual[] result = new Individual[2];
+		result[0] = Operator2Opt.create((IndividualPermutation) individual1);
+		result[1] = Operator2Opt.create((IndividualPermutation) individual2);
+		
+		return result;
 	}
 
 }

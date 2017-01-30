@@ -7,7 +7,7 @@ import java.util.List;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.structures.comparators.CmpIndividualWrapper;
 
@@ -27,16 +27,16 @@ public class ReceivedIndividualsModel {
 	/**
 	 * Add Received {@link IndividualWrapper} to Model
 	 * @param individualW
-	 * @param problemDef
+	 * @param problem
 	 * @param problem
 	 * @param problemTool
 	 * @param logger
 	 */
 	public void addIndividual(IndividualWrapper individualW,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			IProblemTool problemTool, IAgentLogger logger) {
 		
-		if (individualW == null || (! individualW.validation(problemDef, dataset, problemTool, logger))) {
+		if (individualW == null || (! individualW.validation(problem, dataset, problemTool, logger))) {
 			throw new IllegalStateException("Recieved Individual is not valid");
 		}
 		
@@ -47,15 +47,15 @@ public class ReceivedIndividualsModel {
 		
 		receivedIndividuals.add(individualW);
 		
-		Collections.sort(receivedIndividuals, new CmpIndividualWrapper(problemDef));
+		Collections.sort(receivedIndividuals, new CmpIndividualWrapper(problem));
 	}
 	
 	/**
 	 * Get the best {@link IndividualWrapper} from Model 
-	 * @param problemDef
+	 * @param problem
 	 * @return
 	 */
-	public IndividualWrapper removeTheBestIndividual(IProblemDefinition problemDef) {
+	public IndividualWrapper removeTheBestIndividual(IProblem problem) {
 		
 		if (receivedIndividuals.isEmpty()) {
 			return null;

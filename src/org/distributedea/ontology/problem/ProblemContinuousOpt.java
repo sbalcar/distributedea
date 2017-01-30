@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problemdefinition;
+package org.distributedea.ontology.problem;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
@@ -9,34 +9,34 @@ import org.distributedea.ontology.dataset.DatasetContinuousOpt;
  * @author stepan
  *
  */
-public class ProblemContinuousOptDef extends AProblemDefinition {
+public class ProblemContinuousOpt extends AProblem {
 
 	private static final long serialVersionUID = 1L;
 	
 	private boolean isMaximizationProblem;
 
 	@Deprecated
-	public ProblemContinuousOptDef() {} // only for Jade
+	public ProblemContinuousOpt() {} // only for Jade
 	
 	/**
 	 * Constructor
 	 * @param isMaximizationProblem
 	 */
-	public ProblemContinuousOptDef(boolean isMaximizationProblem) {
+	public ProblemContinuousOpt(boolean isMaximizationProblem) {
 		
 		this.isMaximizationProblem = isMaximizationProblem;
 	}
 	
 	/**
 	 * Copy constructor
-	 * @param problemDef
+	 * @param problem
 	 */
-	public ProblemContinuousOptDef(ProblemContinuousOptDef problemDef) {
-		if (problemDef == null || ! problemDef.valid(new TrashLogger())) {
+	public ProblemContinuousOpt(ProblemContinuousOpt problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					ProblemContinuousOptDef.class.getSimpleName() + " is not valid");
+					ProblemContinuousOpt.class.getSimpleName() + " is not valid");
 		}
-		this.isMaximizationProblem = problemDef.isMaximizationProblem();
+		this.isMaximizationProblem = problem.isMaximizationProblem();
 	}
 
 	
@@ -69,20 +69,20 @@ public class ProblemContinuousOptDef extends AProblemDefinition {
 	}
 
 	@Override
-	public ProblemContinuousOptDef deepClone() {
+	public ProblemContinuousOpt deepClone() {
 		
-		return new ProblemContinuousOptDef(this);
+		return new ProblemContinuousOpt(this);
 	}
 	
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof ProblemContinuousOptDef)) {
+	    if (!(other instanceof ProblemContinuousOpt)) {
 	        return false;
 	    }
 	    
-	    IProblemDefinition otherDef = (ProblemContinuousOptDef)other;
+	    IProblem otherProblem = (ProblemContinuousOpt)other;
 	    
-	    return isMaximizationProblem() == otherDef.exportIsMaximizationProblem();
+	    return isMaximizationProblem() == otherProblem.exportIsMaximizationProblem();
 	}
 }

@@ -8,8 +8,8 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.ProblemContinuousOptDef;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
@@ -40,7 +40,7 @@ public abstract class AProblemToolCO extends ProblemTool {
 	
 	@Override
 	public Class<?> problemReprezentation() {
-		return ProblemContinuousOptDef.class;
+		return ProblemContinuousOpt.class;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 	
 	@Override
-	public double fitness(Individual individual, IProblemDefinition problemDef, Dataset dataset,
+	public double fitness(Individual individual, IProblem problem, Dataset dataset,
 			IAgentLogger logger) {
 ////////////////////		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
@@ -85,7 +85,7 @@ public abstract class AProblemToolCO extends ProblemTool {
     		return f2.evaluate(individualPoint);
     	}
 
-		return ToolFitnessBbobCO.evaluate(individualPoint, problemDef, fgeneric, bbobTools, logger);		
+		return ToolFitnessBbobCO.evaluate(individualPoint, problem, fgeneric, bbobTools, logger);		
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 	
 	@Override
-	public Individual generateIndividual(IProblemDefinition problemDef,
+	public Individual generateIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 
 		DatasetContinuousOpt problemContinousOpt = (DatasetContinuousOpt) dataset;

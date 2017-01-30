@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.ProblemBinPackingDef;
-import org.distributedea.ontology.problemdefinition.ProblemContinuousOptDef;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.structures.comparators.CmpIndividualWrapper;
 
 public class Test {
@@ -42,16 +42,16 @@ public class Test {
 		individuals.add(indW0);
 		individuals.add(indW2);
 		
-		IProblemDefinition problemDefBP = new ProblemBinPackingDef(1);
-		Collections.sort(individuals, new CmpIndividualWrapper(problemDefBP));
+		IProblem problemBP = new ProblemBinPacking(1);
+		Collections.sort(individuals, new CmpIndividualWrapper(problemBP));
 
 		IndividualWrapper bestBP = individuals.get(0);
 		if (! bestBP.equals(indW0)) {
 			System.out.println("Error");
 		}
 
-		IProblemDefinition problemDefCO = new ProblemContinuousOptDef(true);
-		Collections.sort(individuals, new CmpIndividualWrapper(problemDefCO));
+		IProblem problemCO = new ProblemContinuousOpt(true);
+		Collections.sort(individuals, new CmpIndividualWrapper(problemCO));
 
 		IndividualWrapper bestCO = individuals.get(0);
 		if (! bestCO.equals(indW3)) {

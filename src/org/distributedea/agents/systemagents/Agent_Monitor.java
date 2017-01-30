@@ -31,7 +31,7 @@ import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Agent which used to monitor computation of all running instances
@@ -195,7 +195,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		
 		StartMonitoring startMonitoring = (StartMonitoring) action.getAction();
 		JobID jobID = startMonitoring.getJobID();
-		IProblemDefinition problemToSolve = startMonitoring.getProblemToSolve();
+		IProblem problemToSolve = startMonitoring.getProblemToSolve();
 		MethodDescriptions agentsToMonitor = startMonitoring.getAgentsToMonitor();	
 		
 		this.model = new MonitorStatisticModel(jobID, problemToSolve);

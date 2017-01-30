@@ -8,7 +8,7 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Interface for {@link ProblemTool} implemntation
@@ -78,7 +78,7 @@ public interface IProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public double fitness(Individual individual, IProblemDefinition problemDef,
+	public double fitness(Individual individual, IProblem problem,
 			Dataset dataset, IAgentLogger logger);
 	
 	/**
@@ -87,13 +87,13 @@ public interface IProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public IndividualEvaluated generateIndividualEval(IProblemDefinition problemDef,
+	public IndividualEvaluated generateIndividualEval(IProblem problem,
 			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
-	public IndividualEvaluated generateFirstIndividualEval(IProblemDefinition problemDef,
+	public IndividualEvaluated generateFirstIndividualEval(IProblem problem,
 			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
-	public IndividualEvaluated generateNextIndividualEval(IProblemDefinition problemDef,
+	public IndividualEvaluated generateNextIndividualEval(IProblem problem,
 			Dataset dataset, IndividualEvaluated individual, PedigreeParameters pedigreeParams,
 			IAgentLogger logger);
 	
@@ -107,21 +107,21 @@ public interface IProblemTool {
 	 * @throws ProblemToolException
 	 */  
 	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
 	
 	public IndividualEvaluated getNeighborEval(IndividualEvaluated individual,
-			IProblemDefinition problemDef, Dataset dataset, long neighborIndex,
+			IProblem problem, Dataset dataset, long neighborIndex,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
 	
 	public IndividualEvaluated[] createNewIndividual(IndividualEvaluated individualEval1,
-			IndividualEvaluated individualEval2, IProblemDefinition problemDef,
+			IndividualEvaluated individualEval2, IProblem problem,
 			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger)
 			throws Exception;
 	
 
 	public IndividualEvaluated[] createNewIndividualEval(IndividualEvaluated individual1, 
 			IndividualEvaluated individual2, IndividualEvaluated individual3,
-			IProblemDefinition problemDef, Dataset dataset,
+			IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;	
 }

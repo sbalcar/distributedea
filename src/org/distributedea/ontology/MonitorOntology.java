@@ -18,7 +18,7 @@ import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 
 
 public class MonitorOntology extends BeanOntology {
@@ -31,7 +31,7 @@ public class MonitorOntology extends BeanOntology {
         try {
         	add(StartMonitoring.class);
             add(JobID.class);
-            add(IProblemDefinition.class.getPackage().getName());
+            add(IProblem.class.getPackage().getName());
             add(MethodDescriptions.class);
             
             add(IndividualWrapper.class);

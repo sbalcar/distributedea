@@ -15,13 +15,15 @@
 
         <agent type="org.distributedea.agents.systemagents.Agent_DataManager" name="DataManager">
         </agent>
+        <!-- Comment of Sniffer -->
 
+        <!--
         <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
             <arguments>
                <argument key="sniffed-1" value="CentralManager" sendOnlyValue="true" />
                <argument key="sniffed-1" value="ManagerAgent" sendOnlyValue="true" />
             </arguments>
         </agent>
-
+        -->
     </agents>
 </configuration>

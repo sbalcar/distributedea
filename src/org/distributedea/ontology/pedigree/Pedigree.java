@@ -5,11 +5,17 @@ import java.util.Arrays;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
 
 import jade.content.Concept;
 
+/**
+ * Ontology represents abstract pedigree of {@link Individual}
+ * @author stepan
+ *
+ */
 public abstract class Pedigree implements Concept {
 
 	private static final long serialVersionUID = 1L;

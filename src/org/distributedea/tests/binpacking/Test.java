@@ -10,8 +10,8 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.ProblemBinPackingDef;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift;
 
@@ -25,17 +25,17 @@ public class Test {
 		ProblemTool tool = new ProblemToolBinPackingSimpleShift();
 		
 		File file = batch.getJobs().get(0).exportDatasetFile();
-		Dataset problem = tool.readDataset(file, new TrashLogger());
+		Dataset dataset = tool.readDataset(file, new TrashLogger());
 		
-		IProblemDefinition def = new ProblemBinPackingDef(1);
+		IProblem problem = new ProblemBinPacking(1);
 		
 		IndividualEvaluated individual =
-				tool.generateIndividualEval(def, problem, null, new TrashLogger());
+				tool.generateIndividualEval(problem, dataset, null, new TrashLogger());
 
 		String fileOfSolution = FileNames.getDirectoryOfInputs() + File.separator +
 				"solutions" + File.separator + file.getName();
-		Individual bestIndividual = tool.readSolution(new File(fileOfSolution), problem, new TrashLogger());
-		double fitness = tool.fitness(bestIndividual, def, problem, new TrashLogger());
+		Individual bestIndividual = tool.readSolution(new File(fileOfSolution), dataset, new TrashLogger());
+		double fitness = tool.fitness(bestIndividual, problem, dataset, new TrashLogger());
 		
 		System.out.println(individual.getFitness());
 		System.out.println(fitness);

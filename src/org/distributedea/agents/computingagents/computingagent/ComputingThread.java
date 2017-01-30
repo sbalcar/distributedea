@@ -3,7 +3,7 @@ package org.distributedea.agents.computingagents.computingagent;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.services.CentralLogerService;
@@ -56,8 +56,8 @@ public class ComputingThread extends Thread {
 		return problemStruct.exportProblemTool(agent.getLogger());
 	}
 
-	public IProblemDefinition getProblemDefinition() {
-		return problemStruct.getProblemDefinition().deepClone();
+	public IProblem getProblemDefinition() {
+		return problemStruct.getProblem().deepClone();
 	}
 	
 	public Dataset getDataset() {

@@ -53,7 +53,7 @@ import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problems.IProblemTool;
@@ -348,11 +348,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return;
 		}
 		
-		IProblemDefinition problemDef = computingThread.getProblemDefinition();
+		IProblem problem = computingThread.getProblemDefinition();
 		Dataset dataset = computingThread.getDataset();
 		IProblemTool problemTool = computingThread.getProblemTool();
 		
-		receivedIndividuals.addIndividual(individualWrapper, problemDef, dataset, problemTool, getLogger());
+		receivedIndividuals.addIndividual(individualWrapper, problem, dataset, problemTool, getLogger());
 	}
 	
 	
@@ -495,7 +495,6 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		boolean newStatisticsForEachQuery =
 				reportHelpmate.isNewStatisticsForEachQuery();
 		
-		
 		ACLMessage reply = msgRequest.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 		reply.setLanguage(codec.getName());
@@ -531,7 +530,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
-		final IProblemDefinition problemDef = problemStruct.getProblemDefinition();
+		final IProblem problem = problemStruct.getProblem();
 		
 		// adding cyclic behavior for sending Individual to distribution
 		this.addBehaviour(new TickerBehaviour(this, InputConfiguration.getConf().INDIVIDUAL_BROADCAST_PERIOD_MS) {
@@ -540,7 +539,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 			protected void onTick() {
 				 getLogger().log(Level.INFO, "Tick to send individual");
-				 IndividualEvaluated individualEval = individualsToDistribution.getIndividual(problemDef);
+				 IndividualEvaluated individualEval = individualsToDistribution.getIndividual(problem);
 				 if (individualEval == null) {
 					 getLogger().log(Level.WARNING, "Any Individual to send availible");
 					 return;
@@ -586,32 +585,32 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 
 	protected void distributeIndividualToNeighours(IndividualsEvaluated individualsEval,
-			IProblemDefinition problemDef, JobID jobID) {
+			IProblem problem, JobID jobID) {
 		
 		individualsToDistribution.addIndividual(
-				individualsEval.getIndividualsEvaluated(), problemDef);
+				individualsEval.getIndividualsEvaluated(), problem);
 	}
 	
 	protected void distributeIndividualToNeighours(List<IndividualEvaluated> individualsEval,
-			IProblemDefinition problemDef, JobID jobID) {
+			IProblem problem, JobID jobID) {
 		
-		individualsToDistribution.addIndividual(individualsEval, problemDef);
+		individualsToDistribution.addIndividual(individualsEval, problem);
 	}
 
 	protected void distributeIndividualToNeighours(IndividualEvaluated individualEval,
-			IProblemDefinition problemDef, JobID jobID) {
+			IProblem problem, JobID jobID) {
 		
-		individualsToDistribution.addIndividual(individualEval, problemDef);
+		individualsToDistribution.addIndividual(individualEval, problem);
 	}
 	
 	private MethodDescription getAgentDescription() {
 
-		IProblemDefinition problemDef = null;
+		IProblem problem = null;
 		Class<?> problemToolClass = null;
 		
 		if (computingThread != null) {
 			
-			problemDef = computingThread.getProblemDefinition();
+			problem = computingThread.getProblemDefinition();
 			
 			IProblemTool problemTool = computingThread.getProblemTool();
 			if (problemTool != null) {
@@ -620,14 +619,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		try {
-			return new MethodDescription(agentConf, problemDef, problemToolClass);
+			return new MethodDescription(agentConf, problem, problemToolClass);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
 	protected void processIndividualFromInitGeneration(IndividualEvaluated individualEval,
-			long generationNumber, IProblemDefinition problemDef, JobID jobID) {
+			long generationNumber, IProblem problem, JobID jobID) {
 		
 		if (individualEval == null || ! individualEval.valid(getLogger())) {
 			individualEval.valid(getLogger());
@@ -647,12 +646,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
 		MethodDescription description =
-				new MethodDescription(agentConf, problemDef, problemTool.getClass());
+				new MethodDescription(agentConf, problem, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
 
-		this.bestIndividualModel.update(computedIndividualWrp, problemDef,
+		this.bestIndividualModel.update(computedIndividualWrp, problem,
 				getCALogger());
 		
 		//log fitness as result
@@ -663,7 +662,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	protected void processComputedIndividual(IndividualEvaluated individualEval ,
-			long generationNumber, IProblemDefinition problemDef, JobID jobID,
+			long generationNumber, IProblem problem, JobID jobID,
 			LocalSaver localSaver) {
 		
 		if (generationNumber == -1) {
@@ -673,14 +672,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
 		MethodDescription description =
-				new MethodDescription(agentConf, problemDef, problemTool.getClass());
+				new MethodDescription(agentConf, problem, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, description, individualEval);
 		
 
 		// log only better individuals
-		if (bestIndividualModel.update(computedIndividualWrp, problemDef, getLogger())) {
+		if (bestIndividualModel.update(computedIndividualWrp, problem, getLogger())) {
 	
 			//log fitness as result
 //			if (DEBUG) {
@@ -703,7 +702,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 */
 	protected void processRecievedIndividual(IndividualEvaluated currentIndiv,
 			IndividualWrapper receivedIndividualWrp, long generationNumber,
-			IProblemDefinition problem, LocalSaver localSaver) {
+			IProblem problem, LocalSaver localSaver) {
 		
 //		if (DEBUG) {
 //			localSaver.logDiffImprovementOfDistribution(receivedIndividualWrp,

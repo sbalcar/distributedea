@@ -6,7 +6,7 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
 
 import jade.content.Concept;
@@ -97,14 +97,14 @@ public class IndividualWrapper implements Concept {
 	}
 	
 	
-	public boolean validation(IProblemDefinition problemDef, Dataset dataset,
+	public boolean validation(IProblem problem, Dataset dataset,
 			IProblemTool problemTool, IAgentLogger logger) {
 		
 		if (dataset == null) {
 			return false;
 		}
 		
-		return individualEvaluated.validation(problemDef, dataset, problemTool, logger);	
+		return individualEvaluated.validation(problem, dataset, problemTool, logger);	
 	}
 	
 	/**

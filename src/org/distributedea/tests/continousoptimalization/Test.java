@@ -10,8 +10,8 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.problemdefinition.IProblemDefinition;
-import org.distributedea.ontology.problemdefinition.ProblemContinuousOptDef;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
 
@@ -27,15 +27,15 @@ public class Test {
 		File file = batchCOf2.getJobs().get(0).exportDatasetFile();
 		Dataset dataset = tool.readDataset(file, new TrashLogger());
 		
-		IProblemDefinition def = new ProblemContinuousOptDef(false);
+		IProblem problem = new ProblemContinuousOpt(false);
 		
 		String fileOfSolution = FileNames.getDirectoryOfInputs() + File.separator +
 				"solutions" + File.separator + file.getName();
 		Individual bestIndividual = tool.readSolution(new File(fileOfSolution), dataset, new TrashLogger());
-		double bestFitness = tool.fitness(bestIndividual, def, dataset, new TrashLogger());
+		double bestFitness = tool.fitness(bestIndividual, problem, dataset, new TrashLogger());
 		
 		IndividualEvaluated individualEval =
-				tool.generateIndividualEval(def, dataset, null, new TrashLogger());
+				tool.generateIndividualEval(problem, dataset, null, new TrashLogger());
 		
 		String fitness = "" + individualEval.getFitness();
 		

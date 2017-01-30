@@ -3,7 +3,7 @@
     <agents>
         <agent type="org.distributedea.agents.computingagents.Agent_HillClimbing" name="Agent_HillClimbing">
             <arguments>
-                <argument key="numberOfNeighbors" value="10" sendOnlyValue="false" />
+                <argument key="numberOfNeighbors" value="10" />
             </arguments>
         </agent>
 
@@ -12,10 +12,10 @@
 
         <agent type="org.distributedea.agents.computingagents.Agent_Evolution" name="Agent_Evolution">
             <arguments>
-                <argument key="popSize" value="10" sendOnlyValue="false" />
-                <argument key="mutationRate" value="0.9" sendOnlyValue="false" />
-                <argument key="crossRate" value="0.1" sendOnlyValue="false" />
-                <argument key="selector" value="org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector" sendOnlyValue="false" />
+                <argument key="popSize" value="10" />
+                <argument key="mutationRate" value="0.9" />
+                <argument key="crossRate" value="0.1" />
+                <argument key="selector" value="org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector" />
             </arguments>
         </agent>
 
@@ -24,20 +24,21 @@
 
         <agent type="org.distributedea.agents.computingagents.Agent_TabuSearch" name="Agent_TabuSearch">
             <arguments>
-                <argument key="tabuModelSize" value="500" sendOnlyValue="false" />
+                <argument key="tabuModelSize" value="50" />
+                <argument key="numberOfNeighbors" values="10" />
             </arguments>
         </agent>
 
         <agent type="org.distributedea.agents.computingagents.Agent_SimulatedAnnealing" name="Agent_SimulatedAnnealing">
             <arguments>
-                <argument key="temperature" value="10000" sendOnlyValue="false" />
-                <argument key="coolingRate" value="0.002" sendOnlyValue="false" />
+                <argument key="temperature" value="10000" />
+                <argument key="coolingRate" value="0.002" />
             </arguments>
         </agent>
 
         <agent type="org.distributedea.agents.computingagents.Agent_DifferentialEvolution" name="Agent_DifferentialEvolution">
             <arguments>
-                <argument key="popSize" value="50" sendOnlyValue="false" />
+                <argument key="popSize" value="50" />
             </arguments>
         </agent>
     </agents>
