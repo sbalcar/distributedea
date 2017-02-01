@@ -1,6 +1,7 @@
 package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -8,11 +9,13 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.PlannerInfrastructure;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.IPlannerEndCondition;
 import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
+import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
 
 /**
@@ -25,6 +28,8 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 	private static final long serialVersionUID = 1L;
 	
 	private JobRun jobRun;
+	private int countOfRuns;
+	
 	private IPlanner planner;
 	private IPlannerEndCondition plannerEndCondition;
 	
@@ -38,7 +43,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 	 * @param plannerEndCondition
 	 * @param logger
 	 */
-	public ComputeJobRunBehaviour(JobRun jobRun,
+	public ComputeJobRunBehaviour(JobRun jobRun, int countOfRuns,
 			IPlannerEndCondition plannerEndCondition, IPlanner planner,
 			IAgentLogger logger) {
 
@@ -60,6 +65,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		}
 		
 		this.jobRun = jobRun;
+		this.countOfRuns = countOfRuns;
 		this.planner = planner;
 		this.plannerEndCondition = plannerEndCondition;
 		
@@ -82,8 +88,8 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		FilesystemInitTool.createLogSpaceForJobRun(jobID);
 		FilesystemInitTool.createResultSpaceForJobRun(jobID);
 		
-		// create space in filesystem
-		if (jobID.getRunNumber() == 0) {			
+		// move job to result as finished
+		if (jobID.getRunNumber() == countOfRuns -1) {			
 			try {			
 				FilesystemInitTool.moveInputJobToResultDir(jobID);
 			} catch (IOException e) {
@@ -109,7 +115,11 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 			e.printStackTrace();
 			centralManager.exit();
 		}
-		
+	
+		File batchesDir = new File(FileNames.getDirectoryOfInputBatches());
+		Behaviour behaviour = new ProcessBatchesInInputQueueBehaviour(batchesDir, logger);
+		centralManager.computingBehaviours.add(behaviour);
+		centralManager.addBehaviour(behaviour);
 	}
 
 }

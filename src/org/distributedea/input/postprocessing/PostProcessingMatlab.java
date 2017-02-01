@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.distributedea.InputConfiguration;
 
 public abstract class PostProcessingMatlab extends PostProcessing {
 
@@ -32,17 +31,7 @@ public abstract class PostProcessingMatlab extends PostProcessing {
 			e.printStackTrace();
 		}
 		
-		
-		boolean runPostProc = false;
-		try {
-			runPostProc = InputConfiguration.getConf().runPostProcessing;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (runPostProc) {
-			executeMatlabScript(bashScriptFileName);
-		}
+		executeMatlabScript(bashScriptFileName);
 	
 	}
 	

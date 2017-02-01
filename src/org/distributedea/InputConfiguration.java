@@ -40,10 +40,16 @@ public class InputConfiguration {
 	 */
 	public boolean automaticExit;
 	
+	
+	/**
+	 * Allows to clean results of old jobs
+	 */
+	public boolean automaticOldResultsRemoving;
+	
 	/**
 	 * Allows the {@link Batch} run available {@link PostProcessing}
 	 */
-	public boolean runPostProcessing;
+	//public boolean runPostProcessing;
 	
 	
 	

@@ -11,7 +11,7 @@ import jade.content.AgentAction;
  * @author stepan
  *
  */
-public class SaveBestIndividual implements AgentAction {
+public class SaveTheBestIndividual implements AgentAction {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,14 +20,14 @@ public class SaveBestIndividual implements AgentAction {
 	private IndividualWrapper result;
 
 	@Deprecated
-	public SaveBestIndividual() {}
+	public SaveTheBestIndividual() {}
 	
 	/**
 	 * Constructor
 	 * @param iteratin
 	 * @param bestIndividual
 	 */
-	public SaveBestIndividual(Iteration iteratin,
+	public SaveTheBestIndividual(Iteration iteratin,
 			IndividualWrapper bestIndividual) {
 		this.iteratin = iteratin;
 		this.result = bestIndividual;

@@ -60,7 +60,7 @@ public class FilesystemInitTool {
 		
 	}
 	
-	public static void clearResultSpaceForJob(String batchID, String jobID, IAgentLogger logger) {
+	private static void clearResultSpaceForJob(String batchID, String jobID, IAgentLogger logger) {
 		
 		String resultJobDirectoryName =
 				FileNames.getResultDirectoryForJob(new JobID(batchID, jobID, 0));
@@ -79,6 +79,34 @@ public class FilesystemInitTool {
 		} catch (Exception e) {
 			logger.logThrowable("Can not create result directory", e);
 		}
+	}
+
+	public static void createResultSpaceForJob(String batchID, String jobID, IAgentLogger logger) {
+		
+		String resultJobDirectoryName =
+				FileNames.getResultDirectoryForJob(new JobID(batchID, jobID, 0));
+		File resultJobDir = new File(resultJobDirectoryName);
+				
+		try {
+			if (! resultJobDir.isDirectory()) {
+				resultJobDir.mkdir();
+			}
+		} catch (Exception e) {
+			logger.logThrowable("Can not create result directory", e);
+		}
+
+	}
+	
+	/**
+	 * Exists directory for given JobRun
+	 * @param jobID
+	 * @return
+	 */
+	public static boolean existsResultSpaceForJobRun(JobID jobID) {
+
+		String resultDirectory = FileNames.getResultDirectoryForJobRun(jobID);
+		
+		return new File(resultDirectory).isDirectory();
 	}
 	
 	/**
@@ -165,8 +193,20 @@ public class FilesystemInitTool {
 		}
 		
 		FileUtils.moveToDirectory(inputJobFile, resultDirectoryWithCopyOfInputBatch, true);
+	}
+	
+	public static void moveInputPostProcToResultDir(Class<?> postProcToMove, String batchID) throws IOException {
 		
+		String resultDirectoryForBatchName = FileNames.getResultDirectory(batchID);
+		File postProcFile = new File(resultDirectoryForBatchName + File.separator +
+				postProcToMove.getSimpleName() + "." + FileNames.POSTPROCESSING_SUFIX);
 		
+		String resultDirectoryWithCopyOfInputBatchName =
+				FileNames.getResultDirectoryWithCopyOfInputBatch(batchID);
+		File resultDirectoryWithCopyOfInputBatch =
+				new File(resultDirectoryWithCopyOfInputBatchName);
+		
+		FileUtils.moveToDirectory(postProcFile, resultDirectoryWithCopyOfInputBatch, true);
 	}
 	
 	/**

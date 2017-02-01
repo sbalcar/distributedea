@@ -5,15 +5,16 @@ import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.apache.commons.io.FileUtils;
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.systemagents.centralmanager.behaviours.ComputeBatchesBehaviour;
-import org.distributedea.agents.systemagents.centralmanager.behaviours.ConsoleAutomatBehaviour;
-import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
+import org.distributedea.agents.systemagents.centralmanager.behaviours.ProcessBatchesInInputQueueBehaviour;
+import org.distributedea.agents.systemagents.centralmanager.consoleautomat.ConsoleAutomatThread;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.logging.FileAndConsoleLogger;
 import org.distributedea.logging.IAgentLogger;
@@ -33,6 +34,8 @@ import org.distributedea.services.ManagerAgentService;
 public class Agent_CentralManager extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
+	
+	public Thread cosoleAutomath;
 	
 	public List<Behaviour> computingBehaviours = new ArrayList<>();
 	
@@ -72,18 +75,27 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		}
 		
 		CentralLogerService.logMessage(this, "Initialization OK", logger);
+	
+		File batchesDir = new File(FileNames.getDirectoryOfInputBatches());
+		cosoleAutomath = new ConsoleAutomatThread(this, batchesDir, this.getLogger());
+		cosoleAutomath.start();
 		
-		Batches batches = null;
+
+		boolean automaticOldResultsRemoving;
 		try {
-			File batchesDir = new File(FileNames.getDirectoryOfInputBatches());
-			batches = Batches.importXML(batchesDir);
-			
+			automaticOldResultsRemoving = InputConfiguration.getConf().automaticOldResultsRemoving;
 		} catch (Exception e) {
-			getLogger().log(Level.INFO, "Can not load input Batches");
-			CentralLogerService.logMessage(this, "Input Batches wasn't loaded", getLogger());
-			ManagerAgentService.killAllContainers(this, getLogger());
+			getLogger().log(Level.INFO, "Can not load input configuration - automatic old results removing");
+			CentralLogerService.logMessage(this, "Can not load input configuration - automatic old results removing", getLogger());
+			exit();
 			return;
 		}
+		
+		// automatic old results removing
+		if (automaticOldResultsRemoving) {
+			oldResultsRemoving();
+		}
+
 		
 		boolean automaticStart;
 		try {
@@ -91,17 +103,13 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		} catch (Exception e) {
 			getLogger().log(Level.INFO, "Can not load input configuration - automatic start");
 			CentralLogerService.logMessage(this, "Can not load input configuration - automatic start", getLogger());
-			ManagerAgentService.killAllContainers(this, getLogger());
+			exit();
 			return;
 		}
 		
 		// adding Behaviour for computing
 		if (automaticStart) {
-
-			addBehaviour(new ComputeBatchesBehaviour(batches, getLogger()));
-		} else {
-			
-			addBehaviour(new ConsoleAutomatBehaviour(batches, getLogger()));
+			addBehaviour(new ProcessBatchesInInputQueueBehaviour(batchesDir, getLogger()));
 		}
 		
 	}
@@ -131,22 +139,48 @@ public class Agent_CentralManager extends Agent_DistributedEA {
 		return true;
 	}
 	
-	public void exit() {
+
+	/**
+	 * Removing old results
+	 */
+	public void oldResultsRemoving() {
 		
-		ManagerAgentService.killAllComputingAgent(this, getLogger());
+		getLogger().log(Level.INFO, "Removing old results");
+		CentralLogerService.logMessage(this, "Removing old results", getLogger());
 		
-		endsComputationOfAllBatches();
-		
-		ManagerAgentService.killAllContainers(this, getLogger());
+		File dir = new File(FileNames.getDirectoryofResults());
+		try {
+			FileUtils.cleanDirectory(dir);
+		} catch (IOException e) {
+			getLogger().log(Level.INFO, "Can not remove old results");
+			CentralLogerService.logMessage(this, "Can not remove old results", getLogger());
+			exit();
+		} 
+
 	}
 	
 	/**
-	 * Removes all Computing-Behaviour
+	 * Stops computing. Removes all Computing-Behaviour
 	 */
-	private void endsComputationOfAllBatches() {
+	public void stopComputation() {
 		
 		for (Behaviour behaviourI : computingBehaviours) {
 			this.removeBehaviour(behaviourI);
 		}
+	}
+	
+	/**
+	 * Exits program. Sends "kill" to all containers.
+	 */
+	public void exit() {
+		
+		getLogger().log(Level.INFO, "Exiting system");
+		CentralLogerService.logMessage(this, "Exiting system", getLogger());
+		
+		ManagerAgentService.killAllComputingAgent(this, getLogger());
+		
+		stopComputation();
+		
+		ManagerAgentService.killAllContainers(this, getLogger());
 	}
 }

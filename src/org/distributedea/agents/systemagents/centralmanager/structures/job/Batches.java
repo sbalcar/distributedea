@@ -66,6 +66,17 @@ public class Batches {
 		return this.batches;
 	}
 	
+	public boolean containsJobOrPostProc() {
+		
+		for (Batch batchI: batches) {
+			if (! batchI.getJobs().isEmpty() ||
+					! batchI.getPostProcessings().isEmpty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public Batch exportBatch(String batchID) {
 		
 		for (Batch batchI: batches) {

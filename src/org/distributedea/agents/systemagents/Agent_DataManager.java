@@ -26,7 +26,7 @@ import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.individuals.SaveBestIndividual;
+import org.distributedea.ontology.individuals.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
@@ -95,8 +95,8 @@ public class Agent_DataManager extends Agent_DistributedEA {
 					getLogger().log(Level.INFO, "Request for " +
 							concept.getClass().getSimpleName());
 					
-					if (concept instanceof SaveBestIndividual) {
-						return respondToResultOfComputing(request, action);
+					if (concept instanceof SaveTheBestIndividual) {
+						return respondToSaveTheBestIndividual(request, action);
 					
 					} else if (concept instanceof SaveResultOfIteration) {
 						return respondToSaveResults(request, action);
@@ -120,10 +120,10 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	}
 	
 
-	protected ACLMessage respondToResultOfComputing(ACLMessage request,
+	protected ACLMessage respondToSaveTheBestIndividual(ACLMessage request,
 			Action action) {
 		
-		SaveBestIndividual saveResultOfComputing = (SaveBestIndividual)action.getAction();
+		SaveTheBestIndividual saveResultOfComputing = (SaveTheBestIndividual)action.getAction();
 		
 		IndividualWrapper result = saveResultOfComputing.getResult();
 		

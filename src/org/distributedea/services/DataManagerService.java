@@ -5,7 +5,7 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_DataManager;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.individuals.SaveBestIndividual;
+import org.distributedea.ontology.individuals.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
@@ -27,7 +27,7 @@ public class DataManagerService {
 
 	/**
 	 * Ensures to save {@link IndividualWrapper} as best result of given {@link Iteration}.
-	 * Communication is formed by sending request {@link SaveBestIndividual}.
+	 * Communication is formed by sending request {@link SaveTheBestIndividual}.
 	 * @param agent
 	 * @param iteration
 	 * @param individualWrp
@@ -65,16 +65,16 @@ public class DataManagerService {
 		msgPartResult.setLanguage(agent.getCodec().getName());
 		msgPartResult.setOntology(ontology.getName());
 	    
-		SaveBestIndividual save = new SaveBestIndividual(iteration, individualWrp);
+		SaveTheBestIndividual save = new SaveTheBestIndividual(iteration, individualWrp);
 		
 		Action action = new Action(agent.getAID(), save);
 		
 		try {
 			agent.getContentManager().fillContent(msgPartResult, action);
 		} catch (CodecException e) {
-			logger.logThrowable("Can not send " + SaveBestIndividual.class.getSimpleName(), e);
+			logger.logThrowable("Can not send " + SaveTheBestIndividual.class.getSimpleName(), e);
 		} catch (OntologyException e) {
-			logger.logThrowable("Can not send " + SaveBestIndividual.class.getSimpleName(), e);
+			logger.logThrowable("Can not send " + SaveTheBestIndividual.class.getSimpleName(), e);
 		}
 
 	    agent.send(msgPartResult);

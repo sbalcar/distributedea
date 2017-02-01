@@ -5,7 +5,7 @@ import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individuals.SaveBestIndividual;
+import org.distributedea.ontology.individuals.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
@@ -35,7 +35,7 @@ public class ResultOntology extends BeanOntology {
         super("ResultOntology");
         
         try {
-        	add(SaveBestIndividual.class);
+        	add(SaveTheBestIndividual.class);
         	add(AccessesResult.class);
         	
         	add(Iteration.class);
