@@ -7,6 +7,7 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
+import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
@@ -52,7 +53,7 @@ public class PlannerDummy implements IPlanner {
 		}
 		
 
-		InputAgentConfigurations configurations = jobRun.getAgentConfigurations();
+		InputAgentConfigurations configurations = jobRun.getMethods().exportInputAgentConfigurations();
 		
 		// chooses agent configuration
 		InputAgentConfiguration agentConfiguration;
@@ -68,7 +69,8 @@ public class PlannerDummy implements IPlanner {
 		
 		
 		// chooses ProblemTool
-		Class<?> problemToolI = jobRun.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
+		ProblemTools problemTools = jobRun.getMethods().exportProblemTools();
+		Class<?> problemToolI = problemTools.getProblemTools().get(PROBLEM_TOOL_INDEX);
 		
 		// assumes the existence of only one Computing Agent
 		AID [] aidComputingAgents = centralManager.searchDF(

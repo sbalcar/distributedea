@@ -4,18 +4,13 @@ import java.util.logging.Level;
 
 import jade.content.Concept;
 
-import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.AgentConfigurations;
-import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
-import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.methoddescription.MethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
+import org.distributedea.ontology.method.IMethods;
+import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.AProblem;
 import org.distributedea.ontology.problem.IProblem;
@@ -41,15 +36,11 @@ public class JobRun implements Concept {
 	 */
 	private boolean individualDistribution;
 	
+
 	/**
-	 * Agent configurations - available for problem solving
+	 * Methods
 	 */
-	private InputAgentConfigurations agentConfigurations;
-	
-	/**
-	 * Problem Tools to use for solving Problem 
-	 */
-	private ProblemTools problemTools;
+	private IMethods methods;
 	
 	/**
 	 * Inform about type of Problem to solve
@@ -67,7 +58,7 @@ public class JobRun implements Concept {
 	private String pedigreeOfIndividualClassName;
 
 	
-	
+
 	/**
 	 * Constructor
 	 */
@@ -87,17 +78,14 @@ public class JobRun implements Concept {
 		JobID jobIDClone = jobRun.getJobID().deepClone();
 		boolean individualDistributionClone =
 				jobRun.getIndividualDistribution();
-		InputAgentConfigurations agentConfigurationsClone =
-				jobRun.getAgentConfigurations().deepClone();
-		ProblemTools problemToolsClone =
-				jobRun.getProblemTools().deepClone();
+		IMethods methodsClone =
+				jobRun.getMethods().deepClone();
 		Dataset datasetClone =
 				jobRun.getDataset().deepClone();
 		
 		setJobID(jobIDClone);
 		setIndividualDistribution(individualDistributionClone);
-		setAgentConfigurations(agentConfigurationsClone);
-		setProblemTools(problemToolsClone);
+		setMethods(methodsClone);
 		setDataset(datasetClone);
 		
 	}
@@ -117,20 +105,17 @@ public class JobRun implements Concept {
 		this.jobID = jobID;
 	}
 	
-	/**
-	 * Returns {@link AgentConfiguration} as agent identification
-	 * @return
-	 */
-	public InputAgentConfigurations getAgentConfigurations() {
-		return agentConfigurations;
+	
+	public IMethods getMethods() {
+		return methods;
 	}
-	public void setAgentConfigurations(InputAgentConfigurations agentConfigurations) {
-		if (agentConfigurations == null ||
-				! agentConfigurations.valid(new TrashLogger())) {
+
+	public void setMethods(IMethods methods) {
+		if (methods == null || ! methods.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					InputAgentConfigurations.class.getSimpleName() + " is not valid");
+					IMethods.class.getSimpleName() + " is not valid");
 		}
-		this.agentConfigurations = agentConfigurations;
+		this.methods = methods;
 	}
 	
 	/**
@@ -143,23 +128,6 @@ public class JobRun implements Concept {
 	public void setIndividualDistribution(boolean individualDistribution) {
 		this.individualDistribution = individualDistribution;
 	}
-	
-	/**
-	 * Returns {@link ProblemTools} available to solve {@link Problem} 
-	 * @return
-	 */
-	public ProblemTools getProblemTools() {
-		return problemTools;
-	}
-	public void setProblemTools(ProblemTools problemTools) {
-		if (problemTools == null ||
-				! problemTools.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					ProblemTools.class.getSimpleName() + " is not valid");
-		}
-		this.problemTools = problemTools;
-	}
-
 	
 	/**
 	 * Returns {@link IProblem} to solve
@@ -230,13 +198,16 @@ public class JobRun implements Concept {
 	
 	
 	/**
-	 * Exports the {@link InputMethodDescriptions}
+	 * Exports the {@link Methods}
 	 * @return
 	 */
+/*
 	public InputMethodDescriptions exportInputAgentDescriptions() {
 		return new InputMethodDescriptions(
 				getAgentConfigurations(),getProblemTools());
 	}
+*/
+	int todo;
 	
 	/**
 	 * Exports the {@link JobRun} as {@link ProblemStruct} which
@@ -266,6 +237,7 @@ public class JobRun implements Concept {
 	 * Export random selected {@link MethodDescription}
 	 * @return
 	 */
+/*
 	public InputMethodDescription exportRandomSelectedAgentDescription() {
 		
 		if (agentConfigurations == null ||
@@ -288,7 +260,7 @@ public class JobRun implements Concept {
 				new InputMethodDescription(agentToCreate, problemToolClass);
 		return methodToCreate;
 	}
-	
+*/	
 	/**
 	 * Tests validation of {@link JobRun}
 	 * @param logger
@@ -301,7 +273,7 @@ public class JobRun implements Concept {
 			return false;
 		}
 		
-		if (agentConfigurations == null || ! agentConfigurations.valid(logger)) {
+		if (methods == null || ! methods.valid(logger)) {
 			logger.log(Level.WARNING, AgentConfigurations.class.getSimpleName() + " are not valid");
 			return false;
 		}
@@ -310,12 +282,7 @@ public class JobRun implements Concept {
 			logger.log(Level.WARNING, Dataset.class.getSimpleName() + " is not valid");
 			return false;
 		}
-		
-		if (problemTools == null || ! problemTools.valid(dataset.getClass(), logger)) {
-			logger.log(Level.WARNING, ProblemTools.class.getSimpleName() + " are not valid");
-			return false;
-		}
-		
+				
 		return true;
 	}
 	

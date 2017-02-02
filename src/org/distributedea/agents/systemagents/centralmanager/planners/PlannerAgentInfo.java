@@ -19,9 +19,10 @@ import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.method.Methods;
+import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
@@ -69,8 +70,9 @@ public class PlannerAgentInfo implements IPlanner {
 		InputAgentConfigurations agentConfigurations =
 				exploitationAgentConfigurations.exportInputAgentConfigurations();
 		
-		JobRun exploitationJobRun = new JobRun(jobRun);
-		exploitationJobRun.setAgentConfigurations(agentConfigurations);
+		JobRun exploitationJobRun = jobRun.deepClone();
+		exploitationJobRun.setMethods(new MethodsTwoSets(
+				agentConfigurations, jobRun.getMethods().exportProblemTools()).deepClone());
 		
 		plannerInit = new PlannerInitialisationOneMethodPerCore();
 		return plannerInit.agentInitialisation(centralManager, iteration,
@@ -121,10 +123,12 @@ public class PlannerAgentInfo implements IPlanner {
 		InputAgentConfigurations exploitationInAgentConfs =
 				exploitationAgentConfigurations.exportInputAgentConfigurations();
 		
-		JobRun exploitationJobRun = new JobRun(jobRun);
-		exploitationJobRun.setAgentConfigurations(exploitationInAgentConfs);
+		JobRun exploitationJobRun = jobRun.deepClone();
+		exploitationJobRun.setMethods(new MethodsTwoSets(
+				exploitationInAgentConfs, jobRun.getMethods().exportProblemTools().deepClone()));
 		
-		InputMethodDescriptions exploitationMethodsWhichHaveNeverRun =
+		
+		Methods exploitationMethodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(exploitationJobRun);
 		
 		if (! exploitationMethodsWhichHaveNeverRun.isEmpty()) {
@@ -137,7 +141,7 @@ public class PlannerAgentInfo implements IPlanner {
 					exportAgentDescriptionClone();
 
 			InputMethodDescription candidateMethod =
-					exploitationMethodsWhichHaveNeverRun.exportRandomInputAgentDescription();
+					exploitationMethodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
 			return new InputRePlan(iteration, methodToKill, candidateMethod);
 		}
 		

@@ -6,8 +6,8 @@ import java.util.Random;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 
 import jade.content.Concept;
 
@@ -105,10 +105,10 @@ public class MethodDescriptions implements Concept {
 	}
 	
 	/**
-	 * Exports {@link InputMethodDescriptions}
+	 * Exports {@link Methods}
 	 * @return
 	 */
-	public InputMethodDescriptions exportInputAgentDescriptions() {
+	public Methods exportInputAgentDescriptions() {
 		
 		List<InputMethodDescription> aDescriptions = new ArrayList<>();
 		
@@ -118,7 +118,7 @@ public class MethodDescriptions implements Concept {
 			aDescriptions.add(inputAgentDescriptionI);
 		}
 		
-		return new InputMethodDescriptions(aDescriptions);
+		return new Methods(aDescriptions);
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public class MethodDescriptions implements Concept {
 				agentDescriptions.getAgentDescriptions());
 	}
 
-	public void removeAll(InputMethodDescriptions inputAgentDescriptions) {
+	public void removeAll(Methods inputAgentDescriptions) {
 				
 		for (InputMethodDescription inputAgentDescriptionI :
 				inputAgentDescriptions.getInputAgentDescriptions()) {

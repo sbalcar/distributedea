@@ -8,6 +8,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 
 public class PostProcJobTable extends PostProcessing {
 
@@ -67,7 +68,10 @@ public class PostProcJobTable extends PostProcessing {
 		"\\multicolumn{2}{|c|}{Výpočetní metody: " + description + "} \\\\" + NL +
 		"\\hline\\hline" + NL;
 		
-		for(InputAgentConfiguration confI : job.getMethods().getAgentConfigurations()) {
+		InputAgentConfigurations confs =
+				job.getMethods().exportInputAgentConfigurations();
+		
+		for(InputAgentConfiguration confI : confs.getAgentConfigurations()) {
 			jobAlgorithmTableCode +=
 			confI.exportAgentClass().getSimpleName() + ":        & " + confI.getArguments().exportToString() + " \\\\" + NL;
 		}

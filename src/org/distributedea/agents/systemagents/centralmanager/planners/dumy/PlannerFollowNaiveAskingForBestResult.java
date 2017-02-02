@@ -14,9 +14,9 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ComputingAgentService;
@@ -90,13 +90,13 @@ public class PlannerFollowNaiveAskingForBestResult implements IPlanner {
 			return new InputRePlan(iteration);
 		}
 		
-		InputMethodDescriptions agentDescriptions =
-				jobRun.exportInputAgentDescriptions();
+		Methods agentDescriptions =
+				jobRun.getMethods().exportInputMethodDescriptions();
 
-		InputMethodDescriptions methodsWhichHaveNeverRun =  history
+		Methods methodsWhichHaveNeverRun =  history
 				.getMethodHistories().exportsMethodsWhichHaveNeverRun(agentDescriptions);
 		
-		InputMethodDescription candidateDescrip = methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
+		InputMethodDescription candidateDescrip = methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
 		
 		if (candidateDescrip != null) {
 			

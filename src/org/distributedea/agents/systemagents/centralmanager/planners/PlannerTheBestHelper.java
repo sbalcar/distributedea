@@ -12,9 +12,9 @@ import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ComputingAgentService;
@@ -77,13 +77,13 @@ public class PlannerTheBestHelper implements IPlanner {
 			return new InputRePlan(iteration);
 		}
 		
-		InputMethodDescriptions methodsWhichHaveNeverRun =
+		Methods methodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(jobRun);
 		
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 		
 			InputMethodDescription candidateDescription =
-					methodsWhichHaveNeverRun.exportRandomInputAgentDescription();
+					methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
 			
 			Pair<MethodDescription, Integer> minPriorityPair =
 					helpmates.exportMinPrioritizedDescription();

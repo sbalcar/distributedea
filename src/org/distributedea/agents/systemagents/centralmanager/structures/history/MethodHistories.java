@@ -10,10 +10,10 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
@@ -502,12 +502,12 @@ public class MethodHistories {
 	 * @param inputDescriptions
 	 * @return
 	 */
-	public InputMethodDescriptions exportsMethodsWhichHaveNeverRun(
-			InputMethodDescriptions inputDescriptions) {
+	public Methods exportsMethodsWhichHaveNeverRun(
+			Methods inputDescriptions) {
 		if (inputDescriptions == null ||
 				! inputDescriptions.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					InputMethodDescriptions.class.getSimpleName() + " is not valid");
+					Methods.class.getSimpleName() + " is not valid");
 		}
 		
 		List<MethodType> availableMethodTypes = exportMethodTypes();
@@ -524,7 +524,7 @@ public class MethodHistories {
 			}
 		}
 		
-		return new InputMethodDescriptions(methodsWhichHaveNeverRun);
+		return new Methods(methodsWhichHaveNeverRun);
 	}
 	
 	private List<MethodTypeHistory> getMethodTypeHistories() {

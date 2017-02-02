@@ -35,6 +35,21 @@ public class ProblemTools {
 	}
 	
 	/**
+	 * Constructor
+	 * @param problemTools
+	 */
+	public ProblemTools(List<Class<?>> problemTools) {
+		if (problemTools == null || problemTools.isEmpty()) {
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
+		}
+		this.problemTools = new ArrayList<>();
+		for (Class<?> probToolI : problemTools) {
+			addProblemTool(probToolI);
+		}
+	}
+	
+	/**
 	 * Copy Constructor
 	 * @param problemToolsStruct
 	 */

@@ -52,7 +52,7 @@ public class PlannerInitialisationRunEachMethodOnce_ implements IPlanner {
 		// chooses ProblemTool by index
 		Class<?> problemToolI;
 		try {
-			problemToolI = job.getProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
+			problemToolI = job.getMethods().exportProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
 		} catch (IndexOutOfBoundsException e) {
 			throw new IllegalStateException("ProblemTool not available");
 		}
@@ -61,7 +61,7 @@ public class PlannerInitialisationRunEachMethodOnce_ implements IPlanner {
 		List<MethodDescription> createdDescriptions = new ArrayList<>();
 		
 		// create one agent for each configuration
-		InputAgentConfigurations configurations = job.getAgentConfigurations();
+		InputAgentConfigurations configurations = job.getMethods().exportInputAgentConfigurations();
 		for (InputAgentConfiguration agentConfigurationI : configurations.getAgentConfigurations()) {
 			
 			AgentConfiguration createdAgentI = ManagerAgentService.sendCreateAgent(

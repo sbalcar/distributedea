@@ -1,4 +1,4 @@
-package org.distributedea.ontology.methoddescriptioninput;
+package org.distributedea.ontology.method;
 
 import jade.content.Concept;
 
@@ -13,6 +13,7 @@ import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 
 /**
@@ -20,7 +21,7 @@ import org.distributedea.ontology.methodtype.MethodType;
  * @author stepan
  *
  */
-public class InputMethodDescriptions implements Concept {
+public class Methods implements IMethods, Concept {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -29,7 +30,7 @@ public class InputMethodDescriptions implements Concept {
 	/**
 	 * Constructor
 	 */
-	public InputMethodDescriptions() {
+	public Methods() {
 		this.inputAgentDescriptions = new ArrayList<>();
 	}
 	
@@ -37,7 +38,7 @@ public class InputMethodDescriptions implements Concept {
 	 * Constructor
 	 * @param agentDescriptions
 	 */
-	public InputMethodDescriptions(List<InputMethodDescription> agentDescriptions) {
+	public Methods(List<InputMethodDescription> agentDescriptions) {
 		importDescriptions(agentDescriptions);
 	}
 
@@ -47,7 +48,7 @@ public class InputMethodDescriptions implements Concept {
 	 * @param configurations
 	 * @param problemTools
 	 */
-	public InputMethodDescriptions(InputAgentConfigurations configurations,
+	public Methods(InputAgentConfigurations configurations,
 			ProblemTools problemTools) {
 		
 		if (configurations == null ||
@@ -82,13 +83,13 @@ public class InputMethodDescriptions implements Concept {
 	 * Copy constructor
 	 * @param agentDescription
 	 */
-	public InputMethodDescriptions(InputMethodDescriptions agentDescription) {
+	public Methods(Methods agentDescription) {
 		if (agentDescription == null ||
 				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					InputMethodDescriptions.class.getSimpleName() + " is not valid");
+					Methods.class.getSimpleName() + " is not valid");
 		}
-		InputMethodDescriptions agentDescriptionClone = agentDescription.deepClone();
+		Methods agentDescriptionClone = agentDescription.deepClone();
 		this.inputAgentDescriptions = agentDescriptionClone.getInputAgentDescriptions();
 	}
 
@@ -168,7 +169,7 @@ public class InputMethodDescriptions implements Concept {
 		return this.inputAgentDescriptions.remove(index);
 	}
 
-	public boolean removeAll(InputMethodDescriptions inputAgentDscrs) {
+	public boolean removeAll(Methods inputAgentDscrs) {
 		return this.inputAgentDescriptions.removeAll(
 				inputAgentDscrs.getInputAgentDescriptions());
 	}
@@ -191,23 +192,9 @@ public class InputMethodDescriptions implements Concept {
 		return this.inputAgentDescriptions.size();
 	}
 	
-	/**
-	 * Exports random selected {@link InputMethodDescription}
-	 * @return
-	 */
-	public InputMethodDescription exportRandomInputAgentDescription() {
+	public Methods exportIntersection(Methods inputAgentDscrs) {
 		
-		if (inputAgentDescriptions.isEmpty()) {
-			return null;
-		}
-		Random ran = new Random();
-		int indexAD = ran.nextInt(inputAgentDescriptions.size());
-		return inputAgentDescriptions.get(indexAD);
-	}
-	
-	public InputMethodDescriptions exportIntersection(InputMethodDescriptions inputAgentDscrs) {
-		
-		InputMethodDescriptions intersection = new InputMethodDescriptions();
+		Methods intersection = new Methods();
 		
 		for (InputMethodDescription inputAgentDescriptionI : inputAgentDescriptions) {
 			if (inputAgentDscrs.containsAgentDescription(
@@ -225,9 +212,9 @@ public class InputMethodDescriptions implements Concept {
 	 * @param descriptions
 	 * @return
 	 */
-	public InputMethodDescriptions exportComplement(InputMethodDescriptions descriptions) {
+	public Methods exportComplement(Methods descriptions) {
 		
-		InputMethodDescriptions thisClone = this.deepClone();
+		Methods thisClone = this.deepClone();
 		thisClone.removeAll(descriptions);
 		
 		return thisClone;
@@ -245,6 +232,50 @@ public class InputMethodDescriptions implements Concept {
 		
 		return methodTypes;
 	}
+
+	
+	@Override
+	public Methods exportInputMethodDescriptions() {
+		return this;
+	}
+
+	@Override
+	public InputAgentConfigurations exportInputAgentConfigurations() {
+		
+		List<InputAgentConfiguration> configurations = new ArrayList<>();
+		
+		for (InputMethodDescription methodI : getInputAgentDescriptions()) {
+			InputAgentConfiguration confI =
+					methodI.getInputAgentConfiguration();
+			configurations.add(confI.deepClone());
+		}
+		
+		return new InputAgentConfigurations(configurations);
+	}
+	@Override
+	public ProblemTools exportProblemTools() {
+		
+		List<Class<?>> probTools = new ArrayList<>();
+		
+		for (InputMethodDescription methodI : getInputAgentDescriptions()) {
+			
+			Class<?> probToolI = methodI.exportProblemToolClass();
+			probTools.add(probToolI);
+		}
+		
+		return new ProblemTools(probTools);
+	}
+
+	@Override
+	public InputMethodDescription exportRandomSelectedAgentDescription() {
+		if (inputAgentDescriptions.isEmpty()) {
+			return null;
+		}
+		Random ran = new Random();
+		int indexAD = ran.nextInt(inputAgentDescriptions.size());
+		return inputAgentDescriptions.get(indexAD);
+	}
+	
 	
 	/**
 	 * Tests validity
@@ -267,7 +298,7 @@ public class InputMethodDescriptions implements Concept {
 	 * Returns Clone
 	 * @return
 	 */
-	public InputMethodDescriptions deepClone() {
+	public Methods deepClone() {
 		if (! valid(new TrashLogger())) {
 			return null;
 		}
@@ -276,18 +307,18 @@ public class InputMethodDescriptions implements Concept {
 			descriptionsClone.add(
 					agentDescriptionI.deepClone());
 		}
-		return new InputMethodDescriptions(descriptionsClone);
+		return new Methods(descriptionsClone);
 	}
 	
 	
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof InputMethodDescriptions)) {
+	    if (!(other instanceof Methods)) {
 	        return false;
 	    }
 	    
-	    InputMethodDescriptions inputAgentDescriptionsOuther = (InputMethodDescriptions)other;
+	    Methods inputAgentDescriptionsOuther = (Methods)other;
 	    
 	    if (inputAgentDescriptions.size() !=
 	    		inputAgentDescriptionsOuther.size()) {
@@ -322,5 +353,6 @@ public class InputMethodDescriptions implements Concept {
 		
 		return string;
 	}
+
 	
 }

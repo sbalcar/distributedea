@@ -2,10 +2,8 @@ package org.distributedea.agents.systemagents.centralmanager.structures.job;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,7 +29,6 @@ import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.Pl
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRandom;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
-import org.distributedea.agents.systemagents.initiator.XmlConfigurationProvider;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configuration.Argument;
@@ -41,6 +38,7 @@ import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.method.IMethods;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
@@ -87,12 +85,8 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Defines the methods
 	 */
-	private InputAgentConfigurations methods;
+	private IMethods methods;
 	
-	/**
-	 * Declares the set of available {@link ProblemTools} for computation
-	 */
-	private ProblemTools problemTools;
 	
 	/**
 	 * Turns on broadcast computed individuals to distributed agents
@@ -102,12 +96,12 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Declares the {@link IPlanner} class which will be used to direction of the evolution
 	 */
-	private List<IPlanner> planners;	// warning planner is wrapped in list because it is necessary for XML serialization
+	private IPlanner planner;
 
 	/**
 	 * Declares the {@link PlannerInfrastructure} class which will be used to direction of the evolution
 	 */
-	private List<IPlannerEndCondition> plannerEndCondition;	// warning plannerEndCondition is wrapped in list because it is necessary for XML serialization
+	private IPlannerEndCondition plannerEndCondition;
 
 	/**
 	 * Specify about type of {@link Pedigree}
@@ -134,11 +128,10 @@ public class Job implements Concept, Serializable {
 		this.numberOfRuns = job.getNumberOfRuns();
 		this.description = job.getDescription();
 		this.problem = job.getProblem();
-		this.datasetFileName = job.getProblemFileName();
+		this.datasetFileName = job.getDatasetFileName();
 		this.methods = job.getMethods().deepClone();
-		this.problemTools = job.getProblemTools().deepClone();
 		this.individualDistribution = job.isIndividualDistribution();
-		this.planners = job.planners;
+		this.planner = job.planner;
 		this.plannerEndCondition = job.plannerEndCondition;
 		this.pedigreeOfIndividualClassName = job.getPedigreeOfIndividualClassName();
 	}
@@ -173,7 +166,7 @@ public class Job implements Concept, Serializable {
 	}
 
 	@Deprecated
-	public String getProblemFileName() {
+	public String getDatasetFileName() {
 		File file = exportDatasetFile();
 		if (file == null) {
 			return null;
@@ -181,7 +174,7 @@ public class Job implements Concept, Serializable {
 		return file.getAbsolutePath();
 	}
 	@Deprecated
-	public void setProblemFileName(String fileName) {
+	public void setDatasetFileName(String fileName) {
 		try {
 			importDatasetFile(new File(fileName));
 		} catch(Exception e) {
@@ -207,40 +200,12 @@ public class Job implements Concept, Serializable {
 		this.datasetFileName = datasetFile.getAbsolutePath();
 	}
 
-	/**
-	 * Imports {@link File} with methods assignment
-	 * @throws IOException 
-	 */
-	public void importMethodsFile(File methodsFile, IAgentLogger logger) throws IOException {
-		if (methodsFile == null || ! methodsFile.isFile()) {
-			throw new IllegalArgumentException("Argument " +
-					File.class.getSimpleName() + " is not valid");
-		}
-		
-		// AgentConfigurations - Methods reading
-		InputAgentConfigurations agentConfigurations =
-				XmlConfigurationProvider.getConfiguration(methodsFile, logger);
-		
-		if (agentConfigurations == null || ! agentConfigurations.valid(logger)) {
-			throw new IOException("Can not read AgetConfigurations");
-		}
 
-		this.methods = agentConfigurations;
-
-	}
-
-	public InputAgentConfigurations getMethods() {
+	public IMethods getMethods() {
 		return this.methods;
 	}
-	public void setMethods(InputAgentConfigurations methods) {
+	public void setMethods(IMethods methods) {
 		this.methods = methods;
-	}
-	
-	public ProblemTools getProblemTools() {
-		return problemTools;
-	}
-	public void setProblemTools(ProblemTools problemTools) {
-		this.problemTools = problemTools;
 	}
 
 	public boolean isIndividualDistribution() {
@@ -251,42 +216,26 @@ public class Job implements Concept, Serializable {
 	}
 	
 	public IPlanner getPlanner() {
-		if (this.planners == null || this.planners.isEmpty()) {
-			return null;
-		}
-		return this.planners.get(0);
+		return this.planner;
 	}
 	public void setPlanner(IPlanner planner) {
 		if (planner == null) {
 			throw new IllegalArgumentException("Argument " +
 					IPlanner.class.getSimpleName() + " can not be null");
 		}
-		
-		if (this.planners == null) {
-			this.planners = new ArrayList<>();
-		}
-		this.planners.clear();
-		this.planners.add(planner);
+		this.planner = planner;	
 	}
 
 	public IPlannerEndCondition getPlannerEndCondition() {
-		if (this.plannerEndCondition == null || this.plannerEndCondition.isEmpty()) {
-			return null;
-		}
-		return this.plannerEndCondition.get(0);
+		return this.plannerEndCondition;
 	}
 	
-	public void setPlannerEndCondition(IPlannerEndCondition plannerType) {
-		if (plannerType == null) {
+	public void setPlannerEndCondition(IPlannerEndCondition plannerEndCondition) {
+		if (plannerEndCondition == null) {
 			throw new IllegalArgumentException("Argument " +
 					PlannerInfrastructure.class.getSimpleName() + " can not be null");
 		}
-		
-		if (this.plannerEndCondition == null) {
-			this.plannerEndCondition = new ArrayList<>();
-		}
-		this.plannerEndCondition.clear();
-		this.plannerEndCondition.add(plannerType);
+		this.plannerEndCondition = plannerEndCondition;
 	}
 	
 	@Deprecated	
@@ -348,10 +297,6 @@ public class Job implements Concept, Serializable {
 		if (getMethods() == null || ! getMethods().valid(logger)) {
 			return false;
 		}
-		if (problemTools == null ||
-				! problemTools.valid(problem.exportDatasetClass(), logger)) {
-			return false;
-		}
 		if (getPlannerEndCondition() == null) {
 			return false;
 		}
@@ -370,7 +315,9 @@ public class Job implements Concept, Serializable {
 	 * @return
 	 */
 	public JobRun exportJobRun(String batchID, int runNumber, IAgentLogger logger) {
-				
+		
+		ProblemTools problemTools = methods.exportProblemTools();
+		
 		// Problem reading and testing
 		List<Class<?>> problemToolClasses = problemTools.getProblemTools();
 		if (problemToolClasses == null || problemToolClasses.isEmpty()) {
@@ -394,10 +341,9 @@ public class Job implements Concept, Serializable {
 		
 		JobRun jobRun = new JobRun();
 		jobRun.setIndividualDistribution(individualDistribution);
-		jobRun.setAgentConfigurations(methods.deepClone());
+		jobRun.setMethods(methods.deepClone());
 		jobRun.setProblemDefinition(problem.deepClone());
 		jobRun.setDataset(dataset);
-		jobRun.setProblemTools(problemTools);
 		
 		jobRun.setJobID(new JobID(batchID, jobID, runNumber));
 		jobRun.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(logger));

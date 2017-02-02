@@ -14,8 +14,8 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
+import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
@@ -33,8 +33,8 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		InputMethodDescriptions agentDescriptions =
-				job.exportInputAgentDescriptions();
+		Methods agentDescriptions =
+				job.getMethods().exportInputMethodDescriptions();
 		
 		
 		InputPlan inputPlan = new InputPlan(iteration);
@@ -61,8 +61,8 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		InputMethodDescriptions agentDescriptions =
-				jobRun.exportInputAgentDescriptions();
+		Methods agentDescriptions =
+				jobRun.getMethods().exportInputMethodDescriptions();
 		
 		
 		InputPlan inputPlan = new InputPlan(iteration);
