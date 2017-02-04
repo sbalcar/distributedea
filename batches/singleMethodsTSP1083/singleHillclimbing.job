@@ -1,0 +1,33 @@
+<job>
+  <jobID>singleHillclimbing</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Single-HillClimbing</description>
+  <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
+  <datasetFileName>inputs/xit1083.tsp</datasetFileName>
+  <methods class="org.distributedea.ontology.method.Methods">
+    <inputAgentDescriptions>
+      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_HillClimbing</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+    </inputAgentDescriptions>
+  </methods>
+  <individualDistribution>true</individualDistribution>
+  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

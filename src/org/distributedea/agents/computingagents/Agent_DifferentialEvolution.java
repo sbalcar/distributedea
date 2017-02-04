@@ -58,19 +58,19 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		boolean isAble = false;
 		
 		
-		if (problem.getClass() == ProblemTSPGPS.class) {
+		if (problem instanceof ProblemTSPGPS) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem.getClass() == ProblemTSPPoint.class) {
+		} else if (problem instanceof ProblemTSPPoint) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem.getClass() == ProblemBinPacking.class) {
+		} else if (problem instanceof ProblemBinPacking) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem.getClass() == ProblemContinuousOpt.class) {
+		} else if (problem instanceof ProblemContinuousOpt) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			

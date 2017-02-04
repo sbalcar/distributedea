@@ -2,6 +2,7 @@ package org.distributedea.agents.systemagents.centralmanager.structures.job;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.List;
@@ -171,7 +172,7 @@ public class Job implements Concept, Serializable {
 		if (file == null) {
 			return null;
 		}
-		return file.getAbsolutePath();
+		return file.getPath();
 	}
 	@Deprecated
 	public void setDatasetFileName(String fileName) {
@@ -192,12 +193,13 @@ public class Job implements Concept, Serializable {
 	}
 	/**
 	 * Imports {@link File} with {@link Dataset} assignment
+	 * @throws IOException 
 	 */
-	public void importDatasetFile(File datasetFile) {
+	public void importDatasetFile(File datasetFile) throws IOException {
 		if (datasetFile == null || ! datasetFile.isFile()) {
 			throw new IllegalArgumentException();
 		}
-		this.datasetFileName = datasetFile.getAbsolutePath();
+		this.datasetFileName = datasetFile.getPath();
 	}
 
 

@@ -1,0 +1,39 @@
+<job>
+  <jobID>singleTabusearch</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Single-TabuSearch</description>
+  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <isMaximizationProblem>false</isMaximizationProblem>
+  </problem>
+  <datasetFileName>inputs/f2.co</datasetFileName>
+  <methods class="org.distributedea.ontology.method.Methods">
+    <inputAgentDescriptions>
+      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_TabuSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>tabuModelSize</name>
+                  <value>50</value>
+                </argument>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+    </inputAgentDescriptions>
+  </methods>
+  <individualDistribution>false</individualDistribution>
+  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

@@ -57,19 +57,19 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		
 		boolean isAble = false;
 		
-		if (problem.getClass() == ProblemTSPGPS.class) {
+		if (problem instanceof ProblemTSPGPS) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}	
-		} else if (problem.getClass() == DatasetTSPPoint.class) {
+		} else if (problem instanceof DatasetTSPPoint) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem.getClass() == DatasetBinPacking.class) {
+		} else if (problem instanceof DatasetBinPacking) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}			
-		} else if (problem.getClass() == DatasetContinuousOpt.class) {
+		} else if (problem instanceof DatasetContinuousOpt) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			

@@ -1,0 +1,26 @@
+<job>
+  <jobID>homoBruteforce</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Homo-BruteForce</description>
+  <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
+  <datasetFileName>inputs/xit1083.tsp</datasetFileName>
+  <methods class="org.distributedea.ontology.method.Methods">
+    <inputAgentDescriptions>
+      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_BruteForce</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+    </inputAgentDescriptions>
+  </methods>
+  <individualDistribution>true</individualDistribution>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

@@ -14,6 +14,7 @@ import org.distributedea.agents.computingagents.computingagent.localsaver.LocalS
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetBinPacking;
@@ -49,9 +50,15 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 
 	private static final long serialVersionUID = 1L;
 
+	private String POP_SIZE = "popSize";
 	private int popSize = 10;
+	
+	private String MUTATION_RATE = "mutationRate";
 	private double mutationRate = 0.9;
-	private double crossRate = 0.5;
+	
+	private String CROSS_RATE = "crossRate";
+	private double crossRate = 0.1;
+	
 	
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
@@ -68,19 +75,19 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		
 		boolean isAble = false;
 		
-		if (problem.getClass() == DatasetTSPGPS.class) {
+		if (problem instanceof DatasetTSPGPS) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem.getClass() == DatasetTSPPoint.class) {
+		} else if (problem instanceof DatasetTSPPoint) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem.getClass() == DatasetBinPacking.class) {
+		} else if (problem instanceof DatasetBinPacking) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem.getClass() == DatasetContinuousOpt.class) {
+		} else if (problem instanceof DatasetContinuousOpt) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			
@@ -101,7 +108,19 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		return description;
 	}
 	
-	protected void processArguments(Arguments args) throws Exception {
+	protected void processArguments(Arguments arguments) throws Exception {
+		
+		// set population size
+		Argument popSizeArg = arguments.exportArgument(POP_SIZE);
+		this.popSize = popSizeArg.exportValueAsInteger();
+		
+		// set cross rate
+		Argument crossRateArg = arguments.exportArgument(CROSS_RATE);
+		this.crossRate = crossRateArg.exportValueAsDouble();
+		
+		// set mutation rate
+		Argument mutationRateArg = arguments.exportArgument(MUTATION_RATE);
+		this.mutationRate = mutationRateArg.exportValueAsDouble();
 	}
 	
 	@Override
