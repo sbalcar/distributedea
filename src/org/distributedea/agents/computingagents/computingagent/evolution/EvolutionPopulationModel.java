@@ -1,6 +1,6 @@
 package org.distributedea.agents.computingagents.computingagent.evolution;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.ISelector;
@@ -11,6 +11,7 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
+import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
  * Structure for representation model of individuals for evolution algorithm
@@ -19,63 +20,55 @@ import org.distributedea.problems.IProblemTool;
  */
 public class EvolutionPopulationModel {
 
-	private IndividualsEvaluated individuals;
+	private IndividualEvaluated[] individuals;
 
-	/**
-	 * Constructor
-	 * @param individual
-	 */
-	public EvolutionPopulationModel(IndividualEvaluated individual) {
-
-		if (individual == null) {
-			throw new IllegalArgumentException("Argument " +
-					IndividualEvaluated.class.getSimpleName() + " is not valid");
-		}
-
-		this.individuals = new IndividualsEvaluated();
-		this.individuals.add(individual);
-	}
 	/**
 	 * Constructor
 	 * @param individuals
 	 */
-	public EvolutionPopulationModel(List<IndividualEvaluated> individuals) {
+	public EvolutionPopulationModel(IndividualEvaluated[] individuals) {
 		
 		if (individuals == null) {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");
 		}
 		
-		this.individuals = new IndividualsEvaluated(individuals);
+		this.individuals = individuals;
 	}
 	
 	/**
 	 * Returns {@link IndividualsEvaluated} in model
 	 * @return
 	 */
-	public IndividualsEvaluated getIndividuals() {
+	public IndividualEvaluated[] getIndividuals() {
 		return individuals;
+	}
+	
+	public void addIndividual(IndividualEvaluated indivToAdd) {
+		IndividualEvaluated[] individualsNew =
+				new IndividualEvaluated[1];
+		individualsNew[0] = indivToAdd;
+		
+		addIndividuals(individualsNew);
 	}
 	
 	/**
 	 * Adds {@link IndividualEvaluated} to model
-	 * @param individual
+	 * @param indivsToAdd
 	 */
-	public void addIndividual(IndividualEvaluated individual) {
-		if (this.individuals == null) {
-			this.individuals = new IndividualsEvaluated();
+	public void addIndividuals(IndividualEvaluated[] indivsToAdd) {
+		
+		IndividualEvaluated[] individualsNew =
+				new IndividualEvaluated[individuals.length + indivsToAdd.length];
+		
+		for (int i = 0; i < individuals.length; i++) {
+			individualsNew[i] = individuals[i];
 		}
-		individuals.add(individual);
-	}
-
-	public void addIndividuals(IndividualsEvaluated indivToAdd) {
-		if (this.individuals == null) {
-			this.individuals = new IndividualsEvaluated();
+		for (int i = 0; i < indivsToAdd.length; i++) {
+			individualsNew[i + individuals.length] = indivsToAdd[i];
 		}
-		for (IndividualEvaluated indivEvalI :
-			indivToAdd.getIndividualsEvaluated()) {
-			individuals.add(indivEvalI);
-		}
+		
+		this.individuals = individualsNew;
 	}
 	
 	/**
@@ -85,7 +78,8 @@ public class EvolutionPopulationModel {
 	 */
 	public IndividualEvaluated getBestIndividual(IProblem problem) {
 		
-		return individuals.exportTheBestIndividual(problem);
+		Arrays.sort(individuals, new CmpIndividualEvaluated(problem));
+		return individuals[0];
 	}
 	
 	/**
@@ -101,18 +95,19 @@ public class EvolutionPopulationModel {
 			IProblemTool tool, IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
-		List<IndividualEvaluated> improvedIndividuals = new ArrayList<>();
+		IndividualEvaluated[] improvedIndividuals =
+				new IndividualEvaluated[individuals.length];
 		
-		for (IndividualEvaluated individualEvalI :
-				individuals.getIndividualsEvaluated()) {
+		for (int i = 0; i < individuals.length; i++) {
 			
+			IndividualEvaluated individualEvalI = individuals[i];
 			IndividualEvaluated newIndividualEvalI = individualEvalI;
 			
 			if (Math.random() < probOfMutation) {
 				newIndividualEvalI = tool.improveIndividualEval(
 						individualEvalI, problem, dataset, pedigreeParams, logger);
 			}
-			improvedIndividuals.add(newIndividualEvalI);
+			improvedIndividuals[i] = newIndividualEvalI;
 		}
 		
 		return new EvolutionPopulationModel(improvedIndividuals);
@@ -132,9 +127,10 @@ public class EvolutionPopulationModel {
 			IProblemTool tool, IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
-		List<IndividualEvaluated> individualsCopy = new ArrayList<>();
+		IndividualEvaluated[] individualsCopy =
+				new IndividualEvaluated[individuals.length];
 		
-		for (int i = 0; i < individuals.size(); i++) {
+		for (int i = 0; i < individuals.length; i++) {
 			
 			IndividualEvaluated indivEval1 = selector.select(individuals, problem);
 			IndividualEvaluated indivEval2 = selector.select(individuals, problem);
@@ -142,7 +138,7 @@ public class EvolutionPopulationModel {
 			IndividualEvaluated[] indivEvalNew = tool.createNewIndividual(
 					indivEval1, indivEval2, problem, dataset, pedigreeParams, logger);
 			
-			individualsCopy.add(indivEvalNew[0]);
+			individualsCopy[i] = indivEvalNew[0];
 		}
 		
 		return new EvolutionPopulationModel(individualsCopy);
@@ -156,13 +152,26 @@ public class EvolutionPopulationModel {
 	 */
 	public void correctedPopulationModel(IProblem problem, int popSize) {
 		
-		individuals.removeDuplicates();
+		Arrays.sort(individuals, new CmpIndividualEvaluated(problem));
 		
-		List<IndividualEvaluated> individualsCopy =
-				individuals.exportSortedFromBestToWorst(problem);
-
-		this.individuals = new IndividualsEvaluated(
-				individualsCopy.subList(0, popSize));
+		int j = 0;
+		IndividualEvaluated[] individualsCorr = new IndividualEvaluated[popSize];
+		
+		IndividualEvaluated indivPrev = null;
+		for (IndividualEvaluated indivI : individuals) {
+			
+			if (! indivI.equals(indivPrev)) {
+				
+				individualsCorr[j++] = indivI;
+				if (j == individualsCorr.length) {
+					break;
+				}
+			}
+			
+			indivPrev = indivI;
+		}
+		
+		individuals = individualsCorr;
 	}
 	
 }

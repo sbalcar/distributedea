@@ -40,20 +40,20 @@ public class BatchHomoMethodsTSP1083 implements IInputBatch {
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 
-		Job jobW0 = InputTSP.test05();
-		jobW0.setJobID("homoHillclimbing");
-		jobW0.setDescription("Homo-HillClimbing");
-		jobW0.setMethods(methods0);
+		Job job0 = InputTSP.test05();
+		job0.setJobID("homoHillclimbing");
+		job0.setDescription("Homo-HillClimbing");
+		job0.setMethods(methods0);
 
 		
 		Methods methods1 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments())),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
-		Job jobW1 = InputTSP.test05();
-		jobW1.setJobID("homoRandomsearch");
-		jobW1.setDescription("Homo-RandomSearch");
-		jobW1.setMethods(methods1);
+		Job job1 = InputTSP.test05();
+		job1.setJobID("homoRandomsearch");
+		job1.setDescription("Homo-RandomSearch");
+		job1.setMethods(methods1);
 
 		
 		Methods methods2 = new Methods(new InputAgentConfigurations(
@@ -70,48 +70,48 @@ public class BatchHomoMethodsTSP1083 implements IInputBatch {
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments())),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 
-		Job jobW3 = InputTSP.test05();
-		jobW3.setJobID("homoBruteforce");
-		jobW3.setDescription("Homo-BruteForce");
-		jobW3.setMethods(methods3);
+		Job job3 = InputTSP.test05();
+		job3.setJobID("homoBruteforce");
+		job3.setDescription("Homo-BruteForce");
+		job3.setMethods(methods3);
 		
 		
 		Methods methods4 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
-		Job jobW4 = InputTSP.test05();
-		jobW4.setJobID("homoTabusearch");
-		jobW4.setDescription("Homo-TabuSearch");
-		jobW4.setMethods(methods4);
+		Job job4 = InputTSP.test05();
+		job4.setJobID("homoTabusearch");
+		job4.setDescription("Homo-TabuSearch");
+		job4.setMethods(methods4);
 		
 		
 		Methods methods5 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002")) )),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
-		Job jobW5 = InputTSP.test05();
-		jobW5.setJobID("homoSimulatedannealing");
-		jobW5.setDescription("Homo-SimulatedAnnealing");
-		jobW5.setMethods(methods5);
+		Job job5 = InputTSP.test05();
+		job5.setJobID("homoSimulatedannealing");
+		job5.setDescription("Homo-SimulatedAnnealing");
+		job5.setMethods(methods5);
 
 		
 		Methods methods6 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 
-		Job jobW6 = InputTSP.test05();
-		jobW6.setJobID("homoDifferentialevolution");
-		jobW6.setDescription("Homo-DifferentialEvolution");
-		jobW6.setMethods(methods6);
+		Job job6 = InputTSP.test05();
+		job6.setJobID("homoDifferentialevolution");
+		job6.setDescription("Homo-DifferentialEvolution");
+		job6.setMethods(methods6);
 		
-		batch.addJobWrapper(jobW0);
-		batch.addJobWrapper(jobW1);
+		batch.addJobWrapper(job0);
+		batch.addJobWrapper(job1);
 		batch.addJobWrapper(jobW2);
-		batch.addJobWrapper(jobW3);
-		batch.addJobWrapper(jobW4);
-		batch.addJobWrapper(jobW5);
-		batch.addJobWrapper(jobW6);
+		batch.addJobWrapper(job3);
+		batch.addJobWrapper(job4);
+		batch.addJobWrapper(job5);
+		batch.addJobWrapper(job6);
 		
 		
 		PostProcessing psMat0 = new PostProcBoxplot();

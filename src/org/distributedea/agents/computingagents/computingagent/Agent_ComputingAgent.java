@@ -47,7 +47,6 @@ import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
-import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
@@ -584,11 +583,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	
 
-	protected void distributeIndividualToNeighours(IndividualsEvaluated individualsEval,
+	protected void distributeIndividualToNeighours(IndividualEvaluated[] individualsEval,
 			IProblem problem, JobID jobID) {
 		
 		individualsToDistribution.addIndividual(
-				individualsEval.getIndividualsEvaluated(), problem);
+				individualsEval, problem);
 	}
 	
 	protected void distributeIndividualToNeighours(List<IndividualEvaluated> individualsEval,

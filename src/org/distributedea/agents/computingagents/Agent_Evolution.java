@@ -1,7 +1,5 @@
 package org.distributedea.agents.computingagents;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.computingagent.CompAgentState;
@@ -155,14 +153,12 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 		
 		
 		// generates Individuals
-		List<IndividualEvaluated> individuals = new ArrayList<>();
-		while (individuals.size() < popSize) {
+		IndividualEvaluated[] individuals = new IndividualEvaluated[popSize];
+		for (int i = 0; i < popSize; i++) {
 			IndividualEvaluated individualEvalI = problemTool.
 					generateIndividualEval(problemDefinition, dataset, pedigreeParams, getCALogger());
 			
-			if (! individuals.contains(individualEvalI)) {
-				individuals.add(individualEvalI);
-			}
+			individuals[i] = individualEvalI;
 		}
 		
 		EvolutionPopulationModel populationI = new EvolutionPopulationModel(individuals);

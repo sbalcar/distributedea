@@ -29,8 +29,19 @@ public class IndividualToDistributionModel {
 			return;
 		}
 		
-		individualsNoSorted.add(individuals.get(0));
+		addIndividual(individuals.get(0), problem);
 	}
+
+	public void addIndividual(
+			IndividualEvaluated[] individuals, IProblem problem) {
+		
+		if (individuals == null || individuals.length == 0) {
+			return;
+		}
+		
+		addIndividual(individuals[0], problem);
+	}
+
 	
 	public void addIndividual(IndividualEvaluated individualEval,
 			IProblem problem) {
@@ -53,7 +64,7 @@ public class IndividualToDistributionModel {
 				
 	}
 	
-	public IndividualEvaluated getIndividual(IProblem problem) {
+	public synchronized IndividualEvaluated getIndividual(IProblem problem) {
 		if (individualsNoSorted.isEmpty()) {
 			return null;
 		}
