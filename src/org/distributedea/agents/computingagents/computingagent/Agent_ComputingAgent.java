@@ -84,7 +84,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	private BestIndividualModel bestIndividualModel = new BestIndividualModel();
 	
 	// the set of received Individuals from distribution
-	protected ReceivedIndividualsModel receivedIndividuals = new ReceivedIndividualsModel();
+	protected ReceivedIndividualsModel receivedIndividuals = new ReceivedIndividualsModel(DEBUG);
 	
 	// the set of Individuals to distribution
 	protected IndividualToDistributionModel individualsToDistribution = new IndividualToDistributionModel();
@@ -280,7 +280,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 					
 					if (concept instanceof IndividualWrapper) {
 
-						processIndividual(msgInform, action);
+						processIndividualWrp(msgInform, action);
 						
 					}
 
@@ -334,14 +334,19 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 
-	protected void processIndividual(ACLMessage request, Action action) {
+	protected void processIndividualWrp(ACLMessage request, Action action) {
 		
 		IndividualWrapper individualWrapper = (IndividualWrapper)action.getAction();
 		
-		if (individualWrapper == null || ! individualWrapper.valid(getLogger())) {
+		if (individualWrapper == null) {
 			getLogger().log(Level.INFO, "Received invalid " + Individual.class.getSimpleName());
 			return;
 		}
+		if (DEBUG && (! individualWrapper.valid(getLogger()))) {
+			getLogger().log(Level.INFO, "Received invalid " + Individual.class.getSimpleName());
+			return;
+		}
+
 		
 		if (state != CompAgentState.COMPUTING) {
 			return;

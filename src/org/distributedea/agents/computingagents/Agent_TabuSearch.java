@@ -149,8 +149,8 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 							recievedIndividualW, individualEvalI, problem);
 
 			if (individualDistribution &&
-					(! tabu.contains(recievedIndividualW)) &&
-					isReceivedBetter) {
+					isReceivedBetter &&
+					(! tabu.contains(recievedIndividualW))) {
 				
 				// save and log received Individual
 				processRecievedIndividual(individualEvalI, recievedIndividualW,

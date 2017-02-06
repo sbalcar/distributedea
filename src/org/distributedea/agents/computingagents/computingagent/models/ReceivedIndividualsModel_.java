@@ -1,33 +1,21 @@
 package org.distributedea.agents.computingagents.computingagent.models;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
+import org.distributedea.structures.comparators.CmpIndividualWrapper;
 
-/**
- * Model for a set of received {@link IndividualWrapper} from distribution
- * @author stepan
- *
- */
-public class ReceivedIndividualsModel {
+public class ReceivedIndividualsModel_ {
 
-	private boolean DEBUG;
-	
 	private int MAX_NUMBER_OF_INDIVIDUAL = 10;
-	
-	private int indivCount = 0;
-	private IndividualWrapper[] individuals =
-			new IndividualWrapper[MAX_NUMBER_OF_INDIVIDUAL];
 
-	/**
-	 * Constructor
-	 * @param DEBUG
-	 */
-	public ReceivedIndividualsModel(boolean DEBUG) {
-		this.DEBUG = DEBUG;
-	}
+	private List<IndividualWrapper> receivedIndividuals = new ArrayList<>();
 	
 	/**
 	 * Add Received {@link IndividualWrapper} to Model
@@ -41,18 +29,18 @@ public class ReceivedIndividualsModel {
 			IProblem problem, Dataset dataset,
 			IProblemTool problemTool, IAgentLogger logger) {
 		
-		if (individualW == null) {
-			throw new IllegalStateException("Recieved Individual is not valid");
-		}
-		if (DEBUG && (! individualW.validation(problem, dataset, problemTool, logger))) {
+		if (individualW == null || (! individualW.validation(problem, dataset, problemTool, logger))) {
 			throw new IllegalStateException("Recieved Individual is not valid");
 		}
 		
-		if (indivCount == individuals.length) {
-			indivCount = 0;
+		// resize model to the max-defined size
+		while (receivedIndividuals.size() > MAX_NUMBER_OF_INDIVIDUAL) {
+			receivedIndividuals.remove(receivedIndividuals.size() -1);
 		}
-		individuals[indivCount++] = individualW;
 		
+		receivedIndividuals.add(individualW);
+		
+		Collections.sort(receivedIndividuals, new CmpIndividualWrapper(problem));
 	}
 	
 	/**
@@ -62,12 +50,12 @@ public class ReceivedIndividualsModel {
 	 */
 	public IndividualWrapper removeTheBestIndividual(IProblem problem) {
 		
-		if (indivCount == 0) {
+		if (receivedIndividuals.isEmpty()) {
 			return null;
 		}
 		
 		// list is sorted from the best to the worst
-		return individuals[0];
+		return receivedIndividuals.get(0);
 	}
 
 }

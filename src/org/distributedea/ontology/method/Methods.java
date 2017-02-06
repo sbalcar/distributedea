@@ -106,6 +106,22 @@ public class Methods implements IMethods, Concept {
 	}
 
 	/**
+	 * Adds {@link InputMethodDescription} multiple times
+	 * @param agentDescriptions
+	 * @param numberOfInstances
+	 */
+	public void addAgentDescriptions(InputMethodDescription agentDescriptions, int numberOfInstances) {
+		if (numberOfInstances < 0) {
+			throw new IllegalArgumentException("Argument " +
+					Integer.class.getSimpleName() + " is not valid");			
+		}
+		
+		for (int i = 0; i < numberOfInstances; i++) {
+			addAgentDescriptions(agentDescriptions);
+		}
+	}
+	
+	/**
 	 * Adds {@link InputMethodDescription}
 	 * @param agentDescriptions
 	 */

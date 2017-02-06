@@ -2,6 +2,8 @@ package org.distributedea.input.batches.tsp.cities1083;
 
 import java.io.IOException;
 
+import org.distributedea.agents.computingagents.Agent_HillClimbing;
+import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomGuaranteeChance;
@@ -13,6 +15,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheG
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfGoodMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfImprovement;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
@@ -25,6 +28,12 @@ import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
+import org.distributedea.ontology.configuration.Argument;
+import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.method.Methods;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 
 public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 
@@ -99,7 +108,22 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		job12.setJobID("theGreatestQGoodMaterialImprovementFitness");
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
-				
+		
+		
+		Methods algorithms = new Methods();
+		algorithms.addAgentDescriptions(new InputMethodDescription(
+				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
+				ProblemToolGPSEuc2D2opt.class), 15);
+		algorithms.addAgentDescriptions(new InputMethodDescription(
+				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
+				ProblemToolGPSEuc2D2opt.class), 1);
+
+		Job job13 = InputTSP.test06();
+		job13.setJobID("onlyInitHillClimbingAndTabuSearch");
+		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
+		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
+
+		
 		batch.addJobWrapper(job0);
 		batch.addJobWrapper(job1);
 		batch.addJobWrapper(job2);
@@ -113,6 +137,7 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		batch.addJobWrapper(job10);
 		batch.addJobWrapper(job11);
 		batch.addJobWrapper(job12);
+		batch.addJobWrapper(job13);
 		
 		PostProcessing psMat0 = new PostProcBoxplot();
 		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun();

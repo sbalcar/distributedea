@@ -27,7 +27,6 @@ public class InputAgentConfigurations implements Concept {
 	private List<InputAgentConfiguration> agentConfigurations;
 
 	
-	@Deprecated
 	public InputAgentConfigurations() { // only for Jade
 		this.agentConfigurations = new ArrayList<>();
 	}
@@ -100,7 +99,7 @@ public class InputAgentConfigurations implements Concept {
 		}
 		this.agentConfigurations = agentConfigurations;
 	}
-
+	
 	public void addAgentConfigurations(InputAgentConfiguration agentConfiguration) {
 		
 		if (agentConfiguration == null ||

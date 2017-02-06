@@ -11,38 +11,46 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.H
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputPlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
 import org.distributedea.ontology.method.Methods;
+import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
-
-public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
-
+public class PlannerInitialisationConcretePlan implements IPlanner {
+	
+	private Methods methods;
+	
+	public PlannerInitialisationConcretePlan(Methods methods) {
+		if (methods == null || ! methods.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					MethodDescriptions.class.getSimpleName() + " is not valid");
+		}
+		this.methods = methods;
+	}
+	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
 			Iteration iteration, JobRun jobRun, IAgentLogger logger)
 			throws Exception {
-		
+
 		NodeInfosWrapper availableNodes =
 				ManagerAgentService.getAvailableNodes(centralManager, logger);
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
-
-		Methods agentDescriptions =
-				jobRun.getMethods().exportInputMethodDescriptions();
 		
 		
 		InputPlan inputPlan = new InputPlan(iteration);
 		
-		for (int i = 0; i < agentDescriptions.size(); i++) {
+		for (int i = 0; i < methods.size(); i++) {
 
 			InputMethodDescription iAgentDescriptionI =
-					agentDescriptions.get(i);
+					methods.get(i);
 
 			AID aidManagerI = managersAID.get(i % managersAID.size());
 			
@@ -53,34 +61,6 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 				jobRun, inputPlan, logger);
 	}
 
-	public Plan agentInitialisationOnlyCreateAgents(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws Exception {
-		
-		NodeInfosWrapper availableNodes =
-				ManagerAgentService.getAvailableNodes(centralManager, logger);
-		List<AID> managersAID =
-				availableNodes.exportManagerAIDOfEachEmptyCore();
-
-		Methods agentDescriptions =
-				jobRun.getMethods().exportInputMethodDescriptions();
-		
-		
-		InputPlan inputPlan = new InputPlan(iteration);
-		
-		for (int i = 0; i < agentDescriptions.size(); i++) {
-
-			InputMethodDescription iAgentDescriptionI =
-					agentDescriptions.get(i);
-
-			AID aidManagerI = managersAID.get(i % managersAID.size());
-			
-			inputPlan.add(aidManagerI, iAgentDescriptionI);
-		}
-		
-		return PlannerTool.createAgents(centralManager,
-				inputPlan, jobRun.getProblemDefinition(), logger);
-	}
-	
 	@Override
 	public Pair<Plan, RePlan> replan(Iteration iteration, History history) {
 		
@@ -88,7 +68,6 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 		RePlan rePlan = new RePlan(iteration);
 		return new Pair<>(plan, rePlan);
 	}
-
 	
 	@Override
 	public void exit(Agent_CentralManager centralManager, IAgentLogger logger) {
