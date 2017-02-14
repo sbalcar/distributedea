@@ -37,7 +37,7 @@ public class ToolGenerateIndividualTSPGPS {
 		while (! numbers.isEmpty()) {
 		
 			int rndIndex = rn.nextInt(numbers.size());
-			int valueI = numbers.remove(rndIndex);
+			Integer valueI = numbers.remove(rndIndex);
 			permutation.add(valueI);
 		}
 		

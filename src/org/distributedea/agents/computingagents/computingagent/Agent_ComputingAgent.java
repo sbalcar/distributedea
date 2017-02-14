@@ -22,6 +22,7 @@ import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.computingagents.computingagent.models.BestIndividualModel;
 import org.distributedea.agents.computingagents.computingagent.models.HelpersModel;
@@ -69,7 +70,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
 
-	private final static boolean DEBUG = false;
+	private final static boolean DEBUG = true;
 	
 	protected CompAgentState state = CompAgentState.INITIALIZATION;
 	
@@ -356,7 +357,15 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		Dataset dataset = computingThread.getDataset();
 		IProblemTool problemTool = computingThread.getProblemTool();
 		
+		// add individual to received model
 		receivedIndividuals.addIndividual(individualWrapper, problem, dataset, problemTool, getLogger());
+		
+		// update best helpers model
+		helpers.processReceivedIndiv(individualWrapper,
+				bestIndividualModel.getTheBestIndividualWrp(), problem);
+		
+		// update the best Individual model
+		bestIndividualModel.update(individualWrapper, problem, getLogger());
 	}
 	
 	

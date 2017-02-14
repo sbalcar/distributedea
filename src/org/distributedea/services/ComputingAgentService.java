@@ -77,8 +77,7 @@ public class ComputingAgentService {
 				Agent_ComputingAgent.class.getName());
 		
 
-		List<StatisticOfHelpmates> statisticOfHelpmates = 
-			new ArrayList<>();
+		List<StatisticOfHelpmates> statisticOfHelpmates = new ArrayList<>();
 		
 		// going through all computing agents
 		for (AID aidComputingAgentI : aidComputingAgents) {

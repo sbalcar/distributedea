@@ -23,7 +23,7 @@ public class IndividualWrapper implements Concept {
 
 	private JobID jobID;
 	
-	private MethodDescription agentDescription;
+	private MethodDescription methodDescription;
 	
 	private IndividualEvaluated individualEvaluated;
 
@@ -39,7 +39,7 @@ public class IndividualWrapper implements Concept {
 	public IndividualWrapper(JobID jobID, MethodDescription agentDescription,
 			IndividualEvaluated individualEvaluated) {
 		setJobID(jobID);
-		setAgentDescription(agentDescription);
+		setMethodDescription(agentDescription);
 		setIndividualEvaluated(individualEvaluated);
 	}
 	
@@ -53,7 +53,7 @@ public class IndividualWrapper implements Concept {
 		}
 			
 		jobID = individualWrp.getJobID().deepClone();
-		agentDescription = individualWrp.getAgentDescription().deepClone();
+		methodDescription = individualWrp.getMethodDescription().deepClone();
 		individualEvaluated = individualWrp.getIndividualEvaluated().deepClone();
 	}
 	
@@ -65,19 +65,19 @@ public class IndividualWrapper implements Concept {
 		this.jobID = jobID;
 	}
 
-	public MethodDescription getAgentDescription() {
-		return agentDescription;
+	public MethodDescription getMethodDescription() {
+		return methodDescription;
 	}
 	@Deprecated
-	public void setAgentDescription(MethodDescription agentDescription) {
-		this.agentDescription = agentDescription;
+	public void setMethodDescription(MethodDescription methodDescription) {
+		this.methodDescription = methodDescription;
 	}
 	
 	public AgentConfiguration exportAgentConfiguration() {
-		return agentDescription.getAgentConfiguration();
+		return methodDescription.getAgentConfiguration();
 	}
 	public MethodDescription exportAgentDescriptionClone() {
-		return agentDescription.deepClone();
+		return methodDescription.deepClone();
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class IndividualWrapper implements Concept {
 	 * @return
 	 */
 	public Class<?> exportProblemToolClass() {
-		return agentDescription.exportProblemToolClass();
+		return methodDescription.exportProblemToolClass();
 	}
 	
 	public IndividualEvaluated getIndividualEvaluated() {
@@ -116,7 +116,7 @@ public class IndividualWrapper implements Concept {
 		if (jobID == null || ! jobID.valid(logger)) {
 			return false;
 		}
-		if (agentDescription == null || ! agentDescription.valid(logger)) {
+		if (methodDescription == null || ! methodDescription.valid(logger)) {
 			return false;
 		}
 		if (individualEvaluated == null || ! individualEvaluated.valid(logger)) {

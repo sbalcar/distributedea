@@ -7,6 +7,7 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.binpacking.permutation.operators.OperatorSimpleShift;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorCrossPermutation;
+import org.distributedea.problems.tsp.gps.permutation.operators.OperatorDifferential;
 
 
 public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPermutation {
@@ -50,8 +51,17 @@ public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPerm
 	protected Individual[] createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
-		
-		return createNewIndividual(individual1, individual2, problem, dataset, logger);
+
+		IndividualPermutation individualPerm1 = (IndividualPermutation) individual1;
+		IndividualPermutation individualPerm2 = (IndividualPermutation) individual2;
+		IndividualPermutation individualPerm3 = (IndividualPermutation) individual3;
+
+		Individual newIndiv = OperatorDifferential.create(individualPerm1, individualPerm2, individualPerm3);
+
+		Individual [] result = new Individual[1];
+		result[0] = newIndiv;
+
+		return result;
 	}
 
 }

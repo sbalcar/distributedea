@@ -57,7 +57,7 @@ public class ManagerAgentService {
 			throw new IllegalArgumentException("Argument " +
 					IAgentLogger.class.getSimpleName() + " can't be null");
 		}
-		
+
 		AID [] aidManagerAgents = agentSender.searchDF(
 				Agent_ManagerAgent.class.getName());
 		
@@ -250,12 +250,6 @@ public class ManagerAgentService {
 			// kill agent
 			ManagerAgentService.sendKillAgent(agentSender, compAID, logger);
 		}
-		
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e) {
-			logger.logThrowable("", e);
-		}
 	}
 	
 	/**
@@ -434,6 +428,8 @@ public class ManagerAgentService {
 			logger.logThrowable("OntologyException by sending " + KillContainer.class.getSimpleName(), e);
 		}
 
+		agentSender.send(msgKillContainer);
+/*		
 		ACLMessage msgReturned = null;
 		try {
 			msgReturned = FIPAService
@@ -450,7 +446,7 @@ public class ManagerAgentService {
 				return true;
 			}
 		}
-		
+*/		
 		return false;
 	}
 	

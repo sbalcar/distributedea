@@ -12,11 +12,11 @@ public class ConsoleLogger {
 	}
 
 	public static void log(Level logLevel, String message) {
-		System.out.println("Log: " + "LogLevel: " + logLevel.intValue() + " " + message);
+		System.out.println(logLevel + " " + message);
 	}
 
 	public static void log(Level logLevel, String source, String message) {
-		System.out.println("Log: " + "LogLevel: " + logLevel.intValue() + " " + message);
+		System.out.println(logLevel.intValue() + " " + message);
 		System.out.println(message);
 	}
 	

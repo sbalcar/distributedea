@@ -112,7 +112,7 @@
   <individualDistribution>true</individualDistribution>
   <planner class="plannerTheGreatestQuantityOfImprovement"/>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>10</countOfReplaning>
+    <countOfReplaning>50</countOfReplaning>
   </plannerEndCondition>
   <pedigreeOfIndividualClassName>org.distributedea.ontology.pedigree.PedigreeTreeFull</pedigreeOfIndividualClassName>
 </job>

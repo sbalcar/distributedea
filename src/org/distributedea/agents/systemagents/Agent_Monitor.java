@@ -182,7 +182,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 			return;
 		}
 		
-		MethodDescription descr = individualWrp.getAgentDescription();
+		MethodDescription descr = individualWrp.getMethodDescription();
 		AgentConfiguration conf = descr.getAgentConfiguration();
 		getLogger().log(Level.INFO, "Individual from : " + conf.exportAgentname());
 		

@@ -145,25 +145,5 @@ public class InputTSP {
 		
 		return job;
 	}
-	
-	public static Job test06() throws IOException {
-
-		InputAgentConfigurations algorithms = test01().getMethods()
-				.exportInputAgentConfigurations().deepClone();
-
-		Job job = new Job();
-		job.setNumberOfRuns(3);
-		job.setIndividualDistribution(true);
-		job.setProblem(new ProblemTSPGPS());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("xit1083.tsp")));
-		job.setMethods(new MethodsTwoSets(
-				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
-		
-		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
-		job.setPlannerEndCondition(new PlannerTimeRestriction(10));
-		
-		return job;
-	}
 
 }

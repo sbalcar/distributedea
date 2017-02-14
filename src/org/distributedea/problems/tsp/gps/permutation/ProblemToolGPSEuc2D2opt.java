@@ -8,6 +8,7 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.tsp.gps.permutation.operators.Operator2Opt;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorCrossPermutation;
+import org.distributedea.problems.tsp.gps.permutation.operators.OperatorDifferential;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolGenerateFirstIndividualTSPGPS;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolNextPermutationTSPGPS;
 
@@ -70,13 +71,18 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 			Individual individual2, Individual individual3, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 
-//		return createNewIndividual(individual1, individual2, problem, dataset, logger);		
-		int todo;
-		Individual[] result = new Individual[2];
-		result[0] = Operator2Opt.create((IndividualPermutation) individual1);
-		result[1] = Operator2Opt.create((IndividualPermutation) individual2);
+		IndividualPermutation individualPerm1 = (IndividualPermutation) individual1;
+		IndividualPermutation individualPerm2 = (IndividualPermutation) individual2;
+		IndividualPermutation individualPerm3 = (IndividualPermutation) individual3;
 		
+		Individual newIndiv = OperatorDifferential.create(individualPerm1, individualPerm2, individualPerm3);
+				
+		
+		Individual[] result = new Individual[1];
+		result[0] = newIndiv;
+
 		return result;
+
 	}
 
 }

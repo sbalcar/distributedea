@@ -112,6 +112,6 @@
   <individualDistribution>true</individualDistribution>
   <planner class="plannerRandomImpr"/>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>10</countOfReplaning>
+    <countOfReplaning>50</countOfReplaning>
   </plannerEndCondition>
 </job>

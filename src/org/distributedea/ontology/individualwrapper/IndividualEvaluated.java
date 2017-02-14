@@ -107,12 +107,14 @@ public class IndividualEvaluated implements Concept {
 	    
 	    IndividualEvaluated ieOuther = (IndividualEvaluated)other;
 	    
-	    boolean areIndividualsEqual =
-	    		getIndividual().equals(ieOuther.getIndividual());
-
 	    boolean areFitnessEqual =
 	    		getFitness() == ieOuther.getFitness();
-	    
+	    if (! areFitnessEqual) {
+	    	return false;
+	    }
+	    	
+	    boolean areIndividualsEqual =
+	    		getIndividual().equals(ieOuther.getIndividual());	    
 	    return areIndividualsEqual && areFitnessEqual;
 	}
 	

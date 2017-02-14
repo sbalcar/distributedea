@@ -17,10 +17,6 @@ import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.Argument;
 import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
-import org.distributedea.ontology.dataset.DatasetBinPacking;
-import org.distributedea.ontology.dataset.DatasetContinuousOpt;
-import org.distributedea.ontology.dataset.DatasetTSPGPS;
-import org.distributedea.ontology.dataset.DatasetTSPPoint;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
@@ -29,6 +25,10 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
@@ -75,19 +75,19 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		
 		boolean isAble = false;
 		
-		if (problem instanceof DatasetTSPGPS) {
+		if (problem instanceof ProblemTSPGPS) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem instanceof DatasetTSPPoint) {
+		} else if (problem instanceof ProblemTSPPoint) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem instanceof DatasetBinPacking) {
+		} else if (problem instanceof ProblemBinPacking) {
 			if (representation == IndividualPermutation.class) {
 				isAble = true;
 			}
-		} else if (problem instanceof DatasetContinuousOpt) {
+		} else if (problem instanceof ProblemContinuousOpt) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
 			}			

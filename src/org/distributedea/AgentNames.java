@@ -9,7 +9,7 @@ public enum AgentNames {
 
 	INITIATOR("Initiator"), CENTRAL_LOGER("CentralLogger"),
 	MANAGER_AGENT("ManagerAgent"), DATA_MANAGER("DataManager"),
-	MONITOR("Monitor");
+	MONITOR("Monitor"), CENTRAL_MANAGER("CentralManager");
 
 	private final String name;
 

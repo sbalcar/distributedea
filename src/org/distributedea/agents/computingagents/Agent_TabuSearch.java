@@ -3,6 +3,7 @@ package org.distributedea.agents.computingagents;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
 
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
@@ -125,7 +126,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 
 
 			if (isNeighborlBetter && (! tabu.contains(neighbor)) ) {
-//				getCALogger().log(Level.INFO, "JUMP " + individualEvalNew.getFitness());
+				getCALogger().log(Level.INFO, "JUMP " + neighbor.getFitness());
 				individualEvalI = neighbor;
 			}
 			

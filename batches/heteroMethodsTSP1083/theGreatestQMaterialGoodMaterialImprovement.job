@@ -114,6 +114,6 @@
     <doMethodSwitch>true</doMethodSwitch>
   </planner>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>10</countOfReplaning>
+    <countOfReplaning>50</countOfReplaning>
   </plannerEndCondition>
 </job>

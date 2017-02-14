@@ -99,7 +99,7 @@ public class LocalSaver {
 			long generationNumber, IndividualEvaluated currentIndiv) {
 		
 		MethodDescription description =
-				receivedIndiv.getAgentDescription();
+				receivedIndiv.getMethodDescription();
 		AgentName agentName = description.getAgentConfiguration().getAgentName();
 		
 		double receivedFitness = receivedIndiv.getIndividualEvaluated().getFitness();

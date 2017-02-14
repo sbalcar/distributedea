@@ -35,7 +35,7 @@ public class ProblemBinPacking extends AProblem {
 			throw new IllegalArgumentException("Argument " +
 					ProblemBinPacking.class.getSimpleName() + " is not valid");			
 		}
-		setSizeOfBin(sizeOfBin);
+		setSizeOfBin(problem.getSizeOfBin());
 	}
 	
 	public int getSizeOfBin() {

@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ManagementOntology;
@@ -105,7 +106,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 					
 					} else if (concept instanceof KillContainer) {
 						// KillContainer request action
-						return respondToKillContainer(request, action);
+						respondToKillContainer(request, action);
 					}
 
 				} catch (OntologyException e) {
@@ -281,8 +282,9 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			Action action) {
 
 		getLogger().log(Level.INFO, "Killing container");
+		ConsoleLogger.log(Level.INFO, "Killing container");
+
 		
-	
 		final boolean isAgentOnMainControler =  isAgentOnMainControler(this, getLogger());
 		
 		Runnable myRunnable = new Runnable(){
@@ -291,35 +293,37 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 
 		    	int seconds = 0;
 		    	if (isAgentOnMainControler) {
-		    		seconds = 15000;
+		    		seconds = 30000;
 		    	} else {
-		    		seconds = 5000;
+		    		seconds = 1000;
 		    	}
 		    	 
 		        try {
 					Thread.sleep(seconds);
-				} catch (InterruptedException e1) {
-					getLogger().logThrowable("Error by Thread sleep", e1);
+				} catch (InterruptedException e) {
+					getLogger().logThrowable("Error by Thread sleep", e);
 				}
 		        
 				try {
 					getContainerController().kill();
 				} catch (StaleProxyException e) {
-					getLogger().logThrowable("StaleProxyException by killing container", e);
+					//getLogger().logThrowable("StaleProxyException by killing container", e);
 				}
 
 		     }
 		   };
 
-		Thread thread = new Thread(myRunnable);
 		
+		Thread thread = new Thread(myRunnable);		
 		thread.start();
-		   
+
+		
+		deregistrDF();
+		doSuspend();
 		
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 		reply.setContent("OK");
-		
 		return reply;
 	}
 

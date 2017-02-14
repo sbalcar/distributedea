@@ -27,7 +27,7 @@ public class IndividualPermutation extends Individual {
 	 * @param permutation
 	 */
 	public IndividualPermutation(List<Integer> permutation) {
-		this.permutation = permutation;
+		setPermutation(permutation);
 	}
 
 	/**
@@ -36,7 +36,8 @@ public class IndividualPermutation extends Individual {
 	 */
 	public IndividualPermutation(IndividualPermutation individual) {
 		if (individual == null || ! individual.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
 		}
 		List<Integer> permutationNew = new ArrayList<>();
 		for (Integer valueI : individual.getPermutation()) {
@@ -46,12 +47,16 @@ public class IndividualPermutation extends Individual {
 	}
 	
 	public List<Integer> getPermutation() {
-		
+		return permutation;
+	}
+
+	@Deprecated
+	public void setPermutation(List<Integer> permutation) {
 		if (permutation == null) {
-			return null;
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
 		}
-		
-		List<Integer> permutationExport = new ArrayList<Integer>();
+		List<Integer> permutationCopy = new ArrayList<Integer>();
 
 		for (Object itemI : permutation) {
 			
@@ -66,18 +71,16 @@ public class IndividualPermutation extends Individual {
 				value = intV;
 			}
 			
-			permutationExport.add(value);
+			permutationCopy.add(value);
 		}
 
-		return permutationExport;
-	}
-
-	@Deprecated
-	public void setPermutation(List<Integer> permutation) {
-		this.permutation = permutation;
+		this.permutation = permutationCopy;
 	}
 	
 	public int sizeOfPermutation() {
+		if (permutation == null) {
+			return 0;
+		}
 		return permutation.size();
 	}
 	
@@ -112,10 +115,10 @@ public class IndividualPermutation extends Individual {
 	    for (int permutaionIndex = 0;
 	    		permutaionIndex < getPermutation().size(); permutaionIndex++) {
 	    	
-	    	Object value1 = permutation.get(permutaionIndex);
-	    	Object value2 = that.getPermutation().get(permutaionIndex);
+	    	Integer value1 = thisPermutation.get(permutaionIndex);
+	    	Integer value2 = thatPermutation.get(permutaionIndex);
 	    	
-	    	if (value1 != value2) {
+	    	if (value1.intValue() != value2.intValue()) {
 	    		return false;
 	    	}
 

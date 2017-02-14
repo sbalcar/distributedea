@@ -114,6 +114,6 @@
     <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
   </planner>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>10</countOfReplaning>
+    <countOfReplaning>50</countOfReplaning>
   </plannerEndCondition>
 </job>

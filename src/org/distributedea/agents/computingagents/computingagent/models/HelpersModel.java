@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.distributedea.agents.FitnessTool;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Structure represents model of computation-helpers
@@ -17,6 +20,22 @@ public class HelpersModel {
 
 	private Map<MethodDescription, Integer> helpers = new HashMap<>();
 
+	/**
+	 * Updates model
+	 * @param receivedIndivWrp
+	 * @param theBestIndiv
+	 * @param problem
+	 */
+	public void processReceivedIndiv(IndividualWrapper receivedIndivWrp,
+			IndividualWrapper theBestIndiv, IProblem problem) {
+		
+		if (FitnessTool.isFistIndividualWBetterThanSecond(
+				receivedIndivWrp, theBestIndiv, problem)) {
+			
+			addHelper(receivedIndivWrp.getMethodDescription());
+		}
+	}
+	
 	/**
 	 * Adds helper to model
 	 * @param description

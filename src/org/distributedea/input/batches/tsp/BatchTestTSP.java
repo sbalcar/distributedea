@@ -30,19 +30,19 @@ public class BatchTestTSP implements IInputBatch {
 		batch.setBatchID("testTSP");
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : TSP ");
 
-		Job jobW2 = InputTSP.test06();
+		Job jobW2 = InputTSP.test05();
 		jobW2.setJobID("followupHelpers");
 		jobW2.setDescription("Follow up Helpers");
 		jobW2.setPlanner(new PlannerTheBestHelper());
 		jobW2.importPedigreeOfIndividualClassName(PedigreeTree.class);
 		
-		Job jobW4 = InputTSP.test06();
+		Job jobW4 = InputTSP.test05();
 		jobW4.setJobID("random");
 		jobW4.setDescription("Random Kill & Random Run");
 		jobW4.setPlanner(new PlannerRandom());
 		jobW4.importPedigreeOfIndividualClassName(PedigreeCounter.class);
 		
-		Job jobW6 = InputTSP.test06();
+		Job jobW6 = InputTSP.test05();
 		jobW6.setJobID("theGreatestQuantityOfImprovement");
 		jobW6.setDescription("The Greatest Quantity Of Improvement Statistic");
 		jobW6.setPlanner(new PlannerTheGreatestQuantityOfImprovement());

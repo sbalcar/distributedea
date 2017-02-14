@@ -152,7 +152,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			//pick random point from population			
 			DifferentialQuaternion quaternion = model.getQuaternion();
 			
-			IndividualEvaluated individualEvalCandidateI = quaternion.individualCandidateI;
+			IndividualEvaluated individualCandidateI = quaternion.individualCandidateI;
 			
 			IndividualEvaluated individual1 = quaternion.individual1;
 			IndividualEvaluated individual2 = quaternion.individual2;
@@ -162,17 +162,19 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			IndividualEvaluated[] individualsNew = problemTool.
 					createNewIndividualEval(individual1, individual2,
 					individual3, problem, dataset, pedigreeParams, getCALogger());
-			IndividualEvaluated individualEvalNew = individualsNew[0];
+			IndividualEvaluated individualNew = individualsNew[0];
 
+			IndividualEvaluated betterFromCandidateAndNewIndiv = individualCandidateI;
 			if (FitnessTool.isFirstIndividualEBetterThanSecond(
-							individualEvalNew, individualEvalCandidateI, problem)) {
+							individualNew, individualCandidateI, problem)) {
 				// switching Individuals
-				model.replaceIndividual(individualEvalCandidateI, individualEvalNew);
+				model.replaceIndividual(individualCandidateI, individualNew);
+				betterFromCandidateAndNewIndiv = individualNew;
 			}
 			
 			
 			// save, log and distribute computed Individual
-			processComputedIndividual(individualEvalNew, generationNumberI,
+			processComputedIndividual(individualNew, generationNumberI,
 					problem, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
@@ -184,15 +186,13 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalCandidateI, problem) &&
-					FitnessTool.isFistIndividualWBetterThanSecond(
-							recievedIndividualW, individualEvalNew, problem)) {
+							recievedIndividualW, betterFromCandidateAndNewIndiv, problem)) {
 				
 				// save and log received Individual
-				processRecievedIndividual(individualEvalNew, recievedIndividualW,
-						generationNumberI, problem, localSaver);
+				processRecievedIndividual(betterFromCandidateAndNewIndiv,
+						recievedIndividualW, generationNumberI, problem, localSaver);
 
-				model.replaceIndividual(individualEvalCandidateI,
+				model.replaceIndividual(betterFromCandidateAndNewIndiv,
 						recievedIndividualW.getIndividualEvaluated());				
 			}
 
@@ -263,6 +263,23 @@ class DifferentialModel {
 			IndividualEvaluated indivToAdd) {
 		
 		int index = indexOf(indivToDel);
+/*		
+		if (index == -1) {
+			System.out.println(indivToDel);
+			System.out.println("----------------");
+			
+			for (int i = 0; i < population.length; i++) {
+				IndividualEvaluated a = population[i];
+				if (a.getFitness() == indivToDel.getFitness()) {
+					int todo = 5;
+					todo++;
+					a.getIndividual().equals(indivToDel.getIndividual());
+					System.out.println(a);
+				}
+			}
+
+		}
+*/		
 		population[index] = indivToAdd;
 	}
 	

@@ -162,7 +162,7 @@ public class MonitorStatisticModel {
 	public void addIndividualWrp(IndividualWrapper individualWrp) {
 		
 		MethodDescription agentDescInput =
-				individualWrp.getAgentDescription();
+				individualWrp.getMethodDescription();
 		IndividualEvaluated individualEvalInput =
 				individualWrp.getIndividualEvaluated();
 		
