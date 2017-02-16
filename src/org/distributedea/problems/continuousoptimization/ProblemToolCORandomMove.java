@@ -68,7 +68,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 	}
 
 	@Override
-	public Individual[] createNewIndividual(Individual individual1,
+	public Individual createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
 			IProblem problem, Dataset dataset,
 			IAgentLogger logger) throws Exception {
@@ -77,11 +77,8 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 		IndividualPoint individualP2 = (IndividualPoint) individual2;
 		IndividualPoint individualP3 = (IndividualPoint) individual3;
 		
-		Individual[] individual = new Individual[1];
-		individual[0] = OperatorDifferential.create(individualP1, individualP2,
+		return OperatorDifferential.create(individualP1, individualP2,
 				individualP3, 1, dataset, logger);
-		
-		return individual;
 	}
 
 }

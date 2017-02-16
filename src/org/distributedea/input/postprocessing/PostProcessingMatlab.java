@@ -8,10 +8,12 @@ import java.io.PrintWriter;
 
 public abstract class PostProcessingMatlab extends PostProcessing {
 
-	protected String NL = "\n";
+	protected static String NL = "\n";
 	
 	
 	public void saveAndProcessMatlab(String matlabCode, String OUTPUT_PATH, String OUTPUT_FILE) {
+		
+		String NL = "\n";
 		
 		try(  PrintWriter out = new PrintWriter(OUTPUT_PATH + File.separator + OUTPUT_FILE + ".m")  ){
 		    out.println(matlabCode);

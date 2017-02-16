@@ -145,7 +145,7 @@ public class Statistic implements Concept {
 		MethodStatistic method0 = this.methodStatistics.get(0);
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
-		IProblem problem = agentDescription.getProblemDefinition();
+		IProblem problem = agentDescription.getProblem();
 		
 		Collections.sort(methodStatistics,
 				new ComparatorQualityOfBestIndividual(problem));

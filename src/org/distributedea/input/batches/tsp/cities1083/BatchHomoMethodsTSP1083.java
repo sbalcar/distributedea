@@ -113,9 +113,12 @@ public class BatchHomoMethodsTSP1083 implements IInputBatch {
 		batch.addJobWrapper(job5);
 		batch.addJobWrapper(job6);
 		
+		String YLABEL0 = "hodnota fitness v kilometrech";
+		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);
 		
-		PostProcessing psMat0 = new PostProcBoxplot();
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun();
+		String XLABEL1 = "čas v sekundách";
+		String YLABEL1 = "hodnota fitness v kilometrech";
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);

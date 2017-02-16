@@ -52,8 +52,13 @@ public class BatchTestTSP implements IInputBatch {
 		batch.addJobWrapper(jobW4);
 		batch.addJobWrapper(jobW6);
 		
-		PostProcessing post1 = new PostProcInvestigationOfMedianJobRun();
-		PostProcessing post2 = new PostProcBoxplot();
+		String XLABEL1 = "čas v sekundách";
+		String YLABEL1 = "hodnota fitness v kilometrech";
+		PostProcessing post1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
+		
+		String YLABEL2 = "hodnota fitness v kilometrech";
+		PostProcessing post2 = new PostProcBoxplot(YLABEL2);
+		
 		PostProcessing post3 = new PostProcInvestigationOfMethods();
 		PostProcessing post4 = new PostProcAllottedTimeOfMethodTypes();
 		PostProcessing post5 = new PostProcAllottedTimeOfAgents();

@@ -39,7 +39,7 @@ public class BatchSingleMethodsCOf2 implements IInputBatch {
 		
 		Job jobI = InputContOpt.test04();
 		jobI.setJobID("0");
-		jobI.setDescription("");
+		jobI.setDescription("clone");
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
@@ -112,8 +112,12 @@ public class BatchSingleMethodsCOf2 implements IInputBatch {
 		job6.setMethods(methods6);
 		
 
-		PostProcessing ps0 = new PostProcBoxplot();
-		PostProcessing ps1 = new PostProcInvestigationOfMedianJobRun();
+		String YLABEL0 = "fitness jako funkční hodnota vstupní funkce";
+		PostProcessing ps0 = new PostProcBoxplot(YLABEL0);
+		
+		String XLABEL1 = "čas v sekundách";
+		String YLABEL1 = "fitness jako funkční hodnota vstupní funkce";
+		PostProcessing ps1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
 
 		PostProcessing psLat0 = new PostProcJobRunsResultTable();
 		

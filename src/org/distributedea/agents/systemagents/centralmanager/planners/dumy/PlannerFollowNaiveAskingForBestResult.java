@@ -75,9 +75,9 @@ public class PlannerFollowNaiveAskingForBestResult implements IPlanner {
 				ComputingAgentService.sendAccessesResult_(centralManager, logger);
 		
 		IndividualWrapper theBestIndivWrp = resultOfComputing
-				.exportBestResultOfComputing(jobRun.getProblemDefinition());
+				.exportBestResultOfComputing(jobRun.getProblem());
 		IndividualWrapper theWorstIndivWrp = resultOfComputing
-				.exportWorstResultOfComputing(jobRun.getProblemDefinition());
+				.exportWorstResultOfComputing(jobRun.getProblem());
 
 		printLog(theBestIndivWrp, theWorstIndivWrp, logger);
 		

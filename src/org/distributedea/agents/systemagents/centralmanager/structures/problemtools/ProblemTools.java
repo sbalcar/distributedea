@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
 
@@ -21,6 +22,7 @@ public class ProblemTools {
 	private List<Class<?>> problemTools;
 
 	
+	@Deprecated
 	public ProblemTools() {
 		this.problemTools = new ArrayList<>();
 	}
@@ -51,16 +53,17 @@ public class ProblemTools {
 	
 	/**
 	 * Copy Constructor
-	 * @param problemToolsStruct
+	 * @param problemTools
 	 */
-	public ProblemTools(ProblemTools problemToolsStruct) {
+	public ProblemTools(ProblemTools problemTools) {
 		
-		if (problemToolsStruct == null) {
-			return;
+		if (problemTools == null || ! problemTools.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemTools.class.getSimpleName() + " is not valid");
 		}
 		
-		List<Class<?>> problemTools = problemToolsStruct.getProblemTools();
-		for (Class<?> problemTollI : problemTools) {
+		List<Class<?>> problemToolsList = problemTools.getProblemTools();
+		for (Class<?> problemTollI : problemToolsList) {
 			addProblemTool(problemTollI);
 		}
 	}
@@ -79,6 +82,11 @@ public class ProblemTools {
 	 */
 	public void addProblemTool(Class<?> problemTool) {
 		
+		if (problemTool == null) {
+			throw new IllegalArgumentException("Argument " +
+					Class.class.getSimpleName() + " is not valid");
+		}
+		
 		if (problemTools == null) {
 			problemTools = new ArrayList<>();
 		}
@@ -89,7 +97,7 @@ public class ProblemTools {
 	 * Export random selected {@link IProblemTool} class
 	 * @return
 	 */
-	public Class<?> exportRandomSelectedProblemTool() {
+	public IProblemTool exportRandomSelectedProblemTool(IAgentLogger logger) {
 		
 		if (problemTools == null || problemTools.isEmpty()) {
 			return null;
@@ -98,21 +106,17 @@ public class ProblemTools {
 		//random select problem tool
 		Random ran = new Random();
 		int indexPT = ran.nextInt(problemTools.size());
-		return problemTools.get(indexPT);
-	}
-	
-	public int exportNumberOfProblemTools() {
-		if (problemTools == null) {
-			return 0;
-		}
-		return problemTools.size();
+		Class<?> problemTollClass =  problemTools.get(indexPT);
+		
+		return exportProblemTool(problemTollClass, logger);
 	}
 	
 	public static IProblemTool exportProblemTool(Class<?> problemToolClass,
 			IAgentLogger logger) {
 		
 		if (problemToolClass == null || logger == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					Class.class.getSimpleName() + " is not valid");
 		}
 		return ProblemTool.createInstanceOfProblemTool(problemToolClass,
 				logger);
@@ -124,7 +128,11 @@ public class ProblemTools {
 	 * @return
 	 */
 	public boolean valid(IAgentLogger logger) {
-				
+		
+		if (problemTools == null) {
+			return false;
+		}
+		
 		for (Class<?> problemToolClassI : problemTools) {
 			
 			IProblemTool problemToolI = ProblemTool.

@@ -39,7 +39,7 @@ public class MethodDescription implements Concept {
 	/**
 	 * Problem to solve definition
 	 */
-	private IProblem problemDefinition;
+	private IProblem problem;
 	
 	/**
 	 * Problem Tool to use for solving Problem 
@@ -65,7 +65,7 @@ public class MethodDescription implements Concept {
 		}
 	
 		setAgentConfiguration(agentConfiguration);
-		setProblemDefinition(problem);
+		setProblem(problem);
 		importProblemToolClass(problemToolClass);
 	}
 
@@ -83,12 +83,12 @@ public class MethodDescription implements Concept {
 		AgentConfiguration agentConfigurationClone =
 				methodDescription.getAgentConfiguration().deepClone();
 		IProblem problemClone =
-				methodDescription.getProblemDefinition().deepClone();
+				methodDescription.getProblem().deepClone();
 		Class<?> problemToolClassClone =
 				methodDescription.exportProblemToolClass();
 		
 		setAgentConfiguration(agentConfigurationClone);
-		setProblemDefinition(problemClone);
+		setProblem(problemClone);
 		importProblemToolClass(problemToolClassClone);
 
 	}
@@ -104,16 +104,16 @@ public class MethodDescription implements Concept {
 		this.agentConfiguration = agentConfiguration;
 	}
 	
-	public IProblem getProblemDefinition() {
-		return problemDefinition;
+	public IProblem getProblem() {
+		return problem;
 	}
 	@Deprecated
-	public void setProblemDefinition(IProblem problem) {
+	public void setProblem(IProblem problem) {
 		if (problem == null || ! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					IProblem.class.getSimpleName() + " is not vlid");
 		}
-		this.problemDefinition = problem;
+		this.problem = problem;
 	}
 	
 	public String getProblemToolClass() {

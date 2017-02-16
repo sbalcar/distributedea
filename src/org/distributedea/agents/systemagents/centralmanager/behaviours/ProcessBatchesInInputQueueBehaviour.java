@@ -42,7 +42,7 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 			throw new IllegalArgumentException("Argument " +
 					IAgentLogger.class.getSimpleName() + " is not valid");
 		}
-		if (batchesDir == null) {
+		if (batchesDir == null || ! batchesDir.isDirectory()) {
 			throw new IllegalArgumentException("Argument " +
 					File.class.getSimpleName() + " is not valid");
 		}

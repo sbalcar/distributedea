@@ -139,7 +139,7 @@ public class MethodStatisticModel {
 			IndividualEvaluated individual1, IndividualEvaluated individual2) {
 		
 		return FitnessTool.isFistIndividualEBetterThanSecond(individual1,
-						individual2, agentDescription.getProblemDefinition());
+						individual2, agentDescription.getProblem());
 	}
 	
 	public MethodStatistic exportMethodStatistic() {

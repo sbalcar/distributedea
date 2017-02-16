@@ -120,7 +120,7 @@ public interface IProblemTool {
 			throws Exception;
 	
 
-	public IndividualEvaluated[] createNewIndividualEval(IndividualEvaluated individual1, 
+	public IndividualEvaluated createNewIndividualEval(IndividualEvaluated individual1, 
 			IndividualEvaluated individual2, IndividualEvaluated individual3,
 			IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;	

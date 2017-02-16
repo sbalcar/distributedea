@@ -168,7 +168,7 @@ public class MonitorStatisticModel {
 		
 		// check initialization of problem Class
 		if (problemToSolve == null) {
-			problemToSolve = agentDescInput.getProblemDefinition();
+			problemToSolve = agentDescInput.getProblem();
 		}
 		
 		// adding Individual to concrete method model

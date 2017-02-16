@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 import javax.xml.bind.JAXBException;
 
@@ -122,7 +122,6 @@ public class Job implements Concept, Serializable {
 	 */
 	public Job(Job job) {
 		if (job == null || ! job.valid(new TrashLogger())) {
-			job.valid(new TrashLogger());
 			throw new IllegalArgumentException("Argument " + Job.class.getSimpleName() + " is not valid");
 		}
 		this.jobID = job.getJobID();
@@ -141,6 +140,10 @@ public class Job implements Concept, Serializable {
 		return jobID;
 	}
 	public void setJobID(String jobID) {
+		if (jobID == null || jobID.isEmpty()) {
+			throw new IllegalArgumentException("Argument " +
+					String.class.getSimpleName() + " is not valid");
+		}
 		this.jobID = jobID;
 	}
 	
@@ -155,15 +158,23 @@ public class Job implements Concept, Serializable {
 		return description;
 	}
 	public void setDescription(String description) {
+		if (description == null || description.isEmpty()) {
+			throw new IllegalArgumentException("Argument " +
+					String.class.getSimpleName() + " is not valid");
+		}
 		this.description = description;
 	}
 	
 	public IProblem getProblem() {
 		return problem;
 	}
-	public void setProblem(
-			IProblem problemToSolveDefinition) {
-		this.problem = problemToSolveDefinition;
+	public void setProblem(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IProblem.class.getSimpleName() + " is not valid");
+		}
+
+		this.problem = problem;
 	}
 
 	@Deprecated
@@ -197,7 +208,8 @@ public class Job implements Concept, Serializable {
 	 */
 	public void importDatasetFile(File datasetFile) throws IOException {
 		if (datasetFile == null || ! datasetFile.isFile()) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					File.class.getSimpleName() + " is not valid");
 		}
 		this.datasetFileName = datasetFile.getPath();
 	}
@@ -207,6 +219,10 @@ public class Job implements Concept, Serializable {
 		return this.methods;
 	}
 	public void setMethods(IMethods methods) {
+		if (methods == null || ! methods.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IMethods.class.getSimpleName() + " is not valid");
+		}
 		this.methods = methods;
 	}
 
@@ -281,16 +297,16 @@ public class Job implements Concept, Serializable {
 	 */
 	public boolean valid(IAgentLogger logger) {
 		
-		if (jobID == null) {
+		if (getJobID() == null || getJobID().isEmpty()) {
 			return false;
 		}
-		if (numberOfRuns <= 0) {
+		if (getNumberOfRuns() <= 0) {
 			return false;
 		}
-		if (description == null) {
+		if (getDescription() == null) {
 			return false;
 		}
-		if (problem == null || ! problem.valid(logger)) {
+		if (getProblem() == null || ! getProblem().valid(logger)) {
 			return false;
 		}
 		if (exportDatasetFile() == null) {
@@ -318,33 +334,22 @@ public class Job implements Concept, Serializable {
 	 */
 	public JobRun exportJobRun(String batchID, int runNumber, IAgentLogger logger) {
 		
+		if (! valid(logger)) {
+			logger.log(Level.WARNING, "Can not export " + JobRun.class.getSimpleName());
+			return null;
+		}
+		
 		ProblemTools problemTools = methods.exportProblemTools();
-		
-		// Problem reading and testing
-		List<Class<?>> problemToolClasses = problemTools.getProblemTools();
-		if (problemToolClasses == null || problemToolClasses.isEmpty()) {
-			return null;
-		}
-		
-		Class<?> problemToolClass0 = problemToolClasses.get(0);
-		if (problemToolClass0 == null) {
-			return null;
-		}
-		
-		IProblemTool problemTool = ProblemTools.exportProblemTool(problemToolClass0, logger);
-		if (problemTool == null) {
-			return null;
-		}
+		IProblemTool problemTool = problemTools.exportRandomSelectedProblemTool(logger);
 		
 		File fileOfProblem = exportDatasetFile();
 		Dataset dataset = problemTool.readDataset(fileOfProblem, logger);
 		
 		
-		
 		JobRun jobRun = new JobRun();
 		jobRun.setIndividualDistribution(individualDistribution);
 		jobRun.setMethods(methods.deepClone());
-		jobRun.setProblemDefinition(problem.deepClone());
+		jobRun.setProblem(problem.deepClone());
 		jobRun.setDataset(dataset);
 		
 		jobRun.setJobID(new JobID(batchID, jobID, runNumber));
@@ -432,7 +437,7 @@ public class Job implements Concept, Serializable {
 		
 		xstream.alias("plannerAgentInfo", PlannerAgentInfo.class);
 		xstream.alias("plannerRandom", PlannerRandom.class);
-		xstream.alias("plannerRandomImpr", PlannerRandomGuaranteeChance.class);
+		xstream.alias("plannerRandomGuaranteeChance", PlannerRandomGuaranteeChance.class);
 		xstream.alias("plannerTheBestAverageOfFitness", PlannerTheBestAverageOfFitness.class);
 		xstream.alias("plannerTheBestHelper", PlannerTheBestHelper.class);
 		xstream.alias("plannerTheBestResult", PlannerTheBestResult.class);

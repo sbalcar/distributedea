@@ -6,13 +6,10 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.AgentConfigurations;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.method.IMethods;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.ontology.problem.AProblem;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
@@ -45,7 +42,7 @@ public class JobRun implements Concept {
 	/**
 	 * Inform about type of Problem to solve
 	 */
-	private IProblem problemToSolveDefinition;
+	private IProblem problem;
 	
 	/**
 	 * Dataset
@@ -109,7 +106,6 @@ public class JobRun implements Concept {
 	public IMethods getMethods() {
 		return methods;
 	}
-
 	public void setMethods(IMethods methods) {
 		if (methods == null || ! methods.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -133,17 +129,16 @@ public class JobRun implements Concept {
 	 * Returns {@link IProblem} to solve
 	 * @return
 	 */
-	public IProblem getProblemDefinition() {
-		return problemToSolveDefinition;
+	public IProblem getProblem() {
+		return problem;
 	}
-	public void setProblemDefinition(
-			IProblem problemToSolveDefinition) {
-		if (problemToSolveDefinition == null ||
-				! problemToSolveDefinition.valid(new TrashLogger())) {
+	public void setProblem(IProblem problem) {
+		if (problem == null ||
+				! problem.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					IProblem.class.getSimpleName() + " is not valid");
 		}
-		this.problemToSolveDefinition = problemToSolveDefinition;
+		this.problem = problem;
 	}
 
 	/**
@@ -196,19 +191,6 @@ public class JobRun implements Concept {
 		this.pedigreeOfIndividualClassName = pedigreeOfIndividual.getName();
 	}
 	
-	
-	/**
-	 * Exports the {@link Methods}
-	 * @return
-	 */
-/*
-	public InputMethodDescriptions exportInputAgentDescriptions() {
-		return new InputMethodDescriptions(
-				getAgentConfigurations(),getProblemTools());
-	}
-*/
-	int todo;
-	
 	/**
 	 * Exports the {@link JobRun} as {@link ProblemStruct} which
 	 * contains ProblemTool in argument
@@ -219,7 +201,7 @@ public class JobRun implements Concept {
 		
 		JobID jobIDClone = getJobID().deepClone();
 		
-		AProblem problemClone = getProblemDefinition().deepClone();
+		IProblem problemClone = getProblem().deepClone();
 		Dataset datasetClone = getDataset().deepClone();
 		
 		ProblemStruct problemStruct = new ProblemStruct();
@@ -234,34 +216,6 @@ public class JobRun implements Concept {
 	}
 	
 	/**
-	 * Export random selected {@link MethodDescription}
-	 * @return
-	 */
-/*
-	public InputMethodDescription exportRandomSelectedAgentDescription() {
-		
-		if (agentConfigurations == null ||
-				agentConfigurations.exportNumberOfAgentConfigurations() == 0 ||
-				problemTools == null ||
-				problemTools.exportNumberOfProblemTools() == 0) {
-			return null;
-		}
-		
-		InputAgentConfiguration agentToCreate =
-				agentConfigurations.exportRandomAgentConfiguration();
-		Class<?> problemToolClass =
-				problemTools.exportRandomSelectedProblemTool();
-		
-		if (agentToCreate == null || problemToolClass == null) {
-			return null;
-		}
-		
-		InputMethodDescription methodToCreate =
-				new InputMethodDescription(agentToCreate, problemToolClass);
-		return methodToCreate;
-	}
-*/	
-	/**
 	 * Tests validation of {@link JobRun}
 	 * @param logger
 	 * @return
@@ -274,7 +228,7 @@ public class JobRun implements Concept {
 		}
 		
 		if (methods == null || ! methods.valid(logger)) {
-			logger.log(Level.WARNING, AgentConfigurations.class.getSimpleName() + " are not valid");
+			logger.log(Level.WARNING, IMethods.class.getSimpleName() + " are not valid");
 			return false;
 		}
 		

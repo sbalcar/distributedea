@@ -89,7 +89,7 @@ public final class PlannerInfrastructure {
 		}
 		
 		JobID jobID = jobRun.getJobID();
-		IProblem problem = jobRun.getProblemDefinition();
+		IProblem problem = jobRun.getProblem();
 		
 		
 		Plan plan = planner.agentInitialisation(centralManager,

@@ -37,7 +37,7 @@ public abstract class ProblemTool implements IProblemTool {
 			Dataset dataset, IAgentLogger logger)
 			throws Exception;
 	
-	protected abstract Individual[] createNewIndividual(Individual individual1,
+	protected abstract Individual createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3,
 			IProblem problem, Dataset dataset, IAgentLogger logger)
 			throws Exception;
@@ -121,7 +121,7 @@ public abstract class ProblemTool implements IProblemTool {
 		return list;
 	}
 			
-	public final IndividualEvaluated[] createNewIndividualEval(IndividualEvaluated individualEval1, 
+	public final IndividualEvaluated createNewIndividualEval(IndividualEvaluated individualEval1, 
 			IndividualEvaluated individualEval2, IndividualEvaluated individualEval3,
 			IProblem problem, Dataset dataset, PedigreeParameters
 			pedigreeParams, IAgentLogger logger) throws Exception {
@@ -136,19 +136,14 @@ public abstract class ProblemTool implements IProblemTool {
 		Pedigree pedigree3 = individualEval3.getPedigree();
 		
 		
-		Individual[] individualNew = createNewIndividual(individual1, 
+		Individual individualNew = createNewIndividual(individual1, 
 				individual2, individual3, problem, dataset, logger);
 		Pedigree pedigreeNew = Pedigree.update(pedigree1, pedigree2, pedigree3,
 				pedigreeParams);
-		
-		IndividualEvaluated[] list = new IndividualEvaluated[individualNew.length];
-		for (int i = 0; i < individualNew.length; i++) {
-			
-			Individual individualNewI = individualNew[i];
-			double fitnessI = fitness(individualNewI, problem, dataset, logger);
-			list[i] = new IndividualEvaluated(individualNewI, fitnessI, pedigreeNew);
-		}
-		return list;
+					
+		double fitness = fitness(individualNew, problem, dataset, logger);
+		return new IndividualEvaluated(individualNew, fitness, pedigreeNew);
+
 	}
 	
 	

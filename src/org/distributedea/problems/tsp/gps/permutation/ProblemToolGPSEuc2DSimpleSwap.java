@@ -7,6 +7,7 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.ProblemTool;
+import org.distributedea.problems.tsp.gps.permutation.operators.OperatorDifferential;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorSimpleSwap;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorSinglePointCrossover;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolGenerateFirstIndividualTSPGPS;
@@ -51,7 +52,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends AProblemToolTSPGPSEuc2DPermut
 	}
 	
 	@Override
-	public Individual[] createNewIndividual(Individual individual1,
+	public Individual createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 		
@@ -59,11 +60,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends AProblemToolTSPGPSEuc2DPermut
 		IndividualPermutation ind2 = (IndividualPermutation) individual2;
 		IndividualPermutation ind3 = (IndividualPermutation) individual2;
 		
-		Individual[] res1 =
-				OperatorSinglePointCrossover.crossover(ind1, ind2);
-		IndividualPermutation ind = (IndividualPermutation) res1[0];
-		
-		return OperatorSinglePointCrossover.crossover(ind, ind3);
+		return OperatorDifferential.create(ind1, ind2, ind3);
 	}
 
 	@Override

@@ -25,6 +25,12 @@ import org.distributedea.ontology.job.JobRun;
  */
 public class PostProcBoxplot extends PostProcessingMatlab {
 	
+	private String YLABEL;
+	
+	public PostProcBoxplot(String yLabel) {
+		this.YLABEL = yLabel; 
+	}
+	
 	@Override
 	public void run(Batch batch) throws Exception {
 		
@@ -49,7 +55,6 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		
 		
 		String TITLE = batch.getDescription();
-		String YLABEL = "hodnota fitnes v kilometrech";
 		
 		String OUTPUT_FILE = batch.getBatchID() + "BoxPlot";
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batchID);
@@ -100,7 +105,8 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		IInputBatch batchCmp = new BatchHomoMethodsTSP1083();
 		Batch batch = batchCmp.batch();
 		
-		PostProcBoxplot p = new PostProcBoxplot();
+		String YLABEL = "hodnota fitness v kilometrech";
+		PostProcBoxplot p = new PostProcBoxplot(YLABEL);
 		p.run(batch);
 	}
 }

@@ -1,5 +1,5 @@
 <job>
-  <jobID>randomImproved</jobID>
+  <jobID>randomGuaranteeChance</jobID>
   <numberOfRuns>3</numberOfRuns>
   <description>Random Kill &amp; Random Run</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
@@ -110,7 +110,7 @@
     </problemTools>
   </methods>
   <individualDistribution>true</individualDistribution>
-  <planner class="plannerRandomImpr"/>
+  <planner class="plannerRandomGuaranteeChance"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplaning>50</countOfReplaning>
   </plannerEndCondition>

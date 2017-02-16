@@ -78,7 +78,7 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 		}
 		
 		return PlannerTool.createAgents(centralManager,
-				inputPlan, jobRun.getProblemDefinition(), logger);
+				inputPlan, jobRun.getProblem(), logger);
 	}
 	
 	@Override

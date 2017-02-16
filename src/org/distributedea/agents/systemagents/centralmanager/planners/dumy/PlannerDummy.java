@@ -85,7 +85,7 @@ public class PlannerDummy implements IPlanner {
 		
 
 		MethodDescription createdDescription = new MethodDescription(
-				createdAgent, jobRun.getProblemDefinition(), problemToolI);
+				createdAgent, jobRun.getProblem(), problemToolI);
 		
 		return new Plan(iteration, createdDescription);
 	}

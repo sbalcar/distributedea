@@ -40,7 +40,7 @@ public class PlannerTool {
 			JobRun jobRun, InputPlan plan, IAgentLogger logger) {
 		
 		Plan createdAgents =
-				createAgents(centralManager, plan, jobRun.getProblemDefinition(), logger);
+				createAgents(centralManager, plan, jobRun.getProblem(), logger);
 		runAgents(centralManager, createdAgents.getNewAgents(), jobRun, logger);
 		
 		return createdAgents;
@@ -131,7 +131,7 @@ public class PlannerTool {
 					agentTokillAID, newConfiguration, problemStruct, logger);
 			
 			MethodDescription createdAD = new MethodDescription(createdAC,
-					jobRun.getProblemDefinition(), problemToolClass);
+					jobRun.getProblem(), problemToolClass);
 			
 			agentsCreated.add(createdAD);
 		}

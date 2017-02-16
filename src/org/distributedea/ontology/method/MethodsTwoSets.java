@@ -9,6 +9,7 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.problems.IProblemTool;
 
 import jade.content.Concept;
 
@@ -114,10 +115,11 @@ public class MethodsTwoSets implements IMethods, Concept{
 		
 		InputAgentConfiguration agentConf =
 				getAlgorithms().exportRandomAgentConfiguration();
-		Class<?> problemTool =
-				getProblemTools().exportRandomSelectedProblemTool();
+		IProblemTool problemTool = getProblemTools()
+				.exportRandomSelectedProblemTool(new TrashLogger());
 		
-		return new InputMethodDescription(agentConf.deepClone(), problemTool);
+		return new InputMethodDescription(agentConf.deepClone(),
+				problemTool.getClass());
 	}
 	
 	

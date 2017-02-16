@@ -159,10 +159,9 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			IndividualEvaluated individual3 = quaternion.individual3;
 			
 									
-			IndividualEvaluated[] individualsNew = problemTool.
+			IndividualEvaluated individualNew = problemTool.
 					createNewIndividualEval(individual1, individual2,
 					individual3, problem, dataset, pedigreeParams, getCALogger());
-			IndividualEvaluated individualNew = individualsNew[0];
 
 			IndividualEvaluated betterFromCandidateAndNewIndiv = individualCandidateI;
 			if (FitnessTool.isFirstIndividualEBetterThanSecond(

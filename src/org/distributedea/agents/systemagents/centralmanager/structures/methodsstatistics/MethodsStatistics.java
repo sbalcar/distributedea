@@ -301,7 +301,7 @@ public class MethodsStatistics {
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		IProblem problem =
-				agentDescription.getProblemDefinition();
+				agentDescription.getProblem();
 
 		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problem));
 		return methodsStatistics.get(methodsStatistics.size() -1);
@@ -321,7 +321,7 @@ public class MethodsStatistics {
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		IProblem problem =
-				agentDescription.getProblemDefinition();
+				agentDescription.getProblem();
 		
 		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problem));
 		return methodsStatistics.get(0);
@@ -342,7 +342,7 @@ public class MethodsStatistics {
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		Collections.sort(methodsStatistics,
-				new ComparatorQualityOfBestIndividual(agentDescription.getProblemDefinition()));
+				new ComparatorQualityOfBestIndividual(agentDescription.getProblem()));
 		
 		return methodsStatistics.get(0);
 	}
@@ -362,7 +362,7 @@ public class MethodsStatistics {
 		MethodDescription agentDescription = method0.getAgentDescription();
 		
 		IProblem problem =
-				agentDescription.getProblemDefinition();
+				agentDescription.getProblem();
 		
 		Collections.sort(methodsStatistics,
 				new ComparatorQualityOfBestIndividual(problem));

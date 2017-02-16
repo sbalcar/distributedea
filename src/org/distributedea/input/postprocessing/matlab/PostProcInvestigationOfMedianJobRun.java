@@ -31,11 +31,17 @@ import org.distributedea.ontology.problem.IProblem;
  */
 public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	
+	private String XLABEL;
+	private String YLABEL;
+	
+	public PostProcInvestigationOfMedianJobRun(String xLabel, String yLabel) {
+		this.XLABEL = xLabel;
+		this.YLABEL = yLabel;
+	}
+	
 	public void run(Batch batch) throws Exception {
 		
 		String TITLE = batch.getDescription();
-		String XLABEL = "čas v sekundách";
-		String YLABEL = "hodnota fitnes v kilometrech";
 		
 		String OUTPUT_FILE = batch.getBatchID() + "Comparing";
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batch.getBatchID());
@@ -156,7 +162,9 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 		IInputBatch batchCmp = new BatchSingleMethodsTSP1083();
 		Batch batch = batchCmp.batch();
 		
-		PostProcessing p = new PostProcInvestigationOfMedianJobRun();
+		String XLABEL = "čas v sekundách";
+		String YLABEL = "hodnota fitness v kilometrech";
+		PostProcessing p = new PostProcInvestigationOfMedianJobRun(XLABEL, YLABEL);
 		p.run(batch);
 	}
 }

@@ -68,7 +68,7 @@ public class PlannerInitialisationRunEachMethodOnce_ implements IPlanner {
 					centralManager, managerAidI, agentConfigurationI, logger);
 			
 			MethodDescription descriptionI = new MethodDescription(
-					createdAgentI, job.getProblemDefinition(), problemToolI);
+					createdAgentI, job.getProblem(), problemToolI);
 						
 			createdDescriptions.add(descriptionI);
 		}

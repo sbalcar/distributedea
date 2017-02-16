@@ -65,7 +65,7 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		job3.setPlanner(new PlannerRandom());
 		
 		Job job4 = InputTSP.test05();
-		job4.setJobID("randomImproved");
+		job4.setJobID("randomGuaranteeChance");
 		job4.setDescription("Random Kill & Random Run");
 		job4.setPlanner(new PlannerRandomGuaranteeChance());
 		
@@ -139,8 +139,12 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		batch.addJobWrapper(job12);
 		batch.addJobWrapper(job13);
 		
-		PostProcessing psMat0 = new PostProcBoxplot();
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun();
+		String YLABEL0 = "hodnota fitness v kilometrech";
+		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);
+		
+		String XLABEL1 = "čas v sekundách";
+		String YLABEL1 = "hodnota fitness v kilometrech";
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);

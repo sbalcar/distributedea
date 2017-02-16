@@ -67,21 +67,15 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 	}
 
 	@Override
-	protected Individual[] createNewIndividual(Individual individual1,
+	protected Individual createNewIndividual(Individual individual1,
 			Individual individual2, Individual individual3, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
 
 		IndividualPermutation individualPerm1 = (IndividualPermutation) individual1;
 		IndividualPermutation individualPerm2 = (IndividualPermutation) individual2;
 		IndividualPermutation individualPerm3 = (IndividualPermutation) individual3;
-		
-		Individual newIndiv = OperatorDifferential.create(individualPerm1, individualPerm2, individualPerm3);
-				
-		
-		Individual[] result = new Individual[1];
-		result[0] = newIndiv;
 
-		return result;
+		return OperatorDifferential.create(individualPerm1, individualPerm2, individualPerm3);
 
 	}
 

@@ -51,8 +51,12 @@ public class BatchHeteroComparingCO implements IInputBatch {
 		batch.addJobWrapper(jobW2);
 		batch.addJobWrapper(jobW7);
 		
-		PostProcessing psMat0 = new PostProcBoxplot();
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun();
+		String YLABEL = "fitness jako funkční hodnota vstupní funkce";
+		PostProcessing psMat0 = new PostProcBoxplot(YLABEL);
+		
+		String XLABEL1 = "čas v sekundách";
+		String YLABEL1 = "fitness jako funkční hodnota vstupní funkce";
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);

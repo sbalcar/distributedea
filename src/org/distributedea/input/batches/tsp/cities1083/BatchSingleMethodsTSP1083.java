@@ -38,7 +38,7 @@ public class BatchSingleMethodsTSP1083 implements IInputBatch {
 		
 		Job jobI = InputTSP.test05();
 		jobI.setJobID("0");
-		jobI.setDescription("");
+		jobI.setDescription("clone");
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
 		
@@ -112,8 +112,12 @@ public class BatchSingleMethodsTSP1083 implements IInputBatch {
 		job6.setMethods(methods6);
 		
 
-		PostProcessing ps0 = new PostProcBoxplot();
-		PostProcessing ps1 = new PostProcInvestigationOfMedianJobRun();
+		String YLABEL0 = "hodnota fitness v kilometrech";
+		PostProcessing ps0 = new PostProcBoxplot(YLABEL0);
+		
+		String XLABEL1 = "čas v sekundách";
+		String YLABEL1 = "hodnota fitness v kilometrech";
+		PostProcessing ps1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
 
 		PostProcessing psLat0 = new PostProcJobRunsResultTable();
 		
