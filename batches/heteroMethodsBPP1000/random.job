@@ -1,0 +1,131 @@
+<job>
+  <jobID>random</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Random Init, Random Kill &amp; Random Run</description>
+  <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
+    <sizeOfBin>1</sizeOfBin>
+  </problem>
+  <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  <methods class="org.distributedea.ontology.method.MethodsTwoSets">
+    <algorithms>
+      <agentConfigurations class="java.util.Arrays$ArrayList">
+        <a class="inputAgentConfiguration-array">
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <inputAgentConfiguration>
+            <agentName>Agent_RandomSearch</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </inputAgentConfiguration>
+          <inputAgentConfiguration>
+            <agentName>Agent_Evolution</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>popSize</name>
+                    <value>10</value>
+                  </argument>
+                  <argument>
+                    <name>mutationRate</name>
+                    <value>0.9</value>
+                  </argument>
+                  <argument>
+                    <name>crossRate</name>
+                    <value>0.1</value>
+                  </argument>
+                  <argument>
+                    <name>selector</name>
+                    <value>org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <inputAgentConfiguration>
+            <agentName>Agent_BruteForce</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </inputAgentConfiguration>
+          <inputAgentConfiguration>
+            <agentName>Agent_TabuSearch</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>tabuModelSize</name>
+                    <value>50</value>
+                  </argument>
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <inputAgentConfiguration>
+            <agentName>Agent_SimulatedAnnealing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>temperature</name>
+                    <value>10000</value>
+                  </argument>
+                  <argument>
+                    <name>coolingRate</name>
+                    <value>0.002</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <inputAgentConfiguration>
+            <agentName>Agent_DifferentialEvolution</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>popSize</name>
+                    <value>50</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+        </a>
+      </agentConfigurations>
+    </algorithms>
+    <problemTools>
+      <problemTools>
+        <java-class>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</java-class>
+      </problemTools>
+    </problemTools>
+  </methods>
+  <individualDistribution>true</individualDistribution>
+  <planner class="plannerRandom"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

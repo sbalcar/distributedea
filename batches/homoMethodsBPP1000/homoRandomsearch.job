@@ -1,0 +1,28 @@
+<job>
+  <jobID>homoRandomsearch</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Homo-RandomSearch</description>
+  <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
+    <sizeOfBin>1</sizeOfBin>
+  </problem>
+  <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  <methods class="org.distributedea.ontology.method.Methods">
+    <inputAgentDescriptions>
+      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_RandomSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+    </inputAgentDescriptions>
+  </methods>
+  <individualDistribution>true</individualDistribution>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

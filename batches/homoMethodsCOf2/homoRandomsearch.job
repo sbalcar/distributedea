@@ -1,0 +1,32 @@
+<job>
+  <jobID>homoRandomsearch</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Homo-RandomSearch</description>
+  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <isMaximizationProblem>false</isMaximizationProblem>
+  </problem>
+  <datasetFileName>inputs/f2.co</datasetFileName>
+  <methods class="org.distributedea.ontology.method.Methods">
+    <inputAgentDescriptions>
+      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_RandomSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+    </inputAgentDescriptions>
+  </methods>
+  <individualDistribution>false</individualDistribution>
+  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerDummy">
+    <NODE__INDEX>0</NODE__INDEX>
+    <COMPUTING__AGENT__INDEX>1</COMPUTING__AGENT__INDEX>
+    <PROBLEM__TOOL__INDEX>0</PROBLEM__TOOL__INDEX>
+  </planner>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

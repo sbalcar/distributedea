@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.distributedea.agents.systemagents.Agent_DataManager;
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobID;
@@ -110,12 +111,10 @@ public class FilesystemInitTool {
 	}
 	
 	/**
-	 * Creates result space in filesystem for given {@link JobID}
-	 * @param jobID
+	 * Creates result space in filesystem for given {@link Batch}
+	 * @param batchID
 	 */
-	public static void createResultSpaceForJobRun(JobID jobID) {
-		
-		String batchID = jobID.getBatchID();
+	public static void createResultSpaceForBatch(String batchID) {
 		
 		String resultDirectoryForBatchName = FileNames.getResultDirectory(batchID);
 		File resultDirectoryForBatch = new File(resultDirectoryForBatchName);
@@ -128,25 +127,7 @@ public class FilesystemInitTool {
 		if (! resultDirectoryForJobs.isDirectory()) {
 			resultDirectoryForJobs.mkdir();
 		}
-		
-		String resultDirectoryForJobName = FileNames.getResultDirectoryForJob(jobID);
-		File resultDirectoryForJob = new File(resultDirectoryForJobName);
-		if (! resultDirectoryForJob.isDirectory()) {
-			resultDirectoryForJob.mkdir();
-		}
-		
-		String resultDirectoryForJobRunName = FileNames.getResultDirectoryForJobRun(jobID);
-		File resultDirectoryForJobRun = new File(resultDirectoryForJobRunName);
-		if (! resultDirectoryForJobRun.isDirectory()) {
-			resultDirectoryForJobRun.mkdir();
-		}
-		
-		String monitoringDirName = FileNames.getResultDirectoryMonitoringDirectory(jobID);
-		File monitoringDirectory = new File(monitoringDirName);
-		if (! monitoringDirectory.isDirectory()) {
-			monitoringDirectory.mkdir();
-		}
-		
+				
 		String resultPostProcDirName = FileNames.getResultDirectoryForMatlab(batchID);
 		File resultPostProcDir = new File(resultPostProcDirName);
 		if (! resultPostProcDir.isDirectory()) {
@@ -166,6 +147,57 @@ public class FilesystemInitTool {
 		}
 	}
 	
+	/**
+	 * Creates result space in filesystem for given {@link JobID}
+	 * @param jobID
+	 */
+	public static void createResultSpaceForJobRun(JobID jobID) {
+		
+		String batchID = jobID.getBatchID();
+		
+		createResultSpaceForBatch(batchID);
+		
+		String resultDirectoryForJobName = FileNames.getResultDirectoryForJob(jobID);
+		File resultDirectoryForJob = new File(resultDirectoryForJobName);
+		if (! resultDirectoryForJob.isDirectory()) {
+			resultDirectoryForJob.mkdir();
+		}
+		
+		String resultDirectoryForJobRunName = FileNames.getResultDirectoryForJobRun(jobID);
+		File resultDirectoryForJobRun = new File(resultDirectoryForJobRunName);
+		if (! resultDirectoryForJobRun.isDirectory()) {
+			resultDirectoryForJobRun.mkdir();
+		}
+		
+		String monitoringDirName = FileNames.getResultDirectoryMonitoringDirectory(jobID);
+		File monitoringDirectory = new File(monitoringDirName);
+		if (! monitoringDirectory.isDirectory()) {
+			monitoringDirectory.mkdir();
+		}
+	}
+
+	public static void copyInputBatchDescriptionToResultDir(String batchID) {
+		
+		String inputBatchDescriptionFileName = FileNames.getInputBatchDirectory(batchID) +
+				File.separator + "description.txt";
+		File inputBatchDescriptionFile = new File(inputBatchDescriptionFileName);
+		
+		String batchDescriptionCopyOFileName =
+				FileNames.getResultDirectoryWithCopyOfInputBatch(batchID) +
+				File.separator + "description.txt";
+		File batchDescriptionCopyOFile =
+				new File(batchDescriptionCopyOFileName);
+
+		if (! batchDescriptionCopyOFile.exists()) {
+			try {
+				FileUtils.copyFile(inputBatchDescriptionFile, batchDescriptionCopyOFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * Moves input file with {@link Job} to directory with results
 	 * @param jobIDToMove
@@ -197,7 +229,7 @@ public class FilesystemInitTool {
 	
 	public static void moveInputPostProcToResultDir(Class<?> postProcToMove, String batchID) throws IOException {
 		
-		String resultDirectoryForBatchName = FileNames.getResultDirectory(batchID);
+		String resultDirectoryForBatchName = FileNames.getInputBatchDirectory(batchID);
 		File postProcFile = new File(resultDirectoryForBatchName + File.separator +
 				postProcToMove.getSimpleName() + "." + FileNames.POSTPROCESSING_SUFIX);
 		

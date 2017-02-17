@@ -1,6 +1,7 @@
 package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 import java.io.File;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.InputConfiguration;
@@ -10,7 +11,9 @@ import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
+import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
+import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.services.CentralLogerService;
@@ -27,7 +30,7 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
-	private File batchesDir;
+	private File inputBatchesDir;
 	
 	private IAgentLogger logger;
 	private Agent_CentralManager centralManager;
@@ -47,7 +50,7 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 					File.class.getSimpleName() + " is not valid");
 		}
 
-		this.batchesDir = batchesDir;
+		this.inputBatchesDir = batchesDir;
 		this.logger = logger;
 	}
 	
@@ -60,7 +63,7 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 		this.centralManager = (Agent_CentralManager) myAgent;
 		
 		
-		processBatches(batchesDir);
+		processBatches(inputBatchesDir);
 	}
 	
 	private void processBatches(File batchesDir) {
@@ -108,8 +111,9 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 	private void processBatch(Batch batch) {
 		
 		String batchID = batch.getBatchID();
+		FilesystemInitTool.createResultSpaceForBatch(batchID);
+		FilesystemInitTool.copyInputBatchDescriptionToResultDir(batchID);
 		
-
 		// add Behavior for Job Runs
 		for (Job jobI : batch.getJobs()) {
 			
@@ -117,11 +121,8 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 			return; // process only one Job
 		}
 
-		// add Behavior for PostProcessings
-		Behaviour behaviourI = new ComputePostProcessingsBehaviour(batch);
-		centralManager.computingBehaviours.add(behaviourI);
-		centralManager.addBehaviour(behaviourI);
-
+		List<PostProcessing> postProcs = batch.getPostProcessings();
+		processPostProc(batchID, postProcs);
 	}
 
 	private void processJob(Job job, String batchID) {
@@ -152,6 +153,29 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 				new ComputeJobRunBehaviour(jobRun, numberOfRuns, endCondition, planner, logger);
 		centralManager.computingBehaviours.add(jobRunBehaviourI);
 		centralManager.addBehaviour(jobRunBehaviourI);
+
+	}
+	
+	private void processPostProc(String batchID, List<PostProcessing> postProcs) {
+		
+		// reads complete Batch from result directory
+		String computedBatchDirName = FileNames.getResultDirectoryWithCopyOfInputBatch(batchID);
+		File computedBatchDir = new File(computedBatchDirName);
+		
+		Batch batch = null;
+		try {
+			batch = Batch.importXML(computedBatchDir);
+		} catch (Exception e) {
+			logger.log(Level.INFO, "Can not read computed batches");
+			centralManager.exit();
+		}
+		
+		batch.setPostProcessings(postProcs);
+		
+		// add Behavior for PostProcessings
+		Behaviour behaviourI = new ComputePostProcessingsBehaviour(batch);
+		centralManager.computingBehaviours.add(behaviourI);
+		centralManager.addBehaviour(behaviourI);
 
 	}
 }

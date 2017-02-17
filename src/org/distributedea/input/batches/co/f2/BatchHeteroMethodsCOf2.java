@@ -1,4 +1,4 @@
-package org.distributedea.input.batches.co;
+package org.distributedea.input.batches.co.f2;
 
 import java.io.IOException;
 
@@ -16,13 +16,13 @@ import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 
-public class BatchHeteroComparingCO implements IInputBatch {
+public class BatchHeteroMethodsCOf2 implements IInputBatch {
 
 	@Override
 	public Batch batch() throws IOException {
 
 		Batch batch = new Batch();
-		batch.setBatchID("heteroComparingCO");
+		batch.setBatchID("heteroComparingCOf2");
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : Cont.Opt. ");
 		
 		Job jobW0 = InputContOpt.test03();
