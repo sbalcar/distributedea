@@ -1,5 +1,6 @@
 package org.distributedea.input.postprocessing.matlab;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,10 +68,16 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 					jobI.getProblem());
 			
 			String fileNameI = FileNames.getResultFile(jobIDI);
+			List<Double> valuesI = FilesystemTool.readVectorFromFile(
+					new File(fileNameI));
+			String matlabArrayI =
+					MatlabTool.convertDoublesToMatlamArray(valuesI);
+			
 			String lineTypeI = lineTypes.get(i % lineTypes.size());
 			
 			matlabSourceCode +=
-				"M = dlmread('" + "../../../" + fileNameI + "')" + NL +
+				//"M = dlmread('" + "../../../" + fileNameI + "')" + NL +
+				"M = " + matlabArrayI + ";" + NL +
 				"plot(M,' "+ lineTypeI + "','LineWidth',3);" + NL +
 				NL;
 		}
