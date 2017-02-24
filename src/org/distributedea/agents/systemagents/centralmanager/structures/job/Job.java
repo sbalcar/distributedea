@@ -32,14 +32,21 @@ import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.Pl
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDefDouble;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDefInteger;
+import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.method.IMethods;
+import org.distributedea.ontology.method.Methods;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
@@ -50,7 +57,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import jade.content.Concept;
 
 /**
- * Ontology represents one input Job
+ * Ontology represents one input job
  * @author stepan
  *
  */
@@ -93,6 +100,11 @@ public class Job implements Concept, Serializable {
 	 * Turns on broadcast computed individuals to distributed agents
 	 */
 	private boolean individualDistribution;
+
+	/**
+	 * Island model configuration
+	 */
+	private IslandModelConfiguration islandModelConfiguration; 
 	
 	/**
 	 * Declares the {@link IPlanner} class which will be used to direction of the evolution
@@ -131,6 +143,7 @@ public class Job implements Concept, Serializable {
 		this.datasetFileName = job.getDatasetFileName();
 		this.methods = job.getMethods().deepClone();
 		this.individualDistribution = job.isIndividualDistribution();
+		this.islandModelConfiguration = job.getIslandModelConfiguration().deepClone();
 		this.planner = job.planner;
 		this.plannerEndCondition = job.plannerEndCondition;
 		this.pedigreeOfIndividualClassName = job.getPedigreeOfIndividualClassName();
@@ -232,7 +245,20 @@ public class Job implements Concept, Serializable {
 	public void setIndividualDistribution(boolean individualDistribution) {
 		this.individualDistribution = individualDistribution;
 	}
-	
+
+	public IslandModelConfiguration getIslandModelConfiguration() {
+		return islandModelConfiguration;
+	}
+	public void setIslandModelConfiguration(
+			IslandModelConfiguration islandModelConfiguration) {
+		if (islandModelConfiguration == null ||
+				! islandModelConfiguration.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IslandModelConfiguration.class.getSimpleName() + " is not valid");
+		}
+		this.islandModelConfiguration = islandModelConfiguration;
+	}
+
 	public IPlanner getPlanner() {
 		return this.planner;
 	}
@@ -313,6 +339,9 @@ public class Job implements Concept, Serializable {
 			return false;
 		}
 		if (getMethods() == null || ! getMethods().valid(logger)) {
+			return false;
+		}
+		if (getIslandModelConfiguration() == null) {
 			return false;
 		}
 		if (getPlannerEndCondition() == null) {
@@ -406,7 +435,6 @@ public class Job implements Concept, Serializable {
 		scanner.close();
 		
 		return importXML(xml);
-		
 	}
 	
 	/**
@@ -430,6 +458,14 @@ public class Job implements Concept, Serializable {
 		xstream.alias("inputAgentConfiguration", InputAgentConfiguration.class);
 		xstream.alias("arguments", Arguments.class);
 		xstream.alias("argument", Argument.class);
+		xstream.alias("argumentsDef", ArgumentsDef.class);
+		xstream.alias("argumentDef", ArgumentDef.class);
+		xstream.alias("argumentDefInteger", ArgumentDefInteger.class);
+		xstream.alias("argumentDefDouble", ArgumentDefDouble.class);
+		
+		xstream.alias("methods", Methods.class);
+		xstream.alias("inputMethodDescription", InputMethodDescription.class);
+		
 		
 		xstream.alias("plannerInitialisationOneMethodPerCore", PlannerInitialisationOneMethodPerCore.class);
 		xstream.alias("plannerInitialisationRandom", PlannerInitialisationRandom.class);

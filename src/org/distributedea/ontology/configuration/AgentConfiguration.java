@@ -12,6 +12,8 @@ import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.Agent_BruteForce;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 
 /**

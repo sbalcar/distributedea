@@ -11,6 +11,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.methodsst
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.method.Methods;
@@ -27,23 +28,26 @@ public class PlannerTheGreatestQuantityOfImprovement implements IPlanner {
 
 	protected Agent_CentralManager centralManager;
 	protected JobRun jobRun;
+	private IslandModelConfiguration configuration;
 	protected IAgentLogger logger;
 	
 	protected IPlanner plannerInit = null;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws Exception {
+			Iteration iteration, JobRun jobRun, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception {
 
 		this.centralManager = centralManager;
 		this.jobRun = jobRun;
+		this.configuration = configuration;
 		this.logger = logger;
 		
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 		
 		
 		plannerInit = new PlannerInitialisationOneMethodPerCore();
-		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
+		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 	}
 
 	@Override
@@ -64,7 +68,8 @@ public class PlannerTheGreatestQuantityOfImprovement implements IPlanner {
 			rePlan = correctReplanning(iteration, history);
 		}
 		
-		RePlan rePlanUpdated = PlannerTool.processReplanning(centralManager, rePlan, jobRun, logger);
+		RePlan rePlanUpdated = PlannerTool.processReplanning(centralManager,
+				rePlan, jobRun, configuration, logger);
 		
 		return new Pair<Plan, RePlan>(rePlanInit.first, rePlanUpdated);
 	}

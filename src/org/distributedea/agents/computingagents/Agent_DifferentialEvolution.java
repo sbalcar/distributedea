@@ -10,10 +10,11 @@ import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.individuals.IndividualArguments;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
@@ -23,6 +24,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.ProblemMachineLearning;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
@@ -72,6 +74,10 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			}
 		} else if (problem instanceof ProblemContinuousOpt) {
 			if (representation == IndividualPoint.class) {
+				isAble = true;
+			}			
+		} else if (problem instanceof ProblemMachineLearning) {
+			if (representation == IndividualArguments.class) {
 				isAble = true;
 			}			
 		}
@@ -128,9 +134,13 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		// generates Individuals
 		Vector<IndividualEvaluated> population = new Vector<>();
 		for (int i = 0; i < popSize; i++) {
-			IndividualEvaluated individualI = problemTool.
+			IndividualEvaluated individualEvalI = problemTool.
 					generateIndividualEval(problem, dataset, pedigreeParams, getCALogger());
-			population.add(individualI);
+			
+			// send new Individual to distributed neighbors
+			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+
+			population.add(individualEvalI);
 		}
 		
 		DifferentialModel model = new DifferentialModel(population, popSize);
@@ -138,7 +148,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		final IndividualEvaluated individualEvalI =
 				model.getBestIndividual(problem);
 		
-		// save, log and distribute computed Individual
+		// logs data
 		processIndividualFromInitGeneration(individualEvalI,
 				generationNumberI, problem, jobID);
 		

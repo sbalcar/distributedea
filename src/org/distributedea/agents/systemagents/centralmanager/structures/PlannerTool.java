@@ -14,6 +14,7 @@ import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
@@ -37,11 +38,13 @@ public class PlannerTool {
 	 * @return
 	 */
 	public static Plan createAndRunAgents(Agent_CentralManager centralManager,
-			JobRun jobRun, InputPlan plan, IAgentLogger logger) {
+			JobRun jobRun, InputPlan plan,IslandModelConfiguration configuration,
+			IAgentLogger logger) {
 		
 		Plan createdAgents =
 				createAgents(centralManager, plan, jobRun.getProblem(), logger);
-		runAgents(centralManager, createdAgents.getNewAgents(), jobRun, logger);
+		runAgents(centralManager, createdAgents.getNewAgents(), jobRun,
+				configuration, logger);
 		
 		return createdAgents;
 	}
@@ -74,10 +77,11 @@ public class PlannerTool {
 	}
 	
 	private static void runAgents(Agent_CentralManager centralManager,
-			MethodDescriptions createdAgents,  JobRun jobRun, IAgentLogger logger) {
+			MethodDescriptions createdAgents,  JobRun jobRun,
+			IslandModelConfiguration configuration, IAgentLogger logger) {
 		
 		for (MethodDescription agentDescriptionI :
-			createdAgents.getAgentDescriptions()) {
+				createdAgents.getAgentDescriptions()) {
 
 			AgentConfiguration agentConfigurationI =
 					agentDescriptionI.getAgentConfiguration();
@@ -87,8 +91,11 @@ public class PlannerTool {
 			ProblemStruct problemStructI =
 					jobRun.exportProblemStruct(problemToolI);
 					
-			ComputingAgentService.sendStartComputing(centralManager,
-					agentConfigurationI.exportAgentAID(), problemStructI, logger);
+			boolean startOK = ComputingAgentService.sendStartComputing(centralManager,
+					agentConfigurationI.exportAgentAID(), problemStructI, configuration, logger);
+			if (! startOK) {
+				centralManager.exit();
+			}
 		}
 		
 	}
@@ -103,7 +110,8 @@ public class PlannerTool {
 	 * @throws PlannerException
 	 */
 	public static RePlan processReplanning(Agent_CentralManager centralManager,
-			InputRePlan replan, JobRun jobRun, IAgentLogger logger) throws Exception {
+			InputRePlan replan, JobRun jobRun, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception {
 		
 		List<MethodDescription> agentsToKill =
 				replan.getAgentsToKill().getAgentDescriptions();
@@ -128,7 +136,7 @@ public class PlannerTool {
 			
 			
 			AgentConfiguration createdAC = killAndCreateAgent(centralManager,
-					agentTokillAID, newConfiguration, problemStruct, logger);
+					agentTokillAID, newConfiguration, problemStruct, configuration, logger);
 			
 			MethodDescription createdAD = new MethodDescription(createdAC,
 					jobRun.getProblem(), problemToolClass);
@@ -152,7 +160,8 @@ public class PlannerTool {
 	 */
 	private static AgentConfiguration killAndCreateAgent(Agent_CentralManager centralManager,
 			AID agentTokillAID, InputAgentConfiguration newConfiguration,
-			ProblemStruct problemStruct, IAgentLogger logger) throws Exception {
+			ProblemStruct problemStruct, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception {
 
 		
 		// kill agent
@@ -170,7 +179,7 @@ public class PlannerTool {
 		
 		// start computing
 		ComputingAgentService.sendStartComputing(
-				centralManager, newAgent.exportAgentAID(), problemStruct, logger);
+				centralManager, newAgent.exportAgentAID(), problemStruct, configuration, logger);
 		return newAgent;
 	}
 }

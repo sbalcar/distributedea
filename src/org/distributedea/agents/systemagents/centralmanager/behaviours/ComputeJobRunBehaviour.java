@@ -12,6 +12,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 
@@ -29,6 +30,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 	
 	private JobRun jobRun;
 	private int countOfRuns;
+	private IslandModelConfiguration islandModelConfiguration;
 	
 	private IPlanner planner;
 	private IPlannerEndCondition plannerEndCondition;
@@ -44,6 +46,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 	 * @param logger
 	 */
 	public ComputeJobRunBehaviour(JobRun jobRun, int countOfRuns,
+			IslandModelConfiguration islandModelConfiguration,
 			IPlannerEndCondition plannerEndCondition, IPlanner planner,
 			IAgentLogger logger) {
 
@@ -55,6 +58,13 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 			throw new IllegalArgumentException("Argument " +
 					JobRun.class.getSimpleName() + " is not valid");
 		}
+		
+		if (islandModelConfiguration == null ||
+				! islandModelConfiguration.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					IslandModelConfiguration.class.getSimpleName() + " is not valid");			
+		}
+		
 		if (planner == null) {
 			throw new IllegalArgumentException("Argument " +
 					IPlanner.class.getSimpleName() + " is not valid");
@@ -66,6 +76,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		
 		this.jobRun = jobRun;
 		this.countOfRuns = countOfRuns;
+		this.islandModelConfiguration = islandModelConfiguration;
 		this.planner = planner;
 		this.plannerEndCondition = plannerEndCondition;
 		
@@ -109,7 +120,7 @@ public class ComputeJobRunBehaviour extends OneShotBehaviour {
 		}
 		
 		try {
-			plannerInfr.run(planner, jobRun);
+			plannerInfr.run(planner, jobRun, islandModelConfiguration);
 		} catch (Exception e) {
 			logger.logThrowable("Error by running " + jobID.toString(), e);
 			e.printStackTrace();

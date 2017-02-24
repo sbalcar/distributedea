@@ -15,6 +15,7 @@ import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.services.CentralLogerService;
 
@@ -129,7 +130,7 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 		
 		FilesystemInitTool.createResultSpaceForJob(batchID, job.getJobID(), logger);
 		
-		
+		IslandModelConfiguration configuration = job.getIslandModelConfiguration();
 		int numberOfRuns = job.getNumberOfRuns();
 
 		IPlannerEndCondition endCondition = job.getPlannerEndCondition();
@@ -141,16 +142,20 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 
 			if (! FilesystemInitTool.existsResultSpaceForJobRun(jobRunI.getJobID())) {
 			
-				processJobRun(jobRunI, numberOfRuns, endCondition, planner);
+				processJobRun(jobRunI, numberOfRuns, configuration,
+						endCondition, planner);
 				return; //process only one JobRun
 			}
 		}
 	}
 	
-	private void processJobRun(JobRun jobRun, int numberOfRuns, IPlannerEndCondition endCondition, IPlanner planner) {
+	private void processJobRun(JobRun jobRun, int numberOfRuns, IslandModelConfiguration configuratiion,
+			IPlannerEndCondition endCondition, IPlanner planner) {
 		
 		ComputeJobRunBehaviour jobRunBehaviourI =
-				new ComputeJobRunBehaviour(jobRun, numberOfRuns, endCondition, planner, logger);
+				new ComputeJobRunBehaviour(jobRun, numberOfRuns,
+						configuratiion, endCondition, planner, logger);
+		
 		centralManager.computingBehaviours.add(jobRunBehaviourI);
 		centralManager.addBehaviour(jobRunBehaviourI);
 

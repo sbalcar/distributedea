@@ -11,7 +11,7 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 public class ToolFitnessBinPacking {
 
 	public static double evaluate(IndividualPermutation individual,
-			DatasetBinPacking problem, IAgentLogger logger) {
+			DatasetBinPacking dataset, IAgentLogger logger) {
 		
 		if (individual == null) {
 			return Double.NaN;
@@ -21,7 +21,7 @@ public class ToolFitnessBinPacking {
 		for (int numberOfPermI : individual.getPermutation()) {
 			
 			ObjectBinPack objectI =
-					problem.exportObjectBinPackBy(numberOfPermI);
+					dataset.exportObjectBinPackBy(numberOfPermI);
 			
 			objectsInOrderOfPermutation.add(objectI);
 		}

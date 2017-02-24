@@ -1,0 +1,6 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Sat Feb 18 21:02:23 CET 2017
+http\://jade.tilab.com/.error=Could not transfer artifact nz.ac.waikato.cms.weka\:weka-stable\:pom\:3.6.6 from/to tilab (http\://jade.tilab.com/)\: jade.tilab.com\: Name or service not known
+@default-tilab-http\://jade.tilab.com/.lastUpdated=1487448143581
+@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1487448143616
+https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact nz.ac.waikato.cms.weka\:weka-stable\:pom\:3.6.6 from/to central (https\://repo.maven.apache.org/maven2)\: repo.maven.apache.org\: Name or service not known

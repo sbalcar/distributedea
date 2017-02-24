@@ -48,9 +48,9 @@ public class BatchTestTSP implements IInputBatch {
 		jobW6.setPlanner(new PlannerTheGreatestQuantityOfImprovement());
 		jobW6.importPedigreeOfIndividualClassName(PedigreeTreeFull.class);
 		
-		batch.addJobWrapper(jobW2);
-		batch.addJobWrapper(jobW4);
-		batch.addJobWrapper(jobW6);
+		batch.addJob(jobW2);
+		batch.addJob(jobW4);
+		batch.addJob(jobW6);
 		
 		String XLABEL1 = "čas v sekundách";
 		String YLABEL1 = "hodnota fitness v kilometrech";

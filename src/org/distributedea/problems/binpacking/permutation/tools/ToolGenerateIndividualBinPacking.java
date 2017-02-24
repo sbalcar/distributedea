@@ -10,10 +10,10 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 
 public class ToolGenerateIndividualBinPacking {
 
-	public static IndividualPermutation generateIndividual(DatasetBinPacking problemBP,
+	public static IndividualPermutation generateIndividual(DatasetBinPacking datasetBP,
 			IAgentLogger logger) {
 		
-		int numOfObjects = problemBP.getObjects().size();
+		int numOfObjects = datasetBP.getObjects().size();
 		
 		List<Integer> permutation = new ArrayList<>();
 		for (int i = 0; i < numOfObjects; i++) {

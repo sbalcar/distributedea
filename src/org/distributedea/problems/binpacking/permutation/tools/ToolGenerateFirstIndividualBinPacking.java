@@ -6,9 +6,9 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 
 public class ToolGenerateFirstIndividualBinPacking {
 
-	public static IndividualPermutation generateFirstIndividual(DatasetBinPacking problemBP,
+	public static IndividualPermutation generateFirstIndividual(DatasetBinPacking datasetBP,
 			IAgentLogger logger) {
 		
-		return ToolGenerateIndividualBinPacking.generateIndividual(problemBP, logger);
+		return ToolGenerateIndividualBinPacking.generateIndividual(datasetBP, logger);
 	}
 }

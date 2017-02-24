@@ -4,6 +4,8 @@ import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
@@ -47,6 +49,9 @@ public class MonitorOntology extends BeanOntology {
             add(MethodDescription.class);
 
             add(Statistic.class.getPackage().getName());
+            
+            add(Argument.class.getPackage().getName());
+            add(ArgumentDef.class.getPackage().getName());
             add(AgentConfiguration.class.getPackage().getName());
         	
         } catch (Exception e) {

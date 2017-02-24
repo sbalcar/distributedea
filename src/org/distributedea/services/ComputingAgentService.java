@@ -13,6 +13,7 @@ import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.AID;
+import jade.core.Agent;
 import jade.domain.FIPAException;
 import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -39,6 +40,7 @@ import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
@@ -211,20 +213,30 @@ public class ComputingAgentService {
 	 * Sends message {@link StartComputing} contains Problem definition
 	 * to {@link Agent_ComputingAgent}
 	 * @param agent
-	 * @param computingAgent
+	 * @param computingAgentAID
 	 * @param problemStruct
 	 * @param logger
 	 * @return
 	 */
-	public static boolean sendStartComputing(Agent_DistributedEA agent, AID computingAgent,
-			ProblemStruct problemStruct, IAgentLogger logger) {
+	public static boolean sendStartComputing(Agent_DistributedEA agent,
+			AID computingAgentAID, ProblemStruct problemStruct,
+			IslandModelConfiguration configuration, IAgentLogger logger) {
 		
 		if (agent == null) {
-			throw new IllegalArgumentException(
-					"Argument agent can't be null");
+			throw new IllegalArgumentException("Argument " +
+					Agent.class.getName() + "can't be null");
+		}
+		if (computingAgentAID == null) {
+			throw new IllegalArgumentException("Argument " +
+					AID.class.getName() + "can't be null");
 		}
 		if (problemStruct == null || ! problemStruct.valid(logger)) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					ProblemStruct.class.getSimpleName() + " is not valid");
+		}
+		if (configuration == null || ! configuration.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
 		if (logger == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -234,17 +246,18 @@ public class ComputingAgentService {
 		Ontology ontology = ComputingOntology.getInstance();
 
 		ACLMessage msgStartComputing = new ACLMessage(ACLMessage.REQUEST);
-		msgStartComputing.addReceiver(computingAgent);
+		msgStartComputing.addReceiver(computingAgentAID);
 		msgStartComputing.setSender(agent.getAID());
 		msgStartComputing.setLanguage(agent.getCodec().getName());
 		msgStartComputing.setOntology(ontology.getName());
 		
-		ProblemWrapper wrapper = problemStruct.exportProblemWrapper();
-		if (wrapper == null) {
+		ProblemWrapper problemWrp = problemStruct.exportProblemWrapper();
+		if (problemWrp == null) {
 			return false;
 		}
 		
-		StartComputing startComputing = new StartComputing(wrapper);
+		StartComputing startComputing = new StartComputing(
+				problemWrp, configuration);
 		
 		Action action = new Action(agent.getAID(), startComputing);
 		
@@ -269,7 +282,7 @@ public class ComputingAgentService {
 			return false;
 		}
 		
-		if (msgRetursName.getPerformative() == ACLMessage.AGREE) {
+		if (msgRetursName.getPerformative() == ACLMessage.INFORM) {
 			return true;
 		}
 		

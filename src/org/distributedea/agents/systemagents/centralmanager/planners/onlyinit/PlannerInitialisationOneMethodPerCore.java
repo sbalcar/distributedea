@@ -11,6 +11,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.H
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputPlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
@@ -27,16 +28,19 @@ public class PlannerInitialisationOneMethodPerCore implements IPlanner {
 	private IAgentLogger logger;
 	
 	private JobRun jobRun;
+	private IslandModelConfiguration configuration;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger)
+			Iteration iteration, JobRun jobRun,
+			IslandModelConfiguration configuration, IAgentLogger logger)
 			throws Exception {
 		
 		this.centralManager = centralManager;
 		this.logger = logger;
 		
 		this.jobRun = jobRun;
+		this.configuration = configuration;
 		
 		NodeInfosWrapper availableNodes =
 				ManagerAgentService.getAvailableNodes(centralManager, logger);
@@ -60,7 +64,7 @@ public class PlannerInitialisationOneMethodPerCore implements IPlanner {
 		}
 		
 		return PlannerTool.createAndRunAgents(centralManager,
-				jobRun, inputPlan, logger);
+				jobRun, inputPlan, configuration, logger);
 	}
 
 	@Override
@@ -104,7 +108,7 @@ public class PlannerInitialisationOneMethodPerCore implements IPlanner {
 		}
 		
 		Plan plan = PlannerTool.createAndRunAgents(centralManager,
-				jobRun, inputPlan, logger);
+				jobRun, inputPlan, configuration, logger);
 		
 		RePlan rePlan = new RePlan(iteration);
 		return new Pair<>(plan, rePlan);

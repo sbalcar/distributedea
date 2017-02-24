@@ -112,6 +112,10 @@
     </problemTools>
   </methods>
   <individualDistribution>true</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>70000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
   <planner class="plannerTheBestHelper">
     <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
   </planner>

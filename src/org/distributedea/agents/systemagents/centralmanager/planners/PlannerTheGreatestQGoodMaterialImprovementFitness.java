@@ -7,6 +7,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.Pl
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.plan.Plan;
@@ -21,25 +22,25 @@ public class PlannerTheGreatestQGoodMaterialImprovementFitness implements IPlann
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger)
-			throws Exception {
+			Iteration iteration, JobRun jobRun, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception {
 		
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 		
 		
 		IPlanner plannerInit = new PlannerInitialisationOneMethodPerCore();
-		Plan initPlan = plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan initPlan = plannerInit.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 		
 		plannerGoodMaterial = new PlannerTheGreatestQuantityOfGoodMaterial();
-		Plan planGoodMaterial = plannerGoodMaterial.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan planGoodMaterial = plannerGoodMaterial.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 		initPlan.addAgentsToCreate(planGoodMaterial.getNewAgents());
 		
 		plannerImprovement = new PlannerTheGreatestQuantityOfImprovement();
-		Plan planImprovement = plannerImprovement.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan planImprovement = plannerImprovement.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 		initPlan.addAgentsToCreate(planImprovement.getNewAgents());
 		
 		plannerFitAverage = new PlannerTheBestAverageOfFitness();
-		Plan planFitAverage =  plannerFitAverage.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan planFitAverage =  plannerFitAverage.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 		initPlan.addAgentsToCreate(planFitAverage.getNewAgents());
 		
 		return initPlan;

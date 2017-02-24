@@ -6,17 +6,26 @@ import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.individuals.IndividualArguments;
+import org.distributedea.ontology.individuals.IndividualPermutation;
+import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.ProblemMachineLearning;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.ProblemTool;
 
 /**
  * Agent represents Simulated Annealing Algorithm Method
@@ -39,8 +48,43 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 
 	@Override
 	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
+		
 
-		return true;
+		IProblem problem = problemStruct.getProblem();
+		
+		Class<?> problemToolClass =
+				problemStruct.exportProblemToolClass(getLogger());
+		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
+				problemToolClass, getLogger());
+		
+		//Class<?> dataset = problemStruct.getDataset().getClass();
+		Class<?> representation = problemTool.reprezentationWhichUses();
+		
+		boolean isAble = false;
+		
+		if (problem instanceof ProblemTSPGPS) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
+		} else if (problem instanceof ProblemTSPPoint) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
+		} else if (problem instanceof ProblemBinPacking) {
+			if (representation == IndividualPermutation.class) {
+				isAble = true;
+			}
+		} else if (problem instanceof ProblemContinuousOpt) {
+			if (representation == IndividualPoint.class) {
+				isAble = true;
+			}			
+		} else if (problem instanceof ProblemMachineLearning) {
+			if (representation == IndividualArguments.class) {
+				isAble = true;
+			}			
+		}
+		
+		return isAble;
 	}
 	
 	@Override
@@ -94,7 +138,10 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		IndividualEvaluated individualEvalI =
 				problemTool.generateIndividualEval(problem, dataset, pedigreeParams, getCALogger());
 		
-		//saves data in Agent DataManager
+		// send new Individual to distributed neighbors
+		distributeIndividualToNeighours(individualEvalI, problem, jobID);
+		
+		// logs data
 		processIndividualFromInitGeneration(individualEvalI,
     			generationNumberI, problem, jobID);
 		

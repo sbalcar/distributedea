@@ -13,9 +13,9 @@ import org.distributedea.agents.computingagents.computingagent.evolutionjgap.EAM
 import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
@@ -155,9 +155,13 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		// generates Individuals
 		List<IndividualEvaluated> individuals = new ArrayList<>();
 		for (int i = 0; i < popSize; i++) {
-			IndividualEvaluated individualI = problemTool.generateIndividualEval(
+			IndividualEvaluated individualEvalI = problemTool.generateIndividualEval(
 					problem, dataset, pedigreeParams, getCALogger());
-			individuals.add(individualI);
+			
+			// send new Individual to distributed neighbors
+			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+			
+			individuals.add(individualEvalI);
 		}		
 		
 		// converts Individuals to Chromosomes
@@ -169,9 +173,9 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 			population.addChromosome(chromI);
 		}
 		
-		if (individualDistribution) {
-			distributeIndividualToNeighours(individuals, problem, jobID);
-		}
+		// logs data
+		processIndividualFromInitGeneration(individuals.get(0), -1, problem,
+				jobID);
 
 		
 		conf.setSampleChromosome(population.getChromosome(0));

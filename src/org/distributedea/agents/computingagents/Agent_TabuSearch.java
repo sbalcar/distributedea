@@ -11,9 +11,9 @@ import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -98,15 +98,19 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		TabuModel tabu = new TabuModel(tabuModelSize);
 		
 		IndividualEvaluated individualEvalI = problemTool
-				.generateFirstIndividualEval(problem, dataset, pedigreeParams, getCALogger());
+				.generateIndividualEval(problem, dataset, pedigreeParams, getCALogger());
 
 		
 		// add actual individual in the Tabu Set
 		tabu.offer(individualEvalI);
 		
-		// save, log and distribute computed Individual
+		// logs data
 		processIndividualFromInitGeneration(individualEvalI,
 				generationNumberI, problem, jobID);
+		
+		// send new Individual to distributed neighbors
+		distributeIndividualToNeighours(individualEvalI, problem, jobID);
+
 		
 		while (state == CompAgentState.COMPUTING) {
 

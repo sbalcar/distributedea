@@ -83,12 +83,10 @@ public class LocalSaver {
 	 */
 	public void logSolution(IndividualEvaluated individualEval) {
 		
-		String individualString = individualEval.getIndividual().toLogString();
-		double fitness = individualEval.getFitness();
+		String individualString = individualEval.exportXML();
 		
-		this.writerOfSolution.write(
-				(Configuration.COMMENT_CHAR + " Fitness: " + fitness + "\n"));
 		this.writerOfSolution.write((individualString + "\n"));
+		this.writerOfSolution.flush();
 	}
 	
 	/**
@@ -124,7 +122,7 @@ public class LocalSaver {
 		this.writerOfFitness.flush();
 		this.writerOfFitness.close();
 		
-		
+		this.writerOfSolution.flush();		
 		this.writerOfSolution.close();
 		
 		this.writerOfImprovementOfDist.flush();

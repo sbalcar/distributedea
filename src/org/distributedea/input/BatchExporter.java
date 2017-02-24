@@ -14,13 +14,16 @@ import org.distributedea.input.batches.binpacking.objects1000.BatchSingleMethods
 import org.distributedea.input.batches.co.f2.BatchHeteroMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchHomoMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchSingleMethodsCOf2;
+import org.distributedea.input.batches.machinelearning.zoo.BatchHeteroMethodsMLZoo;
+import org.distributedea.input.batches.machinelearning.zoo.BatchHomoMethodsMLZoo;
+import org.distributedea.input.batches.machinelearning.zoo.BatchSingleMethodsMLZoo;
 import org.distributedea.input.batches.tsp.BatchTestTSP;
 import org.distributedea.input.batches.tsp.cities1083.BatchHeteroMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
 
 /**
- * Generates Input-Batches to directory "batches". For running Batch
+ * Generates Input {@link Batch}es to directory "batches". For running Batch
  * user copy Batch from this directory to queue directory. 
  * @author stepan
  *
@@ -62,6 +65,16 @@ public class BatchExporter {
 		Batch batchHeteroCOF2 = inputBatchHeteroCOF2.batch();
 		
 		
+		IInputBatch inputBatchSingleMethodsMLZoo = new BatchSingleMethodsMLZoo();
+		Batch batchSingleMethodsMLZoo = inputBatchSingleMethodsMLZoo.batch();
+
+		IInputBatch inputBatchHomoMethodsMLZoo = new BatchHomoMethodsMLZoo();
+		Batch batchHomoMethodsMLZoo = inputBatchHomoMethodsMLZoo.batch();
+
+		IInputBatch inputBatchHeteroMethodsMLZoo = new BatchHeteroMethodsMLZoo();
+		Batch batchHeteroMethodsMLZoo = inputBatchHeteroMethodsMLZoo.batch();
+
+		
 		List<Batch> batchesList = new ArrayList<>();
 		
 		// TSP
@@ -80,6 +93,11 @@ public class BatchExporter {
 		batchesList.add(batchSingleMethodsCOf2);
 		batchesList.add(batchHomoCOF2);
 		batchesList.add(batchHeteroCOF2);
+		
+		// ML
+		batchesList.add(batchSingleMethodsMLZoo);
+		batchesList.add(batchHomoMethodsMLZoo);
+		batchesList.add(batchHeteroMethodsMLZoo);
 		
 		// creates directory if doesn't exist
 		File batchesDir = new File(FileNames.getDirectoryOfBatches());

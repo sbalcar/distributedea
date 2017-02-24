@@ -28,8 +28,8 @@ import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
@@ -124,20 +124,20 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
 
 		
-		batch.addJobWrapper(job0);
-		batch.addJobWrapper(job1);
-		batch.addJobWrapper(job2);
-		batch.addJobWrapper(job3);
-		batch.addJobWrapper(job4);
-		batch.addJobWrapper(job5);
-		batch.addJobWrapper(job6);
-		batch.addJobWrapper(job7);
-		batch.addJobWrapper(job8);
-		batch.addJobWrapper(job9);
-		batch.addJobWrapper(job10);
-		batch.addJobWrapper(job11);
-		batch.addJobWrapper(job12);
-		batch.addJobWrapper(job13);
+		batch.addJob(job0);
+		batch.addJob(job1);
+		batch.addJob(job2);
+		batch.addJob(job3);
+		batch.addJob(job4);
+		batch.addJob(job5);
+		batch.addJob(job6);
+		batch.addJob(job7);
+		batch.addJob(job8);
+		batch.addJob(job9);
+		batch.addJob(job10);
+		batch.addJob(job11);
+		batch.addJob(job12);
+		batch.addJob(job13);
 		
 		String YLABEL0 = "fitness jako počet košů";
 		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);

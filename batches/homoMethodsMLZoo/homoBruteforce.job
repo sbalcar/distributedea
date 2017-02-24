@@ -1,0 +1,56 @@
+<job>
+  <jobID>homoBruteforce</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Homo-BruteForce</description>
+  <problem class="org.distributedea.ontology.problem.ProblemMachineLearning">
+    <classifierClassname>weka.classifiers.functions.MultilayerPerceptron</classifierClassname>
+    <filterClassName>weka.filters.unsupervised.instance.Randomize</filterClassName>
+    <argumentsDef>
+      <argumentsDef>
+        <argumentDefDouble>
+          <name>L</name>
+          <min>0.0</min>
+          <max>1.0</max>
+        </argumentDefDouble>
+        <argumentDefDouble>
+          <name>M</name>
+          <min>0.0</min>
+          <max>1.0</max>
+        </argumentDefDouble>
+        <argumentDefInteger>
+          <name>E</name>
+          <min>20</min>
+          <max>20</max>
+        </argumentDefInteger>
+      </argumentsDef>
+    </argumentsDef>
+  </problem>
+  <datasetFileName>inputs/zoo.arff</datasetFileName>
+  <methods class="methods">
+    <inputAgentDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_BruteForce</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.machinelearning.ProblemToolML</problemToolClass>
+      </inputMethodDescription>
+    </inputAgentDescriptions>
+  </methods>
+  <individualDistribution>false</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>150000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerDummy">
+    <NODE__INDEX>0</NODE__INDEX>
+    <COMPUTING__AGENT__INDEX>1</COMPUTING__AGENT__INDEX>
+    <PROBLEM__TOOL__INDEX>0</PROBLEM__TOOL__INDEX>
+  </planner>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

@@ -17,10 +17,11 @@ import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.Pl
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift;
@@ -41,6 +42,8 @@ public class InputBinPacking {
 		
 		Job job = new Job();
 		job.setNumberOfRuns(3);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
 		job.setIndividualDistribution(true);
 		job.setProblem(new ProblemBinPacking(1));
 		job.importDatasetFile(new File(

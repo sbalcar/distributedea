@@ -1,7 +1,5 @@
 <inputConfiguration>
-  <REPLAN__PERIOD__MS>70000</REPLAN__PERIOD__MS>
-  <INDIVIDUAL__BROADCAST__PERIOD__MS>5000</INDIVIDUAL__BROADCAST__PERIOD__MS>
-  <automaticOldResultsRemoving>false</automaticOldResultsRemoving>
   <automaticStart>true</automaticStart>
-  <automaticExit>true</automaticExit>
+  <automaticExit>false</automaticExit>
+  <automaticOldResultsRemoving>false</automaticOldResultsRemoving>
 </inputConfiguration>

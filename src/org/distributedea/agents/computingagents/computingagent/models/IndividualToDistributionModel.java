@@ -67,6 +67,8 @@ public class IndividualToDistributionModel {
 	public synchronized IndividualEvaluated getIndividual(IProblem problem) {
 		if (individualsNoSorted.isEmpty()) {
 			return null;
+		} else if (individualsNoSorted.size() == 1) {
+			return individualsNoSorted.get(0);
 		}
 		
 		// queue contains some individuals

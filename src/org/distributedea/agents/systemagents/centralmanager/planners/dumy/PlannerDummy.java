@@ -13,6 +13,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
@@ -39,7 +40,8 @@ public class PlannerDummy implements IPlanner {
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws Exception {
+			Iteration iteration, JobRun jobRun, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception {
 		
 		AID [] aidManagerAgents = centralManager.searchDF(
 				Agent_ManagerAgent.class.getName());
@@ -80,9 +82,11 @@ public class PlannerDummy implements IPlanner {
 		
 		ProblemStruct problemStruct = jobRun.exportProblemStruct(problemToolI);
 		
-		ComputingAgentService.sendStartComputing(
-				centralManager, computingAgent, problemStruct, logger);
-		
+		boolean startOK = ComputingAgentService.sendStartComputing(centralManager,
+				computingAgent, problemStruct, configuration, logger);
+		if (! startOK) {
+			centralManager.exit();
+		}
 
 		MethodDescription createdDescription = new MethodDescription(
 				createdAgent, jobRun.getProblem(), problemToolI);

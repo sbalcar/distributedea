@@ -5,6 +5,7 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.plan.Plan;
@@ -24,7 +25,8 @@ public interface IPlanner {
 	 * @param logger
 	 */
 	public abstract Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger) throws Exception;
+			Iteration iteration, JobRun jobRun, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception;
 	
 	
 	/**

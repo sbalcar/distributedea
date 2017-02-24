@@ -15,15 +15,16 @@ import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerTimeRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
-import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce_;
+import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
@@ -51,13 +52,15 @@ public class InputTSP {
 		job.setJobID("tsp01");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("simpleTest.tsp")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 		
-		job.setPlanner(new PlannerInitialisationRunEachMethodOnce_());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
 		
 		return job;
@@ -72,13 +75,15 @@ public class InputTSP {
 		job.setJobID("tsp02");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("wi29.tsp")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 				
-		job.setPlanner(new PlannerInitialisationRunEachMethodOnce_());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
 		
 		return job;
@@ -92,6 +97,8 @@ public class InputTSP {
 		Job job = new Job();
 		job.setJobID("tsp03");
 		job.setNumberOfRuns(1);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
 		job.setIndividualDistribution(true);
 		job.setProblem(new ProblemTSPPoint());
 		job.importDatasetFile(new File(
@@ -99,7 +106,7 @@ public class InputTSP {
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolPoint2opt.class)));
 		
-		job.setPlanner(new PlannerInitialisationRunEachMethodOnce_());
+		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
 		
 		return job;
@@ -114,6 +121,8 @@ public class InputTSP {
 		job.setJobID("tsp04");
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));
@@ -134,6 +143,8 @@ public class InputTSP {
 		Job job = new Job();
 		job.setNumberOfRuns(3);
 		job.setIndividualDistribution(true);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));

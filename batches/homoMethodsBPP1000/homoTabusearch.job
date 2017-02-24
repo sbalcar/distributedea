@@ -6,9 +6,9 @@
     <sizeOfBin>1</sizeOfBin>
   </problem>
   <datasetFileName>inputs/bp1000.bpp</datasetFileName>
-  <methods class="org.distributedea.ontology.method.Methods">
+  <methods class="methods">
     <inputAgentDescriptions>
-      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_TabuSearch</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
@@ -28,10 +28,14 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
-      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+      </inputMethodDescription>
     </inputAgentDescriptions>
   </methods>
   <individualDistribution>true</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>70000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
   <planner class="plannerInitialisationOneMethodPerCore"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplaning>50</countOfReplaning>

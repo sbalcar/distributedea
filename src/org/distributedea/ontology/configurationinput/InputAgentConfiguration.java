@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import org.distributedea.agents.computingagents.Agent_BruteForce;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 
 /**
  * Ontology represents requested configuration for the new agent

@@ -6,9 +6,9 @@
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>
   <datasetFileName>inputs/f2.co</datasetFileName>
-  <methods class="org.distributedea.ontology.method.Methods">
+  <methods class="methods">
     <inputAgentDescriptions>
-      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_DifferentialEvolution</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
@@ -24,10 +24,14 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolClass>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
-      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+      </inputMethodDescription>
     </inputAgentDescriptions>
   </methods>
   <individualDistribution>false</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>70000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
   <planner class="org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerDummy">
     <NODE__INDEX>0</NODE__INDEX>
     <COMPUTING__AGENT__INDEX>1</COMPUTING__AGENT__INDEX>

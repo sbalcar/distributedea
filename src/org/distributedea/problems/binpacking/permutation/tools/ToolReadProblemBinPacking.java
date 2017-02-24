@@ -13,14 +13,14 @@ import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
 
 public class ToolReadProblemBinPacking {
 
-	public static DatasetBinPacking readProblem(File problemFile, IAgentLogger logger) {
+	public static DatasetBinPacking readProblem(File datasetFile, IAgentLogger logger) {
 		
 		List<ObjectBinPack> objectsOfBinPack = new ArrayList<>();
 		
 		BufferedReader br = null;
 		
 		try {
-			br = new BufferedReader(new FileReader(problemFile.getAbsolutePath()));
+			br = new BufferedReader(new FileReader(datasetFile.getAbsolutePath()));
 
 			int currentObjectID = 0;
 			
@@ -36,7 +36,7 @@ public class ToolReadProblemBinPacking {
 			
 		} catch (Exception e) {
 			logger.logThrowable("Problem with reading " +
-					problemFile.getName() + " file", e);
+					datasetFile.getName() + " file", e);
 			return null;
 		} finally {
 			if (br != null){
@@ -44,12 +44,12 @@ public class ToolReadProblemBinPacking {
 					br.close();
 				} catch (IOException e) {
 					logger.logThrowable("Problem with closing the file: " +
-							problemFile.getName(), e);
+							datasetFile.getName(), e);
 				}
 			}
 		}
 		
-		return new DatasetBinPacking(objectsOfBinPack, problemFile);
+		return new DatasetBinPacking(objectsOfBinPack, datasetFile);
 	}
 	
 }

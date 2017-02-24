@@ -12,6 +12,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.plan.Inpu
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
@@ -28,23 +29,26 @@ public class PlannerThePedigree implements IPlanner {
 
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
+	private IslandModelConfiguration configuration;
 	private IAgentLogger logger;
 	
 	private IPlanner plannerInit = null;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger)
-			throws Exception {
+			Iteration iteration, JobRun jobRun, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception {
 		
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 		
 		this.centralManager = centralManager;
 		this.jobRun = jobRun;
+		this.configuration = configuration;
 		this.logger = logger;
 		
 		plannerInit = new PlannerInitialisationOneMethodPerCore();
-		return plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
+		return plannerInit.agentInitialisation(centralManager, iteration,
+				jobRun, configuration, logger);
 	}
 
 	
@@ -58,7 +62,7 @@ public class PlannerThePedigree implements IPlanner {
 		// process RePlan
 		InputRePlan rePlan = replanning(iteration, history);
 		RePlan rePlanUpdated = PlannerTool.processReplanning(centralManager,
-				rePlan, jobRun, logger);
+				rePlan, jobRun, configuration, logger);
 		
 		return new Pair<Plan, RePlan>(rePlanInit.first, rePlanUpdated);
 	}

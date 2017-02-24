@@ -4,9 +4,9 @@
   <description>Single-RandomSearch</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
   <datasetFileName>inputs/xit1083.tsp</datasetFileName>
-  <methods class="org.distributedea.ontology.method.Methods">
+  <methods class="methods">
     <inputAgentDescriptions>
-      <org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_RandomSearch</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
@@ -15,10 +15,14 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
-      </org.distributedea.ontology.methoddescriptioninput.InputMethodDescription>
+      </inputMethodDescription>
     </inputAgentDescriptions>
   </methods>
   <individualDistribution>true</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>70000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
   <planner class="plannerInitialisationRunEachMethodOnce"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplaning>50</countOfReplaning>

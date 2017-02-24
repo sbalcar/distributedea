@@ -2,7 +2,6 @@ package org.distributedea.agents.systemagents.centralmanager.plannerinfrastructu
 
 import java.util.logging.Level;
 
-import org.distributedea.InputConfiguration;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_Monitor;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.IPlannerEndCondition;
@@ -13,6 +12,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
@@ -77,11 +77,16 @@ public final class PlannerInfrastructure {
 	/**
 	 * Runs planning
 	 */
-	public final void run(IPlanner planner, JobRun jobRun) throws Exception {
+	public final void run(IPlanner planner, JobRun jobRun,
+			IslandModelConfiguration configuration) throws Exception {
 		
 		if (planner == null) {
 			throw new IllegalArgumentException("Argument " +
 					IPlanner.class.getSimpleName() + " can not be null");
+		}
+		if (configuration == null || ! configuration.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
 		if (jobRun == null || ! jobRun.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
@@ -93,7 +98,7 @@ public final class PlannerInfrastructure {
 		
 		
 		Plan plan = planner.agentInitialisation(centralManager,
-				endCondition.zeroIteration(), jobRun, logger);
+				endCondition.zeroIteration(), jobRun, configuration, logger);
 		history.addNewPlan(plan);
 		history.addNewRePlan(new RePlan(endCondition.zeroIteration()));
 		
@@ -115,7 +120,7 @@ public final class PlannerInfrastructure {
 			
 			// sleep
 			try {
-				Thread.sleep(InputConfiguration.getConf().REPLAN_PERIOD_MS);
+				Thread.sleep(configuration.getReplanPeriodMS());
 			} catch (InterruptedException e) {
 				logger.logThrowable("Error by waiting for replan", e);
 			}

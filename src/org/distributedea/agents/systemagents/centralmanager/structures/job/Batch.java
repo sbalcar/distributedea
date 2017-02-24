@@ -59,13 +59,13 @@ public class Batch implements Concept {
 	public void setJobs(List<Job> jobs) {
 		this.jobs = jobs;
 	}
-	public void addJobWrapper(Job jobWrappers) {
+	public void addJob(Job job) {
 		
 		if (this.jobs == null) {
 			this.jobs = new ArrayList<>();
 		}
 		
-		this.jobs.add(jobWrappers);
+		this.jobs.add(job);
 	}
 	
 	public List<PostProcessing> getPostProcessings() {
@@ -200,10 +200,10 @@ public class Batch implements Concept {
 	 * @return
 	 */
 	public boolean valid(IAgentLogger logger) {
-		if (batchID == null) {
+		if (batchID == null || batchID.isEmpty()) {
 			return false;
 		}
-		if (description == null) {
+		if (description == null || description.isEmpty()) {
 			return false;
 		}
 		if (jobs == null) {

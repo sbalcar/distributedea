@@ -1,6 +1,8 @@
 package org.distributedea.ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
@@ -66,6 +68,9 @@ public class ResultOntology extends BeanOntology {
             
             add(MethodDescription.class.getPackage().getName());
             add(IProblem.class.getPackage().getName());
+            
+            add(Argument.class.getPackage().getName());
+            add(ArgumentDef.class.getPackage().getName());
             add(AgentConfiguration.class.getPackage().getName());
         	
         } catch (Exception e) {

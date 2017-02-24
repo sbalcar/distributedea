@@ -3,7 +3,7 @@ package org.distributedea.ontology.methodtype;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.problems.IProblemTool;

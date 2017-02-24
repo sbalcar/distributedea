@@ -1,7 +1,15 @@
 package org.distributedea.ontology.individualwrapper;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+import javax.xml.bind.JAXBException;
+
 import jade.content.Concept;
 
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
@@ -9,6 +17,9 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * Ontology which contains one {@link Individual} and fitness value
@@ -130,6 +141,61 @@ public class IndividualEvaluated implements Concept {
 				getFitness();
 	}
 	
+	
+	/**
+	 * Exports structure as the XML String to the file
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws JAXBException 
+	 */
+	public void exportXML(File jobFile) throws Exception {
+
+		String xml = exportXML();
+		
+		PrintWriter file = new PrintWriter(jobFile.getAbsolutePath());
+		file.println(xml);
+		file.close();
+		
+	}
+	
+	/**
+	 * Exports to the XML String
+	 */
+	public String exportXML() {
+
+		XStream xstream = new XStream(new DomDriver());
+		xstream.setMode(XStream.NO_REFERENCES);
+		xstream.autodetectAnnotations(true);
+		
+		return xstream.toXML(this);
+	}
+	
+	/**
+	 * Import the {@link Job} from the file
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	public static IndividualEvaluated importXML(File file)
+			throws Exception {
+
+		Scanner scanner = new Scanner(file);
+		String xml = scanner.useDelimiter("\\Z").next();
+		scanner.close();
+		
+		return importXML(xml);
+	}
+	
+	/**
+	 * Import the {@link Job} from the String
+	 */
+	public static IndividualEvaluated importXML(String xml) {
+
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.NO_REFERENCES);
+		xstream.autodetectAnnotations(true);
+				
+		return (IndividualEvaluated) xstream.fromXML(xml);
+	}
 	
 	/**
 	 * Tests validity

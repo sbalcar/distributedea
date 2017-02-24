@@ -20,8 +20,8 @@ import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
-import org.distributedea.ontology.configuration.Argument;
-import org.distributedea.ontology.configuration.Arguments;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.method.Methods;
@@ -120,13 +120,13 @@ public class BatchSingleMethodsBPP1000 implements IInputBatch {
 
 		PostProcessing psLat0 = new PostProcJobRunsResultTable();
 		
-		batch.addJobWrapper(job0);
-		batch.addJobWrapper(job1);
-		batch.addJobWrapper(job2);
-		batch.addJobWrapper(job3);
-		batch.addJobWrapper(job4);
-		batch.addJobWrapper(job5);
-		batch.addJobWrapper(job6);
+		batch.addJob(job0);
+		batch.addJob(job1);
+		batch.addJob(job2);
+		batch.addJob(job3);
+		batch.addJob(job4);
+		batch.addJob(job5);
+		batch.addJob(job6);
 
 		batch.addPostProcessings(ps0);
 		batch.addPostProcessings(ps1);

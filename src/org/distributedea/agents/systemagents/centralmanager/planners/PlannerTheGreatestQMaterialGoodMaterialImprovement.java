@@ -9,6 +9,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.H
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.method.Methods;
@@ -24,6 +25,7 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements IPlan
 	private Agent_CentralManager centralManager;
 	private IAgentLogger logger;
 	private JobRun jobRun;
+	private IslandModelConfiguration configuration;
 	
 	private IPlanner plannerQuantityMaterial;
 	private IPlanner plannerGoodMaterial;
@@ -33,31 +35,32 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements IPlan
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger)
-			throws Exception {
+			Iteration iteration, JobRun jobRun, IslandModelConfiguration configuration,
+			IAgentLogger logger) throws Exception {
 		
 		logger.log(Level.INFO, "Planner " + getClass().getSimpleName() + " initialization");
 
 		this.centralManager = centralManager;
 		this.logger = logger;
 		this.jobRun = jobRun;
+		this.configuration = configuration;
 		
 		this.doMethodSwitch = true;
 		
 		
 		IPlanner plannerInit = new PlannerInitialisationOneMethodPerCore();
-		Plan initPlan = plannerInit.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan initPlan = plannerInit.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 
 		plannerQuantityMaterial = new PlannerTheGreatestQuantityOfMaterial();
-		Plan planQuantityMaterial =  plannerQuantityMaterial.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan planQuantityMaterial =  plannerQuantityMaterial.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 		initPlan.addAgentsToCreate(planQuantityMaterial.getNewAgents());
 		
 		plannerGoodMaterial = new PlannerTheGreatestQuantityOfGoodMaterial();
-		Plan planGoodMaterial = plannerGoodMaterial.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan planGoodMaterial = plannerGoodMaterial.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 		initPlan.addAgentsToCreate(planGoodMaterial.getNewAgents());
 		
 		plannerImprovement = new PlannerTheGreatestQuantityOfImprovement();
-		Plan planImprovement = plannerImprovement.agentInitialisation(centralManager, iteration, jobRun, logger);
+		Plan planImprovement = plannerImprovement.agentInitialisation(centralManager, iteration, jobRun, configuration, logger);
 		initPlan.addAgentsToCreate(planImprovement.getNewAgents());
 		
 		return initPlan;
@@ -80,7 +83,8 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements IPlan
 				doMethodSwitch = false;
 				
 				InputRePlan inputRePlan = swapMethods(iteration, history);
-				RePlan rePlan = PlannerTool.processReplanning(centralManager, inputRePlan, jobRun, logger);
+				RePlan rePlan = PlannerTool.processReplanning(centralManager,
+						inputRePlan, jobRun, configuration, logger);
 				
 				return new Pair<Plan, RePlan>(new Plan(iteration), rePlan);
 			}

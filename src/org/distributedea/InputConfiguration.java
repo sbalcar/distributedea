@@ -7,7 +7,6 @@ import java.util.Scanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.ontology.individuals.Individual;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -18,16 +17,6 @@ import com.thoughtworks.xstream.XStream;
  *
  */
 public class InputConfiguration {
-	
-	/**
-	 * Period of Planner replanning
-	 */
-	public long REPLAN_PERIOD_MS;
-
-	/**
-	 * Period of sending {@link Individual} from Computing Agent to another Computing Agents
-	 */
-	public long INDIVIDUAL_BROADCAST_PERIOD_MS;
 
 	/**
 	 * Allows automatic skipping machine, offering the option of framework,
@@ -145,12 +134,11 @@ public class InputConfiguration {
 	
 	public static void main(String [] args) throws Exception {
 		
-		//InputConfiguration input = new InputConfiguration();
-		//input.exportXML(new File("configuration/"));
+		InputConfiguration input = new InputConfiguration();
+		input.exportXML(new File("configuration/"));
 		
-		InputConfiguration conf = InputConfiguration.importXML(
-				new File("configuration/inputConfiguration.xml"));
-		System.out.println(conf.INDIVIDUAL_BROADCAST_PERIOD_MS);
+		//InputConfiguration conf = InputConfiguration.importXML(
+		//		new File("configuration/inputConfiguration.xml"));
 	}
 	
 }

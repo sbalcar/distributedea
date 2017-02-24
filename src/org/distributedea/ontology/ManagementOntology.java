@@ -7,6 +7,7 @@ import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.agentinfo.AgentInfoWrapper;
 import org.distributedea.ontology.agentinfo.GetAgentInfo;
+import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
@@ -41,6 +42,8 @@ public class ManagementOntology extends BeanOntology {
             add(KillContainer.class);
             
             add(InputAgentConfiguration.class.getPackage().getName());
+            
+            add(Argument.class.getPackage().getName());
             add(AgentConfiguration.class.getPackage().getName());
 
         } catch (Exception e) {

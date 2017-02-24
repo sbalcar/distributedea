@@ -46,10 +46,10 @@ public class BatchHeteroMethodsCOf2 implements IInputBatch {
 		jobW7.setPlanner(new PlannerTheGreatestQuantityOfMaterial());
 
 		
-		batch.addJobWrapper(jobW0);
-		batch.addJobWrapper(jobW1);
-		batch.addJobWrapper(jobW2);
-		batch.addJobWrapper(jobW7);
+		batch.addJob(jobW0);
+		batch.addJob(jobW1);
+		batch.addJob(jobW2);
+		batch.addJob(jobW7);
 		
 		String YLABEL = "fitness jako funkční hodnota vstupní funkce";
 		PostProcessing psMat0 = new PostProcBoxplot(YLABEL);

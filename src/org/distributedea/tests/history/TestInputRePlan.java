@@ -2,8 +2,8 @@ package org.distributedea.tests.history;
 
 import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;

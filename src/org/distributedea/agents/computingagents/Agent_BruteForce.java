@@ -6,8 +6,8 @@ import org.distributedea.agents.computingagents.computingagent.CompAgentState;
 import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -78,6 +78,10 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 
 		processIndividualFromInitGeneration(individualEvalI,
 				generationNumberI, problem, jobID);
+		
+		// logs data
+		distributeIndividualToNeighours(individualEvalI, problem, jobID);
+		
 		
 		while (individualEvalI != null && state == CompAgentState.COMPUTING) {
 			

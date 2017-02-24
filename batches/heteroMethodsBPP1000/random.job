@@ -124,6 +124,10 @@
     </problemTools>
   </methods>
   <individualDistribution>true</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>70000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
   <planner class="plannerRandom"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplaning>50</countOfReplaning>

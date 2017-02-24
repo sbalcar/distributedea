@@ -4,6 +4,8 @@ import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.arguments.Argument;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
@@ -19,6 +21,7 @@ import org.distributedea.ontology.dataset.tsp.PositionPoint;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
@@ -38,6 +41,7 @@ public class ComputingOntology extends BeanOntology {
         
         try {
             add(StartComputing.class);
+            add(IslandModelConfiguration.class);
             add(ProblemWrapper.class);
             
             add(IndividualWrapper.class);
@@ -54,6 +58,9 @@ public class ComputingOntology extends BeanOntology {
             add(MethodDescription.class);
             add(IProblem.class.getPackage().getName());
             add(InputAgentConfiguration.class.getPackage().getName());
+            
+            add(Argument.class.getPackage().getName());
+            add(ArgumentDef.class.getPackage().getName());
             add(AgentConfiguration.class.getPackage().getName());
             
             add(JobID.class);

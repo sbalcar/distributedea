@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.distributedea.InputConfiguration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.FitnessTool;
 import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
 import org.distributedea.agents.computingagents.computingagent.models.BestIndividualModel;
 import org.distributedea.agents.computingagents.computingagent.models.HelpersModel;
@@ -37,17 +35,18 @@ import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.agentinfo.AgentInfoWrapper;
 import org.distributedea.ontology.agentinfo.GetAgentInfo;
+import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configuration.AgentName;
-import org.distributedea.ontology.configuration.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
@@ -427,7 +426,10 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return request;
 		}
 		
-		final ProblemWrapper problemWrapper = startComputing.getProblemWrapper();
+		final ProblemWrapper problemWrapper =
+				startComputing.getProblemWrapper();
+		final IslandModelConfiguration configuration =
+				startComputing.getIslandModelConfiguration();
 		
 		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
 		
@@ -446,7 +448,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		try {
-			startComputation(problemWrapper);
+			startComputation(problemWrapper, configuration);
 		} catch (Exception e) {
 			ACLMessage reply = request.createReply();
 			reply.setPerformative(ACLMessage.REFUSE);
@@ -536,7 +538,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 
-	private void startComputation(final ProblemWrapper problemWrapper) throws Exception {
+	private void startComputation(final ProblemWrapper problemWrapper,
+			IslandModelConfiguration configuration) throws Exception {
 		
 		if (this.state != CompAgentState.INITIALIZED) {
 			throw new Exception("Agent is not initialized");
@@ -546,7 +549,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		final IProblem problem = problemStruct.getProblem();
 		
 		// adding cyclic behavior for sending Individual to distribution
-		this.addBehaviour(new TickerBehaviour(this, InputConfiguration.getConf().INDIVIDUAL_BROADCAST_PERIOD_MS) {
+		this.addBehaviour(new TickerBehaviour(this, configuration.getIndividualBroadcastPeriodMS()) {
 
 			private static final long serialVersionUID = 1L;
 

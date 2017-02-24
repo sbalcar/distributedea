@@ -12,6 +12,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.plan.Inpu
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
@@ -36,7 +37,8 @@ public class PlannerInitialisationConcretePlan implements IPlanner {
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
-			Iteration iteration, JobRun jobRun, IAgentLogger logger)
+			Iteration iteration, JobRun jobRun,
+			IslandModelConfiguration configuration, IAgentLogger logger)
 			throws Exception {
 
 		NodeInfosWrapper availableNodes =
@@ -58,7 +60,7 @@ public class PlannerInitialisationConcretePlan implements IPlanner {
 		}
 		
 		return PlannerTool.createAndRunAgents(centralManager,
-				jobRun, inputPlan, logger);
+				jobRun, inputPlan, configuration, logger);
 	}
 
 	@Override
