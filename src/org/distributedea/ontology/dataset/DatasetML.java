@@ -20,7 +20,7 @@ public class DatasetML extends Dataset {
 	 * @param problemFile
 	 */
 	public DatasetML(File problemFile) {
-		importProblemFile(problemFile);
+		importDatasetFile(problemFile);
 	}
 
 	/**
@@ -32,17 +32,17 @@ public class DatasetML extends Dataset {
 			throw new IllegalArgumentException("Argument " +
 					DatasetML.class.getSimpleName() + " is not valid");
 		}
-		importProblemFile(dataset.exportProblemFile());
+		importDatasetFile(dataset.exportDatasetFile());
 	}
 
 	
 	@Override
-	public File exportProblemFile() {
+	public File exportDatasetFile() {
 		return new File(arffFileName);
 	}
 
 	@Override
-	public void importProblemFile(File problemFile) {
+	public void importDatasetFile(File problemFile) {
 
 		if (problemFile == null || ! problemFile.isFile()) {
 			throw new IllegalArgumentException("Argument " +
@@ -54,7 +54,7 @@ public class DatasetML extends Dataset {
 	@Override
 	public boolean valid(IAgentLogger logger) {
 		
-		File file = exportProblemFile();
+		File file = exportDatasetFile();
 		return (file != null) && file.isFile();
 	}
 

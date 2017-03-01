@@ -6,6 +6,7 @@ import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.continuousoptimization.point.operators.OperatorDifferential;
 import org.distributedea.problems.continuousoptimization.point.operators.OperatorMoveToSomewhereInTheMiddle;
@@ -30,10 +31,12 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 	public Individual generateNextIndividual(IProblem problem,
 			Dataset dataset, Individual individual, IAgentLogger logger) {
 
-		DatasetContinuousOpt probelmCO = (DatasetContinuousOpt) dataset;
+		ProblemContinuousOpt problemCO = (ProblemContinuousOpt)problem;
+		DatasetContinuousOpt datasetCO = (DatasetContinuousOpt) dataset;
 		IndividualPoint individualPoint = (IndividualPoint) individual;
 		
-		return ToolGenerateNextIndividualCO.create(probelmCO, individualPoint, logger);
+		return ToolGenerateNextIndividualCO.create(individualPoint,
+				problemCO, datasetCO, logger);
 	}
 
 	@Override

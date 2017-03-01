@@ -39,7 +39,8 @@ public class IndividualPoint  extends Individual {
 	 */
 	public IndividualPoint(IndividualPoint individual) {
 		if (individual == null || ! individual.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					IndividualPoint.class.getSimpleName() + " is not valid");
 		}
 		List<Double> coordinatesNew = new ArrayList<>();
 		for (Double valueI : individual.getCoordinates()) {
@@ -89,10 +90,76 @@ public class IndividualPoint  extends Individual {
 		}
 		
 	}
+
+	/**
+	 * Operator plus
+	 * @param indiv
+	 * @return
+	 */
+	public IndividualPoint operator_plus(final IndividualPoint indiv) {
+		
+		List<Double> coordinatesNew = new ArrayList<>();
+		for (int i = 0; i < getCoordinates().size(); i++) {
+			
+			double thisCoorI = exportCoordinate(i);
+			double thatCoorI = indiv.exportCoordinate(i);
+			coordinatesNew.add(thisCoorI + thatCoorI);
+		}
+		return new IndividualPoint(coordinatesNew);
+	}
+
+	/**
+	 * Operator plus
+	 * @param scalar
+	 * @return
+	 */
+	public IndividualPoint operator_plus(final double scalar) {
+		
+		List<Double> coordinatesNew = new ArrayList<>();
+		for (int i = 0; i < getCoordinates().size(); i++) {
+			
+			double thisCoorI = exportCoordinate(i);
+			coordinatesNew.add(thisCoorI + scalar);
+		}
+		return new IndividualPoint(coordinatesNew);
+	}
 	
+	/**
+	 * Operator minus
+	 * @param indiv
+	 * @return
+	 */
+	public IndividualPoint operator_minus(final IndividualPoint indiv) {
+		
+		List<Double> coordinatesNew = new ArrayList<>();
+		for (int i = 0; i < getCoordinates().size(); i++) {
+			
+			double thisCoorI = exportCoordinate(i);
+			double thatCoorI = indiv.exportCoordinate(i);
+			coordinatesNew.add(thisCoorI - thatCoorI);
+		}
+		return new IndividualPoint(coordinatesNew);
+	}
+
+	/**
+	 * Operator multiplication scalar
+	 * @param indiv
+	 * @return
+	 */
+	public IndividualPoint operator_multipl(final double scalar) {
+		
+		List<Double> coordinatesNew = new ArrayList<>();
+		for (int i = 0; i < getCoordinates().size(); i++) {
+			
+			double thisCoorI = exportCoordinate(i);
+			coordinatesNew.add(thisCoorI * scalar);
+		}
+		return new IndividualPoint(coordinatesNew);
+	}
+
 	@Override
 	public boolean equals(Object other) {
-
+		
 	    if (other == null) {
 	    	throw new IllegalArgumentException();
 	    }
@@ -155,4 +222,5 @@ public class IndividualPoint  extends Individual {
 	public IndividualPoint deepClone() {
 		return new IndividualPoint(this);
 	}
+	
 }

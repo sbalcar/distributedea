@@ -5,6 +5,7 @@ import java.io.File;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException;
 import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
@@ -12,14 +13,15 @@ import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
 
 public class ToolInitializationBbobCO {
 
-	public static void initialization(DatasetContinuousOpt problemContinousOpt, AgentConfiguration agentConf,
-			IJNIfgeneric fgeneric, BbobTools bbobTools, IAgentLogger logger) throws Exception {
+	public static void initialization(ProblemContinuousOpt problemCO, DatasetContinuousOpt datasetCO,
+			AgentConfiguration agentConf, IJNIfgeneric fgeneric, BbobTools bbobTools,
+			IAgentLogger logger) throws Exception {
 		
     	System.setProperty("java.library.path", "." + File.separator + "lib");
     	    	
-    	int dim = problemContinousOpt.getDimension();
+    	int dim = problemCO.getDimension();
     	
-    	String functionIDString = problemContinousOpt.getFunctionID();
+    	String functionIDString = problemCO.getFunctionID();
     	int functionID = Integer.parseInt(functionIDString.substring(1));
     	
     	String containerSuffix = agentConf.exportContainerSuffix();

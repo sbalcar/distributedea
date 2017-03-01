@@ -124,7 +124,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		
 		this.localSaver = new LocalSaver(this, jobID);
 		
-		problemTool.initialization(dataset, agentConf, getLogger());
+		problemTool.initialization(problem, dataset, agentConf, getLogger());
 		this.state = CompAgentState.COMPUTING;
 		
 		

@@ -1,6 +1,7 @@
 package org.distributedea.agents.systemagents.centralmanager.behaviours;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -113,7 +114,11 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 		
 		String batchID = batch.getBatchID();
 		FilesystemInitTool.createResultSpaceForBatch(batchID);
-		FilesystemInitTool.copyInputBatchDescriptionToResultDir(batchID);
+		try {
+			FilesystemInitTool.copyInputBatchDescriptionToResultDir(batchID);
+		} catch (IOException e) {
+			logger.logThrowable("Can not copy input Batch", e);
+		}
 		
 		// add Behavior for Job Runs
 		for (Job jobI : batch.getJobs()) {

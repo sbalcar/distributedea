@@ -1,12 +1,11 @@
 package org.distributedea.ontology.dataset;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.dataset.continuousoptimization.Interval;
+import org.distributedea.ontology.dataset.continuousoptimization.DomainDefinition;
 
 /**
  * Ontology represents Continuous Optimization Dataset
@@ -16,22 +15,21 @@ import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 public class DatasetContinuousOpt extends Dataset {
 
 	private static final long serialVersionUID = 1L;
-	
-	/** Identification of function */
-	private String functionID;
-	
-	/** Size of space (the number of intervals) */
-	private int dimension;
-	
+		
 	/** Limiting the space intervals */
-	private List<Interval> intervals;
-
-	/** Problem File name */
-	private String problemFileName;
+	private DomainDefinition domain;
 	
+	/** Dataset File name */
+	private String datasetFileName;
 	
+	@Deprecated
 	public DatasetContinuousOpt() {
-		this.intervals = new ArrayList<>();
+	}
+
+	public DatasetContinuousOpt(DomainDefinition domain,
+			File datasetFile) {
+		setDomain(domain);
+		importDatasetFile(datasetFile);
 	}
 	
 	/**
@@ -44,51 +42,30 @@ public class DatasetContinuousOpt extends Dataset {
 					DatasetContinuousOpt.class.getSimpleName() + " is not valid");
 		}
 		
-		setFunctionID(problem.getFunctionID());
-		setDimension(problem.getDimension());
-		
-		List<Interval> intervalsClone = new ArrayList<>();
-		for (Interval intervalI : problem.getIntervals()) {
-			intervalsClone.add(intervalI.deepClone());
-		}
-		
-		setIntervals(intervalsClone);
-		setProblemFileName(problem.getProblemFileName());
-	}
-	
-	public String getFunctionID() {
-		return functionID;
-	}
-	public void setFunctionID(String functionID) {
-		this.functionID = functionID;
+		setDomain(problem.getDomain().deepClone());
+		setDatasetFileName(problem.getDatasetFileName());
 	}
 
-	public int getDimension() {
-		return dimension;
-	}
-	public void setDimension(int dimension) {
-		this.dimension = dimension;
-	}
 	
-	public List<Interval> getIntervals() {
-		return intervals;
+	public DomainDefinition getDomain() {
+		return domain;
 	}
-	public void setIntervals(List<Interval> intervals) {
-		this.intervals = intervals;
+	public void setDomain(DomainDefinition domain) {
+		this.domain = domain;
 	}
 	
 	@Deprecated
-	public String getProblemFileName() {
-		File file = exportProblemFile();
+	public String getDatasetFileName() {
+		File file = exportDatasetFile();
 		if (file == null) {
 			return null;
 		}
 		return file.getAbsolutePath();
 	}
 	@Deprecated
-	public void setProblemFileName(String fileName) {
+	public void setDatasetFileName(String fileName) {
 		try {
-			importProblemFile(new File(fileName));
+			importDatasetFile(new File(fileName));
 		} catch(Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -97,38 +74,45 @@ public class DatasetContinuousOpt extends Dataset {
 	 * Exports File with {@link Problem} assignment
 	 */
 	@Override
-	public File exportProblemFile() {
-		if (problemFileName == null) {
+	public File exportDatasetFile() {
+		if (datasetFileName == null) {
 			return null;
 		}
-		return new File(problemFileName);
+		return new File(datasetFileName);
 	}
 	/**
 	 * Imports File with {@link Problem} assignment
 	 */
 	@Override
-	public void importProblemFile(File problemFile) {
-		if (problemFile == null) {
+	public void importDatasetFile(File datasetFile) {
+		if (datasetFile == null) {
 			throw new IllegalArgumentException();
 		}
-		if (! problemFile.exists() || ! problemFile.isFile()) {
+		if (! datasetFile.exists() || ! datasetFile.isFile()) {
 			throw new IllegalArgumentException();
 		}
-		this.problemFileName = problemFile.getAbsolutePath();
+		this.datasetFileName = datasetFile.getAbsolutePath();
 	}
+	
+	/**
+	 * Import the {@link DatasetContinuousOpt} from the file
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	public static Dataset importXML(File file)
+			throws Exception {
 		
+		return new DatasetContinuousOpt(
+				DomainDefinition.importXML(file),
+				file);
+	}
+	
 	/**
 	 * Tests validity
 	 */
 	public boolean valid(IAgentLogger logger) {
-		
-		if (functionID == null) {
-			return false;
-		}
-		if (dimension < 1) {
-			return false;
-		}
-		if (intervals == null || intervals.size() != dimension) {
+
+		if (domain == null || ! domain.valid(logger)) {
 			return false;
 		}
 		return true;

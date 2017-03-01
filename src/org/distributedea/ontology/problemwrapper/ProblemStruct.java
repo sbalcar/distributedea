@@ -246,7 +246,7 @@ public class ProblemStruct implements Concept {
 		JobID jobIDCone = jobID.deepClone();
 		boolean individualDistributionClone = individualDistribution;
 		IProblem problemClone = problem.deepClone();
-		File problemFileClone = getDataset().exportProblemFile();
+		File problemFileClone = getDataset().exportDatasetFile();
 		Class<?> problemToolClass = exportProblemToolClass(new TrashLogger());
 		
 		ProblemWrapper wrapper = new ProblemWrapper();

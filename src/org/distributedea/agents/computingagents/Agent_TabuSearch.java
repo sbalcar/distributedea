@@ -91,7 +91,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		
 		this.localSaver = new LocalSaver(this, jobID);
 		
-		problemTool.initialization(dataset, agentConf, getLogger());
+		problemTool.initialization(problem, dataset, agentConf, getLogger());
 		this.state = CompAgentState.COMPUTING;
         
 		long generationNumberI = -1;

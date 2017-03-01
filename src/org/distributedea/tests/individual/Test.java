@@ -50,7 +50,7 @@ public class Test {
 			System.out.println("Error");
 		}
 
-		IProblem problemCO = new ProblemContinuousOpt(true);
+		IProblem problemCO = new ProblemContinuousOpt("f01", 2, true);
 		Collections.sort(individuals, new CmpIndividualWrapper(problemCO));
 
 		IndividualWrapper bestCO = individuals.get(0);

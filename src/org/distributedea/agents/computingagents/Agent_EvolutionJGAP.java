@@ -146,7 +146,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		
 		this.localSaver = new LocalSaver(this, jobID);
 		
-		problemTool.initialization(dataset, agentConf, getLogger());
+		problemTool.initialization(problem, dataset, agentConf, getLogger());
 		this.state = CompAgentState.COMPUTING;
 		
 		Configuration conf = new DefaultConfiguration();
@@ -167,7 +167,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		// converts Individuals to Chromosomes
 		Population population = new Population(conf);
 		for (IndividualEvaluated individualI : individuals) {
-			IChromosome chromI = Convertor.convertToIChromosome(individualI.getIndividual(), dataset, conf);
+			IChromosome chromI = Convertor.convertToIChromosome(individualI.getIndividual(), problem, dataset, conf);
 			//chromI.setFitnessValue(individualI.getFitness());
 			
 			population.addChromosome(chromI);
@@ -251,7 +251,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 				IndividualEvaluated recievedIndividual = recievedIndividualW.getIndividualEvaluated();
 				
 				IChromosome recievedChromI = Convertor
-						.convertToIChromosome(recievedIndividual.getIndividual(), dataset, conf);
+						.convertToIChromosome(recievedIndividual.getIndividual(), problem, dataset, conf);
 				pop.getPopulation().addChromosome(recievedChromI);
 				
 				processRecievedIndividual(individualEvalI_, recievedIndividualW,

@@ -12,6 +12,7 @@ import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputContOpt;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
+import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
@@ -61,11 +62,13 @@ public class BatchHeteroMethodsCOf2 implements IInputBatch {
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
 		
-		PostProcessing psLat0 = new PostProcBatchDiffTable();
-		PostProcessing psLat1 = new PostProcJobTable();
+		PostProcessing psLat0 = new PostProcJobRunsResultTable();
+		PostProcessing psLat1 = new PostProcBatchDiffTable();
+		PostProcessing psLat2 = new PostProcJobTable();
 		
 		batch.addPostProcessings(psLat0);
 		batch.addPostProcessings(psLat1);
+		batch.addPostProcessings(psLat2);
 		
 		return batch;
 	}

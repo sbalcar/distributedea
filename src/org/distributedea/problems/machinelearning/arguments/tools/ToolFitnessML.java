@@ -45,7 +45,7 @@ public class ToolFitnessML {
 	    demo.setFilter(
 	    	problem.exportFilterClass(),
 	        filterOptions.toArray(new String[filterOptions.size()]) );
-	    demo.setTraining(dataset.exportProblemFile());
+	    demo.setTraining(dataset.exportDatasetFile());
 	    demo.execute();
 	    
 	    //System.out.println("ErrorRate: " + demo.getErrorRate());

@@ -56,11 +56,7 @@
     <replanPeriodMS>150000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerDummy">
-    <NODE__INDEX>0</NODE__INDEX>
-    <COMPUTING__AGENT__INDEX>1</COMPUTING__AGENT__INDEX>
-    <PROBLEM__TOOL__INDEX>0</PROBLEM__TOOL__INDEX>
-  </planner>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplaning>50</countOfReplaning>
   </plannerEndCondition>

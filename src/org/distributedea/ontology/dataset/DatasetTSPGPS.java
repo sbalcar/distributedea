@@ -36,7 +36,7 @@ public class DatasetTSPGPS extends DatasetTSP {
 	 */
 	public DatasetTSPGPS(List<PositionGPS> positions, File problemFile) {
 		this.positions = positions;
-		this.importProblemFile(problemFile);
+		this.importDatasetFile(problemFile);
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class DatasetTSPGPS extends DatasetTSP {
 	
 	@Deprecated
 	public String getProblemFileName() {
-		File file = exportProblemFile();
+		File file = exportDatasetFile();
 		if (file == null) {
 			return null;
 		}
@@ -101,7 +101,7 @@ public class DatasetTSPGPS extends DatasetTSP {
 	@Deprecated
 	public void setProblemFileName(String fileName) {
 		try {
-			importProblemFile(new File(fileName));
+			importDatasetFile(new File(fileName));
 		} catch(Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -110,7 +110,7 @@ public class DatasetTSPGPS extends DatasetTSP {
 	 * Exports File with {@link Problem} assignment
 	 */
 	@Override
-	public File exportProblemFile() {
+	public File exportDatasetFile() {
 		if (problemFileName == null) {
 			return null;
 		}
@@ -120,7 +120,7 @@ public class DatasetTSPGPS extends DatasetTSP {
 	 * Imports File with {@link Problem} assignment
 	 */
 	@Override
-	public void importProblemFile(File problemFile) {
+	public void importDatasetFile(File problemFile) {
 		if (problemFile == null) {
 			throw new IllegalArgumentException();
 		}

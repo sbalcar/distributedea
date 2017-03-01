@@ -13,6 +13,12 @@ public class ProblemContinuousOpt extends AProblem {
 
 	private static final long serialVersionUID = 1L;
 	
+	/** Identification of function */
+	private String functionID;
+	
+	/** Size of space (the number of intervals) */
+	private int dimension;
+	
 	private boolean isMaximizationProblem;
 
 	@Deprecated
@@ -22,9 +28,12 @@ public class ProblemContinuousOpt extends AProblem {
 	 * Constructor
 	 * @param isMaximizationProblem
 	 */
-	public ProblemContinuousOpt(boolean isMaximizationProblem) {
+	public ProblemContinuousOpt(String functionID, int dimension,
+			boolean isMaximizationProblem) {
 		
-		this.isMaximizationProblem = isMaximizationProblem;
+		setFunctionID(functionID);
+		setDimension(dimension);
+		setMaximizationProblem(isMaximizationProblem);
 	}
 	
 	/**
@@ -36,9 +45,27 @@ public class ProblemContinuousOpt extends AProblem {
 			throw new IllegalArgumentException("Argument " +
 					ProblemContinuousOpt.class.getSimpleName() + " is not valid");
 		}
+		
+		this.functionID = problem.getFunctionID();
+		this.dimension = problem.getDimension();
 		this.isMaximizationProblem = problem.isMaximizationProblem();
 	}
 
+	public String getFunctionID() {
+		return functionID;
+	}
+	@Deprecated
+	public void setFunctionID(String functionID) {
+		this.functionID = functionID;
+	}
+	
+	public int getDimension() {
+		return dimension;
+	}
+	@Deprecated
+	public void setDimension(int dimension) {
+		this.dimension = dimension;
+	}
 	
 	public boolean isMaximizationProblem() {
 		
@@ -64,6 +91,13 @@ public class ProblemContinuousOpt extends AProblem {
 
 	@Override
 	public boolean valid(IAgentLogger logger) {
+		
+		if (functionID == null) {
+			return false;
+		}
+		if (dimension < 1) {
+			return false;
+		}
 		
 		return true;
 	}

@@ -1,14 +1,6 @@
-<continousoptimalization>
-   <function>f2</function>
-   <dimensions>2</dimensions>
-   <domain>
-      <dimension number="0">
-         <min>-2.048</min>
-         <max>2.047</max>
-      </dimension>
-      <dimension number="1">
-         <min>-2.048</min>
-         <max>2.047</max>
-      </dimension>
-   </domain>
-</continousoptimalization>
+<allDimensionsRestriction>
+  <restriction>
+    <min>-2.048</min>
+    <max>2.047</max>
+  </restriction>
+</allDimensionsRestriction>

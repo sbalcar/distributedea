@@ -11,6 +11,8 @@ import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.problems.IProblemTool;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
@@ -35,23 +37,27 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	public static IChromosome convertToIChromosome(Individual individual,
-			Dataset dataset, Configuration conf) throws InvalidConfigurationException {
+			IProblem problem, Dataset dataset, Configuration conf
+			) throws InvalidConfigurationException {
 	
+		ProblemContinuousOpt problemCO =
+				(ProblemContinuousOpt) problem;
+		DatasetContinuousOpt datasetCO =
+				(DatasetContinuousOpt)dataset;
+
+		
 		if (individual instanceof IndividualPermutation) {
 			
 			IndividualPermutation individualPermutation =
 					(IndividualPermutation) individual;
-			return convertToIChromosome(individualPermutation, null, conf);
+			return convertToIChromosome(individualPermutation, problemCO, datasetCO, conf);
 			
 		} else if (individual instanceof IndividualPoint) {
 			
 			IndividualPoint individualPoint =
 					(IndividualPoint)individual;
-			
-			DatasetContinuousOpt problemCO =
-					(DatasetContinuousOpt)dataset;
-			
-			return convertToIChromosome(individualPoint, problemCO, conf);
+						
+			return convertToIChromosome(individualPoint, problemCO, datasetCO, conf);
 		}
 		
 		return null;
@@ -65,8 +71,8 @@ public class Convertor {
 	 * @throws InvalidConfigurationException
 	 */
 	private static Chromosome convertToIChromosome(
-			IndividualPermutation individual, Dataset dataset,
-			Configuration conf)
+			IndividualPermutation individual, ProblemContinuousOpt problemCO,
+			DatasetContinuousOpt datasetCO, Configuration conf)
 			throws InvalidConfigurationException {
 		
 		Gene[] sampleGenes = new Gene[individual.sizeOfPermutation()];
@@ -89,16 +95,14 @@ public class Convertor {
 	}
 
 	private static Chromosome convertToIChromosome(
-			IndividualPoint individual, DatasetContinuousOpt problem,
-			Configuration conf)
+			IndividualPoint individual, ProblemContinuousOpt problemCO,
+			DatasetContinuousOpt datasetCO, Configuration conf)
 			throws InvalidConfigurationException {
 		
-		List<Interval> intervals = problem.getIntervals();
-		
-		Gene[] sampleGenes = new Gene[problem.getDimension()];
+		Gene[] sampleGenes = new Gene[problemCO.getDimension()];
 		for (int i = 0; i < sampleGenes.length; i++) {
 
-			Interval intervalI = intervals.get(i);
+			Interval intervalI = datasetCO.getDomain().exportRestriction(i);
 			
 			int minVal = (int) intervalI.getMin();
 			int maxVal = (int) intervalI.getMax();

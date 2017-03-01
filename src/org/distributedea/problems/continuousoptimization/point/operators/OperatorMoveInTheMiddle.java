@@ -4,22 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 
 public class OperatorMoveInTheMiddle {
 
 	public static Individual[] create(IndividualPoint individualP1,
 			IndividualPoint individualP2, IndividualPoint individualP3,
-			Dataset dataset, IAgentLogger logger)
-			throws Exception {
+			ProblemContinuousOpt problemCO, DatasetContinuousOpt datasetCO,
+			IAgentLogger logger) throws Exception {
 		
 		double F = 1.0;
-		
-		DatasetContinuousOpt problemCO = (DatasetContinuousOpt) dataset;
 		
 		List<Double> coordinates = new ArrayList<Double>();
 		for (int i = 0; i < individualP1.getCoordinates().size(); i++) {
@@ -30,7 +28,7 @@ public class OperatorMoveInTheMiddle {
 			
 			double valueNew = indACoorI+F*(indBCoorI-indCCoorI);
 			
-			Interval intervalI = problemCO.getIntervals().get(i);
+			Interval intervalI = datasetCO.getDomain().exportRestriction(i);
 			
 			// corrects the new computed value
 			double intervalSize = intervalI.getMax() - intervalI.getMin();

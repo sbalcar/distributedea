@@ -37,7 +37,7 @@ public class BatchSingleMethodsCOf2 implements IInputBatch {
 		batch.setBatchID("singleMethodsCOf2");
 		batch.setDescription("Porovnání samostatných metod : COf2");
 		
-		Job jobI = InputContOpt.test04();
+		Job jobI = InputContOpt.test04_();
 		jobI.setJobID("0");
 		jobI.setDescription("clone");
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());

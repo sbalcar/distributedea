@@ -52,9 +52,9 @@ public class InputContOpt {
 		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(70000, 5000));
-		job.setProblem(new ProblemContinuousOpt(true));
+		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("f01.co")));
+				FileNames.getInputProblemFile("weka.co")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class) ));
 		job.setPlanner(new PlannerDummy());
@@ -74,9 +74,9 @@ public class InputContOpt {
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(70000, 5000));
-		job.setProblem(new ProblemContinuousOpt(true));
+		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("f01.co")));
+				FileNames.getInputProblemFile("weka.co")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
@@ -97,9 +97,9 @@ public class InputContOpt {
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(70000, 5000));
-		job.setProblem(new ProblemContinuousOpt(true));
+		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("f01.co")));
+				FileNames.getInputProblemFile("weka.co")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
@@ -109,7 +109,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static Job test04() throws IOException {
+	public static Job test04_() throws IOException {
 
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
@@ -120,7 +120,7 @@ public class InputContOpt {
 		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(70000, 5000));
-		job.setProblem(new ProblemContinuousOpt(false));
+		job.setProblem(new ProblemContinuousOpt("f2", 2, false));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("f2.co")));
 		job.setMethods(new MethodsTwoSets(
@@ -128,6 +128,39 @@ public class InputContOpt {
 		
 		job.setPlanner(new PlannerDummy());
 		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		
+		return job;
+	}
+
+	public static Job test04() throws IOException {
+
+		InputAgentConfigurations algorithms = test01().getMethods()
+				.exportInputAgentConfigurations().deepClone();
+
+		Job job = new Job();
+		job.setJobID("f08");
+		job.setNumberOfRuns(3);
+		job.setIndividualDistribution(false);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
+		job.setProblem(new ProblemContinuousOpt("f04", 2, false));
+		job.importDatasetFile(new File(
+				FileNames.getInputProblemFile("weka.co")));
+		job.setMethods(new MethodsTwoSets(
+				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
+		
+		job.setPlanner(new PlannerDummy());
+		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		
+		return job;
+	}
+
+	public static Job test08() throws IOException {
+
+		Job job = test04();
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(70000, 5000));
+		job.setProblem(new ProblemContinuousOpt("f08", 2, false));
 		
 		return job;
 	}

@@ -1,5 +1,8 @@
 package org.distributedea.ontology.dataset.continuousoptimization;
 
+import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
+
 import jade.content.Concept;
 
 /**
@@ -31,7 +34,7 @@ public class Interval implements Concept {
 	 * @param interval
 	 */
 	public Interval(Interval interval) {
-		if (interval == null || ! interval.valid()) {
+		if (interval == null || ! interval.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					Interval.class.getSimpleName() + " is not valid");
 		}
@@ -58,13 +61,16 @@ public class Interval implements Concept {
 	public double size() {
 		return getMax() - getMin();
 	}
+	public boolean contain(double val) {
+		return getMin() <= val && val <= getMax();
+	}
 	
 	/**
 	 * Tests validity
 	 * @return
 	 */
-	public boolean valid() {
-		return min < max;
+	public boolean valid(IAgentLogger logger) {
+		return getMin() < getMax();
 	}
 	
 	/**

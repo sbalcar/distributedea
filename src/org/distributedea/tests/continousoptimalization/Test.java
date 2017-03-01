@@ -27,7 +27,7 @@ public class Test {
 		File file = batchCOf2.getJobs().get(0).exportDatasetFile();
 		Dataset dataset = tool.readDataset(file, new TrashLogger());
 		
-		IProblem problem = new ProblemContinuousOpt(false);
+		IProblem problem = new ProblemContinuousOpt("f2", 2, false);
 		
 		String fileOfSolution = FileNames.getDirectoryOfInputs() + File.separator +
 				"solutions" + File.separator + file.getName();

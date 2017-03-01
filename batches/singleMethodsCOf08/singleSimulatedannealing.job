@@ -1,0 +1,45 @@
+<job>
+  <jobID>singleSimulatedannealing</jobID>
+  <numberOfRuns>3</numberOfRuns>
+  <description>Single-SimulatedAnnealing</description>
+  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <functionID>f08</functionID>
+    <dimension>2</dimension>
+    <isMaximizationProblem>false</isMaximizationProblem>
+  </problem>
+  <datasetFileName>inputs/weka.co</datasetFileName>
+  <methods class="methods">
+    <inputAgentDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_SimulatedAnnealing</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>temperature</name>
+                  <value>10000</value>
+                </argument>
+                <argument>
+                  <name>coolingRate</name>
+                  <value>0.002</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+      </inputMethodDescription>
+    </inputAgentDescriptions>
+  </methods>
+  <individualDistribution>false</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>70000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplaning>50</countOfReplaning>
+  </plannerEndCondition>
+</job>

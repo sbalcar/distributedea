@@ -176,7 +176,7 @@ public class FilesystemInitTool {
 		}
 	}
 
-	public static void copyInputBatchDescriptionToResultDir(String batchID) {
+	public static void copyInputBatchDescriptionToResultDir(String batchID) throws IOException {
 		
 		String inputBatchDescriptionFileName = FileNames.getInputBatchDirectory(batchID) +
 				File.separator + "description.txt";
@@ -189,12 +189,7 @@ public class FilesystemInitTool {
 				new File(batchDescriptionCopyOFileName);
 
 		if (! batchDescriptionCopyOFile.exists()) {
-			try {
 				FileUtils.copyFile(inputBatchDescriptionFile, batchDescriptionCopyOFile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 

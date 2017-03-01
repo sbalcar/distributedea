@@ -18,12 +18,12 @@ public abstract class Dataset implements Concept {
 	 * Export {@link File} with {@link Dataset}
 	 * @return
 	 */
-	public abstract File exportProblemFile();
+	public abstract File exportDatasetFile();
 	/**
 	 * Import {@link File} with {@link Dataset} to solve
 	 * @param problemFile
 	 */
-	public abstract void importProblemFile(File problemFile);
+	public abstract void importDatasetFile(File problemFile);
 	
 
 	/**

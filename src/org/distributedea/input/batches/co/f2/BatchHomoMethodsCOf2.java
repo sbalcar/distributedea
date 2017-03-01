@@ -40,7 +40,7 @@ public class BatchHomoMethodsCOf2 implements IInputBatch {
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolCORandomMove.class));
 
-		Job job0 = InputContOpt.test04();
+		Job job0 = InputContOpt.test04_();
 		job0.setJobID("homoHillclimbing");
 		job0.setDescription("Homo-HillClimbing");
 		job0.setMethods(methods0);
@@ -50,7 +50,7 @@ public class BatchHomoMethodsCOf2 implements IInputBatch {
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments())),
 				new ProblemTools(ProblemToolCORandomMove.class));
 		
-		Job job1 = InputContOpt.test04();
+		Job job1 = InputContOpt.test04_();
 		job1.setJobID("homoRandomsearch");
 		job1.setDescription("Homo-RandomSearch");
 		job1.setMethods(methods1);
@@ -60,7 +60,7 @@ public class BatchHomoMethodsCOf2 implements IInputBatch {
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) ))),
 				new ProblemTools(ProblemToolCORandomMove.class));
 
-		Job job2 = InputContOpt.test04();
+		Job job2 = InputContOpt.test04_();
 		job2.setJobID("homoEvolution");
 		job2.setDescription("Homo-Evolution");
 		job2.setMethods(methods2);
@@ -70,7 +70,7 @@ public class BatchHomoMethodsCOf2 implements IInputBatch {
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments())),
 				new ProblemTools(ProblemToolCORandomMove.class));
 
-		Job job3 = InputContOpt.test04();
+		Job job3 = InputContOpt.test04_();
 		job3.setJobID("homoBruteforce");
 		job3.setDescription("Homo-BruteForce");
 		job3.setMethods(methods3);
@@ -80,7 +80,7 @@ public class BatchHomoMethodsCOf2 implements IInputBatch {
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolCORandomMove.class));
 		
-		Job job4 = InputContOpt.test04();
+		Job job4 = InputContOpt.test04_();
 		job4.setJobID("homoTabusearch");
 		job4.setDescription("Homo-TabuSearch");
 		job4.setMethods(methods4);
@@ -90,7 +90,7 @@ public class BatchHomoMethodsCOf2 implements IInputBatch {
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002")) )),
 				new ProblemTools(ProblemToolCORandomMove.class));
 		
-		Job job5 = InputContOpt.test04();
+		Job job5 = InputContOpt.test04_();
 		job5.setJobID("homoSimulatedannealing");
 		job5.setDescription("Homo-SimulatedAnnealing");
 		job5.setMethods(methods5);
@@ -100,7 +100,7 @@ public class BatchHomoMethodsCOf2 implements IInputBatch {
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )),
 				new ProblemTools(ProblemToolCORandomMove.class));
 
-		Job job6 = InputContOpt.test04();
+		Job job6 = InputContOpt.test04_();
 		job6.setJobID("homoDifferentialevolution");
 		job6.setDescription("Homo-DifferentialEvolution");
 		job6.setMethods(methods6);

@@ -33,7 +33,7 @@ public class TestDemoWeka {
 	    demo.setFilter(
 	    	problem.exportFilterClass(),
 	        (String[]) filterOptions.toArray(new String[filterOptions.size()]));
-	    demo.setTraining(datasetML.exportProblemFile());
+	    demo.setTraining(datasetML.exportDatasetFile());
 	    demo.execute();
 
 	    System.out.println("ErrorRate: " + demo.getErrorRate());

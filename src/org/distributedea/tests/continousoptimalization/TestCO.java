@@ -35,11 +35,11 @@ public class TestCO {
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		File fileOfInput = new File(inputFileName);
 		
-		IProblem problem = new ProblemContinuousOpt(true);
+		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		IProblemTool tool = new ProblemToolCORandomMove();
 		
 		Dataset dataset = tool.readDataset(fileOfInput, null);
-		tool.initialization(dataset, null, null);
+		tool.initialization(problem, dataset, null, null);
 		
 		IndividualEvaluated individual = tool.generateIndividualEval(problem, dataset, null, null);
 		
@@ -57,9 +57,9 @@ public class TestCO {
 		
 		IProblemTool tool1 = new ProblemToolCORandomMove();
 		
-		IProblem problem = new ProblemContinuousOpt(true);
+		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		Dataset dataset1 = tool1.readDataset(fileOfInput, null);
-		tool1.initialization(dataset1, null, null);
+		tool1.initialization(problem, dataset1, null, null);
 
 		try {
 			Thread.sleep(1000);
@@ -69,7 +69,7 @@ public class TestCO {
 		IProblemTool tool2 = new ProblemToolCORandomMove();
 		
 		Dataset dataset2 = tool2.readDataset(fileOfInput, null);
-		tool2.initialization(dataset2, null, null);
+		tool2.initialization(problem, dataset2, null, null);
 		
 		
 		for (int i = 0; i < 10; i++) {
@@ -99,11 +99,11 @@ public class TestCO {
 	    String inputFileName = "inputs" + File.separator + "f01.co";
 	    File fileOfInput = new File(inputFileName);
 	    
-		IProblem problem = new ProblemContinuousOpt(true);
+		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		
 	    IProblemTool tool = new ProblemToolCORandomMove();
 	    Dataset dataset = tool.readDataset(fileOfInput, null);
-		tool.initialization(dataset, null, null);
+		tool.initialization(problem, dataset, null, null);
 		
 		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problem, dataset, null, null);
 		Individual individual1 = individualEval1.getIndividual();
@@ -181,7 +181,7 @@ public class TestCO {
 	
 	private void test5() {
 		
-		IProblem problem = new ProblemContinuousOpt(true);
+		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		
 		Map<MethodDescription, Integer> map = new HashMap<MethodDescription, Integer>();
 		

@@ -1,0 +1,6 @@
+<allDimensionsRestriction>
+  <restriction>
+    <min>-5.0</min>
+    <max>5.0</max>
+  </restriction>
+</allDimensionsRestriction>

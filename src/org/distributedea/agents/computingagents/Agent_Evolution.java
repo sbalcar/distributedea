@@ -151,7 +151,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 
 		this.localSaver = new LocalSaver(this, jobID);
 		
-		problemTool.initialization(dataset, agentConf, getLogger());
+		problemTool.initialization(problem, dataset, agentConf, getLogger());
 		this.state = CompAgentState.COMPUTING;
 		
 		

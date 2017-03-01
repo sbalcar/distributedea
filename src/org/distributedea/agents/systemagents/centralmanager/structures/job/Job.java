@@ -221,6 +221,7 @@ public class Job implements Concept, Serializable {
 	 */
 	public void importDatasetFile(File datasetFile) throws IOException {
 		if (datasetFile == null || ! datasetFile.isFile()) {
+			System.out.println(datasetFile);
 			throw new IllegalArgumentException("Argument " +
 					File.class.getSimpleName() + " is not valid");
 		}
@@ -485,7 +486,7 @@ public class Job implements Concept, Serializable {
 		xstream.alias("plannerThePedigree", PlannerThePedigree.class);
 		
 		xstream.alias("plannerTimeRestriction", PlannerTimeRestriction.class);
-	}
+	}	
 	
 	/**
 	 * exports Clone

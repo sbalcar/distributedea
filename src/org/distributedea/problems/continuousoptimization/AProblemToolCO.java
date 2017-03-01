@@ -19,6 +19,8 @@ import org.distributedea.problems.continuousoptimization.point.tools.ToolReadSol
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolExitBbobCO;
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolFitnessBbobCO;
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolInitializationBbobCO;
+import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f04;
+import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f08;
 import org.distributedea.problems.continuousoptimization.point.tools.ownfunction.f2;
 
 /**
@@ -49,18 +51,26 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 
 	@Override
-	public void initialization(Dataset dataset, AgentConfiguration agentConf,
+	public void initialization(IProblem problem, Dataset dataset, AgentConfiguration agentConf,
 			IAgentLogger logger) throws Exception {
-////////////////////	
-    	DatasetContinuousOpt problemContinousOpt = (DatasetContinuousOpt)dataset;
+////////////////////
 
-    	String functionID = problemContinousOpt.getFunctionID();
+    	ProblemContinuousOpt problemCO = (ProblemContinuousOpt) problem;
+		DatasetContinuousOpt datasetCO = (DatasetContinuousOpt) dataset;
+
+    	String functionID = problemCO.getFunctionID();
     	
     	if (functionID.equals("f2")) {
     		return;
     	}
+    	if (functionID.equals("f04")) {
+    		return;
+    	}
+    	if (functionID.equals("f08")) {
+    		return;
+    	}
     	
-		ToolInitializationBbobCO.initialization(problemContinousOpt, agentConf,
+		ToolInitializationBbobCO.initialization(problemCO, datasetCO, agentConf,
 				fgeneric, bbobTools, logger);
 	}
 
@@ -77,14 +87,20 @@ public abstract class AProblemToolCO extends ProblemTool {
 			IAgentLogger logger) {
 ////////////////////		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
-		DatasetContinuousOpt problemContinousOpt = (DatasetContinuousOpt) dataset;
+		ProblemContinuousOpt problemCO = (ProblemContinuousOpt) problem;
 
-    	String functionID = problemContinousOpt.getFunctionID();
+    	String functionID = problemCO.getFunctionID();
     	
     	if (functionID.equals("f2")) {
     		return f2.evaluate(individualPoint);
     	}
-
+    	if (functionID.equals("f04")) {
+    		return f04.evaluate(individualPoint);
+    	}
+    	if (functionID.equals("f08")) {
+    		return f08.evaluate(individualPoint);
+    	}
+    	
 		return ToolFitnessBbobCO.evaluate(individualPoint, problem, fgeneric, bbobTools, logger);		
 	}
 	
@@ -98,9 +114,10 @@ public abstract class AProblemToolCO extends ProblemTool {
 	public Individual generateIndividual(IProblem problem,
 			Dataset dataset, IAgentLogger logger) {
 
-		DatasetContinuousOpt problemContinousOpt = (DatasetContinuousOpt) dataset;
+		ProblemContinuousOpt problemCO = (ProblemContinuousOpt) problem;
+		DatasetContinuousOpt datasetCO = (DatasetContinuousOpt) dataset;
 		
-		return ToolGenerateIndividualCO.generateIndividual(problemContinousOpt, logger);
+		return ToolGenerateIndividualCO.generateIndividual(problemCO, datasetCO, logger);
 	}
 	
 	@Override

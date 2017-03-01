@@ -34,7 +34,7 @@ public abstract class AProblemToolML extends ProblemTool {
 	}
 
 	@Override
-	public void initialization(Dataset dataset, AgentConfiguration agentConf,
+	public void initialization(IProblem problem, Dataset dataset, AgentConfiguration agentConf,
 			IAgentLogger logger) throws Exception {
 	}
 

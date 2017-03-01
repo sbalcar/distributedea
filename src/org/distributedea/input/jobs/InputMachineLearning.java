@@ -13,7 +13,7 @@ import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerTimeRestriction;
-import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerDummy;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
@@ -61,7 +61,7 @@ public class InputMachineLearning {
 				FileNames.getInputProblemFile("iris.arff")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolML.class) ));
-		job.setPlanner(new PlannerDummy());
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
 		
 		return job;

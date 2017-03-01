@@ -152,9 +152,9 @@ public class EACrossoverWrapper implements GeneticOperator {
 		IChromosome chromosomeNewB = null;
 		try {
 			chromosomeNewA = Convertor.convertToIChromosome(
-					newIndividuals[0].getIndividual(), dataset,  conf);
+					newIndividuals[0].getIndividual(), problem, dataset,  conf);
 			chromosomeNewB = Convertor.convertToIChromosome(
-					newIndividuals[1].getIndividual(), dataset, conf);
+					newIndividuals[1].getIndividual(), problem, dataset, conf);
 		} catch (InvalidConfigurationException e) {
 			logger.logThrowable("Can't convert Individual to Chromosome", e);
 			return null;

@@ -42,7 +42,7 @@ public interface IProblemTool {
 	 * @param logger
 	 * @throws ProblemToolException
 	 */
-	public void initialization(Dataset dataset, AgentConfiguration agentConf,
+	public void initialization(IProblem problem, Dataset dataset, AgentConfiguration agentConf,
 			IAgentLogger logger) throws Exception;
 	
 	/**

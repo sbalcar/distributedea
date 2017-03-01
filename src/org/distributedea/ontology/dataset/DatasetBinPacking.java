@@ -36,7 +36,7 @@ public class DatasetBinPacking extends Dataset {
 	 */
 	public DatasetBinPacking(List<ObjectBinPack> objects, File problemFile) {
 		setObjects(objects);
-		importProblemFile(problemFile);
+		importDatasetFile(problemFile);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class DatasetBinPacking extends Dataset {
 			objects.add(objectI.deepClone());
 		}
 		
-		importProblemFile(problemBinPacking.exportProblemFile());
+		importDatasetFile(problemBinPacking.exportDatasetFile());
 	}
 
 	
@@ -94,7 +94,7 @@ public class DatasetBinPacking extends Dataset {
 	 * Exports File with {@link Problem} assignment
 	 */
 	@Override
-	public File exportProblemFile() {
+	public File exportDatasetFile() {
 		if (problemFileName == null) {
 			return null;
 		}
@@ -105,7 +105,7 @@ public class DatasetBinPacking extends Dataset {
 	 * Imports File with {@link Problem} assignment
 	 */
 	@Override
-	public void importProblemFile(File problemFile) {
+	public void importDatasetFile(File problemFile) {
 		if (problemFile == null) {
 			throw new IllegalArgumentException();
 		}
@@ -117,7 +117,7 @@ public class DatasetBinPacking extends Dataset {
 
 	@Override
 	public boolean valid(IAgentLogger logger) {
-		if (exportProblemFile() == null) {
+		if (exportDatasetFile() == null) {
 			return false;
 		}
 

@@ -3,9 +3,11 @@
   <numberOfRuns>1</numberOfRuns>
   <description>Follow up Helpers</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <functionID>f01</functionID>
+    <dimension>2</dimension>
     <isMaximizationProblem>true</isMaximizationProblem>
   </problem>
-  <datasetFileName>inputs/f01.co</datasetFileName>
+  <datasetFileName>inputs/weka.co</datasetFileName>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

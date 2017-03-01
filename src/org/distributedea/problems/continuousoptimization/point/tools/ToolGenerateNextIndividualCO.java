@@ -4,31 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
 
 public class ToolGenerateNextIndividualCO {
 
 	private static double maxStep = 0.005;
 	
-	public static Individual create(Dataset dataset,
-			Individual individual, IAgentLogger logger) {
-		
-		DatasetContinuousOpt problemCO = (DatasetContinuousOpt) dataset;
-		IndividualPoint individualP = (IndividualPoint) individual;
-		
-		List<Interval> intervals = problemCO.getIntervals();
+	public static Individual create(IndividualPoint individualP,
+			ProblemContinuousOpt problemCO, DatasetContinuousOpt datasetCO,
+			IAgentLogger logger) {
+				
 		List<Double> coordinates = individualP.getCoordinates();
 				
 		List<Double> coordinatesNew = new ArrayList<Double>();
 		
 		boolean isTheLastIndividual = true;
-		for (int i = 0; i < intervals.size(); i++) {
+		for (int i = 0; i < problemCO.getDimension(); i++) {
 		
-			Interval intervalI = intervals.get(i);
+			Interval intervalI = datasetCO.getDomain().exportRestriction(i);
 			double coordinateI = coordinates.get(i);
 			
 			if (coordinateI + maxStep < intervalI.getMax()) {
