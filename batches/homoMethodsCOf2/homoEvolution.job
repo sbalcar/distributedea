@@ -52,6 +52,6 @@
     <PROBLEM__TOOL__INDEX>0</PROBLEM__TOOL__INDEX>
   </planner>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>50</countOfReplaning>
+    <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
 </job>

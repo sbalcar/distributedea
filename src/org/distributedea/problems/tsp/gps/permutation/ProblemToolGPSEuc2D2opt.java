@@ -7,12 +7,12 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.tsp.gps.permutation.operators.Operator2Opt;
-import org.distributedea.problems.tsp.gps.permutation.operators.OperatorCrossPermutation;
+import org.distributedea.problems.tsp.gps.permutation.operators.OperatorTwoPointCrossoverPermutation;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorDifferential;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolGenerateFirstIndividualTSPGPS;
 import org.distributedea.problems.tsp.gps.permutation.tools.ToolNextPermutationTSPGPS;
 
-public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation implements IProblemTSPPermutationTool {
+public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation {
 
 	@Override
 	protected Individual generateFirstIndividual(IProblem problem,
@@ -57,7 +57,7 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 		IndividualPermutation individualPerm1 = (IndividualPermutation) individual1;
 		IndividualPermutation individualPerm2 = (IndividualPermutation) individual2;
 		
-		Individual newIndiv = OperatorCrossPermutation.crossover(individualPerm1, individualPerm2);
+		Individual newIndiv = OperatorTwoPointCrossoverPermutation.crossover(individualPerm1, individualPerm2);
 		
 		Individual [] result = new Individual[2];
 		result[0] = newIndiv;

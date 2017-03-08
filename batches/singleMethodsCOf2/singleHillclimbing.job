@@ -36,6 +36,6 @@
   </islandModelConfiguration>
   <planner class="plannerInitialisationRunEachMethodOnce"/>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>50</countOfReplaning>
+    <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
 </job>

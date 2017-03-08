@@ -6,7 +6,7 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.binpacking.permutation.operators.OperatorSimpleShift;
-import org.distributedea.problems.tsp.gps.permutation.operators.OperatorCrossPermutation;
+import org.distributedea.problems.tsp.gps.permutation.operators.OperatorTwoPointCrossoverPermutation;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorDifferential;
 
 
@@ -38,7 +38,7 @@ public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPerm
 		IndividualPermutation individualPerm1 = (IndividualPermutation) individual1;
 		IndividualPermutation individualPerm2 = (IndividualPermutation) individual2;
 		
-		Individual newIndiv = OperatorCrossPermutation.crossover(individualPerm1, individualPerm2);
+		Individual newIndiv = OperatorTwoPointCrossoverPermutation.crossover(individualPerm1, individualPerm2);
 		
 		Individual [] result = new Individual[2];
 		result[0] = newIndiv;

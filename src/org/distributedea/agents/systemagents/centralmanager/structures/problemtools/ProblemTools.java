@@ -123,6 +123,22 @@ public class ProblemTools {
 	}
 
 	/**
+	 * Exports as string
+	 * @return
+	 */
+	public String exportAsString() {
+		
+		String string = "";
+		for (Class<?> problemToolClassI : problemTools) {
+			
+			String simpleNameI = problemToolClassI.getSimpleName();
+			string += simpleNameI + ", ";
+		}
+		
+		return string.substring(0, string.length() -2);
+	}
+	
+	/**
 	 * Test validity
 	 * @param logger
 	 * @return

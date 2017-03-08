@@ -19,9 +19,21 @@ import org.distributedea.ontology.job.JobID;
 
 public class PostProcJobRunsResultTable extends PostProcessing {
 
+	private int maxLengthOfResult;
+	
+	public PostProcJobRunsResultTable(int maxLengthOfResult) {
+		if (maxLengthOfResult <= 0) {
+			throw new IllegalArgumentException("Argument " +
+					Integer.class.getSimpleName() + " is nto valid");
+		}
+		this.maxLengthOfResult = maxLengthOfResult;
+	}
+	
 	@Override
 	public void run(Batch batch) throws Exception {
-		
+		// sorting jobs
+		batch.sortJobsByID();
+
 		String BATCH_ID = batch.getBatchID();
 		String BATCH_DESCRIPTION = batch.getDescription();
 		int NUMBER_OF_RUNS = batch.getJobs().get(0).getNumberOfRuns();
@@ -29,29 +41,30 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		String NL = "\n";
 		List<Job> jobs = batch.getJobs();
 		
-		String table =
+		String latexCode =
 		"\\begin{table} [ht] " + NL +
 		"\\centering" + NL;
 
 		
-		String latexCode = "|";
-		for (int i = 0; i < jobs.size(); i++) {
-			latexCode += "c|";
+		String table = "|l|";
+		for (int i = 1; i <= jobs.size(); i++) {
+			table += "c|";
 		}
 		
-		table +=
-		"\\begin{tabular}{ " + latexCode + " }" + NL + 
+		latexCode +=
+		"\\begin{tabular}{ " + table + " }" + NL + 
 		"\\hline" + NL;
 		
-		table +=
-		"\\textbf{Identifikace job struktur} & \\multicolumn{" + NUMBER_OF_RUNS + "}{|c|}{\\textbf{výsledky běhů}} \\\\" + NL +
+		latexCode +=
+		"\\textbf{Identifikace job struktur} & \\multicolumn{" + NUMBER_OF_RUNS + "}"
+				+ "{|c|}{\\textbf{Výsledky běhů 1-" + NUMBER_OF_RUNS + "}} \\\\" + NL +
 		"\\hline\\hline" + NL;
 		
 		for (Job jobI : jobs) {
-			table += processJob(jobI, BATCH_ID) + NL;
+			latexCode += processJob(jobI, BATCH_ID) + NL;
 		}
 		
-		table +=
+		latexCode +=
 		"\\hline" + NL +
 		"\\end{tabular}" + NL +
 		"\\caption{" + BATCH_DESCRIPTION + "}" + NL +
@@ -59,10 +72,11 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		"\\end{table}";
 
 		
-		System.out.println(table);
+		System.out.println(latexCode);
 		
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(BATCH_ID);
-		String OUTPUT_FILE = BATCH_ID;
+		String OUTPUT_FILE = BATCH_ID +
+				getClass().getSimpleName().replace("PostProc", "");
 		
 		try(  PrintWriter out = new PrintWriter(OUTPUT_PATH + File.separator + OUTPUT_FILE + ".lat")  ){
 		    out.println(latexCode);
@@ -83,9 +97,13 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		
 		List<Double> resultsOfJobs = new ArrayList<>(resultsOfJobsMap.values());
 
-		String jobLine = job.getDescription();
+		String jobLine = job.getDescription().replaceAll("&", "\\&");
 		for (double resultI : resultsOfJobs) {
-			jobLine += " & " + resultI;
+			String resultStrI = "" + resultI;
+			if (resultStrI.length() > maxLengthOfResult) {
+				resultStrI = resultStrI.substring(0, maxLengthOfResult);
+			}
+			jobLine += " & " + resultStrI;
 		}
 
 		return jobLine + " \\\\";
@@ -99,7 +117,7 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		
 		Batch batch = batchCmp.batch();
 		
-		PostProcessing p = new PostProcJobRunsResultTable();
+		PostProcessing p = new PostProcJobRunsResultTable(10);
 		p.run(batch);
 	}
 }

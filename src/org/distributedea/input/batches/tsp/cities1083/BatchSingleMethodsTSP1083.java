@@ -18,6 +18,7 @@ import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
+import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.ontology.arguments.Argument;
@@ -111,16 +112,6 @@ public class BatchSingleMethodsTSP1083 implements IInputBatch {
 		job6.setDescription("Single-DifferentialEvolution");
 		job6.setMethods(methods6);
 		
-
-		String YLABEL0 = "hodnota fitness v kilometrech";
-		PostProcessing ps0 = new PostProcBoxplot(YLABEL0);
-		
-		String XLABEL1 = "čas v sekundách";
-		String YLABEL1 = "hodnota fitness v kilometrech";
-		PostProcessing ps1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
-
-		PostProcessing psLat0 = new PostProcJobRunsResultTable();
-		
 		batch.addJob(job0);
 		batch.addJob(job1);
 		batch.addJob(job2);
@@ -128,11 +119,23 @@ public class BatchSingleMethodsTSP1083 implements IInputBatch {
 		batch.addJob(job4);
 		batch.addJob(job5);
 		batch.addJob(job6);
-
-		batch.addPostProcessings(ps0);
-		batch.addPostProcessings(ps1);
 		
+		
+		PostProcessing psLat0 = new PostProcJobTable();
+		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
+
 		batch.addPostProcessings(psLat0);
+		batch.addPostProcessings(psLat1);
+		
+		
+		String YLABEL0 = "hodnota fitness v kilometrech";
+		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);
+		
+		String YLABEL1 = "hodnota fitness v kilometrech";
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
+
+		batch.addPostProcessings(psMat0);
+		batch.addPostProcessings(psMat1);
 		
 		return batch;
 	}

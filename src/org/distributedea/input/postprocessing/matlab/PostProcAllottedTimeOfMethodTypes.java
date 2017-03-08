@@ -27,10 +27,27 @@ import org.distributedea.ontology.methodtype.MethodType;
  *
  */
 public class PostProcAllottedTimeOfMethodTypes extends PostProcessingMatlab {
+
+	private boolean legendContainsProblemTools;
+	private boolean legendContainsArguments;
+	
+	/**
+	 * Constructor
+	 * @param legendContainsProblemTools
+	 * @param legendContainsArguments
+	 */
+	public PostProcAllottedTimeOfMethodTypes(boolean legendContainsProblemTools,
+			boolean legendContainsArguments) {
+		
+		this.legendContainsProblemTools = legendContainsProblemTools;
+		this.legendContainsArguments = legendContainsArguments;
+	}
 	
 	@Override
 	public void run(Batch batch) throws Exception {
-		
+		// sorting jobs
+		batch.sortJobsByID();
+
 		String batchID = batch.getBatchID();
 		
 		for (Job jobI : batch.getJobs()) {
@@ -48,6 +65,9 @@ public class PostProcAllottedTimeOfMethodTypes extends PostProcessingMatlab {
 	
 	private void processJobRun(JobID jobID) throws Exception {
 		
+		String BATCH_ID = jobID.getBatchID();
+		String JOB_ID = jobID.getJobID();
+		
 		String monitoringDirNameI = FileNames.getResultDirectoryMonitoringDirectory(jobID);
 		File monitoringDirI = new File(monitoringDirNameI);
 		
@@ -64,7 +84,10 @@ public class PostProcAllottedTimeOfMethodTypes extends PostProcessingMatlab {
 			long iterationI = methodHistories.exportNumberOfIterationOf(methodTypeI);
 			iterationsList.add(iterationI);
 			
-			labelsList.add(methodTypeI.exportString());
+			String labelI = methodTypeI.exportString(
+					legendContainsProblemTools,
+					legendContainsArguments);
+			labelsList.add(labelI);
 		}
 		
 		String iterations = MatlabTool.convertLongsToMatlamArray(iterationsList);
@@ -72,17 +95,23 @@ public class PostProcAllottedTimeOfMethodTypes extends PostProcessingMatlab {
 		labels = labels.replaceAll("ProblemTool", "");
 		labels = labels.replaceAll("Agent\\\\_", "");
 		
-		String OUTPUT_FILE = "allottedTime" + jobID.getJobID() + jobID.getRunNumber();
+		String OUTPUT_FILE = BATCH_ID +
+				getClass().getSimpleName().replace("PostProc", "") +
+				JOB_ID + jobID.getRunNumber();
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(jobID.getBatchID());
 		
 		String matlabCode =
-				"h = figure" + NL +
-				"barh(" + iterations + ");" + NL +
-				"labels = " + labels + ";" + NL +
-				"set(gca,'YTickLabel',labels);" + NL +
-				"title('Časová kvanta, která dostala metody k dispozici');" + NL +
-				"saveas(h, '" + OUTPUT_FILE + "','jpg');" + NL +
-				"exit;";
+			"h = figure" + NL +
+			"barh(" + iterations + ");" + NL +
+			"labels = " + labels + ";" + NL +
+			"set(gca,'YTickLabel',labels);" + NL +
+			"title('Časová kvanta, která dostala metody k dispozici');" + NL +
+			"h.PaperPositionMode = 'auto'" + NL +
+			"fig_pos = h.PaperPosition;" + NL +
+			"h.PaperSize = [fig_pos(3) fig_pos(4)];" + NL +
+			"saveas(h, '" + OUTPUT_FILE + "','bmp');" + NL +
+			"print(h, '-fillpage', '" + OUTPUT_FILE + "','-dpdf');" + NL +
+			"exit;";
 		System.out.println(matlabCode);
 
 		saveAndProcessMatlab(matlabCode, OUTPUT_PATH, OUTPUT_FILE);
@@ -94,7 +123,7 @@ public class PostProcAllottedTimeOfMethodTypes extends PostProcessingMatlab {
 		IInputBatch batchCmp = new BatchTestTSP();
 		Batch batch = batchCmp.batch();
 		
-		PostProcessing p = new PostProcAllottedTimeOfMethodTypes();
+		PostProcessing p = new PostProcAllottedTimeOfMethodTypes(false, false);
 		p.run(batch);
 	}
 	

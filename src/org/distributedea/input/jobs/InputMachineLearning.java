@@ -12,7 +12,7 @@ import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
-import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerTimeRestriction;
+import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
@@ -27,7 +27,7 @@ import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
-import org.distributedea.problems.machinelearning.ProblemToolML;
+import org.distributedea.problems.machinelearning.ProblemToolMLRandomMove;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 
@@ -60,9 +60,9 @@ public class InputMachineLearning {
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("iris.arff")));
 		job.setMethods(new MethodsTwoSets(
-				algorithms, new ProblemTools(ProblemToolML.class) ));
+				algorithms, new ProblemTools(ProblemToolMLRandomMove.class) ));
 		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
-		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 		
 		return job;
 	}

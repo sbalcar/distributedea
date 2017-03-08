@@ -31,6 +31,7 @@ public class ComputePostProcessingsBehaviour extends OneShotBehaviour {
 	 */
 	public ComputePostProcessingsBehaviour(Batch batch) {
 		if (batch == null || ! batch.valid(new TrashLogger())) {
+			 batch.valid(new TrashLogger());
 			throw new IllegalArgumentException("Argument " +
 					Batch.class.getSimpleName() + " is not valid");
 		}
@@ -49,6 +50,7 @@ public class ComputePostProcessingsBehaviour extends OneShotBehaviour {
 			runPostProcessing(batch);
 		} catch (Exception e) {
 			centralManager.getLogger().logThrowable("PostProc error", e);
+			e.printStackTrace();
 		}
 	}
 

@@ -139,7 +139,7 @@
     </algorithms>
     <problemTools>
       <problemTools>
-        <java-class>org.distributedea.problems.machinelearning.ProblemToolML</java-class>
+        <java-class>org.distributedea.problems.machinelearning.ProblemToolMLRandomMove</java-class>
       </problemTools>
     </problemTools>
   </methods>
@@ -150,6 +150,6 @@
   </islandModelConfiguration>
   <planner class="plannerRandom"/>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>50</countOfReplaning>
+    <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
 </job>

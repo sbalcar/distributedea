@@ -32,8 +32,10 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 	
 	@Override
 	public void run(Batch batch) throws Exception {
-		
-		String batchID = batch.getBatchID();
+		// sorting jobs
+		batch.sortJobsByID();
+
+		String BATCH_ID = batch.getBatchID();
 		
 		for (Job jobI : batch.getJobs()) {
 			
@@ -42,13 +44,16 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 			for (int runNumberI = 0; runNumberI < jobI.getNumberOfRuns();
 					runNumberI++) {
 				
-				JobID jobID = new JobID(batchID, jobIDI, runNumberI);
+				JobID jobID = new JobID(BATCH_ID, jobIDI, runNumberI);
 				processJobRun(batch, jobID);
 			}
 		}
 	}
 	
 	private void processJobRun(Batch batch, JobID jobID) throws Exception {
+		
+		String BATCH_ID = jobID.getBatchID();
+		String JOB_ID = jobID.getJobID();
 		
 		String historyDir = FileNames.getResultDirectoryMonitoringDirectory(jobID);
 		History history = History.importXML(new File(historyDir));
@@ -59,7 +64,9 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 		String TITLE = "Průběh jednotlivých metod"; // batch.getDescription();
 		String YLABEL = "jádra systému a jejich vytížení instancemi metod";
 		
-		String OUTPUT_FILE = "investigarionOfMethods" + jobID.getJobID() + "" + jobID.getRunNumber();
+		String OUTPUT_FILE = BATCH_ID +
+				getClass().getSimpleName().replace("PostProc", "") +
+				JOB_ID + "" + jobID.getRunNumber();
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batch.getBatchID());
 		
 
@@ -111,7 +118,11 @@ public class PostProcInvestigationOfMethods extends PostProcessingMatlab {
 		"xlim([x1(1)-1, x1(2)+1]);" + NL +
 		"ylim([y1(1)-1, y1(2)+1]);" + NL +
 		"hold off" + NL +
-		"saveas(h, '" + OUTPUT_FILE + "','jpg');" + NL +
+		"h.PaperPositionMode = 'auto'" + NL +
+		"fig_pos = h.PaperPosition;" + NL +
+		"h.PaperSize = [fig_pos(3) fig_pos(4)];" + NL +
+		"saveas(h, '" + OUTPUT_FILE + "','bmp');" + NL +
+		"print(h, '-fillpage', '" + OUTPUT_FILE + "','-dpdf');" + NL +
 		"exit;";
 		
 		System.out.println(matlabCode);

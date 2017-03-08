@@ -36,7 +36,7 @@
             <arguments/>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.machinelearning.ProblemToolML</problemToolClass>
+        <problemToolClass>org.distributedea.problems.machinelearning.ProblemToolMLRandomMove</problemToolClass>
       </inputMethodDescription>
     </inputAgentDescriptions>
   </methods>
@@ -47,6 +47,6 @@
   </islandModelConfiguration>
   <planner class="plannerInitialisationRunEachMethodOnce"/>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>50</countOfReplaning>
+    <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
 </job>

@@ -18,31 +18,21 @@ public class ToolGenerateNextIndividualCO {
 			ProblemContinuousOpt problemCO, DatasetContinuousOpt datasetCO,
 			IAgentLogger logger) {
 				
-		List<Double> coordinates = individualP.getCoordinates();
-				
 		List<Double> coordinatesNew = new ArrayList<Double>();
 		
-		boolean isTheLastIndividual = true;
 		for (int i = 0; i < problemCO.getDimension(); i++) {
 		
 			Interval intervalI = datasetCO.getDomain().exportRestriction(i);
-			double coordinateI = coordinates.get(i);
+			double coordinateI = individualP.exportCoordinate(i);
 			
 			if (coordinateI + maxStep < intervalI.getMax()) {
-				
-				isTheLastIndividual = false;
-				
-				int sequenceNumber = (int) (coordinateI / maxStep);
+								
 				double coordinateNewI =
-						maxStep*(sequenceNumber +1) + maxStep*Math.random();
+						coordinateI + maxStep*Math.random();
 				coordinatesNew.add(coordinateNewI);
 			} else {
 				coordinatesNew.add(coordinateI);
 			}
-		}
-
-		if (isTheLastIndividual) {
-			return null;
 		}
 
 		return new IndividualPoint(coordinatesNew);

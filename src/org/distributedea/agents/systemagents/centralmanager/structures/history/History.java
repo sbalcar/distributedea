@@ -551,7 +551,6 @@ public class History {
 			    if (! file.isFile()) {
 			    	continue;
 			    }
-		        
 		    	RePlan replanI = RePlan.importXML(file);
 		    	importedRePlans.add(replanI);
 			}

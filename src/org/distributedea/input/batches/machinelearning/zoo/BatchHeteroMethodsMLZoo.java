@@ -23,9 +23,9 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputMachineLearning;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
+import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfMethodTypes;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.ontology.arguments.Argument;
@@ -33,7 +33,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.problems.machinelearning.ProblemToolML;
+import org.distributedea.problems.machinelearning.ProblemToolMLRandomMove;
 
 public class BatchHeteroMethodsMLZoo implements IInputBatch {
 
@@ -113,10 +113,10 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		Methods algorithms = new Methods();
 		algorithms.addAgentDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				ProblemToolML.class), 15);
+				ProblemToolMLRandomMove.class), 15);
 		algorithms.addAgentDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
-				ProblemToolML.class), 1);
+				ProblemToolMLRandomMove.class), 1);
 
 		Job job13 = InputMachineLearning.test02();
 		job13.setJobID("onlyInitHillClimbingAndTabuSearch");
@@ -139,23 +139,25 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		batch.addJob(job12);
 		batch.addJob(job13);
 		
-		String YLABEL0 = "fitness jako procentuelní poměr nesprávné klasifikace";
-		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);
 		
-		String XLABEL1 = "čas v sekundách";
-		String YLABEL1 = "fitness jako procentuelní poměr nesprávné klasifikace";
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
-		
-		batch.addPostProcessings(psMat0);
-		batch.addPostProcessings(psMat1);
-		
-		PostProcessing psLat0 = new PostProcJobRunsResultTable();
-		PostProcessing psLat1 = new PostProcBatchDiffTable();
-		PostProcessing psLat2 = new PostProcJobTable();
+		PostProcessing psLat0 = new PostProcJobTable();
+		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
 		
 		batch.addPostProcessings(psLat0);
 		batch.addPostProcessings(psLat1);
-		batch.addPostProcessings(psLat2);
+		
+		
+		String YLABEL0 = "fitness jako procentuelní poměr nesprávné klasifikace";
+		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);
+		
+		String YLABEL1 = "fitness jako procentuelní poměr nesprávné klasifikace";
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
+
+		PostProcessing psMat2 = new PostProcAllottedTimeOfMethodTypes(false, false);
+
+		batch.addPostProcessings(psMat0);
+		batch.addPostProcessings(psMat1);
+		batch.addPostProcessings(psMat2);
 		
 		return batch;
 	}

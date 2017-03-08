@@ -32,27 +32,33 @@ import org.distributedea.ontology.problem.IProblem;
  */
 public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	
-	private String XLABEL;
-	private String YLABEL;
+	private String yLabel;
 	
-	public PostProcInvestigationOfMedianJobRun(String xLabel, String yLabel) {
-		this.XLABEL = xLabel;
-		this.YLABEL = yLabel;
+	public PostProcInvestigationOfMedianJobRun(String yLabel) {
+		this.yLabel = yLabel;
 	}
 	
 	public void run(Batch batch) throws Exception {
-		
+		// sorting jobs
+		batch.sortJobsByID();
+
+		String BATCH_ID = batch.getBatchID();
 		String TITLE = batch.getDescription();
+		String XLABEL1 = "čas v iteracích plánovače(1x iterace = " +
+				batch.exportIslandModelConfiguration().getReplanPeriodMS() /1000 +
+				"x sekund)";
 		
-		String OUTPUT_FILE = batch.getBatchID() + "Comparing";
+		
+		String OUTPUT_FILE = BATCH_ID +
+				getClass().getSimpleName().replace("PostProc", "");
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batch.getBatchID());
 		
 		String matlabSourceCode =
 		"h = figure" + NL +
 		"hold on" + NL +
 		"title('" + TITLE + "');" + NL +
-		"xlabel('x: " + XLABEL + "', 'FontSize', 10);" + NL +
-		"ylabel('y: " + YLABEL + "', 'FontSize', 10);" + NL +
+		"xlabel('x: " + XLABEL1 + "', 'FontSize', 10);" + NL +
+		"ylabel('y: " + yLabel + "', 'FontSize', 10);" + NL +
 		NL;
 		
 		List<String> lineTypes = Arrays.asList("-", "--", ":", "-.");
@@ -92,7 +98,11 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 		"legend('show');" + NL +
 		NL +
 		"hold off" + NL +
-		"saveas(h, '" + OUTPUT_FILE + "','jpg');" + NL +
+		"h.PaperPositionMode = 'auto'" + NL +
+		"fig_pos = h.PaperPosition;" + NL +
+		"h.PaperSize = [fig_pos(3) fig_pos(4)];" + NL +
+		"saveas(h, '" + OUTPUT_FILE + "','bmp');" + NL +
+		"print(h, '-fillpage', '" + OUTPUT_FILE + "','-dpdf');" + NL +
 		"exit;";
 		
 	
@@ -169,9 +179,8 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 		IInputBatch batchCmp = new BatchSingleMethodsTSP1083();
 		Batch batch = batchCmp.batch();
 		
-		String XLABEL = "čas v sekundách";
 		String YLABEL = "hodnota fitness v kilometrech";
-		PostProcessing p = new PostProcInvestigationOfMedianJobRun(XLABEL, YLABEL);
+		PostProcessing p = new PostProcInvestigationOfMedianJobRun(YLABEL);
 		p.run(batch);
 	}
 }

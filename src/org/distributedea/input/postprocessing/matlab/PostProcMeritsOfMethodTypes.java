@@ -26,10 +26,26 @@ import org.distributedea.ontology.methodtype.MethodType;
  */
 public class PostProcMeritsOfMethodTypes extends PostProcessingMatlab {
 	
+	private boolean legendContainsProblemTools;
+	private boolean legendContainsArguments;
+	
+	/**
+	 * Constructor
+	 * @param legendContainsProblemTools
+	 * @param legendContainsArguments
+	 */
+	public PostProcMeritsOfMethodTypes(boolean legendContainsProblemTools,
+			boolean legendContainsArguments) {
+		this.legendContainsProblemTools = legendContainsProblemTools;
+		this.legendContainsArguments = legendContainsArguments;
+	}
+	
 	@Override
 	public void run(Batch batch) throws Exception {
-		
-		String batchID = batch.getBatchID();
+		// sorting jobs
+		batch.sortJobsByID();
+
+		String BATCH_ID = batch.getBatchID();
 		
 		for (Job jobI : batch.getJobs()) {
 			
@@ -38,13 +54,16 @@ public class PostProcMeritsOfMethodTypes extends PostProcessingMatlab {
 			for (int runNumberI = 0; runNumberI < jobI.getNumberOfRuns();
 					runNumberI++) {
 				
-				JobID jobID = new JobID(batchID, jobIDI, runNumberI);
+				JobID jobID = new JobID(BATCH_ID, jobIDI, runNumberI);
 				processJobRun(jobID);
 			}
 		}
 	}
 	
 	private void processJobRun(JobID jobID) throws Exception {
+		
+		String BATCH_ID = jobID.getBatchID();
+		String JOB_ID = jobID.getJobID();
 		
 		String monitoringDirNameI = FileNames.getResultDirectoryMonitoringDirectory(jobID);
 		File monitoringDirI = new File(monitoringDirNameI);
@@ -62,7 +81,9 @@ public class PostProcMeritsOfMethodTypes extends PostProcessingMatlab {
 			long numberOfTheBestI = methodHistories.exportNumberOfTheBestCreatedIndividuals(methodTypeI);
 			improvementsList.add(numberOfTheBestI);
 			
-			labelsList.add(methodTypeI.exportString());
+			String labelI = methodTypeI.exportString(
+					legendContainsProblemTools, legendContainsArguments);
+			labelsList.add(labelI);
 		}
 		
 		String improvements = MatlabTool.convertLongsToMatlamArray(improvementsList);
@@ -70,17 +91,23 @@ public class PostProcMeritsOfMethodTypes extends PostProcessingMatlab {
 		labels = labels.replaceAll("ProblemTool", "");
 		labels = labels.replaceAll("Agent\\\\_", "");
 		
-		String OUTPUT_FILE = "improvements" + jobID.getJobID() + jobID.getRunNumber();
+		String OUTPUT_FILE = BATCH_ID +
+				getClass().getSimpleName().replace("PostProc", "") +
+				JOB_ID + "" + jobID.getRunNumber();
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(jobID.getBatchID());
 		
 		String matlabCode =
-				"h = figure" + NL +
-				"barh(" + improvements + ");" + NL +
-				"labels = " + labels + ";" + NL +
-				"set(gca,'YTickLabel',labels);" + NL +
-				"title('Počty dosažených vylepšení metodami');" + NL +
-				"saveas(h, '" + OUTPUT_FILE + "','jpg');" + NL +
-				"exit;";
+			"h = figure" + NL +
+			"barh(" + improvements + ");" + NL +
+			"labels = " + labels + ";" + NL +
+			"set(gca,'YTickLabel',labels);" + NL +
+			"title('Počty dosažených vylepšení metodami');" + NL +
+			"h.PaperPositionMode = 'auto'" + NL +
+			"fig_pos = h.PaperPosition;" + NL +
+			"h.PaperSize = [fig_pos(3) fig_pos(4)];" + NL +
+			"saveas(h, '" + OUTPUT_FILE + "','bmp');" + NL +
+			"print(h, '-fillpage', '" + OUTPUT_FILE + "','-dpdf');" + NL +
+			"exit;";
 		System.out.println(matlabCode);
 
 		saveAndProcessMatlab(matlabCode, OUTPUT_PATH, OUTPUT_FILE);
@@ -92,7 +119,7 @@ public class PostProcMeritsOfMethodTypes extends PostProcessingMatlab {
 		IInputBatch batchCmp = new BatchTestTSP();
 		Batch batch = batchCmp.batch();
 		
-		PostProcessing p = new PostProcMeritsOfMethodTypes();
+		PostProcessing p = new PostProcMeritsOfMethodTypes(false, false);
 		p.run(batch);
 	}
 	

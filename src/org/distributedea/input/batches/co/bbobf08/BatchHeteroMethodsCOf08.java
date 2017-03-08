@@ -20,9 +20,9 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputContOpt;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
+import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfMethodTypes;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 
@@ -117,23 +117,25 @@ public class BatchHeteroMethodsCOf08 implements IInputBatch {
 		batch.addJob(job11);
 		batch.addJob(job12);
 		
-		String YLABEL = "fitness jako funkční hodnota vstupní funkce";
-		PostProcessing psMat0 = new PostProcBoxplot(YLABEL);
 		
-		String XLABEL1 = "čas v sekundách";
-		String YLABEL1 = "fitness jako funkční hodnota vstupní funkce";
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
-		
-		batch.addPostProcessings(psMat0);
-		batch.addPostProcessings(psMat1);
-		
-		PostProcessing psLat0 = new PostProcJobRunsResultTable();
-		PostProcessing psLat1 = new PostProcBatchDiffTable();
-		PostProcessing psLat2 = new PostProcJobTable();
+		PostProcessing psLat0 = new PostProcJobTable();
+		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
 		
 		batch.addPostProcessings(psLat0);
 		batch.addPostProcessings(psLat1);
-		batch.addPostProcessings(psLat2);
+		
+		
+		String YLABEL = "fitness jako funkční hodnota vstupní funkce";
+		PostProcessing psMat0 = new PostProcBoxplot(YLABEL);
+
+		String YLABEL1 = "fitness jako funkční hodnota vstupní funkce";
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
+
+		PostProcessing psMat2 = new PostProcAllottedTimeOfMethodTypes(false, false);
+
+		batch.addPostProcessings(psMat0);
+		batch.addPostProcessings(psMat1);
+		batch.addPostProcessings(psMat2);
 		
 		return batch;
 	}

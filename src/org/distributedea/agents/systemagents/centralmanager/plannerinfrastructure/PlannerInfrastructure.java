@@ -120,6 +120,9 @@ public final class PlannerInfrastructure {
 			
 			// sleep
 			try {
+				int todo;
+				if (iterationNumI == 1)
+					Thread.sleep(3000);
 				Thread.sleep(configuration.getReplanPeriodMS());
 			} catch (InterruptedException e) {
 				logger.logThrowable("Error by waiting for replan", e);

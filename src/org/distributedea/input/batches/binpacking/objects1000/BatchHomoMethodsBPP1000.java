@@ -16,7 +16,6 @@ import org.distributedea.agents.systemagents.centralmanager.structures.problemto
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputBinPacking;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
@@ -112,24 +111,23 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		batch.addJob(job4);
 		batch.addJob(job5);
 		batch.addJob(job6);
+
+		
+		PostProcessing psLat0 = new PostProcJobTable();
+		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
+		
+		batch.addPostProcessings(psLat0);
+		batch.addPostProcessings(psLat1);
+
 		
 		String YLABEL0 = "fitness jako počet košů";
 		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);
 		
-		String XLABEL1 = "čas v sekundách";
 		String YLABEL1 = "fitness jako počet košů";
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
-		
-		PostProcessing psLat0 = new PostProcJobRunsResultTable();
-		PostProcessing psLat1 = new PostProcBatchDiffTable();
-		PostProcessing psLat2 = new PostProcJobTable();
-		
-		batch.addPostProcessings(psLat0);
-		batch.addPostProcessings(psLat1);
-		batch.addPostProcessings(psLat2);
 		
 		return batch;
 	}

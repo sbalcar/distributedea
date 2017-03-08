@@ -25,28 +25,29 @@ import org.distributedea.ontology.job.JobRun;
  */
 public class PostProcBoxplot extends PostProcessingMatlab {
 	
-	private String YLABEL;
+	private String yLabel;
 	
 	public PostProcBoxplot(String yLabel) {
-		this.YLABEL = yLabel; 
+		this.yLabel = yLabel; 
 	}
 	
 	@Override
 	public void run(Batch batch) throws Exception {
-		
-		List<Job> jobWrps = batch.getJobs();
-		String batchID = batch.getBatchID();
+		// sorting jobs
+		batch.sortJobsByID();
+
+		String BATCH_ID = batch.getBatchID();
 		String description = batch.getDescription();
 		
 		List<String> legends = new ArrayList<>();
 		List<String> matrix = new ArrayList<>();
 		
-		for (Job jobI : jobWrps) {
+		for (Job jobI : batch.getJobs()) {
 				
 			String jobDescrI = jobI.getDescription();
 			legends.add(jobDescrI);
 			
-			String columbI = processJob(jobI, batchID);
+			String columbI = processJob(jobI, BATCH_ID);
 			matrix.add(columbI);
 		}
 		
@@ -56,14 +57,15 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		
 		String TITLE = batch.getDescription();
 		
-		String OUTPUT_FILE = batch.getBatchID() + "BoxPlot";
-		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batchID);
+		String OUTPUT_FILE = BATCH_ID +
+				getClass().getSimpleName().replace("PostProc", "");
+		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(BATCH_ID);
 		
 		String matlabCode =
 		"h = figure" + NL +
 		"hold on" + NL +
 		"title('" + TITLE + "');" + NL +
-		"ylabel('y: " + YLABEL + "', 'FontSize', 10);" + NL +
+		"ylabel('y: " + yLabel + "', 'FontSize', 10);" + NL +
 		NL;
 		
 		matlabCode += 
@@ -75,8 +77,11 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		
 		matlabCode +=
 		"hold off" + NL +
+		"h.PaperPositionMode = 'auto'" + NL +
+		"fig_pos = h.PaperPosition;" + NL +
+		"h.PaperSize = [fig_pos(3) fig_pos(4)];" + NL +
 		"saveas(h, '" + OUTPUT_FILE + "','bmp');" + NL +
-		"saveas(h, '" + OUTPUT_FILE + "','pdf');" + NL +
+		"print(h, '-fillpage', '" + OUTPUT_FILE + "','-dpdf');" + NL +
 		"exit;";
 		
 		System.out.println(matlabCode);

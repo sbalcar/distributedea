@@ -7,12 +7,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
+import org.distributedea.structures.comparators.CmpJob;
 
 /**
  * Ontology represents one batch. 
@@ -74,22 +78,33 @@ public class Batch implements Concept {
 	public void setPostProcessings(List<PostProcessing> postProcessings) {
 		this.postProcessings = postProcessings;
 	}
-	public void addPostProcessings(PostProcessing postProcessings) {
+	public void addPostProcessings(PostProcessing postProcessing) {
+		if (postProcessing == null ||
+				! postProcessing.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					PostProcessing.class.getSimpleName() + " is not valid");
+		}
 		
 		if (this.postProcessings == null) {
 			this.postProcessings = new ArrayList<>();
 		}
 		
-		this.postProcessings.add(postProcessings);
+		this.postProcessings.add(postProcessing);
 	}
-	
+
+	public IslandModelConfiguration exportIslandModelConfiguration() {
+		if (jobs == null || jobs.isEmpty()) {
+			return null;
+		}
+		return getJobs().get(0).getIslandModelConfiguration();
+	}
 	public List<String> exportDescriptions() {
 
 		List<String> list = new ArrayList<>();
 		
-		for (Job jobWrpI : jobs) {
+		for (Job jobI : jobs) {
 			
-			String descriptionI = jobWrpI.getDescription();
+			String descriptionI = jobI.getDescription();
 			list.add(descriptionI);
 		}
 		
@@ -193,6 +208,11 @@ public class Batch implements Concept {
 			postProcI.exportXML(new File(postProcDirectoryI));
 		}
 		
+	}
+	
+	public void sortJobsByID() {
+		
+		Collections.sort(jobs, new CmpJob());
 	}
 	
 	/**

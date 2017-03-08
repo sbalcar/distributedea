@@ -12,7 +12,7 @@ import javax.xml.bind.JAXBException;
 
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.PlannerInfrastructure;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.IPlannerEndCondition;
-import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerTimeRestriction;
+import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
@@ -485,7 +485,7 @@ public class Job implements Concept, Serializable {
 		xstream.alias("plannerTheGreatestQMaterialGoodMaterialImprovement", PlannerTheGreatestQMaterialGoodMaterialImprovement.class);
 		xstream.alias("plannerThePedigree", PlannerThePedigree.class);
 		
-		xstream.alias("plannerTimeRestriction", PlannerTimeRestriction.class);
+		xstream.alias("plannerTimeRestriction", PlannerEndCondIterationCountRestriction.class);
 	}	
 	
 	/**

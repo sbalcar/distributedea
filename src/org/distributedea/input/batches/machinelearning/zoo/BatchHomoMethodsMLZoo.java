@@ -16,7 +16,6 @@ import org.distributedea.agents.systemagents.centralmanager.structures.problemto
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputMachineLearning;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
@@ -26,7 +25,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.method.Methods;
-import org.distributedea.problems.machinelearning.ProblemToolML;
+import org.distributedea.problems.machinelearning.ProblemToolMLRandomMove;
 
 public class BatchHomoMethodsMLZoo implements IInputBatch {
 
@@ -39,7 +38,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
-				new ProblemTools(ProblemToolML.class));
+				new ProblemTools(ProblemToolMLRandomMove.class));
 
 		Job job0 = InputMachineLearning.test02();
 		job0.setJobID("homoHillclimbing");
@@ -49,7 +48,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Methods methods1 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments())),
-				new ProblemTools(ProblemToolML.class));
+				new ProblemTools(ProblemToolMLRandomMove.class));
 		
 		Job job1 = InputMachineLearning.test02();
 		job1.setJobID("homoRandomsearch");
@@ -59,7 +58,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Methods methods2 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) ))),
-				new ProblemTools(ProblemToolML.class));
+				new ProblemTools(ProblemToolMLRandomMove.class));
 
 		Job job2 = InputMachineLearning.test02();
 		job2.setJobID("homoEvolution");
@@ -69,7 +68,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Methods methods3 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments())),
-				new ProblemTools(ProblemToolML.class));
+				new ProblemTools(ProblemToolMLRandomMove.class));
 
 		Job job3 = InputMachineLearning.test02();
 		job3.setJobID("homoBruteforce");
@@ -79,7 +78,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Methods methods4 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))),
-				new ProblemTools(ProblemToolML.class));
+				new ProblemTools(ProblemToolMLRandomMove.class));
 		
 		Job job4 = InputMachineLearning.test02();
 		job4.setJobID("homoTabusearch");
@@ -89,7 +88,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Methods methods5 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002")) )),
-				new ProblemTools(ProblemToolML.class));
+				new ProblemTools(ProblemToolMLRandomMove.class));
 		
 		Job job5 = InputMachineLearning.test02();
 		job5.setJobID("homoSimulatedannealing");
@@ -99,7 +98,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Methods methods6 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )),
-				new ProblemTools(ProblemToolML.class));
+				new ProblemTools(ProblemToolMLRandomMove.class));
 
 		Job job6 = InputMachineLearning.test02();
 		job6.setJobID("homoDifferentialevolution");
@@ -114,23 +113,22 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		batch.addJob(job5);
 		batch.addJob(job6);
 		
+		
+		PostProcessing psLat0 = new PostProcJobTable();
+		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
+
+		batch.addPostProcessings(psLat0);
+		batch.addPostProcessings(psLat1);
+		
+		
 		String YLABEL0 = "fitness jako procentuelní poměr nesprávné klasifikace";
 		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);
 		
-		String XLABEL1 = "čas v sekundách";
 		String YLABEL1 = "fitness jako procentuelní poměr nesprávné klasifikace";
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
-		
-		PostProcessing psLat0 = new PostProcJobRunsResultTable();
-		PostProcessing psLat1 = new PostProcBatchDiffTable();
-		PostProcessing psLat2 = new PostProcJobTable();
-		
-		batch.addPostProcessings(psLat0);
-		batch.addPostProcessings(psLat1);
-		batch.addPostProcessings(psLat2);
 		
 		return batch;
 	}

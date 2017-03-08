@@ -13,7 +13,7 @@ import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
-import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerTimeRestriction;
+import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerDummy;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
@@ -58,7 +58,7 @@ public class InputContOpt {
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class) ));
 		job.setPlanner(new PlannerDummy());
-		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 		
 		return job;
 	}
@@ -81,7 +81,7 @@ public class InputContOpt {
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
 		job.setPlanner(new PlannerTheBestHelper());
-		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 		
 		return job;
 	}
@@ -104,7 +104,7 @@ public class InputContOpt {
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
 		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
-		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 
 		return job;
 	}
@@ -127,7 +127,7 @@ public class InputContOpt {
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
 		job.setPlanner(new PlannerDummy());
-		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 		
 		return job;
 	}
@@ -149,8 +149,8 @@ public class InputContOpt {
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
-		job.setPlanner(new PlannerDummy());
-		job.setPlannerEndCondition(new PlannerTimeRestriction(50));
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 		
 		return job;
 	}

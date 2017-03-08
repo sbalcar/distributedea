@@ -118,7 +118,8 @@ public class MethodType implements Concept {
 	 */
 	private void importAgentClass(Class<?> agentClass) {
 		if (agentClass == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					Class.class.getSimpleName() + " is not valid");
 		}
 		this.agentClassName = agentClass.getName();
 	}
@@ -140,7 +141,8 @@ public class MethodType implements Concept {
 	 */
 	private void importProblemToolClass(Class<?> problemToolClass) {
 		if (problemToolClass == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					Class.class.getSimpleName() + " is not valid");
 		}
 		this.problemToolClassName = problemToolClass.getName();
 	}
@@ -204,11 +206,26 @@ public class MethodType implements Concept {
 			arguments.toString();
 	}
 
-	public String exportString() {
+	/**
+	 * Export type of method as String
+	 * @param legendContainsProblemTools
+	 * @param legendContainsArguments
+	 * @return
+	 */
+	public String exportString(boolean legendContainsProblemTools,
+			boolean legendContainsArguments) {
 		
-		return exportAgentClass().getSimpleName() + "-" +
-				exportProblemToolClass().getSimpleName() + "-" +
-				arguments.toString();
+		String eString = exportAgentClass().getSimpleName();
+		
+		if (legendContainsProblemTools) {
+			eString += "-" + exportProblemToolClass().getSimpleName();
+		}
+		
+		if (legendContainsArguments) {
+			eString += "-" + arguments.toString();
+		}
+
+		return eString;
 	}
 	
 	

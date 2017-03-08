@@ -23,7 +23,6 @@ import org.distributedea.input.batches.co.f2.BatchSingleMethodsCOf2;
 import org.distributedea.input.batches.machinelearning.zoo.BatchHeteroMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchHomoMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchSingleMethodsMLZoo;
-import org.distributedea.input.batches.tsp.BatchTestTSP;
 import org.distributedea.input.batches.tsp.cities1083.BatchHeteroMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
@@ -38,8 +37,8 @@ public class BatchExporter {
 	
 	public static void main(String [] args) throws Exception {		
 		
-		IInputBatch inputBatchTestTSP = new BatchTestTSP();
-		Batch batchTestTSP = inputBatchTestTSP.batch();
+		//IInputBatch inputBatchTestTSP = new BatchTestTSP();
+		//Batch batchTestTSP = inputBatchTestTSP.batch();
 		
 		IInputBatch inputBatchSimpleMethodsTSP1083 = new BatchSingleMethodsTSP1083();
 		Batch batchSimpleMethodsTSP1083 = inputBatchSimpleMethodsTSP1083.batch();
@@ -104,7 +103,7 @@ public class BatchExporter {
 		List<Batch> batchesList = new ArrayList<>();
 		
 		// TSP
-		batchesList.add(batchTestTSP);
+		//batchesList.add(batchTestTSP);
 		
 		batchesList.add(batchSimpleMethodsTSP1083);
 		batchesList.add(batchHomoTSP1083);

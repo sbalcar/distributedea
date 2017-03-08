@@ -17,18 +17,17 @@ import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.Pl
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
-import org.distributedea.input.BatchExporter;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputContOpt;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcBatchDiffTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
 import org.distributedea.input.postprocessing.latex.PostProcJobTable;
+import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfMethodTypes;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 
 public class BatchHeteroMethodsCOf04  implements IInputBatch {
-BatchExporter a;
+
 	@Override
 	public Batch batch() throws IOException {
 
@@ -101,8 +100,6 @@ BatchExporter a;
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
 		
-
-		
 		batch.addJob(job0);
 		batch.addJob(job1);
 		batch.addJob(job2);
@@ -116,25 +113,27 @@ BatchExporter a;
 		batch.addJob(job10);
 		batch.addJob(job11);
 		batch.addJob(job12);
+
+		
+		PostProcessing psLat0 = new PostProcJobTable();
+		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
+		
+		batch.addPostProcessings(psLat0);
+		batch.addPostProcessings(psLat1);
+		
 		
 		String YLABEL = "fitness jako funkční hodnota vstupní funkce";
 		PostProcessing psMat0 = new PostProcBoxplot(YLABEL);
 		
-		String XLABEL1 = "čas v sekundách";
 		String YLABEL1 = "fitness jako funkční hodnota vstupní funkce";
-		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(XLABEL1, YLABEL1);
+		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
+		
+		PostProcessing psMat2 = new PostProcAllottedTimeOfMethodTypes(false, false);
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
-		
-		PostProcessing psLat0 = new PostProcJobRunsResultTable();
-		PostProcessing psLat1 = new PostProcBatchDiffTable();
-		PostProcessing psLat2 = new PostProcJobTable();
-		
-		batch.addPostProcessings(psLat0);
-		batch.addPostProcessings(psLat1);
-		batch.addPostProcessings(psLat2);
-		
+		batch.addPostProcessings(psMat2);
+				
 		return batch;
 	}
 

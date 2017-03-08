@@ -122,6 +122,6 @@
     <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
   </planner>
   <plannerEndCondition class="plannerTimeRestriction">
-    <countOfReplaning>50</countOfReplaning>
+    <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
 </job>
