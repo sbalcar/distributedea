@@ -143,7 +143,7 @@ public class InputContOpt {
 		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(70000, 5000));
-		job.setProblem(new ProblemContinuousOpt("f04", 2, false));
+		job.setProblem(new ProblemContinuousOpt("f04", 10, false));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("weka.co")));
 		job.setMethods(new MethodsTwoSets(
@@ -160,7 +160,7 @@ public class InputContOpt {
 		Job job = test04();
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(70000, 5000));
-		job.setProblem(new ProblemContinuousOpt("f08", 2, false));
+		job.setProblem(new ProblemContinuousOpt("f08", 10, false));
 		
 		return job;
 	}

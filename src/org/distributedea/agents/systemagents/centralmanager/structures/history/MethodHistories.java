@@ -475,7 +475,28 @@ public class MethodHistories {
 		
 		return number;
 	}
+	
+	public long exportNumberOfTheBestCreatedIndividuals(MethodType methodType, int iterationNumber) {
+		
+		long number = 0;
+		
+		for (MethodHistory methodI : methods) {
+			
+			MethodInstanceDescription methodInstanceI =
+					methodI.getMethodInstanceDescription();
+			MethodType methodTypeI =
+					methodInstanceI.getMethodType();
+			
+			if (! methodTypeI.equals(methodType)) {
+				continue;
+			}
+			
+			number += methodI.exportNumberOfTheBestCreatedIndividuals(iterationNumber);
+		}
 
+		return number;
+	}
+	
 	/**
 	 * Exports {@link List} of {@link MethodType}s in structure 
 	 * @return

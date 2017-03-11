@@ -15,7 +15,19 @@ public class MatlabTool {
 		
 		return "[" + convertToMatlab(values, ",") + "]";
 	}
-	
+
+	public static String convertIntegersToMatlamArray(List<Integer> values) {
+		
+		List<String> valuesStr = new ArrayList<>();
+		
+		for (Integer valueI : values) {
+			
+			valuesStr.add("" + valueI);
+		}
+		
+		return convertStringsToMatlamArray(valuesStr);
+	}
+
 	public static String convertDoublesToMatlamArray(List<Double> values) {
 	
 		List<String> valuesStr = new ArrayList<>();

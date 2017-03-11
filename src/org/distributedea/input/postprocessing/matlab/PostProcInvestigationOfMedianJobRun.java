@@ -44,7 +44,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 
 		String BATCH_ID = batch.getBatchID();
 		String TITLE = batch.getDescription();
-		String XLABEL1 = "čas v iteracích plánovače(1x iterace = " +
+		String XLABEL = "čas v iteracích plánovače(1x iterace = " +
 				batch.exportIslandModelConfiguration().getReplanPeriodMS() /1000 +
 				"x sekund)";
 		
@@ -57,7 +57,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 		"h = figure" + NL +
 		"hold on" + NL +
 		"title('" + TITLE + "');" + NL +
-		"xlabel('x: " + XLABEL1 + "', 'FontSize', 10);" + NL +
+		"xlabel('x: " + XLABEL + "', 'FontSize', 10);" + NL +
 		"ylabel('y: " + yLabel + "', 'FontSize', 10);" + NL +
 		NL;
 		
@@ -82,7 +82,6 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 			String lineTypeI = lineTypes.get(i % lineTypes.size());
 			
 			matlabSourceCode +=
-				//"M = dlmread('" + "../../../" + fileNameI + "')" + NL +
 				"M = " + matlabArrayI + ";" + NL +
 				"plot(M,' "+ lineTypeI + "','LineWidth',3);" + NL +
 				NL;

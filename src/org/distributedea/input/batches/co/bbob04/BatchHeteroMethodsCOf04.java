@@ -25,6 +25,7 @@ import org.distributedea.input.postprocessing.latex.PostProcJobTable;
 import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfMethodTypes;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
+import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
 
 public class BatchHeteroMethodsCOf04  implements IInputBatch {
 
@@ -130,9 +131,12 @@ public class BatchHeteroMethodsCOf04  implements IInputBatch {
 		
 		PostProcessing psMat2 = new PostProcAllottedTimeOfMethodTypes(false, false);
 		
+		PostProcessing psMat3 = new PostProcInvestigationOfMeritsOfMethodTypes(false, false);
+		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
 		batch.addPostProcessings(psMat2);
+		batch.addPostProcessings(psMat3);
 				
 		return batch;
 	}

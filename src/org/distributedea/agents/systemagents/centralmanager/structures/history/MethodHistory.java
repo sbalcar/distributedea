@@ -155,6 +155,33 @@ public class MethodHistory {
 		}
 		return null;
 	}
+
+	public MethodStatisticResultWrapper exportStatistic(long iterationNumber) {
+		
+		if (this.statistics == null || this.statistics.isEmpty()) {
+			return null;
+		}
+		
+		for (MethodStatisticResultWrapper statisticI : statistics) {
+			
+			Iteration methodIterationI = statisticI.getIteration();
+			if (methodIterationI.getIterationNumber() == iterationNumber) {
+				return statisticI;
+			}
+		}
+		return null;
+	}
+
+	public long exportNumberOfTheBestCreatedIndividuals(long iterationNumber) {
+		
+		MethodStatisticResultWrapper resultWrp = exportStatistic(iterationNumber);
+		if (resultWrp == null) {
+			return 0;
+		}
+
+		MethodStatisticResult result = resultWrp.getMethodStatisticResult();
+		return result.getNumberOfTheBestCreatedIndividuals();
+	}
 	
 	public long exportNumberOfTheBestCreatedIndividuals() {
 		

@@ -4,7 +4,7 @@
   <description>Single-SimulatedAnnealing</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f08</functionID>
-    <dimension>2</dimension>
+    <dimension>10</dimension>
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>
   <datasetFileName>inputs/weka.co</datasetFileName>
