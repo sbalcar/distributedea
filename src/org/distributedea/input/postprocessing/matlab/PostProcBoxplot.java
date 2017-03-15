@@ -15,6 +15,7 @@ import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Postprocessing creating boxplots for given {@link Batch}.  In the graph is one
@@ -95,8 +96,10 @@ public class PostProcBoxplot extends PostProcessingMatlab {
 		
 		String jobID = job.getJobID();	
 		int numberOfRuns = job.getNumberOfRuns();
+		IProblem problem = job.getProblem();
 		
-		Map<JobID, Double> resultsOfJobsMap = FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
+		Map<JobID, Double> resultsOfJobsMap = FilesystemTool
+				.getTheBestPartResultOfJobForAllRuns(batchID, jobID, numberOfRuns, problem);
 		
 		List<Double> resultsOfJobs = new ArrayList<>(resultsOfJobsMap.values());
 		

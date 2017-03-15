@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.problem.IProblem;
 
 public class FilesystemTool {
 
@@ -44,16 +46,15 @@ public class FilesystemTool {
 		return vectors;
 	}
 	
-
-	
-	public static Map<JobID, Double> getResultOfJobForAllRuns(String batchID, String jobID, int numberOfRuns) throws IOException {
+	public static Map<JobID, Double> getTheBestPartResultOfJobForAllRuns(String batchID, String jobID,
+			int numberOfRuns, IProblem problem) throws IOException {
 		
 		Map<JobID, Double> results = new HashMap<>();
 		
 		for (int runNumberI = 0; runNumberI < numberOfRuns; runNumberI++) {
 			
 			JobID jobIDStructI = new JobID(batchID, jobID, runNumberI);
-			Double lastValue = getResultOfJobRun(jobIDStructI);
+			Double lastValue = getTheBestPartResultOfJobRun(jobIDStructI, problem);
 
 			results.put(jobIDStructI, lastValue);
 		}
@@ -61,7 +62,7 @@ public class FilesystemTool {
 		return results;
 	}
 	
-	public static Double getResultOfJobRun(JobID JobID) throws IOException {
+	public static Double getLastPartResultOfJobRun_(JobID JobID) throws IOException {
 		
 		if (JobID == null || ! JobID.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -77,4 +78,22 @@ public class FilesystemTool {
 		
 		return listOfFitnessValues.get(listOfFitnessValues.size() -1);
 	}
+	
+	public static Double getTheBestPartResultOfJobRun(JobID JobID, IProblem problem) throws IOException {
+		
+		if (JobID == null || ! JobID.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					JobID.class.getSimpleName() + " is not valid");
+		}
+		
+		String fileName = FileNames.getResultFile(JobID);
+		List<Double> listOfFitnessValues = FilesystemTool.readVectorFromFile(new File(fileName));
+
+		if (listOfFitnessValues == null || listOfFitnessValues.isEmpty()) {
+			return null;
+		}
+		
+		return FitnessTool.getTheBestFitnessValueFrom(listOfFitnessValues, problem);
+	}
+
 }

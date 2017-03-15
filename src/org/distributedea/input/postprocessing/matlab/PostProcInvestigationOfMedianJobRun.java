@@ -115,8 +115,8 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	private JobID processJobIDOfTheMedianResult(String batchID, String jobID,
 			int numberOfRuns, IProblem problem) throws IOException {
 
-		Map<JobID, Double> resultsOfJobsMap =
-				FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
+		Map<JobID, Double> resultsOfJobsMap = FilesystemTool
+				.getTheBestPartResultOfJobForAllRuns(batchID, jobID, numberOfRuns, problem);
 		
 		List<Double> list = new ArrayList<Double>(resultsOfJobsMap.values());
 		Collections.sort(list);
@@ -136,8 +136,8 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 	private JobID processJobIDOfTheBestResult(String batchID, String jobID,
 			int numberOfRuns, IProblem problem) throws IOException {
 		
-		Map<JobID, Double> resultsOfJobsMap =
-				FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
+		Map<JobID, Double> resultsOfJobsMap = FilesystemTool
+				.getTheBestPartResultOfJobForAllRuns(batchID, jobID, numberOfRuns, problem);
 		
 		return getBestJobID(resultsOfJobsMap, problem);
 	}

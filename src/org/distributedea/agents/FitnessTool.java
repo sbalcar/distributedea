@@ -1,5 +1,9 @@
 package org.distributedea.agents;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -14,6 +18,18 @@ import org.distributedea.ontology.problem.IProblem;
  */
 public class FitnessTool {
 
+	public static double getTheBestFitnessValueFrom(List<Double> fitnessValues, IProblem problem) {
+	
+		List<Double> listSorted = new ArrayList<Double>(fitnessValues);
+		Collections.sort(listSorted);
+		
+		if (problem.exportIsMaximizationProblem()) {
+			return listSorted.get(listSorted.size() -1);
+		} else {
+			return listSorted.get(0);
+		}
+	}
+	
 	public static boolean isFistIndividualWBetterThanSecond(IndividualWrapper individual1,
 			IndividualWrapper individual2, IProblem problem) {
 		

@@ -35,7 +35,7 @@ public class BatchHeteroMethodsCOf08 implements IInputBatch {
 
 		Batch batch = new Batch();
 		batch.setBatchID("heteroComparingCOf08");
-		batch.setDescription("Porovnání plánovačů v heterogenních modelech : Cont.Opt. ");
+		batch.setDescription("Porovnání plánovačů v heterogenních modelech : COf08");
 		
 		Job job0 = InputContOpt.test08();
 		job0.setJobID("initialisationOneMethodPerCore");

@@ -16,6 +16,7 @@ import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.problem.IProblem;
 
 public class PostProcJobRunsResultTable extends PostProcessing {
 
@@ -92,12 +93,14 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		
 		String jobID = job.getJobID();	
 		int numberOfRuns = job.getNumberOfRuns();
+		IProblem problem = job.getProblem();
 		
-		Map<JobID, Double> resultsOfJobsMap = FilesystemTool.getResultOfJobForAllRuns(batchID, jobID, numberOfRuns);
+		Map<JobID, Double> resultsOfJobsMap = FilesystemTool
+				.getTheBestPartResultOfJobForAllRuns(batchID, jobID, numberOfRuns, problem);
 		
 		List<Double> resultsOfJobs = new ArrayList<>(resultsOfJobsMap.values());
 
-		String jobLine = job.getDescription().replaceAll("&", "\\&");
+		String jobLine = job.getDescription().replaceAll("\\&", "\\\\&");
 		for (double resultI : resultsOfJobs) {
 			String resultStrI = "" + resultI;
 			if (resultStrI.length() > maxLengthOfResult) {

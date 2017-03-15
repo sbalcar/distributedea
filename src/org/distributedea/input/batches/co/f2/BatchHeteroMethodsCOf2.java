@@ -25,7 +25,7 @@ public class BatchHeteroMethodsCOf2 implements IInputBatch {
 
 		Batch batch = new Batch();
 		batch.setBatchID("heteroComparingCOf2");
-		batch.setDescription("Porovnání plánovačů v heterogenních modelech : Cont.Opt. ");
+		batch.setDescription("Porovnání plánovačů v heterogenních modelech : COf2");
 		
 		Job job0 = InputContOpt.test03();
 		job0.setJobID("onlyInit");
