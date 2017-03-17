@@ -19,6 +19,7 @@ import org.distributedea.problems.continuousoptimization.point.tools.ToolReadSol
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolExitBbobCO;
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolFitnessBbobCO;
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolInitializationBbobCO;
+import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f02;
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f04;
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f08;
 import org.distributedea.problems.continuousoptimization.point.tools.ownfunction.f2;
@@ -63,6 +64,9 @@ public abstract class AProblemToolCO extends ProblemTool {
     	if (functionID.equals("f2")) {
     		return;
     	}
+    	if (functionID.equals("f02")) {
+    		return;
+    	}
     	if (functionID.equals("f04")) {
     		return;
     	}
@@ -93,6 +97,9 @@ public abstract class AProblemToolCO extends ProblemTool {
     	
     	if (functionID.equals("f2")) {
     		return f2.evaluate(individualPoint);
+    	}
+    	if (functionID.equals("f02")) {
+    		return f02.evaluate(individualPoint);
     	}
     	if (functionID.equals("f04")) {
     		return f04.evaluate(individualPoint);

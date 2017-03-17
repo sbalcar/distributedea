@@ -11,6 +11,9 @@ import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.batches.binpacking.objects1000.BatchHeteroMethodsBPP1000;
 import org.distributedea.input.batches.binpacking.objects1000.BatchHomoMethodsBPP1000;
 import org.distributedea.input.batches.binpacking.objects1000.BatchSingleMethodsBPP1000;
+import org.distributedea.input.batches.co.bbob02.BatchHeteroMethodsCOf02;
+import org.distributedea.input.batches.co.bbob02.BatchHomoMethodsCOf02;
+import org.distributedea.input.batches.co.bbob02.BatchSingleMethodsCOf02;
 import org.distributedea.input.batches.co.bbob04.BatchHeteroMethodsCOf04;
 import org.distributedea.input.batches.co.bbob04.BatchHomoMethodsCOf04;
 import org.distributedea.input.batches.co.bbob04.BatchSingleMethodsCOf04;
@@ -69,7 +72,17 @@ public class BatchExporter {
 		IInputBatch inputBatchHeteroCOF2 = new BatchHeteroMethodsCOf2();
 		Batch batchHeteroCOF2 = inputBatchHeteroCOF2.batch();
 		
+		
+		IInputBatch inputBatchSingleMethodsCOf02 = new BatchSingleMethodsCOf02();
+		Batch batchSingleMethodsCOf02 = inputBatchSingleMethodsCOf02.batch();
 
+		IInputBatch inputBatchHomoMethodsCOf02 = new BatchHomoMethodsCOf02();
+		Batch batchHomoMethodsCOf02 = inputBatchHomoMethodsCOf02.batch();
+
+		IInputBatch inputBatchHeteroMethodsCOf02 = new BatchHeteroMethodsCOf02();
+		Batch batchHeteroMethodsCOf02 = inputBatchHeteroMethodsCOf02.batch();
+		
+		
 		IInputBatch inputBatchSingleMethodsCOf04 = new BatchSingleMethodsCOf04();
 		Batch batchSingleMethodsCOf04 = inputBatchSingleMethodsCOf04.batch();
 
@@ -119,6 +132,10 @@ public class BatchExporter {
 		batchesList.add(batchHomoCOF2);
 		batchesList.add(batchHeteroCOF2);
 
+		batchesList.add(batchSingleMethodsCOf02);
+		batchesList.add(batchHomoMethodsCOf02);
+		batchesList.add(batchHeteroMethodsCOf02);
+		
 		batchesList.add(batchSingleMethodsCOf04);
 		batchesList.add(batchHomoMethodsCOf04);
 		batchesList.add(batchHeteroMethodsCOf04);

@@ -102,7 +102,10 @@ public class BatchHeteroMethodsCOf08 implements IInputBatch {
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
 		
-
+		Job job14 = InputContOpt.test08();
+		job14.setJobID("withoutReplanning");
+		job14.setDescription("Hetero without replanning");
+		job14.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		
 		batch.addJob(job0);
 		batch.addJob(job1);
@@ -117,6 +120,7 @@ public class BatchHeteroMethodsCOf08 implements IInputBatch {
 		batch.addJob(job10);
 		batch.addJob(job11);
 		batch.addJob(job12);
+		batch.addJob(job14);
 		
 		
 		PostProcessing psLat0 = new PostProcJobTable();

@@ -124,6 +124,11 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
 		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
 
+		Job job14 = InputTSP.test05();
+		job14.setJobID("withoutReplanning");
+		job14.setDescription("Hetero without replanning");
+		job14.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		
 		
 		batch.addJob(job0);
 		batch.addJob(job1);
@@ -139,6 +144,7 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		batch.addJob(job11);
 		batch.addJob(job12);
 		batch.addJob(job13);
+		batch.addJob(job14);
 		
 		
 		PostProcessing psLat0 = new PostProcJobTable();

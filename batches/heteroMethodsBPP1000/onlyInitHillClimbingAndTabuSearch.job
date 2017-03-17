@@ -119,13 +119,13 @@
     </algorithms>
     <problemTools>
       <problemTools>
-        <java-class>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</java-class>
+        <java-class>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</java-class>
       </problemTools>
     </problemTools>
   </methods>
   <individualDistribution>true</individualDistribution>
   <islandModelConfiguration>
-    <replanPeriodMS>70000</replanPeriodMS>
+    <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
   <planner class="org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan">
@@ -146,7 +146,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -163,7 +163,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -180,7 +180,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -197,7 +197,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -214,7 +214,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -231,7 +231,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -248,7 +248,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -265,7 +265,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -282,7 +282,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -299,7 +299,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -316,7 +316,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -333,7 +333,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -350,7 +350,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -367,7 +367,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -384,7 +384,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
@@ -405,7 +405,7 @@
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
         </inputMethodDescription>
       </inputAgentDescriptions>
     </methods>

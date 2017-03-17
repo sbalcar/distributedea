@@ -63,7 +63,7 @@ public class InputContOpt {
 		return job;
 	}
 	
-	public static Job test02() throws IOException {
+	public static Job test02_() throws IOException {
 		
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
@@ -132,18 +132,18 @@ public class InputContOpt {
 		return job;
 	}
 
-	public static Job test04() throws IOException {
+	public static Job test02() throws IOException {
 
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
 
 		Job job = new Job();
-		job.setJobID("f08");
+		job.setJobID("f02");
 		job.setNumberOfRuns(3);
 		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
-		job.setProblem(new ProblemContinuousOpt("f04", 10, false));
+				new IslandModelConfiguration(60000, 5000));
+		job.setProblem(new ProblemContinuousOpt("f02", 10, false));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("weka.co")));
 		job.setMethods(new MethodsTwoSets(
@@ -153,13 +153,26 @@ public class InputContOpt {
 		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 		
 		return job;
+
+	}
+	
+	public static Job test04() throws IOException {
+
+		Job job = test02();
+		job.setJobID("f04");
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(60000, 5000));
+		job.setProblem(new ProblemContinuousOpt("f04", 10, false));
+		
+		return job;
 	}
 
 	public static Job test08() throws IOException {
-
-		Job job = test04();
+		
+		Job job = test02();
+		job.setJobID("f08");
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f08", 10, false));
 		
 		return job;

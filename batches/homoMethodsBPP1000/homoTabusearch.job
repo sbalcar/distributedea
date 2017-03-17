@@ -27,13 +27,13 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift</problemToolClass>
+        <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
       </inputMethodDescription>
     </inputAgentDescriptions>
   </methods>
   <individualDistribution>true</individualDistribution>
   <islandModelConfiguration>
-    <replanPeriodMS>70000</replanPeriodMS>
+    <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
   <planner class="plannerInitialisationOneMethodPerCore"/>

@@ -108,8 +108,7 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		Job job12 = InputBinPacking.test01();
 		job12.setJobID("theGreatestQGoodMaterialImprovementFitness");
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
-		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
-		
+		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());		
 		
 		Methods algorithms = new Methods();
 		algorithms.addAgentDescriptions(new InputMethodDescription(
@@ -123,6 +122,11 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		job13.setJobID("onlyInitHillClimbingAndTabuSearch");
 		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
 		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
+
+		Job job14 = InputBinPacking.test01();
+		job14.setJobID("withoutReplanning");
+		job14.setDescription("Hetero without replanning");
+		job14.setPlanner(new PlannerInitialisationOneMethodPerCore());
 
 		
 		batch.addJob(job0);
@@ -139,6 +143,7 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		batch.addJob(job11);
 		batch.addJob(job12);
 		batch.addJob(job13);
+		batch.addJob(job14);
 		
 		
 		PostProcessing psLat0 = new PostProcJobRunsResultTable(10);

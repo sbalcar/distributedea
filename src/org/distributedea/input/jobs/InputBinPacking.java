@@ -43,7 +43,7 @@ public class InputBinPacking {
 		Job job = new Job();
 		job.setNumberOfRuns(3);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(60000, 5000));
 		job.setIndividualDistribution(true);
 		job.setProblem(new ProblemBinPacking(1));
 		job.importDatasetFile(new File(

@@ -115,7 +115,7 @@
   </methods>
   <individualDistribution>false</individualDistribution>
   <islandModelConfiguration>
-    <replanPeriodMS>70000</replanPeriodMS>
+    <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
   <planner class="plannerTheBestResult"/>
