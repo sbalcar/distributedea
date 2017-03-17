@@ -5,12 +5,13 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.problems.binpacking.permutation.operators.OperatorDisplacementOfPart;
 import org.distributedea.problems.binpacking.permutation.operators.OperatorSimpleShift;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorTwoPointCrossoverPermutation;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorDifferential;
 
 
-public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPermutation {
+public class ProblemToolBinPackingDisplacementOfPart extends AProblemToolBinPackingPermutation {
 
 	@Override
 	protected Individual improveIndividual(Individual individual,
@@ -27,7 +28,7 @@ public class ProblemToolBinPackingSimpleShift extends AProblemToolBinPackingPerm
 
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		
-		return OperatorSimpleShift.create(individualPerm, logger);
+		return OperatorDisplacementOfPart.create(individualPerm, logger);
 	}
 
 	@Override

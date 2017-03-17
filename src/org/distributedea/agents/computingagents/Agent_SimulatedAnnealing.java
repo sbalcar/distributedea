@@ -158,8 +158,8 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 			}
 			
 			IndividualEvaluated individualEvalNewI = 
-					problemTool.improveIndividualEval(individualEvalI, problem, dataset,
-					pedigreeParams, getCALogger());
+					problemTool.getNeighborEval(individualEvalI, problem, dataset,
+					0, pedigreeParams, getCALogger());
 	
             // decide on the acceptance the neighbour
 			double acceptanceProbability = acceptanceProbability(individualEvalI,

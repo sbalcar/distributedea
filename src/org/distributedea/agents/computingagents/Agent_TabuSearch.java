@@ -184,8 +184,8 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 				
 		for (int i = 0; i < numberOfNeighbors; i++) {
 			
-			IndividualEvaluated indivI = problemTool.improveIndividualEval(individualEval,
-					problem, dataset, pedigreeParams, getCALogger());
+			IndividualEvaluated indivI = problemTool.getNeighborEval(individualEval,
+					problem, dataset, 0, pedigreeParams, getCALogger());
 			neighbours[i] = indivI;
 			
 			if (state != CompAgentState.COMPUTING) {

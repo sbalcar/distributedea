@@ -13,7 +13,7 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift;
+import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
 
 public class Test {
 
@@ -22,7 +22,7 @@ public class Test {
 		IInputBatch iInputBatch = new BatchSingleMethodsBPP1000();
 		Batch batch = iInputBatch.batch();
 		
-		ProblemTool tool = new ProblemToolBinPackingSimpleShift();
+		ProblemTool tool = new ProblemToolBinPackingDisplacementOfPart();
 		
 		File file = batch.getJobs().get(0).exportDatasetFile();
 		Dataset dataset = tool.readDataset(file, new TrashLogger());

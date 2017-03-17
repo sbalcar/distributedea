@@ -25,7 +25,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.method.Methods;
-import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift;
+import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
 
 public class BatchHomoMethodsBPP1000 implements IInputBatch {
 
@@ -37,7 +37,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
-				new ProblemTools(ProblemToolBinPackingSimpleShift.class));
+				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 
 		Job job0 = InputBinPacking.test01();
 		job0.setJobID("homoHillclimbing");
@@ -47,7 +47,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Methods methods1 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments())),
-				new ProblemTools(ProblemToolBinPackingSimpleShift.class));
+				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 		
 		Job job1 = InputBinPacking.test01();
 		job1.setJobID("homoRandomsearch");
@@ -57,7 +57,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Methods methods2 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) ))),
-				new ProblemTools(ProblemToolBinPackingSimpleShift.class));
+				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 
 		Job job2 = InputBinPacking.test01();
 		job2.setJobID("homoEvolution");
@@ -67,7 +67,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Methods methods3 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments())),
-				new ProblemTools(ProblemToolBinPackingSimpleShift.class));
+				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 
 		Job job3 = InputBinPacking.test01();
 		job3.setJobID("homoBruteforce");
@@ -77,7 +77,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Methods methods4 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))),
-				new ProblemTools(ProblemToolBinPackingSimpleShift.class));
+				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 		
 		Job job4 = InputBinPacking.test01();
 		job4.setJobID("homoTabusearch");
@@ -87,7 +87,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Methods methods5 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002")) )),
-				new ProblemTools(ProblemToolBinPackingSimpleShift.class));
+				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 		
 		Job job5 = InputBinPacking.test01();
 		job5.setJobID("homoSimulatedannealing");
@@ -97,7 +97,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Methods methods6 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )),
-				new ProblemTools(ProblemToolBinPackingSimpleShift.class));
+				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 
 		Job job6 = InputBinPacking.test01();
 		job6.setJobID("homoDifferentialevolution");

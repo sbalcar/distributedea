@@ -34,7 +34,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingSimpleShift;
+import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
 
 public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 
@@ -114,10 +114,10 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		Methods algorithms = new Methods();
 		algorithms.addAgentDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				ProblemToolBinPackingSimpleShift.class), 15);
+				ProblemToolBinPackingDisplacementOfPart.class), 15);
 		algorithms.addAgentDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
-				ProblemToolBinPackingSimpleShift.class), 1);
+				ProblemToolBinPackingDisplacementOfPart.class), 1);
 
 		Job job13 = InputBinPacking.test01();
 		job13.setJobID("onlyInitHillClimbingAndTabuSearch");
