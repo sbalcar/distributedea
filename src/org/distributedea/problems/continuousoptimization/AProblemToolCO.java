@@ -19,9 +19,12 @@ import org.distributedea.problems.continuousoptimization.point.tools.ToolReadSol
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolExitBbobCO;
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolFitnessBbobCO;
 import org.distributedea.problems.continuousoptimization.point.tools.bbob.ToolInitializationBbobCO;
+import org.distributedea.problems.continuousoptimization.point.tools.bbob.fBbob;
+import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.IFuncitonCO;
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f02;
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f04;
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f08;
+import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f10;
 import org.distributedea.problems.continuousoptimization.point.tools.ownfunction.f2;
 
 /**
@@ -35,6 +38,7 @@ public abstract class AProblemToolCO extends ProblemTool {
 	protected IJNIfgeneric fgeneric;
 	protected BbobTools bbobTools;
 	
+	protected IFuncitonCO function;
 	
 	@Override
 	public Class<?> datasetReprezentation() {
@@ -62,20 +66,28 @@ public abstract class AProblemToolCO extends ProblemTool {
     	String functionID = problemCO.getFunctionID();
     	
     	if (functionID.equals("f2")) {
-    		return;
+    		function = new f2();
     	}
     	if (functionID.equals("f02")) {
-    		return;
+    		function = new f02();
     	}
     	if (functionID.equals("f04")) {
-    		return;
+    		function = new f04();
     	}
     	if (functionID.equals("f08")) {
-    		return;
+    		function = new f08();
+    	}
+    	if (functionID.equals("f10")) {
+    		function = new f10();
     	}
     	
-		ToolInitializationBbobCO.initialization(problemCO, datasetCO, agentConf,
-				fgeneric, bbobTools, logger);
+    	if (functionID.equals("Bbob")) {
+    		function = new fBbob();
+			ToolInitializationBbobCO.initialization(problemCO, datasetCO,
+					agentConf, fgeneric, bbobTools, logger);
+    	}
+    	
+		function.initialisation(problemCO.getDimension());
 	}
 
 	@Override
@@ -89,26 +101,14 @@ public abstract class AProblemToolCO extends ProblemTool {
 	@Override
 	public double fitness(Individual individual, IProblem problem, Dataset dataset,
 			IAgentLogger logger) {
-////////////////////		
+		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
-		ProblemContinuousOpt problemCO = (ProblemContinuousOpt) problem;
 
-    	String functionID = problemCO.getFunctionID();
-    	
-    	if (functionID.equals("f2")) {
-    		return f2.evaluate(individualPoint);
-    	}
-    	if (functionID.equals("f02")) {
-    		return f02.evaluate(individualPoint);
-    	}
-    	if (functionID.equals("f04")) {
-    		return f04.evaluate(individualPoint);
-    	}
-    	if (functionID.equals("f08")) {
-    		return f08.evaluate(individualPoint);
-    	}
-    	
-		return ToolFitnessBbobCO.evaluate(individualPoint, problem, fgeneric, bbobTools, logger);		
+		if (function instanceof fBbob) {
+			return ToolFitnessBbobCO.evaluate(individualPoint, problem,
+					fgeneric, bbobTools, logger);
+		}
+		return function.evaluate(individualPoint);		
 	}
 	
 	@Override

@@ -91,6 +91,16 @@ public class IndividualPoint  extends Individual {
 		
 	}
 
+	public double[] exortAsArray() {
+		
+		double[] array = new double[coordinates.size()];
+		
+		for (int i = 0; i < coordinates.size(); i++) {
+			array[i] = coordinates.get(i);
+		}
+		return array;
+	}
+	
 	/**
 	 * Operator plus
 	 * @param indiv

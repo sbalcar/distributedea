@@ -177,4 +177,16 @@ public class InputContOpt {
 		
 		return job;
 	}
+	
+	public static Job test10() throws IOException {
+		
+		Job job = test02();
+		job.setJobID("f10");
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(60000, 5000));
+		job.setProblem(new ProblemContinuousOpt("f10", 10, false));
+		
+		return job;
+	}
+
 }

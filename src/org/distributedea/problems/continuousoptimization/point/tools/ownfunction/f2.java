@@ -3,10 +3,16 @@ package org.distributedea.problems.continuousoptimization.point.tools.ownfunctio
 import java.util.List;
 
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.IFuncitonCO;
 
-public class f2 {
+public class f2 implements IFuncitonCO {
 
-	public static double evaluate(IndividualPoint individualPoint) {
+	@Override
+	public void initialisation(int d) {
+	}
+	
+	@Override
+	public double evaluate(IndividualPoint individualPoint) {
 		
 		List<Double> coordinates = individualPoint.getCoordinates();
 		double x = coordinates.get(0);
@@ -15,8 +21,9 @@ public class f2 {
 		return function(x, y);
 	}
 	
-	private static double function(double x, double y) {
+	private double function(double x, double y) {
 		
 		return 100 * Math.pow((x*x - y), 2) + Math.pow((1 - x), 2);
 	}
+	
 }

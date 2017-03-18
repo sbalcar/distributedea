@@ -2,16 +2,22 @@ package org.distributedea.problems.continuousoptimization.point.tools.bbobjava;
 
 import org.distributedea.ontology.individuals.IndividualPoint;
 
-public class f08 {
+public class f08 implements IFuncitonCO {
 
-	public static double evaluate(IndividualPoint individualPoint) {
+	@Override
+	public void initialisation(int d) {
+	}
+
+	@Override
+	public double evaluate(IndividualPoint indiv) {
 		
-		int d = individualPoint.getCoordinates().size();
+		double[] x = indiv.exortAsArray();
+		int d = x.length;
 		
 		double result = 0;
 		for (int i = 0; i <= d -2; i++) {
 
-			IndividualPoint z = countZ(individualPoint);
+			IndividualPoint z = countZ(indiv);
 			
 			double zi = z.exportCoordinate(i);
 			double ziplus1 = z.exportCoordinate(i+1);
@@ -22,7 +28,7 @@ public class f08 {
 		return result;
 	}
 	
-	private static IndividualPoint countZ(IndividualPoint x) {
+	private IndividualPoint countZ(IndividualPoint x) {
 		
 		int d = x.getCoordinates().size();
 		
@@ -30,4 +36,5 @@ public class f08 {
 		
 		return x.operator_multipl(max).operator_plus(1.0);
 	}
+
 }
