@@ -1,6 +1,6 @@
 <job>
   <jobID>initialisationOneMethodPerCore</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>Initialisation One Method Per Core</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f10</functionID>

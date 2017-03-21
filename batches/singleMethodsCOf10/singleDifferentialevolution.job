@@ -1,6 +1,6 @@
 <job>
   <jobID>singleDifferentialevolution</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>Single-DifferentialEvolution</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f10</functionID>

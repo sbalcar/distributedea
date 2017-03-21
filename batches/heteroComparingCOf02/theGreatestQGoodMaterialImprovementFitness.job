@@ -1,6 +1,6 @@
 <job>
   <jobID>theGreatestQGoodMaterialImprovementFitness</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>The Combination of Greatest Quantity Good Material, Improvement and Fitness</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f02</functionID>

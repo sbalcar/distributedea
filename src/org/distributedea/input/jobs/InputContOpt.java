@@ -139,7 +139,7 @@ public class InputContOpt {
 
 		Job job = new Job();
 		job.setJobID("f02");
-		job.setNumberOfRuns(3);
+		job.setNumberOfRuns(5);
 		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));

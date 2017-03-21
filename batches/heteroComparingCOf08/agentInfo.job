@@ -1,6 +1,6 @@
 <job>
   <jobID>agentInfo</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>Based on exploatation/exploration Agent Info</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f08</functionID>

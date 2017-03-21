@@ -1,6 +1,6 @@
 <job>
   <jobID>theGreatestQuantityOfMaterial</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>The Greatest Quantity Of Genetic Material</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f02</functionID>

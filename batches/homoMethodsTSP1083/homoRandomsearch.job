@@ -1,6 +1,6 @@
 <job>
   <jobID>homoRandomsearch</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>Homo-RandomSearch</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
   <datasetFileName>inputs/xit1083.tsp</datasetFileName>
@@ -20,7 +20,7 @@
   </methods>
   <individualDistribution>true</individualDistribution>
   <islandModelConfiguration>
-    <replanPeriodMS>70000</replanPeriodMS>
+    <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
   <planner class="plannerInitialisationOneMethodPerCore"/>

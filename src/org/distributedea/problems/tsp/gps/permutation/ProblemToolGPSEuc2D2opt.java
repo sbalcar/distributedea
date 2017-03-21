@@ -46,7 +46,9 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 			IProblem problem, Dataset dataset,
 			long neighborIndex, IAgentLogger logger) throws Exception {
 
-		return generateIndividual(problem, dataset, logger);
+		IndividualPermutation indivPerm = (IndividualPermutation) individual;
+		
+		return Operator2Opt.create(indivPerm);
 	}
 
 	@Override

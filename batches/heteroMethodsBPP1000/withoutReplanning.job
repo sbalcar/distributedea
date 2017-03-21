@@ -1,6 +1,6 @@
 <job>
   <jobID>withoutReplanning</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>Hetero without replanning</description>
   <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
     <sizeOfBin>1</sizeOfBin>

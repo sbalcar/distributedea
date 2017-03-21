@@ -53,7 +53,7 @@ public class InputTSP {
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("simpleTest.tsp")));
@@ -76,7 +76,7 @@ public class InputTSP {
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("wi29.tsp")));
@@ -98,7 +98,7 @@ public class InputTSP {
 		job.setJobID("tsp03");
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(60000, 5000));
 		job.setIndividualDistribution(true);
 		job.setProblem(new ProblemTSPPoint());
 		job.importDatasetFile(new File(
@@ -122,7 +122,7 @@ public class InputTSP {
 		job.setNumberOfRuns(1);
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));
@@ -141,10 +141,10 @@ public class InputTSP {
 				.exportInputAgentConfigurations().deepClone();
 
 		Job job = new Job();
-		job.setNumberOfRuns(3);
+		job.setNumberOfRuns(5);
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));

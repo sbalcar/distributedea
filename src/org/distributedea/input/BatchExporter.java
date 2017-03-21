@@ -141,9 +141,9 @@ public class BatchExporter {
 		batchesList.add(batchHeteroBPP1000);
 		
 		// CO
-		batchesList.add(batchSingleMethodsCOf2);
-		batchesList.add(batchHomoCOF2);
-		batchesList.add(batchHeteroCOF2);
+		//batchesList.add(batchSingleMethodsCOf2);
+		//batchesList.add(batchHomoCOF2);
+		//batchesList.add(batchHeteroCOF2);
 
 		batchesList.add(batchSingleMethodsCOf02);
 		batchesList.add(batchHomoMethodsCOf02);

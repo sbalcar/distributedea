@@ -1,6 +1,6 @@
 <job>
   <jobID>theBestResult</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>5</numberOfRuns>
   <description>The Best Result Quantity Of Improvement Statistic</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f10</functionID>
