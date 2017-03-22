@@ -15,6 +15,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheG
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.IInputBatch;
@@ -102,9 +103,15 @@ public class BatchHeteroMethodsCOf10 implements IInputBatch {
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
 		
 		Job job14 = InputContOpt.test10();
-		job14.setJobID("withoutReplanning");
-		job14.setDescription("Hetero without replanning");
+		job14.setJobID("withoutReplanning1xAll");
+		job14.setDescription("Hetero without replanning all methods");
 		job14.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		
+		Job job15 = InputContOpt.test10();
+		job15.setJobID("withoutReplanning2xAll");
+		job15.setDescription("Hetero without replanning 2x all methods");
+		job15.setPlanner(new PlannerInitialisationRunEachMethodTwice());
+		
 		
 		batch.addJob(job0);
 		batch.addJob(job1);
@@ -120,6 +127,7 @@ public class BatchHeteroMethodsCOf10 implements IInputBatch {
 		batch.addJob(job11);
 		batch.addJob(job12);
 		batch.addJob(job14);
+		batch.addJob(job15);
 		
 		
 		PostProcessing psLat0 = new PostProcJobTable();

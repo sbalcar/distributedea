@@ -1,9 +1,9 @@
 <job>
-  <jobID>withoutReplanning</jobID>
+  <jobID>withoutReplanning1xAll</jobID>
   <numberOfRuns>5</numberOfRuns>
-  <description>Hetero without replanning</description>
+  <description>Hetero without replanning all methods</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
-    <functionID>f04</functionID>
+    <functionID>f08</functionID>
     <dimension>10</dimension>
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>

@@ -1,9 +1,13 @@
 <job>
-  <jobID>withoutReplanning</jobID>
+  <jobID>withoutReplanning1xAll</jobID>
   <numberOfRuns>5</numberOfRuns>
-  <description>Hetero without replanning</description>
-  <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
-  <datasetFileName>inputs/xit1083.tsp</datasetFileName>
+  <description>Hetero without replanning all methods</description>
+  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <functionID>f04</functionID>
+    <dimension>10</dimension>
+    <isMaximizationProblem>false</isMaximizationProblem>
+  </problem>
+  <datasetFileName>inputs/weka.co</datasetFileName>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>
@@ -105,11 +109,11 @@
     </algorithms>
     <problemTools>
       <problemTools>
-        <java-class>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</java-class>
+        <java-class>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</java-class>
       </problemTools>
     </problemTools>
   </methods>
-  <individualDistribution>true</individualDistribution>
+  <individualDistribution>false</individualDistribution>
   <islandModelConfiguration>
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>

@@ -25,13 +25,13 @@ public class Methods implements IMethods, Concept {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private List<InputMethodDescription> inputAgentDescriptions;
+	private List<InputMethodDescription> inputMethodDescriptions;
 
 	/**
 	 * Constructor
 	 */
 	public Methods() {
-		this.inputAgentDescriptions = new ArrayList<>();
+		this.inputMethodDescriptions = new ArrayList<>();
 	}
 	
 	/**
@@ -90,49 +90,62 @@ public class Methods implements IMethods, Concept {
 					Methods.class.getSimpleName() + " is not valid");
 		}
 		Methods agentDescriptionClone = agentDescription.deepClone();
-		this.inputAgentDescriptions = agentDescriptionClone.getInputAgentDescriptions();
+		this.inputMethodDescriptions = agentDescriptionClone.getInputMethodDescriptions();
 	}
 
 	/**
 	 * Returns list of {@link InputMethodDescription}.
 	 * @return
 	 */
-	public List<InputMethodDescription> getInputAgentDescriptions() {
-		return inputAgentDescriptions;
+	public List<InputMethodDescription> getInputMethodDescriptions() {
+		return inputMethodDescriptions;
 	}
 	@Deprecated
-	public void setInputAgentDescriptions(List<InputMethodDescription> agentDescriptions) {
+	public void setInputMethodDescriptions(List<InputMethodDescription> agentDescriptions) {
 		importDescriptions(agentDescriptions);
 	}
 
 	/**
 	 * Adds {@link InputMethodDescription} multiple times
-	 * @param agentDescriptions
+	 * @param methodDescriptions
 	 * @param numberOfInstances
 	 */
-	public void addAgentDescriptions(InputMethodDescription agentDescriptions, int numberOfInstances) {
+	public void addMethodDescriptions(InputMethodDescription methodDescriptions, int numberOfInstances) {
 		if (numberOfInstances < 0) {
 			throw new IllegalArgumentException("Argument " +
 					Integer.class.getSimpleName() + " is not valid");			
 		}
 		
 		for (int i = 0; i < numberOfInstances; i++) {
-			addAgentDescriptions(agentDescriptions);
+			addMethodDescriptions(methodDescriptions);
 		}
 	}
 	
 	/**
 	 * Adds {@link InputMethodDescription}
-	 * @param agentDescriptions
+	 * @param methodDescriptions
 	 */
-	public void addAgentDescriptions(InputMethodDescription agentDescriptions) {
-		if (agentDescriptions == null ||
-				! agentDescriptions.valid(new TrashLogger())) {
+	public void addMethodDescriptions( List<InputMethodDescription> methodDescriptions) {
+		if (methodDescriptions == null) {
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");			
+		}
+		
+		this.inputMethodDescriptions.addAll(methodDescriptions);
+	}
+	
+	/**
+	 * Adds {@link InputMethodDescription}
+	 * @param agentDescription
+	 */
+	public void addMethodDescriptions(InputMethodDescription agentDescription) {
+		if (agentDescription == null ||
+				! agentDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					InputMethodDescription.class.getSimpleName() + " is not valid");			
 		}
 		
-		this.inputAgentDescriptions.add(agentDescriptions);
+		this.inputMethodDescriptions.add(agentDescription);
 	}
 
 	private void importDescriptions(List<InputMethodDescription> agentDescriptions) {
@@ -148,27 +161,27 @@ public class Methods implements IMethods, Concept {
 				throw new IllegalArgumentException();
 			}
 		}
-		this.inputAgentDescriptions = agentDescriptions;
+		this.inputMethodDescriptions = agentDescriptions;
 	}
 	
 	/**
 	 * Tests if this {@link MethodDescriptions} contains given {@link MethodDescription}.
-	 * @param agentDescription
+	 * @param methodDescription
 	 * @return
 	 */
-	public boolean containsAgentDescription(InputMethodDescription agentDescription) {
-		if (agentDescription == null ||
-				! agentDescription.valid(new TrashLogger())) {
+	public boolean containsMethodDescription(InputMethodDescription methodDescription) {
+		if (methodDescription == null ||
+				! methodDescription.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					agentDescription.getClass().getSimpleName() + " is not valid.");
+					methodDescription.getClass().getSimpleName() + " is not valid.");
 		}
-		return inputAgentDescriptions.contains(agentDescription);
+		return inputMethodDescriptions.contains(methodDescription);
 	}
 	
 	
 	public InputMethodDescription get(int index) {
 		
-		return this.inputAgentDescriptions.get(index);
+		return this.inputMethodDescriptions.get(index);
 	}
 	
 	/**
@@ -182,12 +195,12 @@ public class Methods implements IMethods, Concept {
 			throw new IllegalArgumentException("Argument " +
 					int.class.getSimpleName() + " is not valid");
 		}
-		return this.inputAgentDescriptions.remove(index);
+		return this.inputMethodDescriptions.remove(index);
 	}
 
 	public boolean removeAll(Methods inputAgentDscrs) {
-		return this.inputAgentDescriptions.removeAll(
-				inputAgentDscrs.getInputAgentDescriptions());
+		return this.inputMethodDescriptions.removeAll(
+				inputAgentDscrs.getInputMethodDescriptions());
 	}
 	
 	/**
@@ -196,7 +209,7 @@ public class Methods implements IMethods, Concept {
 	 */
 	public boolean isEmpty() {
 
-		return this.inputAgentDescriptions.isEmpty();
+		return this.inputMethodDescriptions.isEmpty();
 	}
 
 	/**
@@ -205,17 +218,17 @@ public class Methods implements IMethods, Concept {
 	 */
 	public int size() {
 
-		return this.inputAgentDescriptions.size();
+		return this.inputMethodDescriptions.size();
 	}
 	
-	public Methods exportIntersection(Methods inputAgentDscrs) {
+	public Methods exportIntersection(Methods methodAgentDescrs) {
 		
 		Methods intersection = new Methods();
 		
-		for (InputMethodDescription inputAgentDescriptionI : inputAgentDescriptions) {
-			if (inputAgentDscrs.containsAgentDescription(
+		for (InputMethodDescription inputAgentDescriptionI : inputMethodDescriptions) {
+			if (methodAgentDescrs.containsMethodDescription(
 					inputAgentDescriptionI)) {
-				intersection.addAgentDescriptions(inputAgentDescriptionI);
+				intersection.addMethodDescriptions(inputAgentDescriptionI);
 			}
 		}
 		
@@ -241,7 +254,7 @@ public class Methods implements IMethods, Concept {
 		List<MethodType> methodTypes = new ArrayList<>();
 		
 		for (InputMethodDescription inputAgentDescriptionI :
-			inputAgentDescriptions) {
+			inputMethodDescriptions) {
 			
 			methodTypes.add(inputAgentDescriptionI.exportMethodType());
 		}
@@ -260,7 +273,7 @@ public class Methods implements IMethods, Concept {
 		
 		List<InputAgentConfiguration> configurations = new ArrayList<>();
 		
-		for (InputMethodDescription methodI : getInputAgentDescriptions()) {
+		for (InputMethodDescription methodI : getInputMethodDescriptions()) {
 			InputAgentConfiguration confI =
 					methodI.getInputAgentConfiguration();
 			configurations.add(confI.deepClone());
@@ -273,7 +286,7 @@ public class Methods implements IMethods, Concept {
 		
 		List<Class<?>> probTools = new ArrayList<>();
 		
-		for (InputMethodDescription methodI : getInputAgentDescriptions()) {
+		for (InputMethodDescription methodI : getInputMethodDescriptions()) {
 			
 			Class<?> probToolI = methodI.exportProblemToolClass();
 			probTools.add(probToolI);
@@ -284,12 +297,12 @@ public class Methods implements IMethods, Concept {
 
 	@Override
 	public InputMethodDescription exportRandomSelectedAgentDescription() {
-		if (inputAgentDescriptions.isEmpty()) {
+		if (inputMethodDescriptions.isEmpty()) {
 			return null;
 		}
 		Random ran = new Random();
-		int indexAD = ran.nextInt(inputAgentDescriptions.size());
-		return inputAgentDescriptions.get(indexAD);
+		int indexAD = ran.nextInt(inputMethodDescriptions.size());
+		return inputMethodDescriptions.get(indexAD);
 	}
 	
 	
@@ -298,10 +311,10 @@ public class Methods implements IMethods, Concept {
 	 * @return
 	 */
 	public boolean valid(IAgentLogger logger) {
-		if (inputAgentDescriptions == null) {
+		if (inputMethodDescriptions == null) {
 			return false;
 		}
-		for (InputMethodDescription agentDescriptionI : inputAgentDescriptions) {
+		for (InputMethodDescription agentDescriptionI : inputMethodDescriptions) {
 			if (agentDescriptionI == null ||
 					! agentDescriptionI.valid(logger)) {
 				return false;
@@ -319,7 +332,7 @@ public class Methods implements IMethods, Concept {
 			return null;
 		}
 		List<InputMethodDescription> descriptionsClone = new ArrayList<>();
-		for (InputMethodDescription agentDescriptionI : inputAgentDescriptions) {
+		for (InputMethodDescription agentDescriptionI : inputMethodDescriptions) {
 			descriptionsClone.add(
 					agentDescriptionI.deepClone());
 		}
@@ -336,14 +349,14 @@ public class Methods implements IMethods, Concept {
 	    
 	    Methods inputAgentDescriptionsOuther = (Methods)other;
 	    
-	    if (inputAgentDescriptions.size() !=
+	    if (inputMethodDescriptions.size() !=
 	    		inputAgentDescriptionsOuther.size()) {
 	    	return false;
 	    }
-	    for (int i = 0; i < inputAgentDescriptions.size(); i++) {
+	    for (int i = 0; i < inputMethodDescriptions.size(); i++) {
 	    	
 	    	InputMethodDescription iaI =
-	    			inputAgentDescriptions.get(i);
+	    			inputMethodDescriptions.get(i);
 	    	InputMethodDescription iadOutherI =
 	    			inputAgentDescriptionsOuther.get(i);
 	    	
@@ -363,7 +376,7 @@ public class Methods implements IMethods, Concept {
 	public String toString() {
 		String string = "";
 		
-		for (InputMethodDescription inputAgentDescrI : inputAgentDescriptions) {
+		for (InputMethodDescription inputAgentDescrI : inputMethodDescriptions) {
 			string += inputAgentDescrI.toString();
 		}
 		

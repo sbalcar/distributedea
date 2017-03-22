@@ -173,7 +173,7 @@ public class MethodDescriptions implements Concept {
 	public void removeAll(Methods inputAgentDescriptions) {
 				
 		for (InputMethodDescription inputAgentDescriptionI :
-				inputAgentDescriptions.getInputAgentDescriptions()) {
+				inputAgentDescriptions.getInputMethodDescriptions()) {
 			
 			MethodDescription agentDescriptionI =
 					exportAgentDescription(inputAgentDescriptionI);

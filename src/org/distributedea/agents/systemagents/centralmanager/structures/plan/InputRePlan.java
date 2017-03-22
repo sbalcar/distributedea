@@ -189,7 +189,7 @@ public class InputRePlan implements Concept {
 			this.agentsToCreate = new Methods();
 		}
 		
-		this.agentsToCreate.addAgentDescriptions(agentToCreate);
+		this.agentsToCreate.addMethodDescriptions(agentToCreate);
 
 	}
 

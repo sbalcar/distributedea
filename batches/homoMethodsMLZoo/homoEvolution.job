@@ -27,7 +27,7 @@
   </problem>
   <datasetFileName>inputs/zoo.arff</datasetFileName>
   <methods class="methods">
-    <inputAgentDescriptions>
+    <inputMethodDescriptions>
       <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_Evolution</agentName>
@@ -57,7 +57,7 @@
         </inputAgentConfiguration>
         <problemToolClass>org.distributedea.problems.machinelearning.ProblemToolMLRandomMove</problemToolClass>
       </inputMethodDescription>
-    </inputAgentDescriptions>
+    </inputMethodDescriptions>
   </methods>
   <individualDistribution>false</individualDistribution>
   <islandModelConfiguration>

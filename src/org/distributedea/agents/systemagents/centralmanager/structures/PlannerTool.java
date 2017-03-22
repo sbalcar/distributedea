@@ -116,7 +116,7 @@ public class PlannerTool {
 		List<MethodDescription> agentsToKill =
 				replan.getAgentsToKill().getAgentDescriptions();
 		List<InputMethodDescription> agentsToCreate =
-				replan.getAgentsToCreate().getInputAgentDescriptions();
+				replan.getAgentsToCreate().getInputMethodDescriptions();
 		
 		List<MethodDescription> agentsCreated = new ArrayList<>();
 		

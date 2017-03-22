@@ -18,6 +18,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheG
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.IInputBatch;
@@ -112,10 +113,10 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		
 		
 		Methods algorithms = new Methods();
-		algorithms.addAgentDescriptions(new InputMethodDescription(
+		algorithms.addMethodDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
 				ProblemToolMLRandomMove.class), 15);
-		algorithms.addAgentDescriptions(new InputMethodDescription(
+		algorithms.addMethodDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
 				ProblemToolMLRandomMove.class), 1);
 
@@ -124,6 +125,16 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
 		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
 
+		Job job14 = InputMachineLearning.test02();
+		job14.setJobID("withoutReplanning1xAll");
+		job14.setDescription("Hetero without replanning all methods");
+		job14.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		
+		Job job15 = InputMachineLearning.test02();
+		job15.setJobID("withoutReplanning2xAll");
+		job15.setDescription("Hetero without replanning 2x all methods");
+		job15.setPlanner(new PlannerInitialisationRunEachMethodTwice());
+		
 		
 		batch.addJob(job0);
 		batch.addJob(job1);
@@ -139,6 +150,8 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		batch.addJob(job11);
 		batch.addJob(job12);
 		batch.addJob(job13);
+		batch.addJob(job14);
+		batch.addJob(job15);
 		
 		
 		PostProcessing psLat0 = new PostProcJobTable();

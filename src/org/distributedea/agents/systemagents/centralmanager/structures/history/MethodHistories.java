@@ -536,7 +536,7 @@ public class MethodHistories {
 		List<InputMethodDescription> methodsWhichHaveNeverRun = new ArrayList<>();
 		
 		for (InputMethodDescription inputAgentDescriptionI :
-				inputDescriptions.getInputAgentDescriptions()) {
+				inputDescriptions.getInputMethodDescriptions()) {
 			MethodType methodTypeI =
 					inputAgentDescriptionI.exportMethodType();
 			
