@@ -157,4 +157,26 @@ public class InputTSP {
 		return job;
 	}
 
+	public static Job test06() throws IOException {
+
+		InputAgentConfigurations algorithms = test01().getMethods()
+				.exportInputAgentConfigurations().deepClone();
+
+		Job job = new Job();
+		job.setNumberOfRuns(5);
+		job.setIndividualDistribution(true);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(60000, 5000));
+		job.setProblem(new ProblemTSPGPS());
+		job.importDatasetFile(new File(
+				FileNames.getInputProblemFile("djb2036.tsp")));
+		job.setMethods(new MethodsTwoSets(
+				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
+		
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
+		
+		return job;
+	}
+
 }

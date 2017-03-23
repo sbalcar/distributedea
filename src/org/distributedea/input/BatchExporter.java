@@ -32,6 +32,9 @@ import org.distributedea.input.batches.machinelearning.zoo.BatchSingleMethodsMLZ
 import org.distributedea.input.batches.tsp.cities1083.BatchHeteroMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
+import org.distributedea.input.batches.tsp.cities2036.BatchHeteroMethodsTSP2036;
+import org.distributedea.input.batches.tsp.cities2036.BatchHomoMethodsTSP2036;
+import org.distributedea.input.batches.tsp.cities2036.BatchSingleMethodsTSP2036;
 
 /**
  * Generates Input {@link Batch}es to directory "batches". For running Batch
@@ -54,7 +57,17 @@ public class BatchExporter {
 		
 		IInputBatch inputBatchHeteroTSP1083 = new BatchHeteroMethodsTSP1083(); 
 		Batch batchHeteroTSP1083 = inputBatchHeteroTSP1083.batch();
+
 		
+		IInputBatch inputBatchSimpleMethodsTSP2036 = new BatchSingleMethodsTSP2036();
+		Batch batchSimpleMethodsTSP2036 = inputBatchSimpleMethodsTSP2036.batch();
+		
+		IInputBatch inputBatchHomoTSP2036 = new BatchHomoMethodsTSP2036();
+		Batch batchHomoTSP2036 = inputBatchHomoTSP2036.batch();
+		
+		IInputBatch inputBatchHeteroTSP2036 = new BatchHeteroMethodsTSP2036(); 
+		Batch batchHeteroTSP2036 = inputBatchHeteroTSP2036.batch();
+
 		
 		IInputBatch inputBatchSingleMethodsBPP1000 = new BatchSingleMethodsBPP1000();
 		Batch batchSingleMethodsBPP1000 = inputBatchSingleMethodsBPP1000.batch();
@@ -134,6 +147,11 @@ public class BatchExporter {
 		batchesList.add(batchSimpleMethodsTSP1083);
 		batchesList.add(batchHomoTSP1083);
 		batchesList.add(batchHeteroTSP1083);
+
+		batchesList.add(batchSimpleMethodsTSP2036);
+		batchesList.add(batchHomoTSP2036);
+		batchesList.add(batchHeteroTSP2036);
+
 		
 		// BP
 		batchesList.add(batchSingleMethodsBPP1000);
