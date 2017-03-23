@@ -66,6 +66,17 @@ public class BbobOperations {
 		return result * Math.pow(Math.sqrt(10), i/(d-1));
 	}
 
+	public static double[] countTosz(double[] x) {
+		int d = x.length;
+		
+		double[] result = new double[d];
+		
+		for (int i = 0; i < d; i++) {
+			result[i] = countTosz(i, x[i], d);
+		}
+		
+		return result;
+	}
 	public static double countTosz(int i, double xi, int d) {
 		
 		double xistr = 0;

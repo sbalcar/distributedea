@@ -17,7 +17,8 @@ public class f10 implements IFuncitonCO {
 		
 		int d = x.getCoordinates().size();
 		
-		double[] z = BbobOperations.multipl(matrix, x.exortAsArray());
+		double[] z = BbobOperations.countTosz(
+				BbobOperations.multipl(matrix, x.exortAsArray()));
 		
 		double result = 0;
 		for (int i = 0; i < d; i++) {
