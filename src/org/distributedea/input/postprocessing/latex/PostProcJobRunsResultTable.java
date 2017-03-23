@@ -102,10 +102,21 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 
 		String jobLine = job.getDescription().replaceAll("\\&", "\\\\&");
 		for (double resultI : resultsOfJobs) {
-			String resultStrI = "" + resultI;
-			if (resultStrI.length() > maxLengthOfResult) {
-				resultStrI = resultStrI.substring(0, maxLengthOfResult);
+			
+			String resultStrI = "";
+			
+			// convert double to format without exponent
+			resultStrI = String.format("%." + maxLengthOfResult + "f", resultI);
+			
+			// cut to given size
+			resultStrI = resultStrI.substring(0, maxLengthOfResult);
+			
+			// remove zeroes at the end
+			if (resultStrI.contains(".")) {
+				resultStrI = resultStrI.replaceAll("[0]*$", "");
+				resultStrI = resultStrI.replaceAll("\\.$", "");
 			}
+			
 			jobLine += " & " + resultStrI;
 		}
 
@@ -122,5 +133,6 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		
 		PostProcessing p = new PostProcJobRunsResultTable(10);
 		p.run(batch);
+		
 	}
 }
