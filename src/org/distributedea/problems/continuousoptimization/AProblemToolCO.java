@@ -25,6 +25,7 @@ import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f0
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f04;
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f08;
 import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f10;
+import org.distributedea.problems.continuousoptimization.point.tools.bbobjava.f14;
 import org.distributedea.problems.continuousoptimization.point.tools.ownfunction.f2;
 
 /**
@@ -80,7 +81,10 @@ public abstract class AProblemToolCO extends ProblemTool {
     	if (functionID.equals("f10")) {
     		function = new f10();
     	}
-    	
+     	if (functionID.equals("f14")) {
+    		function = new f14();
+    	}
+     	
     	if (functionID.equals("Bbob")) {
     		function = new fBbob();
 			ToolInitializationBbobCO.initialization(problemCO, datasetCO,

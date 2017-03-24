@@ -1,0 +1,53 @@
+<job>
+  <jobID>homoEvolution</jobID>
+  <numberOfRuns>5</numberOfRuns>
+  <description>Homo-Evolution</description>
+  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <functionID>f14</functionID>
+    <dimension>10</dimension>
+    <isMaximizationProblem>false</isMaximizationProblem>
+  </problem>
+  <datasetFileName>inputs/weka.co</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_Evolution</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>popSize</name>
+                  <value>10</value>
+                </argument>
+                <argument>
+                  <name>mutationRate</name>
+                  <value>0.9</value>
+                </argument>
+                <argument>
+                  <name>crossRate</name>
+                  <value>0.1</value>
+                </argument>
+                <argument>
+                  <name>selector</name>
+                  <value>org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <individualDistribution>false</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

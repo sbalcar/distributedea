@@ -1,4 +1,4 @@
-package org.distributedea.input.batches.co.bbobf10;
+package org.distributedea.input.batches.co.bbobf14;
 
 import java.io.IOException;
 
@@ -28,16 +28,16 @@ import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
 
-public class BatchSingleMethodsCOf10 implements IInputBatch {
+public class BatchSingleMethodsCOf14 implements IInputBatch {
 
 	@Override
 	public Batch batch() throws IOException {
 		
 		Batch batch = new Batch();
-		batch.setBatchID("singleMethodsCOf10");
-		batch.setDescription("Porovnání samostatných metod : COf10");
+		batch.setBatchID("singleMethodsCOf14");
+		batch.setDescription("Porovnání samostatných metod : COf14");
 		
-		Job jobI = InputContOpt.test10();
+		Job jobI = InputContOpt.test14();
 		jobI.setJobID("0");
 		jobI.setDescription("clone");
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
@@ -137,5 +137,5 @@ public class BatchSingleMethodsCOf10 implements IInputBatch {
 		
 		return batch;
 	}
-
+	
 }

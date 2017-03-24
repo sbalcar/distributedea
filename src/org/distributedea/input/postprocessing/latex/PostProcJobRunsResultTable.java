@@ -112,9 +112,10 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 			resultStrI = resultStrI.substring(0, maxLengthOfResult);
 			
 			// remove zeroes at the end
-			if (resultStrI.contains(".")) {
+			if (resultStrI.contains(".") || resultStrI.contains(",")) {
 				resultStrI = resultStrI.replaceAll("[0]*$", "");
 				resultStrI = resultStrI.replaceAll("\\.$", "");
+				resultStrI = resultStrI.replaceAll("\\,$", "");
 			}
 			
 			jobLine += " & " + resultStrI;
