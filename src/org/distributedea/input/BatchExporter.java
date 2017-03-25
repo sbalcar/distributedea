@@ -11,12 +11,12 @@ import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.batches.binpacking.objects1000.BatchHeteroMethodsBPP1000;
 import org.distributedea.input.batches.binpacking.objects1000.BatchHomoMethodsBPP1000;
 import org.distributedea.input.batches.binpacking.objects1000.BatchSingleMethodsBPP1000;
-import org.distributedea.input.batches.co.bbob02.BatchHeteroMethodsCOf02;
-import org.distributedea.input.batches.co.bbob02.BatchHomoMethodsCOf02;
-import org.distributedea.input.batches.co.bbob02.BatchSingleMethodsCOf02;
-import org.distributedea.input.batches.co.bbob04.BatchHeteroMethodsCOf04;
-import org.distributedea.input.batches.co.bbob04.BatchHomoMethodsCOf04;
-import org.distributedea.input.batches.co.bbob04.BatchSingleMethodsCOf04;
+import org.distributedea.input.batches.co.bbobf02.BatchHeteroMethodsCOf02;
+import org.distributedea.input.batches.co.bbobf02.BatchHomoMethodsCOf02;
+import org.distributedea.input.batches.co.bbobf02.BatchSingleMethodsCOf02;
+import org.distributedea.input.batches.co.bbobf04.BatchHeteroMethodsCOf04;
+import org.distributedea.input.batches.co.bbobf04.BatchHomoMethodsCOf04;
+import org.distributedea.input.batches.co.bbobf04.BatchSingleMethodsCOf04;
 import org.distributedea.input.batches.co.bbobf08.BatchHeteroMethodsCOf08;
 import org.distributedea.input.batches.co.bbobf08.BatchHomoMethodsCOf08;
 import org.distributedea.input.batches.co.bbobf08.BatchSingleMethodsCOf08;
@@ -26,6 +26,9 @@ import org.distributedea.input.batches.co.bbobf10.BatchSingleMethodsCOf10;
 import org.distributedea.input.batches.co.bbobf14.BatchHeteroMethodsCOf14;
 import org.distributedea.input.batches.co.bbobf14.BatchHomoMethodsCOf14;
 import org.distributedea.input.batches.co.bbobf14.BatchSingleMethodsCOf14;
+import org.distributedea.input.batches.co.bbobf17.BatchHeteroMethodsCOf17;
+import org.distributedea.input.batches.co.bbobf17.BatchHomoMethodsCOf17;
+import org.distributedea.input.batches.co.bbobf17.BatchSingleMethodsCOf17;
 import org.distributedea.input.batches.co.f2.BatchHeteroMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchHomoMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchSingleMethodsCOf2;
@@ -140,7 +143,17 @@ public class BatchExporter {
 
 		IInputBatch inputBatchHeteroMethodsCOf14 = new BatchHeteroMethodsCOf14();
 		Batch batchHeteroMethodsCOf14 = inputBatchHeteroMethodsCOf14.batch();
+
 		
+		IInputBatch inputBatchSingleMethodsCOf17 = new BatchSingleMethodsCOf17();
+		Batch batchSingleMethodsCOf17 = inputBatchSingleMethodsCOf17.batch();
+
+		IInputBatch inputBatchHomoMethodsCOf17 = new BatchHomoMethodsCOf17();
+		Batch batchHomoMethodsCOf17 = inputBatchHomoMethodsCOf17.batch();
+
+		IInputBatch inputBatchHeteroMethodsCOf17 = new BatchHeteroMethodsCOf17();
+		Batch batchHeteroMethodsCOf17 = inputBatchHeteroMethodsCOf17.batch();
+
 		
 		IInputBatch inputBatchSingleMethodsMLZoo = new BatchSingleMethodsMLZoo();
 		Batch batchSingleMethodsMLZoo = inputBatchSingleMethodsMLZoo.batch();
@@ -195,6 +208,10 @@ public class BatchExporter {
 		batchesList.add(batchSingleMethodsCOf14);
 		batchesList.add(batchHomoMethodsCOf14);
 		batchesList.add(batchHeteroMethodsCOf14);
+
+		batchesList.add(batchSingleMethodsCOf17);
+		batchesList.add(batchHomoMethodsCOf17);
+		batchesList.add(batchHeteroMethodsCOf17);
 		
 		// ML
 		batchesList.add(batchSingleMethodsMLZoo);

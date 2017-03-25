@@ -41,6 +41,18 @@ public class BbobOperations {
         return matrix;
     }
 	
+	public static double[][] getDiagonalMatrix(int alfa, int d) {
+		
+		double[][] matrix = new double[d][d];
+		
+		for (int i = 0; i < d; i++) {
+			
+			matrix[i][i] = Math.pow(alfa, 0.5 * i / (d -1));
+		}
+		
+		return matrix;
+	}
+	
     public static double[] multipl(double[][] matrix, double[] vector) {
     	
     	int d = vector.length;
@@ -56,6 +68,50 @@ public class BbobOperations {
         return newVector;
     }
 
+    public static double[][] multipl(double[][] matrixA, double[][] matrixB) {
+    
+        int aRows = matrixA.length;
+        int aColumns = matrixA[0].length;
+        int bRows = matrixB.length;
+        int bColumns = matrixB[0].length;
+
+        if (aColumns != bRows) {
+            throw new IllegalArgumentException();
+        }
+
+        double[][] matrixC = new double[aRows][bColumns];
+
+        for (int i = 0; i < aRows; i++) {
+            for (int j = 0; j < bColumns; j++) {
+            	matrixC[i][j] = 0;
+                for (int k = 0; k < aColumns; k++) {
+                	matrixC[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+            }
+        }
+    	
+    	return matrixC;
+    }
+    
+	public static double[] countsTasy(double beta, double[] vector) {
+		
+		int d = vector.length;
+		
+		double[] result = new double[d];
+		
+		for (int i = 0; i < d; i++) {
+			
+			double xi = vector[i];
+			if (xi > 0) {
+				result[i] = Math.pow(xi, 1 + beta * i/(d-1) * Math.sqrt(xi));
+			} else {
+				result[i] = xi;
+			}
+		}
+		
+		return result;
+	}
+			
 	public static double countsi(int i, double xi, int d) {
 		
 		double result = 1;

@@ -4,12 +4,12 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 
 public class f14 implements IFuncitonCO {
 
-	double[][] matrix;
+	double[][] matrixR;
 	
 	@Override
 	public void initialisation(int d) {
 		
-		matrix = BbobOperations.getRandomRotationMatrix(d);
+		matrixR = BbobOperations.getRandomRotationMatrix(d);
 	}
 
 	@Override
@@ -17,7 +17,7 @@ public class f14 implements IFuncitonCO {
 
 		int d = x.getCoordinates().size();
 		
-		double[] z = BbobOperations.multipl(matrix, x.exortAsArray());
+		double[] z = BbobOperations.multipl(matrixR, x.exortAsArray());
 		
 		double sum = 0;
 		for (int i = 0; i < d; i++) {

@@ -1,4 +1,4 @@
-package org.distributedea.input.batches.co.bbob02;
+package org.distributedea.input.batches.co.bbobf02;
 
 import java.io.IOException;
 

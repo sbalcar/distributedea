@@ -1,0 +1,34 @@
+<job>
+  <jobID>homoRandomsearch</jobID>
+  <numberOfRuns>5</numberOfRuns>
+  <description>Homo-RandomSearch</description>
+  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <functionID>f17</functionID>
+    <dimension>10</dimension>
+    <isMaximizationProblem>false</isMaximizationProblem>
+  </problem>
+  <datasetFileName>inputs/weka.co</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_RandomSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <individualDistribution>false</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>
