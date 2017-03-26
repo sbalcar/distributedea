@@ -18,7 +18,7 @@ public class f02 implements IFuncitonCO {
 		double result = 0;
 		for (int i = 0; i < d; i++) {
 			
-			double exponent = 6*i/(d-1);	
+			double exponent = 6.0*i/(d-1);	
 			result += Math.pow(10, exponent) * Math.pow(z[i], 2);
 		}
 		

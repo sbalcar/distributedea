@@ -22,12 +22,11 @@ public class f14 implements IFuncitonCO {
 		double sum = 0;
 		for (int i = 0; i < d; i++) {
 			
-			double exponent = 2 + 4*(i / (d -1));
+			double exponent = 2 + 4.0* i / (d -1);
 			sum += Math.pow(Math.abs(z[i]), exponent);
 		}
 		
 		return Math.sqrt(sum);
 	}
 
-	
 }
