@@ -77,13 +77,18 @@ public class JobRun implements Concept {
 				jobRun.getIndividualDistribution();
 		IMethods methodsClone =
 				jobRun.getMethods().deepClone();
+		IProblem problemClone =
+				jobRun.getProblem().deepClone();
 		Dataset datasetClone =
 				jobRun.getDataset().deepClone();
 		
 		setJobID(jobIDClone);
 		setIndividualDistribution(individualDistributionClone);
 		setMethods(methodsClone);
+		setProblem(problemClone);
 		setDataset(datasetClone);
+		setPedigreeOfIndividualClassName(
+				jobRun.getPedigreeOfIndividualClassName());
 		
 	}
 	
