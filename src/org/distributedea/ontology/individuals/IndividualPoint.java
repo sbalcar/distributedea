@@ -11,7 +11,7 @@ import org.distributedea.logging.TrashLogger;
  * @author stepan
  *
  */
-public class IndividualPoint  extends Individual {
+public class IndividualPoint extends Individual {
 
 	private static final long serialVersionUID = 1L;
 	

@@ -41,6 +41,12 @@ import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities2036.BatchHeteroMethodsTSP2036;
 import org.distributedea.input.batches.tsp.cities2036.BatchHomoMethodsTSP2036;
 import org.distributedea.input.batches.tsp.cities2036.BatchSingleMethodsTSP2036;
+import org.distributedea.input.batches.vc.frb10040.BatchHeteroMethodsVCfrb10040;
+import org.distributedea.input.batches.vc.frb10040.BatchHomoMethodsVCfrb10040;
+import org.distributedea.input.batches.vc.frb10040.BatchSingleMethodsVCfrb10040;
+import org.distributedea.input.batches.vc.frb59265.BatchHeteroMethodsVCfrb59265;
+import org.distributedea.input.batches.vc.frb59265.BatchHomoMethodsVCfrb59265;
+import org.distributedea.input.batches.vc.frb59265.BatchSingleMethodsVCfrb59265;
 
 /**
  * Generates Input {@link Batch}es to directory "batches". For running Batch
@@ -164,6 +170,25 @@ public class BatchExporter {
 		IInputBatch inputBatchHeteroMethodsMLZoo = new BatchHeteroMethodsMLZoo();
 		Batch batchHeteroMethodsMLZoo = inputBatchHeteroMethodsMLZoo.batch();
 
+
+		IInputBatch inputBatchSingleMethodsVCfrb10040 = new BatchSingleMethodsVCfrb10040();
+		Batch batchSingleMethodsVCfrb10040 = inputBatchSingleMethodsVCfrb10040.batch();
+
+		IInputBatch inputBatchHomoMethodsVCfrb10040 = new BatchHomoMethodsVCfrb10040();
+		Batch batchHomoMethodsVCfrb10040 = inputBatchHomoMethodsVCfrb10040.batch();
+
+		IInputBatch inputBatchHeteroMethodsVCfrb10040 = new BatchHeteroMethodsVCfrb10040();
+		Batch batchHeteroMethodsVCfrb10040 = inputBatchHeteroMethodsVCfrb10040.batch();
+
+		
+		IInputBatch inputBatchSingleMethodsVCfrb59265 = new BatchSingleMethodsVCfrb59265();
+		Batch batchSingleMethodsVCfrb59265 = inputBatchSingleMethodsVCfrb59265.batch();
+
+		IInputBatch inputBatchHomoMethodsVCfrb59265 = new BatchHomoMethodsVCfrb59265();
+		Batch batchHomoMethodsVCfrb59265 = inputBatchHomoMethodsVCfrb59265.batch();
+		
+		IInputBatch inputBatchHeteroMethodsVCfrb59265 = new BatchHeteroMethodsVCfrb59265();
+		Batch batchHeteroMethodsVCfrb59265 = inputBatchHeteroMethodsVCfrb59265.batch();
 		
 		List<Batch> batchesList = new ArrayList<>();
 		
@@ -217,6 +242,15 @@ public class BatchExporter {
 		batchesList.add(batchSingleMethodsMLZoo);
 		batchesList.add(batchHomoMethodsMLZoo);
 		batchesList.add(batchHeteroMethodsMLZoo);
+		
+		// VC		
+		batchesList.add(batchSingleMethodsVCfrb10040);
+		batchesList.add(batchHomoMethodsVCfrb10040);
+		batchesList.add(batchHeteroMethodsVCfrb10040);
+				
+		batchesList.add(batchSingleMethodsVCfrb59265);
+		batchesList.add(batchHomoMethodsVCfrb59265);
+		batchesList.add(batchHeteroMethodsVCfrb59265);
 		
 		// creates directory if doesn't exist
 		File batchesDir = new File(FileNames.getDirectoryOfBatches());

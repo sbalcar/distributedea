@@ -1,0 +1,33 @@
+<job>
+  <jobID>homoRandomsearch</jobID>
+  <numberOfRuns>5</numberOfRuns>
+  <description>Homo-RandomSearch</description>
+  <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
+  <datasetFileName>inputs/frb100-40.mis</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_RandomSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.vertexcover.ProblemToolVC</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <individualDistribution>true</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce">
+    <NODE__INDEX>0</NODE__INDEX>
+    <PROBLEM__TOOL__INDEX>0</PROBLEM__TOOL__INDEX>
+  </planner>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

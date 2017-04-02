@@ -20,7 +20,7 @@ public class ProblemToolPoint2opt extends AProblemToolTSPPointPermutation {
 
 	@Override
 	public Individual improveIndividual(Individual individual, IProblem problem,
-			IAgentLogger logger) throws Exception {
+			Dataset dataset, IAgentLogger logger) throws Exception {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		

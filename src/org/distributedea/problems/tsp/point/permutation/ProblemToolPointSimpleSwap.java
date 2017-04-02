@@ -6,8 +6,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorDifferential;
+import org.distributedea.problems.tsp.gps.permutation.operators.OperatorSimpleSwap;
 import org.distributedea.problems.tsp.gps.permutation.operators.OperatorSinglePointCrossover;
 
 /**
@@ -20,10 +20,11 @@ public class ProblemToolPointSimpleSwap extends AProblemToolTSPPointPermutation 
 	
 	@Override
 	public Individual improveIndividual(Individual individual, IProblem problem,
-			IAgentLogger logger) throws Exception {
+			Dataset dataset, IAgentLogger logger) throws Exception {
 		
-		ProblemToolGPSEuc2DSimpleSwap tool = new ProblemToolGPSEuc2DSimpleSwap();
-		return tool.improveIndividual(individual, problem, logger);
+		IndividualPermutation individualPerm = (IndividualPermutation) individual;
+		
+		return OperatorSimpleSwap.create(individualPerm, logger);		
 	}
 
 	@Override

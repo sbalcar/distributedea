@@ -16,6 +16,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.IndividualArguments;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
+import org.distributedea.ontology.individuals.IndividualSet;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
@@ -26,6 +27,7 @@ import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
@@ -87,7 +89,12 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			if (representation == IndividualArguments.class) {
 				isAble = true;
 			}
+		} else if (problem instanceof ProblemVertexCover) {
+			if (representation == IndividualSet.class) {
+				isAble = true;
+			}			
 		}
+
 		
 		return isAble;
 	}

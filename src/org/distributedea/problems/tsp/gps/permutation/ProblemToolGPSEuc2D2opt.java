@@ -34,7 +34,7 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 
 	@Override
 	protected Individual improveIndividual(Individual individual,
-			IProblem problem, IAgentLogger logger) throws Exception {
+			IProblem problem, Dataset dataset, IAgentLogger logger) throws Exception {
 
 		IndividualPermutation indivPerm = (IndividualPermutation) individual;
 		

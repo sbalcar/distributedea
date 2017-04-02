@@ -26,7 +26,7 @@ public abstract class ProblemTool implements IProblemTool {
 			Dataset dataset, Individual individual, IAgentLogger logger);
 	
 	protected abstract Individual improveIndividual(Individual individual,
-			IProblem problem, IAgentLogger logger) throws Exception;
+			IProblem problem, Dataset dataset, IAgentLogger logger) throws Exception;
 
 	protected abstract Individual getNeighbor(Individual individual,
 			IProblem problem, Dataset dataset, long neighborIndex,
@@ -154,7 +154,7 @@ public abstract class ProblemTool implements IProblemTool {
 		Individual individual1 = individualEval1.getIndividual();
 		Pedigree pedigree1 = individualEval1.getPedigree();
 		
-		Individual individualNew = improveIndividual(individual1, problem, logger);
+		Individual individualNew = improveIndividual(individual1, problem, dataset, logger);
 		double fitness = fitness(individualNew, problem, dataset, logger);
 		
 		Pedigree pedigreeNew = Pedigree.update(pedigree1, pedigreeParams);

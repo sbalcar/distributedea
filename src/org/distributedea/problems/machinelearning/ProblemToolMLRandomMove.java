@@ -38,7 +38,7 @@ public class ProblemToolMLRandomMove extends AProblemToolML {
 
 	@Override
 	protected Individual improveIndividual(Individual individual,
-			IProblem problem, IAgentLogger logger) throws Exception {
+			IProblem problem, Dataset dataset, IAgentLogger logger) throws Exception {
 
 		IndividualArguments individualArgs = (IndividualArguments) individual;
 		ProblemMachineLearning problemML = (ProblemMachineLearning) problem;

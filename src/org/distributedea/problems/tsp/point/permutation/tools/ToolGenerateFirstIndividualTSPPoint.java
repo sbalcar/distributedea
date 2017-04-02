@@ -6,7 +6,7 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 
 public class ToolGenerateFirstIndividualTSPPoint {
 
-	public IndividualPermutation generateFirst(DatasetTSPPoint dataset,
+	public static IndividualPermutation generate(DatasetTSPPoint dataset,
 			IAgentLogger logger) {
 		
 		return ToolGenerateIndividualForTSPPoint.generate(dataset);

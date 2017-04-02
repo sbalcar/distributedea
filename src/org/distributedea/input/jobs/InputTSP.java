@@ -163,6 +163,8 @@ public class InputTSP {
 				.exportInputAgentConfigurations().deepClone();
 
 		Job job = new Job();
+		job.setJobID("id");
+		job.setDescription("description");
 		job.setNumberOfRuns(5);
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(

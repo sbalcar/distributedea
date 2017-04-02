@@ -33,7 +33,7 @@ public class ProblemToolGPSEuc2DSimpleSwap extends AProblemToolTSPGPSEuc2DPermut
 	
 	@Override
 	public Individual improveIndividual(Individual individual, IProblem problem,
-			IAgentLogger logger) throws Exception {
+			Dataset dataset, IAgentLogger logger) throws Exception {
 				
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		

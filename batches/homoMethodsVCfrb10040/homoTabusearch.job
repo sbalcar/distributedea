@@ -1,0 +1,44 @@
+<job>
+  <jobID>homoTabusearch</jobID>
+  <numberOfRuns>5</numberOfRuns>
+  <description>Homo-TabuSearch</description>
+  <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
+  <datasetFileName>inputs/frb100-40.mis</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_TabuSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>tabuModelSize</name>
+                  <value>50</value>
+                </argument>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.vertexcover.ProblemToolVC</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <individualDistribution>true</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce">
+    <NODE__INDEX>0</NODE__INDEX>
+    <PROBLEM__TOOL__INDEX>0</PROBLEM__TOOL__INDEX>
+  </planner>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

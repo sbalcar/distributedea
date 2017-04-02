@@ -28,7 +28,7 @@ import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 
-public class BatchSingleMethodsTSP2036  implements IInputBatch {
+public class BatchSingleMethodsTSP2036 implements IInputBatch {
 
 	@Override
 	public Batch batch() throws IOException {

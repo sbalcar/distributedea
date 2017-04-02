@@ -41,7 +41,7 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 
 	@Override
 	public Individual improveIndividual(Individual individual, IProblem problem,
-			IAgentLogger logger) throws Exception {
+			Dataset dataset, IAgentLogger logger) throws Exception {
 		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
 		

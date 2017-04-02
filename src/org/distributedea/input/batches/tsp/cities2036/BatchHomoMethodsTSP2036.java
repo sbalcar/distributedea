@@ -35,11 +35,13 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 		batch.setBatchID("homoMethodsTSP2036");
 		batch.setDescription("Porovnání homogeních modelů : TSP2036");
 		
+		Job job = InputTSP.test06();
+		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 
-		Job job0 = InputTSP.test06();
+		Job job0 = job.deepClone();
 		job0.setJobID("homoHillclimbing");
 		job0.setDescription("Homo-HillClimbing");
 		job0.setMethods(methods0);
@@ -49,7 +51,7 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments())),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
-		Job job1 = InputTSP.test06();
+		Job job1 = job.deepClone();
 		job1.setJobID("homoRandomsearch");
 		job1.setDescription("Homo-RandomSearch");
 		job1.setMethods(methods1);
@@ -59,7 +61,7 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) ))),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 
-		Job job2 = InputTSP.test06();
+		Job job2 = job.deepClone();
 		job2.setJobID("homoEvolution");
 		job2.setDescription("Homo-Evolution");
 		job2.setMethods(methods2);
@@ -69,7 +71,7 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments())),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 
-		Job job3 = InputTSP.test06();
+		Job job3 = job.deepClone();
 		job3.setJobID("homoBruteforce");
 		job3.setDescription("Homo-BruteForce");
 		job3.setMethods(methods3);
@@ -79,7 +81,7 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
-		Job job4 = InputTSP.test06();
+		Job job4 = job.deepClone();
 		job4.setJobID("homoTabusearch");
 		job4.setDescription("Homo-TabuSearch");
 		job4.setMethods(methods4);
@@ -89,7 +91,7 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002")) )),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 		
-		Job job5 = InputTSP.test06();
+		Job job5 = job.deepClone();
 		job5.setJobID("homoSimulatedannealing");
 		job5.setDescription("Homo-SimulatedAnnealing");
 		job5.setMethods(methods5);
@@ -99,7 +101,7 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )),
 				new ProblemTools(ProblemToolGPSEuc2D2opt.class));
 
-		Job job6 = InputTSP.test06();
+		Job job6 = job.deepClone();
 		job6.setJobID("homoDifferentialevolution");
 		job6.setDescription("Homo-DifferentialEvolution");
 		job6.setMethods(methods6);

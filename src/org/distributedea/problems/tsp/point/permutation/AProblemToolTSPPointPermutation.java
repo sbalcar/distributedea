@@ -17,6 +17,7 @@ import org.distributedea.problems.tsp.gps.permutation.tools.ToolNextPermutationT
 import org.distributedea.problems.tsp.point.ProblemTSPPointTool;
 import org.distributedea.problems.tsp.point.permutation.tools.ToolDistanceTSPPoint;
 import org.distributedea.problems.tsp.point.permutation.tools.ToolFitnessTSPPoint;
+import org.distributedea.problems.tsp.point.permutation.tools.ToolGenerateFirstIndividualTSPPoint;
 import org.distributedea.problems.tsp.point.permutation.tools.ToolGenerateIndividualForTSPPoint;
 import org.distributedea.problems.tsp.point.permutation.tools.ToolReadProblemTSPPoint;
 import org.distributedea.problems.tsp.point.permutation.tools.ToolReadSolutionTSPPoints;
@@ -48,7 +49,7 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 		
 		DatasetTSPPoint datasetTSPPoint = (DatasetTSPPoint)dataset;
 		
-		return ToolGenerateIndividualForTSPPoint.generate(datasetTSPPoint);
+		return ToolGenerateFirstIndividualTSPPoint.generate(datasetTSPPoint, logger);
 	}
 	
 	@Override

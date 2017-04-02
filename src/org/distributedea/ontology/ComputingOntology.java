@@ -14,10 +14,12 @@ import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
 import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.dataset.DatasetTSPPoint;
+import org.distributedea.ontology.dataset.DatasetVertexCover;
 import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
 import org.distributedea.ontology.dataset.continuousoptimization.Interval;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.ontology.dataset.tsp.PositionPoint;
+import org.distributedea.ontology.dataset.vertexcover.Graph;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -81,6 +83,9 @@ public class ComputingOntology extends BeanOntology {
             add(DatasetContinuousOpt.class);
             add(Interval.class);
 
+            add(DatasetVertexCover.class);
+            add(Graph.class.getPackage().getName());
+            
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);
         }

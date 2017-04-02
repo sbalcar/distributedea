@@ -20,8 +20,8 @@ public class DatasetBinPacking extends Dataset {
 	/** Input objects **/
 	private List<ObjectBinPack> objects;
 	
-	/** Problem File */
-	private String problemFileName;
+	/** Dataset File */
+	private String datasetFileName;
 	
 	
 	@Deprecated
@@ -32,7 +32,7 @@ public class DatasetBinPacking extends Dataset {
 	/**
 	 * Constructor
 	 * @param objects
-	 * @param problemFileName
+	 * @param datasetFileName
 	 */
 	public DatasetBinPacking(List<ObjectBinPack> objects, File problemFile) {
 		setObjects(objects);
@@ -81,12 +81,12 @@ public class DatasetBinPacking extends Dataset {
 		return null;
 	}
 	
-	public String getProblemFileName() {
-		return problemFileName;
+	public String getDatasetFileName() {
+		return datasetFileName;
 	}
 	@Deprecated
-	public void setProblemFileName(String problemFileName) {
-		this.problemFileName = problemFileName;
+	public void setDatasetFileName(String datasetFileName) {
+		this.datasetFileName = datasetFileName;
 	}
 
 	
@@ -95,10 +95,10 @@ public class DatasetBinPacking extends Dataset {
 	 */
 	@Override
 	public File exportDatasetFile() {
-		if (problemFileName == null) {
+		if (datasetFileName == null) {
 			return null;
 		}
-		return new File(problemFileName);
+		return new File(datasetFileName);
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class DatasetBinPacking extends Dataset {
 		if ((! problemFile.exists()) || (! problemFile.isFile())) {
 			throw new IllegalArgumentException();
 		}
-		this.problemFileName = problemFile.getAbsolutePath();
+		this.datasetFileName = problemFile.getAbsolutePath();
 	}
 
 	@Override

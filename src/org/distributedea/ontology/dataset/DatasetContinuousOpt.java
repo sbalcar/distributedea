@@ -70,8 +70,9 @@ public class DatasetContinuousOpt extends Dataset {
 			throw new IllegalArgumentException();
 		}
 	}
+	
 	/**
-	 * Exports File with {@link Problem} assignment
+	 * Exports File with {@link Dataset} assignment
 	 */
 	@Override
 	public File exportDatasetFile() {
@@ -81,7 +82,7 @@ public class DatasetContinuousOpt extends Dataset {
 		return new File(datasetFileName);
 	}
 	/**
-	 * Imports File with {@link Problem} assignment
+	 * Imports File with {@link Dataset} assignment
 	 */
 	@Override
 	public void importDatasetFile(File datasetFile) {
