@@ -139,6 +139,7 @@ public class InputContOpt {
 
 		Job job = new Job();
 		job.setJobID("f02");
+		job.setDescription("Bbob f02");
 		job.setNumberOfRuns(5);
 		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
@@ -160,6 +161,7 @@ public class InputContOpt {
 
 		Job job = test02();
 		job.setJobID("f04");
+		job.setDescription("Bbob f04");
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f04", 10, false));
@@ -171,6 +173,7 @@ public class InputContOpt {
 		
 		Job job = test02();
 		job.setJobID("f08");
+		job.setDescription("Bbob f08");
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f08", 10, false));
@@ -182,6 +185,7 @@ public class InputContOpt {
 		
 		Job job = test02();
 		job.setJobID("f10");
+		job.setDescription("Bbob f10");
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f10", 10, false));
@@ -193,6 +197,7 @@ public class InputContOpt {
 		
 		Job job = test02();
 		job.setJobID("f14");
+		job.setDescription("Bbob f14");
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f14", 10, false));
@@ -204,6 +209,7 @@ public class InputContOpt {
 		
 		Job job = test02();
 		job.setJobID("f17");
+		job.setDescription("Bbob f17");
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f17", 10, false));

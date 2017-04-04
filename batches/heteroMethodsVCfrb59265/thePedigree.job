@@ -1,11 +1,9 @@
 <job>
-  <jobID>theGreatestQMaterialGoodMaterialImprovement</jobID>
+  <jobID>thePedigree</jobID>
   <numberOfRuns>5</numberOfRuns>
-  <description>The Combination of Greatest Quantity of Material, Good Material and Improvement</description>
-  <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
-    <sizeOfBin>1</sizeOfBin>
-  </problem>
-  <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  <description>The Pedigree</description>
+  <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
+  <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>
@@ -107,7 +105,7 @@
     </algorithms>
     <problemTools>
       <problemTools>
-        <java-class>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</java-class>
+        <java-class>org.distributedea.problems.vertexcover.ProblemToolVC</java-class>
       </problemTools>
     </problemTools>
   </methods>
@@ -116,10 +114,9 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerTheGreatestQMaterialGoodMaterialImprovement">
-    <doMethodSwitch>true</doMethodSwitch>
-  </planner>
+  <planner class="plannerThePedigree"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeOfIndividualClassName>org.distributedea.ontology.pedigree.PedigreeCounter</pedigreeOfIndividualClassName>
 </job>

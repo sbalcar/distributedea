@@ -70,28 +70,35 @@ public abstract class ProblemTool implements IProblemTool {
 	
 	public final IndividualEvaluated generateNextIndividualEval(
 			IProblem problem, Dataset dataset,
-			IndividualEvaluated individual, PedigreeParameters pedigreeParams,
+			IndividualEvaluated individualEval, PedigreeParameters pedigreeParams,
 			IAgentLogger logger) {
 		
-		Individual individualNew = generateNextIndividual(problem, dataset, individual.getIndividual(), logger);
+		Individual individual = individualEval.getIndividual();
+		Pedigree pedigree = individualEval.getPedigree();
+		
+		Individual individualNew = generateNextIndividual(problem, dataset,
+				individual, logger);
 		double fitness = fitness(individualNew, problem, dataset, logger);
 		
-		Pedigree pedigree = Pedigree.create(pedigreeParams);
+		Pedigree pedigreeNew = Pedigree.update(pedigree, pedigreeParams);
 		
-		return new IndividualEvaluated(individualNew, fitness, pedigree);
+		return new IndividualEvaluated(individualNew, fitness, pedigreeNew);
 	}
 	
-	public final IndividualEvaluated getNeighborEval(IndividualEvaluated individual,
+	public final IndividualEvaluated getNeighborEval(IndividualEvaluated individualEval,
 			IProblem problem, Dataset dataset, long neighborIndex,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
-		Individual individualNew = getNeighbor(individual.getIndividual(),
-				problem, dataset, neighborIndex, logger);
+		Individual individual = individualEval.getIndividual();
+		Pedigree pedigree = individualEval.getPedigree();
+		
+		Individual individualNew = getNeighbor(individual, problem, dataset,
+				neighborIndex, logger);
 		double fitness = fitness(individualNew, problem, dataset, logger);
 		
-		Pedigree pedigree = Pedigree.create(pedigreeParams);
+		Pedigree pedigreeNew = Pedigree.update(pedigree, pedigreeParams);
 		
-		return new IndividualEvaluated(individualNew, fitness, pedigree);
+		return new IndividualEvaluated(individualNew, fitness, pedigreeNew);
 	}
 	
 	public final IndividualEvaluated[] createNewIndividual(IndividualEvaluated individualEval1,

@@ -1,7 +1,7 @@
 <job>
-  <jobID>theGreatestQMaterialGoodMaterialImprovement</jobID>
+  <jobID>thePedigree</jobID>
   <numberOfRuns>5</numberOfRuns>
-  <description>The Combination of Greatest Quantity of Material, Good Material and Improvement</description>
+  <description>The Pedigree</description>
   <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
     <sizeOfBin>1</sizeOfBin>
   </problem>
@@ -116,10 +116,9 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerTheGreatestQMaterialGoodMaterialImprovement">
-    <doMethodSwitch>true</doMethodSwitch>
-  </planner>
+  <planner class="plannerThePedigree"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeOfIndividualClassName>org.distributedea.ontology.pedigree.PedigreeCounter</pedigreeOfIndividualClassName>
 </job>

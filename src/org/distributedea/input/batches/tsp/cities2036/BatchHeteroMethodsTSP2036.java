@@ -15,6 +15,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheG
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfGoodMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfImprovement;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerThePedigree;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
@@ -35,6 +36,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 
 public class BatchHeteroMethodsTSP2036 implements IInputBatch {
@@ -113,7 +115,12 @@ public class BatchHeteroMethodsTSP2036 implements IInputBatch {
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
 		
-		
+		Job job12_ = job.deepClone();
+		job12_.setJobID("thePedigree");
+		job12_.setDescription("The Pedigree");
+		job12_.setPlanner(new PlannerThePedigree());
+		job12_.importPedigreeOfIndividualClassName(PedigreeCounter.class);
+
 		Methods algorithms = new Methods();
 		algorithms.addMethodDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
@@ -150,6 +157,7 @@ public class BatchHeteroMethodsTSP2036 implements IInputBatch {
 		batch.addJob(job10);
 		batch.addJob(job11);
 		batch.addJob(job12);
+		batch.addJob(job12_);
 		batch.addJob(job13);
 		batch.addJob(job14);
 		batch.addJob(job15);

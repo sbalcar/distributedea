@@ -49,8 +49,7 @@ public class PedigreeCounter extends Pedigree {
 		this.counters.incrementCounterOf(parameters.methodDescription);
 	}
 
-	PedigreeCounter(List<Pedigree> pedigrees,
-			PedigreeParameters pedParams) {
+	PedigreeCounter(List<Pedigree> pedigrees, PedigreeParameters pedParams) {
 		if (pedigrees == null || pedigrees.isEmpty() || pedigrees.size() > 3) {
 			throw new IllegalArgumentException("Argument " +
 					PedigreeCounter.class.getSimpleName() + " is not valid");
@@ -59,17 +58,19 @@ public class PedigreeCounter extends Pedigree {
 			if (pedigreeI == null || ! pedigreeI.valid(new TrashLogger())) {
 				throw new IllegalArgumentException("Argument " +
 						PedigreeCounter.class.getSimpleName() + " is not valid");
-			}			
+			}
 		}
 
-		MethodDescriptionNumbers numbers = new MethodDescriptionNumbers();
+		this.counters = new MethodDescriptionNumbers();
+		this.counters.incrementCounterOf(pedParams.methodDescription);
+
 		for (Pedigree pedigreeI : pedigrees) {
 			PedigreeCounter pedigCounterI = (PedigreeCounter) pedigreeI;
 			MethodDescriptionNumbers countersI =
 					pedigCounterI.getCounters();
-			numbers.addMetDescNumbersAsCounters(countersI.getMethDescNumbers());
+			this.counters.addMetDescNumbersAsCounters(countersI.getMethDescNumbers());
 		}
-		this.counters = numbers;
+
 	}
 	
 	/**

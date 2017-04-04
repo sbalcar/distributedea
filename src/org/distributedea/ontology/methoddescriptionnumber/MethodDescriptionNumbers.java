@@ -163,12 +163,25 @@ public class MethodDescriptionNumbers implements Concept {
 	}
 
 	/**
+	 * Exports {@link MethodDescriptionNumbers} of given
+	 * {@link MethodDescription} types
+	 * @param methodDescriptions
+	 * @return
+	 */
+	public MethodDescriptionNumbers exportMethodDescriptionNumbersOfGiven(
+			MethodDescriptions methodDescriptions) {
+
+		return new MethodDescriptionNumbers(
+				exportMethodDescriptionNumbersListOfGiven(methodDescriptions));
+	}
+	
+	/**
 	 * Exports {@link List<MethodDescriptionNumber>} of given
 	 * {@link MethodDescription} types
 	 * @param methodDescriptions
 	 * @return
 	 */
-	public List<MethodDescriptionNumber> exportMethodDescriptionNumbersOfGiven(
+	public List<MethodDescriptionNumber> exportMethodDescriptionNumbersListOfGiven(
 			MethodDescriptions methodDescriptions) {
 		if (methodDescriptions == null || ! methodDescriptions.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +

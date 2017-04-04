@@ -1,6 +1,5 @@
 package org.distributedea.agents.systemagents.centralmanager.planners;
 
-import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.systemagents.Agent_CentralManager;
@@ -11,6 +10,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.methodsst
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
@@ -19,6 +19,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
+import org.distributedea.ontology.methodtypenumber.MethodTypeNumber;
 import org.distributedea.ontology.methodtypenumber.MethodTypeNumbers;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.plan.Plan;
@@ -84,19 +85,20 @@ public class PlannerThePedigree implements IPlanner {
 
 		
 		MethodDescriptionNumbers pedigreeNumbers = pedigree.exportCreditsOfMethodDescriptions();
-		List<MethodDescriptionNumber> runningPedigreeNumbers =
-				pedigreeNumbers.exportMethodDescriptionNumbersOfGiven(
-				history.exportRunningMethods());
-		
 		MethodDescriptionNumbers numbers =
-				new MethodDescriptionNumbers(runningPedigreeNumbers);
+				pedigreeNumbers.exportMethodDescriptionNumbersOfGiven(
+						history.exportRunningMethods());
 		
-		MethodTypeNumbers typeNumbers = numbers.exportMethodTypeNumbers();
 		
 		MethodDescription methodToKill = history
 				.exportRunningMethods().exportRandomAgentDescription();
-		InputMethodDescription methodToCreate = typeNumbers
-				.exportMethodTypeNumberWithMaxNumber().getMethodType().exportInputAgentDescription();
+		
+		MethodTypeNumbers typeNumbers = numbers.exportMethodTypeNumbers();
+		MethodTypeNumber methodTypeNumberWithMax =
+				typeNumbers.exportMethodTypeNumberWithMaxNumber();
+		
+		InputMethodDescription methodToCreate = methodTypeNumberWithMax
+				.getMethodType().exportInputAgentDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate).
 				exportOptimalizedInpuRePlan();
@@ -105,6 +107,16 @@ public class PlannerThePedigree implements IPlanner {
 	private void printLog(Agent_CentralManager centralManager,
 			IndividualWrapper theBestIndiwWrp, IAgentLogger logger) {
 		
+		IndividualEvaluated individualEval =
+				theBestIndiwWrp.getIndividualEvaluated();
+		Pedigree pedigree = individualEval.getPedigree();
+		
+		MethodDescriptionNumbers methodDescriptionNumbers =
+				pedigree.exportCreditsOfMethodDescriptions();
+		for (MethodDescriptionNumber numI :
+			methodDescriptionNumbers.getMethDescNumbers()) {
+			System.out.println("  " + numI.getDescription().exportMethodName() + " " + numI.getNumber());
+		}
 	}
 	
 	@Override

@@ -1,11 +1,13 @@
 <job>
-  <jobID>theGreatestQMaterialGoodMaterialImprovement</jobID>
+  <jobID>thePedigree</jobID>
   <numberOfRuns>5</numberOfRuns>
-  <description>The Combination of Greatest Quantity of Material, Good Material and Improvement</description>
-  <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
-    <sizeOfBin>1</sizeOfBin>
+  <description>The Pedigree</description>
+  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+    <functionID>f02</functionID>
+    <dimension>10</dimension>
+    <isMaximizationProblem>false</isMaximizationProblem>
   </problem>
-  <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  <datasetFileName>inputs/weka.co</datasetFileName>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>
@@ -107,19 +109,18 @@
     </algorithms>
     <problemTools>
       <problemTools>
-        <java-class>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</java-class>
+        <java-class>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</java-class>
       </problemTools>
     </problemTools>
   </methods>
-  <individualDistribution>true</individualDistribution>
+  <individualDistribution>false</individualDistribution>
   <islandModelConfiguration>
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerTheGreatestQMaterialGoodMaterialImprovement">
-    <doMethodSwitch>true</doMethodSwitch>
-  </planner>
+  <planner class="plannerThePedigree"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeOfIndividualClassName>org.distributedea.ontology.pedigree.PedigreeCounter</pedigreeOfIndividualClassName>
 </job>
