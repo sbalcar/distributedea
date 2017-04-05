@@ -37,7 +37,7 @@ public class BatchHeteroMethodsCOf04 implements IInputBatch {
 	public Batch batch() throws IOException {
 
 		Batch batch = new Batch();
-		batch.setBatchID("heteroComparingCOf04");
+		batch.setBatchID("heteroMethodsCOf04");
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : COf04");
 		
 		Job job = InputContOpt.test04();
