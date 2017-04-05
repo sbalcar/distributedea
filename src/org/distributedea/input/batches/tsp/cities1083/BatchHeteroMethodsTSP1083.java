@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerLazyQuantityOfImprovement;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomGuaranteeChance;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestAverageOfFitness;
@@ -100,6 +101,11 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		job9.setDescription("The Greatest Quantity Of Improvement Statistic");
 		job9.setPlanner(new PlannerTheGreatestQuantityOfImprovement());
 		
+		Job job9_ = job.deepClone();
+		job9_.setJobID("lazyQuantityOfImprovement");
+		job9_.setDescription("Lazy impl. of the Greatest Quantity Of Improvement Statistic");
+		job9_.setPlanner(new PlannerLazyQuantityOfImprovement());
+		
 		Job job10 = job.deepClone();
 		job10.setJobID("theGreatestQuantityOfMaterial");
 		job10.setDescription("The Greatest Quantity Of Genetic Material");
@@ -154,6 +160,7 @@ public class BatchHeteroMethodsTSP1083 implements IInputBatch {
 		batch.addJob(job7);
 		batch.addJob(job8);
 		batch.addJob(job9);
+		batch.addJob(job9_);
 		batch.addJob(job10);
 		batch.addJob(job11);
 		batch.addJob(job12);

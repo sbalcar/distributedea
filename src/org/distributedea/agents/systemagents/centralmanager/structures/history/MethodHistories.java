@@ -361,6 +361,31 @@ public class MethodHistories {
 		return new MethodHistories(amethodsWithHisotry);
 	}
 
+	public MethodHistories exportHistoryWithoutImprovement(Iteration iteration, long minimumLengthOfHistory) {
+
+		if (iteration == null || ! iteration.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					Iteration.class.getSimpleName() + " is not valid");
+		}
+
+		MethodHistories currentlyRunningMethods =
+				exportHistoryOfRunningMethods(iteration);
+		
+		List<MethodHistory> amethodsWithHisotry = new ArrayList<>();
+
+		for (MethodHistory methodHistoryI :
+			currentlyRunningMethods.getMethods()) {
+			
+			if (methodHistoryI.reachedNtimesZeroTheBestCreatedIndividuals(iteration,
+					minimumLengthOfHistory)) {
+				amethodsWithHisotry.add(methodHistoryI);
+			}
+		}
+		
+		return new MethodHistories(amethodsWithHisotry);
+
+	}
+	
 	/**
 	 * Exports currently running methods
 	 * @return

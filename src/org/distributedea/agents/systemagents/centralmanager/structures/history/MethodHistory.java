@@ -131,6 +131,40 @@ public class MethodHistory {
 		}
 		return true;
 	}
+
+	public boolean reachedNtimesZeroTheBestCreatedIndividuals(Iteration iteration, long iterationCount) {
+		
+		// is running now
+		MethodStatisticResultWrapper resultWrp0 =
+				exportStatistic(iteration);
+		if (resultWrp0 == null) {
+			return false;
+		}
+		
+		// is running in previous iterations
+		Iteration iterationI = iteration;
+		for (int i = 0; i < iterationCount; i++) {
+			
+			Iteration newIteration = iterationI.exportPreviousIteration();
+			if (newIteration == null) {
+				return false;
+			}
+			iterationI = newIteration;
+			
+			MethodStatisticResultWrapper resultWrpI =
+					exportStatistic(iterationI);
+			if (resultWrpI == null) {
+				return false;
+			}
+			
+			MethodStatisticResult methodStatI =
+					resultWrpI.getMethodStatisticResult();
+			if (methodStatI.getNumberOfTheBestCreatedIndividuals() > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	public MethodStatisticResultWrapper exportLastStatistic() {
 		
