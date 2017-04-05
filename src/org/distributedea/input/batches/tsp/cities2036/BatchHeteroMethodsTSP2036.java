@@ -18,7 +18,6 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheG
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerThePedigree;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
@@ -52,14 +51,14 @@ public class BatchHeteroMethodsTSP2036 implements IInputBatch {
 		Job job = InputTSP.test06();
 		
 		Job job0 = job.deepClone();
-		job0.setJobID("initialisationOneMethodPerCore");
-		job0.setDescription("Initialisation One Method Per Core");
-		job0.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		job0.setJobID("withoutReplanning1xAll");
+		job0.setDescription("Hetero without replanning all methods");
+		job0.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
 		Job job1 = job.deepClone();
-		job1.setJobID("initialisationRunEachMethodOnce");
-		job1.setDescription("Initialisation Run Each Method Once");
-		job1.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job1.setJobID("withoutReplanning2xAll");
+		job1.setDescription("Hetero without replanning 2x all methods");
+		job1.setPlanner(new PlannerInitialisationRunEachMethodTwice());
 		
 		Job job2 = job.deepClone();
 		job2.setJobID("agentInfo");
@@ -140,16 +139,7 @@ public class BatchHeteroMethodsTSP2036 implements IInputBatch {
 		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
 		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
 
-		Job job14 = job.deepClone();
-		job14.setJobID("withoutReplanning1xAll");
-		job14.setDescription("Hetero without replanning all methods");
-		job14.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		
-		Job job15 = job.deepClone();
-		job15.setJobID("withoutReplanning2xAll");
-		job15.setDescription("Hetero without replanning 2x all methods");
-		job15.setPlanner(new PlannerInitialisationRunEachMethodTwice());
-
 		batch.addJob(job0);
 		batch.addJob(job1);
 		batch.addJob(job2);
@@ -166,8 +156,7 @@ public class BatchHeteroMethodsTSP2036 implements IInputBatch {
 		batch.addJob(job12);
 		batch.addJob(job12_);
 		batch.addJob(job13);
-		batch.addJob(job14);
-		batch.addJob(job15);
+
 		
 		PostProcessing psLat0 = new PostProcJobTable();
 		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
