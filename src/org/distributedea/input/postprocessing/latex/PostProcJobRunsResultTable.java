@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +33,98 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 	
 	@Override
 	public void run(Batch batch) throws Exception {
+		
+		String NL = "\n";
+		
 		// sorting jobs
 		batch.sortJobsByID();
+
+		String BATCH_ID = batch.getBatchID();
+		
+		
+		String latexStaistic = createStatisticTableWithResults(batch);
+		
+		String latexAllValues = createTableWithResults(batch);
+		
+		String latexResult = latexStaistic + NL + NL + latexAllValues + NL;
+		
+		
+		System.out.println(latexResult);
+		
+		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(BATCH_ID);
+		String OUTPUT_FILE = BATCH_ID +
+				getClass().getSimpleName().replace("PostProc", "");
+		
+		try(  PrintWriter out = new PrintWriter(OUTPUT_PATH + File.separator + OUTPUT_FILE + ".lat")  ){
+		    out.println(latexResult);
+		    out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private String createStatisticTableWithResults(Batch batch) throws Exception {
+		
+		String BATCH_ID = batch.getBatchID();
+		String BATCH_DESCRIPTION = batch.getDescription();
+		int NUMBER_OF_RUNS = batch.getJobs().get(0).getNumberOfRuns();
+		
+		String NL = "\n";
+		List<Job> jobs = batch.getJobs();
+		
+		String latexCode =
+		"\\begin{table} [ht]" + NL +
+		"\\centering" + NL +
+		"\\begin{tabular}{ |l|r|r|r|r| }" + NL +
+		"\\hline" + NL +
+		"\\textbf{Identifikace job struktur} & Min & Max & Medián & Průměr \\\\" + NL +
+		"\\hline\\hline" + NL;
+
+		for (Job jobI : jobs) {
+
+			String jobIdI = jobI.getJobID();
+			IProblem problemI = jobI.getProblem();
+			
+			Map<JobID, Double> resultsOfJobsMap = FilesystemTool
+					.getTheBestPartResultOfJobForAllRuns(BATCH_ID, jobIdI, NUMBER_OF_RUNS, problemI);
+
+			List<Double> resultsOfJobI = new ArrayList<Double>(resultsOfJobsMap.values());
+			
+			double min = Collections.min(resultsOfJobI);
+			double max = Collections.max(resultsOfJobI);
+			
+			Collections.sort(resultsOfJobI);
+			double median = resultsOfJobI.get((resultsOfJobI.size() -1) /2);
+			
+			double avrg = 0;
+			for (double resultI : resultsOfJobI) {
+				avrg += resultI;
+			}
+			avrg = avrg / resultsOfJobI.size();
+			if (max - min > 10) {
+				avrg = (double) Math.round(avrg * 10) / 10;
+			}
+			
+			latexCode +=
+					jobI.getDescription().replace("&", "\\&") + " & " +
+					min + " & " +
+					max + " & " +
+					median + " & " +
+					avrg + " \\\\" + NL;
+		}
+		
+		latexCode +=
+		"\\hline" + NL +
+		"\\end{tabular}" + NL +
+		"\\caption{" + BATCH_DESCRIPTION + ", běhů : " + NUMBER_OF_RUNS + "}" + NL +
+		"\\label{tab:" + BATCH_ID + "ResultsStat}" + NL +
+		"\\end{table}";
+
+		return latexCode;
+	}
+	
+	private String createTableWithResults(Batch batch) throws Exception {
 
 		String BATCH_ID = batch.getBatchID();
 		String BATCH_DESCRIPTION = batch.getDescription();
@@ -49,7 +140,7 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		
 		String table = "|l|";
 		for (int i = 1; i <= jobs.size(); i++) {
-			table += "c|";
+			table += "r|";
 		}
 		
 		latexCode +=
@@ -72,23 +163,9 @@ public class PostProcJobRunsResultTable extends PostProcessing {
 		"\\label{tab:" + BATCH_ID + "Results}" + NL +
 		"\\end{table}";
 
-		
-		System.out.println(latexCode);
-		
-		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(BATCH_ID);
-		String OUTPUT_FILE = BATCH_ID +
-				getClass().getSimpleName().replace("PostProc", "");
-		
-		try(  PrintWriter out = new PrintWriter(OUTPUT_PATH + File.separator + OUTPUT_FILE + ".lat")  ){
-		    out.println(latexCode);
-		    out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
+		return latexCode;
 	}
-
-
+	
 	private String processJob(Job job, String batchID) throws IOException {
 		
 		String jobID = job.getJobID();	
