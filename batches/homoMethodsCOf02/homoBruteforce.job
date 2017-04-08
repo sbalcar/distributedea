@@ -3,7 +3,7 @@
   <numberOfRuns>9</numberOfRuns>
   <description>Homo-BruteForce</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
-    <functionID>f04</functionID>
+    <functionID>f02</functionID>
     <dimension>10</dimension>
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>

@@ -45,7 +45,7 @@ public class IndividualSet extends Individual {
 		}
 		
 		List<Integer> setClone = new ArrayList<>();
-		for (int numI : individual.getSet()) {
+		for (Integer numI : individual.getSet()) {
 			setClone.add(numI);
 		}
 		setSet(setClone);
@@ -60,7 +60,25 @@ public class IndividualSet extends Individual {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");
 		}
-		this.set = set;
+		
+		List<Integer> setCopy = new ArrayList<Integer>();
+
+		for (Object itemI : set) {
+			
+			Integer value = null;
+			if (itemI instanceof Integer) {
+				Integer integerValue = (Integer) itemI;
+				value = integerValue;
+			} else if (itemI instanceof Long) {
+				Long longValue = (Long) itemI;
+				long longV = longValue;
+				int intV = (int)longV;
+				value = intV;
+			}
+			
+			setCopy.add(value);
+		}
+		this.set = setCopy;
 	}
 
 	public Set<Integer> exportSet() {
