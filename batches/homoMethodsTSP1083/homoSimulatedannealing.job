@@ -1,6 +1,6 @@
 <job>
   <jobID>homoSimulatedannealing</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Homo-SimulatedAnnealing</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
   <datasetFileName>inputs/xit1083.tsp</datasetFileName>

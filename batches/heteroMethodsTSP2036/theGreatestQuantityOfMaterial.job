@@ -1,6 +1,6 @@
 <job>
   <jobID>theGreatestQuantityOfMaterial</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>The Greatest Quantity Of Genetic Material</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
   <datasetFileName>inputs/djb2036.tsp</datasetFileName>

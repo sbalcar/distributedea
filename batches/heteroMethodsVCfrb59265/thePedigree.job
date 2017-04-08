@@ -1,6 +1,6 @@
 <job>
   <jobID>thePedigree</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>The Pedigree</description>
   <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
   <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>

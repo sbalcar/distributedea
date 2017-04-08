@@ -1,6 +1,6 @@
 <job>
   <jobID>singleHillclimbing</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Single-HillClimbing</description>
   <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
   <datasetFileName>inputs/frb100-40.mis</datasetFileName>
@@ -30,7 +30,7 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

@@ -1,6 +1,6 @@
 <job>
   <jobID>homoBruteforce</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Homo-BruteForce</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f10</functionID>

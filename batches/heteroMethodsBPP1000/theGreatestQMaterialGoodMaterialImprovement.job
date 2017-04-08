@@ -1,6 +1,6 @@
 <job>
   <jobID>theGreatestQMaterialGoodMaterialImprovement</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>The Combination of Greatest Quantity of Material, Good Material and Improvement</description>
   <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
     <sizeOfBin>1</sizeOfBin>

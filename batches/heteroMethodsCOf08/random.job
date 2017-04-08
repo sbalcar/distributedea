@@ -1,6 +1,6 @@
 <job>
   <jobID>random</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Random Init, Random Kill &amp; Random Run</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f08</functionID>

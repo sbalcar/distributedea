@@ -1,6 +1,6 @@
 <job>
   <jobID>randomGuaranteeChance</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Random Kill &amp; Random Run</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
   <datasetFileName>inputs/xit1083.tsp</datasetFileName>

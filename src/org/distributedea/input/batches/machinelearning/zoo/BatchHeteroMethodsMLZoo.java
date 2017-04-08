@@ -47,67 +47,69 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		batch.setBatchID("heteroMethodsMLZoo");
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : MLZoo");
 		
-		Job job0 = InputMachineLearning.test02();
+		Job job = InputMachineLearning.test02();
+		
+		Job job0 = job.deepClone();
 		job0.setJobID("initialisationOneMethodPerCore");
 		job0.setDescription("Initialisation One Method Per Core");
 		job0.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		
-		Job job1 = InputMachineLearning.test02();
+		Job job1 = job.deepClone();
 		job1.setJobID("initialisationRunEachMethodOnce");
 		job1.setDescription("Initialisation Run Each Method Once");
 		job1.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
-		Job job2 = InputMachineLearning.test02();
+		Job job2 = job.deepClone();
 		job2.setJobID("agentInfo");
 		job2.setDescription("Based on exploatation/exploration Agent Info");
 		job2.setPlanner(new PlannerAgentInfo());
 		
-		Job job3 = InputMachineLearning.test02();
+		Job job3 = job.deepClone();
 		job3.setJobID("random");
 		job3.setDescription("Random Init, Random Kill & Random Run");
 		job3.setPlanner(new PlannerRandom());
 		
-		Job job4 = InputMachineLearning.test02();
+		Job job4 = job.deepClone();
 		job4.setJobID("randomGuaranteeChance");
 		job4.setDescription("Random Kill & Random Run");
 		job4.setPlanner(new PlannerRandomGuaranteeChance());
 		
-		Job job5 = InputMachineLearning.test02();
+		Job job5 = job.deepClone();
 		job5.setJobID("theBestAverageOfFitness");
 		job5.setDescription("The Best Average Of Fitness");
 		job5.setPlanner(new PlannerTheBestAverageOfFitness());
 		
-		Job job6 = InputMachineLearning.test02();
+		Job job6 = job.deepClone();
 		job6.setJobID("theBestHelper");
 		job6.setDescription("Follow up Helpers");
 		job6.setPlanner(new PlannerTheBestHelper());
 		
-		Job job7 = InputMachineLearning.test02();
+		Job job7 = job.deepClone();
 		job7.setJobID("theBestResult");
 		job7.setDescription("The Best Result Quantity Of Improvement Statistic");
 		job7.setPlanner(new PlannerTheBestResult());
 		
-		Job job8 = InputMachineLearning.test02();
+		Job job8 = job.deepClone();
 		job8.setJobID("theGreatestQuantityOfGoodMaterial");
 		job8.setDescription("The Greatest Quantity Of Good Genetic Material");
 		job8.setPlanner(new PlannerTheGreatestQuantityOfGoodMaterial());
 		
-		Job job9 = InputMachineLearning.test02();
+		Job job9 = job.deepClone();
 		job9.setJobID("theGreatestQuantityOfImprovement");
 		job9.setDescription("The Greatest Quantity Of Improvement Statistic");
 		job9.setPlanner(new PlannerTheGreatestQuantityOfImprovement());
 		
-		Job job10 = InputMachineLearning.test02();
+		Job job10 = job.deepClone();
 		job10.setJobID("theGreatestQuantityOfMaterial");
 		job10.setDescription("The Greatest Quantity Of Genetic Material");
 		job10.setPlanner(new PlannerTheGreatestQuantityOfMaterial());
 
-		Job job11 = InputMachineLearning.test02();
+		Job job11 = job.deepClone();
 		job11.setJobID("theGreatestQMaterialGoodMaterialImprovement");
 		job11.setDescription("The Combination of Greatest Quantity of Material, Good Material and Improvement");
 		job11.setPlanner(new PlannerTheGreatestQMaterialGoodMaterialImprovement());
 		
-		Job job12 = InputMachineLearning.test02();
+		Job job12 = job.deepClone();
 		job12.setJobID("theGreatestQGoodMaterialImprovementFitness");
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
@@ -121,17 +123,17 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
 				ProblemToolMLRandomMove.class), 1);
 
-		Job job13 = InputMachineLearning.test02();
+		Job job13 = job.deepClone();
 		job13.setJobID("onlyInitHillClimbingAndTabuSearch");
 		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
 		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
 
-		Job job14 = InputMachineLearning.test02();
+		Job job14 = job.deepClone();
 		job14.setJobID("withoutReplanning1xAll");
 		job14.setDescription("Hetero without replanning all methods");
 		job14.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		
-		Job job15 = InputMachineLearning.test02();
+		Job job15 = job.deepClone();
 		job15.setJobID("withoutReplanning2xAll");
 		job15.setDescription("Hetero without replanning 2x all methods");
 		job15.setPlanner(new PlannerInitialisationRunEachMethodTwice());

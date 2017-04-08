@@ -1,6 +1,6 @@
 <job>
   <jobID>homoHillclimbing</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Homo-HillClimbing</description>
   <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
     <sizeOfBin>1</sizeOfBin>

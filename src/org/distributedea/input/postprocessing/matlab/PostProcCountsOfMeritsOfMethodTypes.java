@@ -120,7 +120,7 @@ public class PostProcCountsOfMeritsOfMethodTypes extends PostProcessingMatlab {
 		Batch batch = batchCmp.batch();
 		
 		PostProcessing p = new PostProcCountsOfMeritsOfMethodTypes(false, false);
-		//p.run(batch);
+		p.run(batch);
 		System.out.println(p.exportXML());
 	}
 	

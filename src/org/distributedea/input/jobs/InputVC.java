@@ -13,7 +13,7 @@ import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
-import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
@@ -46,7 +46,7 @@ public class InputVC {
 		Job job = new Job();
 		job.setJobID("frb59265");
 		job.setDescription("description");
-		job.setNumberOfRuns(5);
+		job.setNumberOfRuns(9);
 		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));
@@ -56,7 +56,7 @@ public class InputVC {
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolVC.class)));
 		
-		job.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
 		
 		return job;
@@ -66,6 +66,7 @@ public class InputVC {
 
 		Job job = test01();
 		job.setJobID("frb10040");
+		job.setDescription("description");
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("frb100-40.mis")));
 		

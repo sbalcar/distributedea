@@ -49,7 +49,7 @@ public class BatchHeteroMethodsVCfrb10040 implements IInputBatch {
 		batch.setBatchID("heteroMethodsVCfrb10040");
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : VCfrb10040");
 		
-		Job job = InputVC.test01();
+		Job job = InputVC.test02();
 
 		Job job0 = job.deepClone();
 		job0.setJobID("withoutReplanning1xAll");

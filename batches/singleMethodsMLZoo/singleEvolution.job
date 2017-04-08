@@ -1,6 +1,6 @@
 <job>
   <jobID>singleEvolution</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Single-Evolution</description>
   <problem class="org.distributedea.ontology.problem.ProblemMachineLearning">
     <classifierClassname>weka.classifiers.functions.MultilayerPerceptron</classifierClassname>

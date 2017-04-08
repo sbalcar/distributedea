@@ -43,7 +43,7 @@ public class InputBinPacking {
 		Job job = new Job();
 		job.setJobID("jobID");
 		job.setDescription("description");
-		job.setNumberOfRuns(5);
+		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(60000, 5000));
 		job.setIndividualDistribution(true);

@@ -1,9 +1,9 @@
 <job>
   <jobID>theGreatestQuantityOfGoodMaterial</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>The Greatest Quantity Of Good Genetic Material</description>
   <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
-  <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
+  <datasetFileName>inputs/frb100-40.mis</datasetFileName>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

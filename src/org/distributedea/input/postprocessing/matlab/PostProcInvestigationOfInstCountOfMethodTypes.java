@@ -68,7 +68,7 @@ public class PostProcInvestigationOfInstCountOfMethodTypes extends PostProcessin
 		methodHistories.sortMethodInstancesByName();
 		
 		String TITLE1 = "Průběh jednotlivých typů metod";
-		String TITLE2 =  batch.getBatchID() + "-" + JOB_ID + "-" + jobID.getRunNumber();
+		String TITLE2 =  batch.getBatchID() + "-" + JOB_ID + "-R" + jobID.getRunNumber();
 		String YLABEL = "jádra systému a jejich vytížení";
 		
 		String OUTPUT_FILE = BATCH_ID +

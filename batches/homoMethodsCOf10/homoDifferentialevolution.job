@@ -1,6 +1,6 @@
 <job>
   <jobID>homoDifferentialevolution</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Homo-DifferentialEvolution</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f10</functionID>

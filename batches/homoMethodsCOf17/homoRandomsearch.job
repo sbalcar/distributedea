@@ -1,6 +1,6 @@
 <job>
   <jobID>homoRandomsearch</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Homo-RandomSearch</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f17</functionID>

@@ -1,6 +1,6 @@
 <job>
   <jobID>singleHillclimbing</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Single-HillClimbing</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
   <datasetFileName>inputs/xit1083.tsp</datasetFileName>

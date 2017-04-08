@@ -98,7 +98,8 @@ public class PostProcInvestigationOfMeritsOfMethodTypes extends PostProcessingMa
 				JOB_ID + "R" + jobID.getRunNumber();
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(jobID.getBatchID());
 
-		String TITLE = "Průběh počtů dosažených vylepšení typy metod";
+		String TITLE1 = "Průběh počtů dosažených vylepšení typy metod";
+		String TITLE2 =  jobID.getBatchID() + "-" + JOB_ID + "-R" + jobID.getRunNumber();
 		String XLABEL = "čas v iteracích plánovače(1x iterace = " +
 				periodMS /1000 + "x sekund)";
 		String YLABEL = "Počet vylepšení doposavaď nalezeného řešení";
@@ -106,7 +107,7 @@ public class PostProcInvestigationOfMeritsOfMethodTypes extends PostProcessingMa
 		String matlabSourceCode =
 		"h = figure" + NL +
 		"hold on" + NL +
-		"title('" + TITLE + "');" + NL +
+		"title({'" + TITLE1 + "' ; '" + TITLE2 + "'});" + NL +
 		"xlabel('x: " + XLABEL + "', 'FontSize', 10);" + NL +
 		"ylabel('y: " + YLABEL + "', 'FontSize', 10);" + NL +
 		NL;

@@ -1,6 +1,6 @@
 <job>
   <jobID>theBestAverageOfFitness</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>The Best Average Of Fitness</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f17</functionID>

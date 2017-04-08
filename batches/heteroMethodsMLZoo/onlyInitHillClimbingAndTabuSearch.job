@@ -1,6 +1,6 @@
 <job>
   <jobID>onlyInitHillClimbingAndTabuSearch</jobID>
-  <numberOfRuns>3</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Only initialization 15x Hillclimbing and 1x Tabu search</description>
   <problem class="org.distributedea.ontology.problem.ProblemMachineLearning">
     <classifierClassname>weka.classifiers.functions.MultilayerPerceptron</classifierClassname>
@@ -28,113 +28,101 @@
   <datasetFileName>inputs/zoo.arff</datasetFileName>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
-      <agentConfigurations class="java.util.Arrays$ArrayList">
-        <a class="inputAgentConfiguration-array">
-          <inputAgentConfiguration>
-            <agentName>Agent_HillClimbing</agentName>
-            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+      <agentConfigurations>
+        <inputAgentConfiguration>
+          <agentName>Agent_HillClimbing</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+          <arguments>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
-              </arguments>
+              <argument>
+                <name>numberOfNeighbors</name>
+                <value>10</value>
+              </argument>
             </arguments>
-          </inputAgentConfiguration>
-          <inputAgentConfiguration>
-            <agentName>Agent_RandomSearch</agentName>
-            <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_RandomSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_Evolution</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+          <arguments>
             <arguments>
-              <arguments/>
+              <argument>
+                <name>popSize</name>
+                <value>10</value>
+              </argument>
+              <argument>
+                <name>mutationRate</name>
+                <value>0.9</value>
+              </argument>
+              <argument>
+                <name>crossRate</name>
+                <value>0.1</value>
+              </argument>
+              <argument>
+                <name>selector</name>
+                <value>org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector</value>
+              </argument>
             </arguments>
-          </inputAgentConfiguration>
-          <inputAgentConfiguration>
-            <agentName>Agent_Evolution</agentName>
-            <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_BruteForce</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_TabuSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+          <arguments>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>popSize</name>
-                    <value>10</value>
-                  </argument>
-                  <argument>
-                    <name>mutationRate</name>
-                    <value>0.9</value>
-                  </argument>
-                  <argument>
-                    <name>crossRate</name>
-                    <value>0.1</value>
-                  </argument>
-                  <argument>
-                    <name>selector</name>
-                    <value>org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector</value>
-                  </argument>
-                </a>
-              </arguments>
+              <argument>
+                <name>tabuModelSize</name>
+                <value>50</value>
+              </argument>
+              <argument>
+                <name>numberOfNeighbors</name>
+                <value>10</value>
+              </argument>
             </arguments>
-          </inputAgentConfiguration>
-          <inputAgentConfiguration>
-            <agentName>Agent_BruteForce</agentName>
-            <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_SimulatedAnnealing</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
+          <arguments>
             <arguments>
-              <arguments/>
+              <argument>
+                <name>temperature</name>
+                <value>10000</value>
+              </argument>
+              <argument>
+                <name>coolingRate</name>
+                <value>0.002</value>
+              </argument>
             </arguments>
-          </inputAgentConfiguration>
-          <inputAgentConfiguration>
-            <agentName>Agent_TabuSearch</agentName>
-            <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_DifferentialEvolution</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
+          <arguments>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>tabuModelSize</name>
-                    <value>50</value>
-                  </argument>
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
-              </arguments>
+              <argument>
+                <name>popSize</name>
+                <value>50</value>
+              </argument>
             </arguments>
-          </inputAgentConfiguration>
-          <inputAgentConfiguration>
-            <agentName>Agent_SimulatedAnnealing</agentName>
-            <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
-            <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>temperature</name>
-                    <value>10000</value>
-                  </argument>
-                  <argument>
-                    <name>coolingRate</name>
-                    <value>0.002</value>
-                  </argument>
-                </a>
-              </arguments>
-            </arguments>
-          </inputAgentConfiguration>
-          <inputAgentConfiguration>
-            <agentName>Agent_DifferentialEvolution</agentName>
-            <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
-            <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>popSize</name>
-                    <value>50</value>
-                  </argument>
-                </a>
-              </arguments>
-            </arguments>
-          </inputAgentConfiguration>
-        </a>
+          </arguments>
+        </inputAgentConfiguration>
       </agentConfigurations>
     </algorithms>
     <problemTools>

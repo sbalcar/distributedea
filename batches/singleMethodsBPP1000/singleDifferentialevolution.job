@@ -1,6 +1,6 @@
 <job>
   <jobID>singleDifferentialevolution</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Single-DifferentialEvolution</description>
   <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
     <sizeOfBin>1</sizeOfBin>

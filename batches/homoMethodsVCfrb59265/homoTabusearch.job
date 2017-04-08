@@ -1,6 +1,6 @@
 <job>
   <jobID>homoTabusearch</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Homo-TabuSearch</description>
   <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
   <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
@@ -34,10 +34,7 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce">
-    <NODE__INDEX>0</NODE__INDEX>
-    <PROBLEM__TOOL__INDEX>0</PROBLEM__TOOL__INDEX>
-  </planner>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

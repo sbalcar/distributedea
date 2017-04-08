@@ -1,6 +1,6 @@
 <job>
   <jobID>onlyInitHillClimbingAndTabuSearch</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Only initialization 15x Hillclimbing and 1x Tabu search</description>
   <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
   <datasetFileName>inputs/djb2036.tsp</datasetFileName>

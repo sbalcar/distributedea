@@ -1,6 +1,6 @@
 <job>
   <jobID>lazyQuantityOfImprovement</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Lazy impl. of the Greatest Quantity Of Improvement Statistic</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f08</functionID>

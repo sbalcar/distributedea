@@ -1,6 +1,6 @@
 <job>
   <jobID>withoutReplanning1xAll</jobID>
-  <numberOfRuns>5</numberOfRuns>
+  <numberOfRuns>9</numberOfRuns>
   <description>Hetero without replanning all methods</description>
   <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
     <functionID>f14</functionID>

@@ -61,7 +61,8 @@ public class PostProcInvestigationOfInstPresenceOfMethods extends PostProcessing
 		MethodHistories methodHistories = history.getMethodHistories();
 		methodHistories.sortMethodInstancesByName();
 		
-		String TITLE = "Průběh jednotlivých metod"; // batch.getDescription();
+		String TITLE1 = "Průběh jednotlivých metod";
+		String TITLE2 =  jobID.getBatchID() + "-" + JOB_ID + "-R" + jobID.getRunNumber();
 		String YLABEL = "jádra systému a jejich vytížení instancemi metod";
 		
 		String OUTPUT_FILE = BATCH_ID +
@@ -75,7 +76,7 @@ public class PostProcInvestigationOfInstPresenceOfMethods extends PostProcessing
 		String matlabCode =
 		"h = figure" + NL +
 		"hold on" + NL +
-		"title('" + TITLE + "');" + NL +
+		"title({'" + TITLE1 + "' ; '" + TITLE2 + "'});" + NL +
 		"ylabel('y: " + YLABEL + "', 'FontSize', 10);" + NL +
 		NL;
 		

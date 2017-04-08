@@ -8,7 +8,6 @@ import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
@@ -36,9 +35,6 @@ public class BatchSingleMethodsVCfrb10040 implements IInputBatch {
 		batch.setDescription("Porovnání samostatných metod : VCfrb10040");
 		
 		Job jobI = InputVC.test02();
-		jobI.setJobID("0");
-		jobI.setDescription("clone");
-		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
