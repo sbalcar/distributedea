@@ -12,10 +12,10 @@ import org.distributedea.input.jobs.InputTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
-import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMethods;
-import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfAgents;
-import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfMethodTypes;
-import org.distributedea.input.postprocessing.matlab.PostProcMeritsOfMethodTypes;
+import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfInstPresenceOfMethods;
+import org.distributedea.input.postprocessing.matlab.PostProcCountsOfAllottedTimeOfMethods;
+import org.distributedea.input.postprocessing.matlab.PostProcCountsOfAllottedTimeOfMethodTypes;
+import org.distributedea.input.postprocessing.matlab.PostProcCountsOfMeritsOfMethodTypes;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.ontology.pedigree.PedigreeTree;
 import org.distributedea.ontology.pedigree.PedigreeTreeFull;
@@ -58,10 +58,10 @@ public class BatchTestTSP implements IInputBatch {
 		String YLABEL2 = "hodnota fitness v kilometrech";
 		PostProcessing post2 = new PostProcBoxplot(YLABEL2);
 		
-		PostProcessing post3 = new PostProcInvestigationOfMethods();
-		PostProcessing post4 = new PostProcAllottedTimeOfMethodTypes(false, false);
-		PostProcessing post5 = new PostProcAllottedTimeOfAgents();
-		PostProcessing post6 = new PostProcMeritsOfMethodTypes(false, false);
+		PostProcessing post3 = new PostProcInvestigationOfInstPresenceOfMethods();
+		PostProcessing post4 = new PostProcCountsOfAllottedTimeOfMethodTypes(false, false);
+		PostProcessing post5 = new PostProcCountsOfAllottedTimeOfMethods();
+		PostProcessing post6 = new PostProcCountsOfMeritsOfMethodTypes(false, false);
 		
 		batch.addPostProcessings(post1);
 		batch.addPostProcessings(post2);

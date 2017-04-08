@@ -25,10 +25,11 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputBinPacking;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
-import org.distributedea.input.postprocessing.latex.PostProcJobTable;
-import org.distributedea.input.postprocessing.matlab.PostProcAllottedTimeOfMethodTypes;
+import org.distributedea.input.postprocessing.latex.PostProcTableOfJobRunResults;
+import org.distributedea.input.postprocessing.latex.PostProcTableOfJob;
+import org.distributedea.input.postprocessing.matlab.PostProcCountsOfAllottedTimeOfMethodTypes;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
+import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
 import org.distributedea.ontology.arguments.Argument;
@@ -158,8 +159,8 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		batch.addJob(job13);
 		
 		
-		PostProcessing psLat0 = new PostProcJobRunsResultTable(10);
-		PostProcessing psLat1 = new PostProcJobTable();
+		PostProcessing psLat0 = new PostProcTableOfJobRunResults(10);
+		PostProcessing psLat1 = new PostProcTableOfJob();
 		
 		batch.addPostProcessings(psLat0);
 		batch.addPostProcessings(psLat1);
@@ -171,15 +172,18 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		String YLABEL1 = "fitness jako počet košů";
 		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
 		
-		PostProcessing psMat2 = new PostProcAllottedTimeOfMethodTypes(false, false);
+		PostProcessing psMat2 = new PostProcCountsOfAllottedTimeOfMethodTypes(false, false);
 		
 		PostProcessing psMat3 = new PostProcInvestigationOfMeritsOfMethodTypes(false, false);
+		
+		PostProcessing psMat4 = new PostProcInvestigationOfInstCountOfMethodTypes(false, false);
 		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
 		batch.addPostProcessings(psMat2);
 		batch.addPostProcessings(psMat3);
-
+		batch.addPostProcessings(psMat4);
+		
 		return batch;
 	}
 

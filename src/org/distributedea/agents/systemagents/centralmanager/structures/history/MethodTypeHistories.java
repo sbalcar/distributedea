@@ -87,4 +87,12 @@ public class MethodTypeHistories {
 		
 		return maxMethodTypeHistory.getMethodType();
 	}
+	
+	public int size() {
+		return methods.size();
+	}
+	
+	public MethodTypeHistory get(int i) {
+		return methods.get(i);
+	}
 }

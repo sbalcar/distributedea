@@ -48,7 +48,7 @@ public class MethodTypeHistory {
 	public List<MethodHistory> getMethodHistories() {
 		return this.methods;
 	}
-	
+
 	public long exportNumberOfLastIteration() {
 		if (methods == null || methods.isEmpty()) {
 			return 0;
@@ -58,6 +58,39 @@ public class MethodTypeHistory {
 				Collections.max(methods, new ComparatorLastIteration());
 		
 		return maxMethodHistory.exportNumberOfLastIteration();
+	}
+
+	public List<Integer> exportNumbersOfInstancesDuringAllIterations(int iterationCount) {
+		
+		List<Integer> result = new ArrayList<>();
+		
+		for (int i = 1; i <= iterationCount; i++) {
+			
+			int numberI = exportNumberOfInstancesDuringGivenIteration(i);
+			result.add(numberI);
+		}
+		
+		return result;
+	}
+	
+	public int exportNumberOfInstancesDuringGivenIteration(int iteration) {
+		if (iteration <= 0) {
+			throw new IllegalArgumentException("Argument " +
+					Integer.class.getSimpleName() + " is not valid");
+		}
+		if (methods == null || methods.isEmpty()) {
+			return 0;
+		}
+		
+		int result = 0;
+		for (MethodHistory methodHistoryI : methods) {
+			
+			if (methodHistoryI.exportStatistic(iteration) != null) {
+				result++;
+			}
+		}
+		
+		return result;
 	}
 	
 	/**

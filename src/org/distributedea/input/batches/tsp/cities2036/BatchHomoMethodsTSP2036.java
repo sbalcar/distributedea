@@ -16,8 +16,8 @@ import org.distributedea.agents.systemagents.centralmanager.structures.problemto
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcJobRunsResultTable;
-import org.distributedea.input.postprocessing.latex.PostProcJobTable;
+import org.distributedea.input.postprocessing.latex.PostProcTableOfJobRunResults;
+import org.distributedea.input.postprocessing.latex.PostProcTableOfJob;
 import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.ontology.arguments.Argument;
@@ -115,8 +115,8 @@ public class BatchHomoMethodsTSP2036 implements IInputBatch {
 		batch.addJob(job6);
 		
 		
-		PostProcessing psLat0 = new PostProcJobTable();
-		PostProcessing psLat1 = new PostProcJobRunsResultTable(10);
+		PostProcessing psLat0 = new PostProcTableOfJob();
+		PostProcessing psLat1 = new PostProcTableOfJobRunResults(10);
 
 		batch.addPostProcessings(psLat0);
 		batch.addPostProcessings(psLat1);
