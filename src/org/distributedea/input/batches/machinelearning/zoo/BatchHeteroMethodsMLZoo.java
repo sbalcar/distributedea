@@ -16,7 +16,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheG
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfImprovement;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan;
-import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
@@ -51,7 +51,7 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		Job job0 = job.deepClone();
 		job0.setJobID("withoutReplanning1xAll");
 		job0.setDescription("Hetero without replanning all methods");
-		job0.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		job0.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
 		Job job1 = job.deepClone();
 		job1.setJobID("withoutReplanning2xAll");

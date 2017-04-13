@@ -41,6 +41,9 @@ import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities2036.BatchHeteroMethodsTSP2036;
 import org.distributedea.input.batches.tsp.cities2036.BatchHomoMethodsTSP2036;
 import org.distributedea.input.batches.tsp.cities2036.BatchSingleMethodsTSP2036;
+import org.distributedea.input.batches.tsp.cities662.BatchHeteroMethodsTSP662;
+import org.distributedea.input.batches.tsp.cities662.BatchHomoMethodsTSP662;
+import org.distributedea.input.batches.tsp.cities662.BatchSingleMethodsTSP662;
 import org.distributedea.input.batches.vc.frb10040.BatchHeteroMethodsVCfrb10040;
 import org.distributedea.input.batches.vc.frb10040.BatchHomoMethodsVCfrb10040;
 import org.distributedea.input.batches.vc.frb10040.BatchSingleMethodsVCfrb10040;
@@ -80,6 +83,17 @@ public class BatchExporter {
 		IInputBatch inputBatchHeteroTSP2036 = new BatchHeteroMethodsTSP2036(); 
 		Batch batchHeteroTSP2036 = inputBatchHeteroTSP2036.batch();
 
+		
+		IInputBatch inputBatchSimpleMethodsTSP662 = new BatchSingleMethodsTSP662();
+		Batch batchSimpleMethodsTSP662 = inputBatchSimpleMethodsTSP662.batch();
+		
+		IInputBatch inputBatchHomoTSP662 = new BatchHomoMethodsTSP662();
+		Batch batchHomoTSP662 = inputBatchHomoTSP662.batch();
+		
+		IInputBatch inputBatchHeteroTSP662 = new BatchHeteroMethodsTSP662(); 
+		Batch batchHeteroTSP662 = inputBatchHeteroTSP662.batch();
+		
+		
 		
 		IInputBatch inputBatchSingleMethodsBPP1000 = new BatchSingleMethodsBPP1000();
 		Batch batchSingleMethodsBPP1000 = inputBatchSingleMethodsBPP1000.batch();
@@ -203,6 +217,9 @@ public class BatchExporter {
 		batchesList.add(batchHomoTSP2036);
 		batchesList.add(batchHeteroTSP2036);
 
+		batchesList.add(batchSimpleMethodsTSP662);
+		batchesList.add(batchHomoTSP662);
+		batchesList.add(batchHeteroTSP662);
 		
 		// BP
 		batchesList.add(batchSingleMethodsBPP1000);

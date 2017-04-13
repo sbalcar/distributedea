@@ -136,7 +136,7 @@
     <replanPeriodMS>150000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <planner class="plannerInitialisationRunEachMethodOnce"/>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

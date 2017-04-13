@@ -120,7 +120,7 @@ public class BatchSingleMethodsCOf17 implements IInputBatch {
 
 		
 		PostProcessing psLat0 = new PostProcTableOfJob();
-		PostProcessing psLat1 = new PostProcTableOfJobRunResults(10);
+		PostProcessing psLat1 = new PostProcTableOfJobRunResults(6);
 		
 		batch.addPostProcessings(psLat0);
 		batch.addPostProcessings(psLat1);

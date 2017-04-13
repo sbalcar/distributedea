@@ -183,4 +183,27 @@ public class InputTSP {
 		return job;
 	}
 
+	public static Job test07() throws IOException {
+
+		InputAgentConfigurations algorithms = test01().getMethods()
+				.exportInputAgentConfigurations().deepClone();
+
+		Job job = new Job();
+		job.setJobID("id");
+		job.setDescription("description");
+		job.setNumberOfRuns(9);
+		job.setIndividualDistribution(true);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(60000, 5000));
+		job.setProblem(new ProblemTSPGPS());
+		job.importDatasetFile(new File(
+				FileNames.getInputProblemFile("xql662.tsp")));
+		job.setMethods(new MethodsTwoSets(
+				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
+		
+		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
+		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
+		
+		return job;
+	}
 }

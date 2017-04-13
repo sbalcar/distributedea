@@ -1,0 +1,49 @@
+<job>
+  <jobID>singleEvolution</jobID>
+  <numberOfRuns>9</numberOfRuns>
+  <description>Single-Evolution</description>
+  <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
+  <datasetFileName>inputs/xql662.tsp</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_Evolution</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>popSize</name>
+                  <value>10</value>
+                </argument>
+                <argument>
+                  <name>mutationRate</name>
+                  <value>0.9</value>
+                </argument>
+                <argument>
+                  <name>crossRate</name>
+                  <value>0.1</value>
+                </argument>
+                <argument>
+                  <name>selector</name>
+                  <value>org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <individualDistribution>true</individualDistribution>
+  <islandModelConfiguration>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

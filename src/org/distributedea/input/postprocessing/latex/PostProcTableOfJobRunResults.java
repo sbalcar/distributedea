@@ -101,17 +101,13 @@ public class PostProcTableOfJobRunResults extends PostProcessing {
 			for (double resultI : resultsOfJobI) {
 				avrg += resultI;
 			}
-			avrg = avrg / resultsOfJobI.size();
-			if (max - min > 10) {
-				avrg = (double) Math.round(avrg * 10) / 10;
-			}
 			
 			latexCode +=
 					jobI.getDescription().replace("&", "\\&") + " & " +
-					min + " & " +
-					max + " & " +
-					median + " & " +
-					avrg + " \\\\" + NL;
+					convertDoubleToString(min) + " & " +
+					convertDoubleToString(max) + " & " +
+					convertDoubleToString(median) + " & " +
+					convertDoubleToString(avrg) + " \\\\" + NL;
 		}
 		
 		latexCode +=
@@ -180,25 +176,30 @@ public class PostProcTableOfJobRunResults extends PostProcessing {
 		String jobLine = job.getDescription().replaceAll("\\&", "\\\\&");
 		for (double resultI : resultsOfJobs) {
 			
-			String resultStrI = "";
-			
-			// convert double to format without exponent
-			resultStrI = String.format("%." + maxLengthOfResult + "f", resultI);
-			
-			// cut to given size
-			resultStrI = resultStrI.substring(0, maxLengthOfResult);
-			
-			// remove zeroes at the end
-			if (resultStrI.contains(".") || resultStrI.contains(",")) {
-				resultStrI = resultStrI.replaceAll("[0]*$", "");
-				resultStrI = resultStrI.replaceAll("\\.$", "");
-				resultStrI = resultStrI.replaceAll("\\,$", "");
-			}
-			
-			jobLine += " & " + resultStrI;
+			jobLine += " & " + convertDoubleToString(resultI);
 		}
 
 		return jobLine + " \\\\";
+	}
+	
+	private String convertDoubleToString(double value) {
+		
+		String resultStr = "";
+		
+		// convert double to format without exponent
+		resultStr = String.format("%." + maxLengthOfResult + "f", value);
+		
+		// cut to given size
+		resultStr = resultStr.substring(0, maxLengthOfResult);
+		
+		// remove zeroes at the end
+		if (resultStr.contains(".") || resultStr.contains(",")) {
+			resultStr = resultStr.replaceAll("[0]*$", "");
+			resultStr = resultStr.replaceAll("\\.$", "");
+			resultStr = resultStr.replaceAll("\\,$", "");
+		}
+
+		return resultStr;
 	}
 	
 	public static void main(String [] args) throws Exception {
