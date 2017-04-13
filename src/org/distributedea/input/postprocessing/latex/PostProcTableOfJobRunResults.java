@@ -101,6 +101,7 @@ public class PostProcTableOfJobRunResults extends PostProcessing {
 			for (double resultI : resultsOfJobI) {
 				avrg += resultI;
 			}
+			avrg = avrg / resultsOfJobI.size();
 			
 			latexCode +=
 					jobI.getDescription().replace("&", "\\&") + " & " +
