@@ -7,11 +7,11 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualSet;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemVertexCover;
+import org.distributedea.problems.vertexcover.set.operators.OperatorCompleteByTheSecondCrossover;
 import org.distributedea.problems.vertexcover.set.operators.OperatorDifferential;
 import org.distributedea.problems.vertexcover.set.operators.OperatorRemoveRandomSubgraph;
-import org.distributedea.problems.vertexcover.set.operators.OperatorRemoveRandom;
+import org.distributedea.problems.vertexcover.set.operators.OperatorRemoveRandom3;
 import org.distributedea.problems.vertexcover.set.operators.OperatorSequentiallyGeneratingSubsets;
-import org.distributedea.problems.vertexcover.set.operators.OperatorSinglePointCrossover;
 
 public class ProblemToolVC extends AProblemToolVC {
 
@@ -49,7 +49,7 @@ public class ProblemToolVC extends AProblemToolVC {
 		ProblemVertexCover problemVC = (ProblemVertexCover) problem;
 		DatasetVertexCover datasetVC = (DatasetVertexCover) dataset;
 
-		return OperatorRemoveRandom.create(individualSet, problemVC, datasetVC,
+		return OperatorRemoveRandom3.create(individualSet, problemVC, datasetVC,
 				logger);
 	}
 
@@ -78,7 +78,7 @@ public class ProblemToolVC extends AProblemToolVC {
 		ProblemVertexCover problemVC = (ProblemVertexCover) problem;
 		DatasetVertexCover datasetVC = (DatasetVertexCover) dataset;
 
-		return OperatorSinglePointCrossover.crossover(individualSet1,
+		return OperatorCompleteByTheSecondCrossover.crossover(individualSet1,
 				individualSet2, problemVC, datasetVC);
 	}
 

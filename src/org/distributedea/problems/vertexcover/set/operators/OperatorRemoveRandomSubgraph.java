@@ -21,7 +21,15 @@ public class OperatorRemoveRandomSubgraph {
 	public static Individual create(IndividualSet individualSet,
 			ProblemVertexCover problemVC, DatasetVertexCover datasetVC,
 			IAgentLogger logger) {
-		
+
+		return create(individualSet, problemVC, datasetVC,
+				SIZE_OF_SUBGRAPH, logger);
+	}
+	
+	protected static Individual create(IndividualSet individualSet,
+			ProblemVertexCover problemVC, DatasetVertexCover datasetVC,
+			int size, IAgentLogger logger) {
+
 		List<Integer> cover = individualSet.getSet();
 		Graph graph = datasetVC.getGraph();
 		
