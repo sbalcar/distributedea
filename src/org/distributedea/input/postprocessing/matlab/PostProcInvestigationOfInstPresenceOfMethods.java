@@ -71,7 +71,7 @@ public class PostProcInvestigationOfInstPresenceOfMethods extends PostProcessing
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(batch.getBatchID());
 		
 
-		int numOfIter = (int) history.getMethodHistories().exportNumberOfLastIteration();
+		int numOfIter = history.getRePlans().size();
 		
 		String matlabCode =
 		"h = figure" + NL +
