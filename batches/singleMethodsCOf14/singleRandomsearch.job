@@ -7,7 +7,7 @@
     <dimension>10</dimension>
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>
-  <datasetFileName>inputs/weka.co</datasetFileName>
+  <datasetFileName>inputs/bbob.co</datasetFileName>
   <methods class="methods">
     <inputMethodDescriptions>
       <inputMethodDescription>

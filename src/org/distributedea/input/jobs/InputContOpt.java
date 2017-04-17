@@ -54,7 +54,7 @@ public class InputContOpt {
 				new IslandModelConfiguration(70000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("weka.co")));
+				FileNames.getInputProblemFile("bbob.co")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class) ));
 		job.setPlanner(new PlannerDummy());
@@ -76,7 +76,7 @@ public class InputContOpt {
 				new IslandModelConfiguration(70000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("weka.co")));
+				FileNames.getInputProblemFile("bbob.co")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
@@ -99,7 +99,7 @@ public class InputContOpt {
 				new IslandModelConfiguration(70000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("weka.co")));
+				FileNames.getInputProblemFile("bbob.co")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
@@ -146,7 +146,7 @@ public class InputContOpt {
 				new IslandModelConfiguration(60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f02", 10, false));
 		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("weka.co")));
+				FileNames.getInputProblemFile("bbob.co")));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
