@@ -111,8 +111,8 @@
       </problemTools>
     </problemTools>
   </methods>
-  <individualDistribution>true</individualDistribution>
   <islandModelConfiguration>
+    <individualDistribution>true</individualDistribution>
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>

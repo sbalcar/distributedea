@@ -9,6 +9,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
@@ -48,7 +49,7 @@ public class Agent_RandomSearch extends Agent_ComputingAgent {
 
 	@Override
 	protected void startComputing(ProblemStruct problemStruct,
-			AgentConfiguration requiredAgentConfiguration) throws Exception {
+			IslandModelConfiguration configuration, AgentConfiguration requiredAgentConfiguration) throws Exception {
 		
 		if (problemStruct == null || ! problemStruct.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +

@@ -3,6 +3,7 @@ package org.distributedea.agents.computingagents.computingagent;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.problems.IProblemTool;
@@ -19,12 +20,14 @@ public class ComputingThread extends Thread {
 
 	private Agent_ComputingAgent agent;
 
+	private IslandModelConfiguration configuration;
+	
 	private ProblemStruct problemStruct;
 	
 	private AgentConfiguration requiredAgentConfiguration;
 	
 	public ComputingThread(Agent_ComputingAgent agent, ProblemStruct problemStruct,
-			AgentConfiguration requiredAgentConfiguration) {
+			IslandModelConfiguration configuration, AgentConfiguration requiredAgentConfiguration) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -47,6 +50,8 @@ public class ComputingThread extends Thread {
 		
 		this.problemStruct = problemStruct;
 		
+		this.configuration = configuration;
+		
 		this.requiredAgentConfiguration = requiredAgentConfiguration;
 		
 	}
@@ -64,12 +69,16 @@ public class ComputingThread extends Thread {
 		return problemStruct.getDataset().deepClone();
 	}
 
+	public void isIndividualDistribution() {
+		configuration.isIndividualDistribution();
+	}
 	
 	@Override
 	public void run() {
 
 		try {
-			agent.startComputing(problemStruct.deepClone(), requiredAgentConfiguration);
+			agent.startComputing(problemStruct.deepClone(),
+					configuration.deepClone(), requiredAgentConfiguration);
 			
 		} catch (Exception e) {
 			System.out.println("Error by computing");

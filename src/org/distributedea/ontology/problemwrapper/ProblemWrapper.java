@@ -5,8 +5,6 @@ import java.io.File;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
-import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
@@ -29,10 +27,6 @@ public class ProblemWrapper implements Concept {
 	 */
 	private JobID jobID;
 	
-	/**
-	 * Turns on broadcast computed individuals to distributed agents
-	 */
-	private boolean individualDistribution;
 	
 	/**
 	 * Problem definition
@@ -70,7 +64,6 @@ public class ProblemWrapper implements Concept {
 					ProblemWrapper.class.getSimpleName() + " is not valid");
 		}
 		jobID = problemWrapper.getJobID().deepClone();
-		individualDistribution = problemWrapper.isIndividualDistribution();
 		setProblem(problemWrapper.getProblem().deepClone());
 		importDatasetFile(problemWrapper.exportDatasetFile());
 		importProblemToolClass(problemWrapper.exportProblemToolClass());
@@ -91,24 +84,7 @@ public class ProblemWrapper implements Concept {
 	 */
 	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
-	}
-	
-	
-	/**
-	 * Returns flag decides about distribution of {@link IndividualWrapper}s
-	 * @return
-	 */
-	public boolean isIndividualDistribution() {
-		return individualDistribution;
-	}
-	/**
-	 * Sets distribution of {@link Individual}s
-	 * @param individualDistribution
-	 */
-	public void setIndividualDistribution(boolean individualDistribution) {
-		this.individualDistribution = individualDistribution;
-	}
-	
+	}	
 	
 	/**
 	 * Returns definition of Problem to solve
@@ -256,7 +232,6 @@ public class ProblemWrapper implements Concept {
 		
 		ProblemStruct struct = new ProblemStruct();
 		struct.setJobID(getJobID());
-		struct.setIndividualDistribution(individualDistribution);
 		struct.setProblem(problem.deepClone());
 		struct.setDataset(exportDataset(logger));
 		struct.importProblemToolClass(exportProblemToolClass());

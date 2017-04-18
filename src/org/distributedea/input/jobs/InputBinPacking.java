@@ -45,8 +45,7 @@ public class InputBinPacking {
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
-		job.setIndividualDistribution(true);
+				new IslandModelConfiguration(true, 60000, 5000));
 		job.setProblem(new ProblemBinPacking(1));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("bp1000.bpp")));

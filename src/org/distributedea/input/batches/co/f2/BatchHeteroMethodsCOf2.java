@@ -27,22 +27,25 @@ public class BatchHeteroMethodsCOf2 implements IInputBatch {
 		batch.setBatchID("heteroMethodsCOf2");
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : COf2");
 		
-		Job job0 = InputContOpt.test03();
+		Job jobI = InputContOpt.test03();
+		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
+		
+		Job job0 = jobI.deepClone();
 		job0.setJobID("onlyInit");
 		job0.setDescription("Only Initialization");
 		job0.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		
-		Job job1 = InputContOpt.test03();
+		Job job1 = jobI.deepClone();
 		job1.setJobID("followBestResult");
 		job1.setDescription("Follow Best Result");
 		job1.setPlanner(new PlannerFollowNaiveAskingForBestResult());
 		
-		Job job2 = InputContOpt.test03();
+		Job job2 = jobI.deepClone();
 		job2.setJobID("followupHelpers");
 		job2.setDescription("Follow up Helpers");
 		job2.setPlanner(new PlannerTheBestHelper());
 		
-		Job job7 = InputContOpt.test03();
+		Job job7 = jobI.deepClone();
 		job7.setJobID("theGreatestQuantityOfMaterial");
 		job7.setDescription("The Greatest Quantity Of Genetic Material");
 		job7.setPlanner(new PlannerTheGreatestQuantityOfMaterial());

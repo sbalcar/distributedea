@@ -7,7 +7,6 @@ import jade.content.Concept;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
-import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
@@ -28,11 +27,6 @@ public class ProblemStruct implements Concept {
 	 * Job identification
 	 */
 	private JobID jobID;
-	
-	/**
-	 * Turns on broadcast computed individuals to distributed agents
-	 */
-	private boolean individualDistribution;
 	
 	/**
 	 * Problem Tool to use for solving Problem 
@@ -73,8 +67,6 @@ public class ProblemStruct implements Concept {
 		}
 		
 		JobID jobIDClone = problemStruct.getJobID().deepClone();
-		boolean individualDistributionClone =
-				problemStruct.getIndividualDistribution();
 		Class<?> problemToolClassClone =
 				problemStruct.exportProblemToolClass(new TrashLogger());
 		IProblem problemClone =
@@ -85,7 +77,6 @@ public class ProblemStruct implements Concept {
 		
 		
 		this.setJobID(jobIDClone);
-		this.setIndividualDistribution(individualDistributionClone);
 		this.importProblemToolClass(problemToolClassClone);
 		this.setProblem(problemClone);
 		this.setDataset(datasetClone);
@@ -102,17 +93,6 @@ public class ProblemStruct implements Concept {
 	public void setJobID(JobID jobID) {
 		this.jobID = jobID;
 	}
-
-	/**
-	 * Returns flag decides about distribution of {@link IndividualWrapper}s
-	 * @return
-	 */
-	public boolean getIndividualDistribution() {
-		return individualDistribution;
-	}
-	public void setIndividualDistribution(boolean individualDistribution) {
-		this.individualDistribution = individualDistribution;
-	}
 	
 	@Deprecated
 	public String getProblemToolClass() {
@@ -122,6 +102,7 @@ public class ProblemStruct implements Concept {
 	public void setProblemToolClass(String problemToolClass) {
 		this.problemToolClass = problemToolClass;
 	}
+	
 	/**
 	 * Export {@link IProblemTool} class
 	 * @param logger
@@ -244,14 +225,12 @@ public class ProblemStruct implements Concept {
 			return null;
 		}
 		JobID jobIDCone = jobID.deepClone();
-		boolean individualDistributionClone = individualDistribution;
 		IProblem problemClone = problem.deepClone();
 		File problemFileClone = getDataset().exportDatasetFile();
 		Class<?> problemToolClass = exportProblemToolClass(new TrashLogger());
 		
 		ProblemWrapper wrapper = new ProblemWrapper();
 		wrapper.setJobID(jobIDCone);
-		wrapper.setIndividualDistribution(individualDistributionClone);
 		wrapper.setProblem(problemClone);
 		wrapper.importDatasetFile(problemFileClone);
 		wrapper.importProblemToolClass(problemToolClass);

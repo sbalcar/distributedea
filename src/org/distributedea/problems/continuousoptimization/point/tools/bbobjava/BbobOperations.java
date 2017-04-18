@@ -8,7 +8,7 @@ public class BbobOperations {
         
     	double[][] matrix = new double[d][d];
         
-        Random rnd = new Random();
+        Random rnd = new Random(333);
         
         //generate matrix
         for (int i = 0; i < d; i++) {

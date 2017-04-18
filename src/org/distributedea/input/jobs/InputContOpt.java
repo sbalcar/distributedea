@@ -49,9 +49,8 @@ public class InputContOpt {
 		Job job = new Job();
 		job.setJobID("co01");
 		job.setNumberOfRuns(1);
-		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(false, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("bbob.co")));
@@ -71,9 +70,8 @@ public class InputContOpt {
 		Job job = new Job();
 		job.setJobID("co02");
 		job.setNumberOfRuns(1);
-		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(true, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("bbob.co")));
@@ -93,10 +91,10 @@ public class InputContOpt {
 
 		Job job = new Job();
 		job.setJobID("co03");
+		job.setDescription("description");
 		job.setNumberOfRuns(1);
-		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(true, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("bbob.co")));
@@ -116,10 +114,10 @@ public class InputContOpt {
 
 		Job job = new Job();
 		job.setJobID("f2");
+		job.setDescription("description");
 		job.setNumberOfRuns(3);
-		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(70000, 5000));
+				new IslandModelConfiguration(false, 70000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f2", 2, false));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("f2.co")));
@@ -141,9 +139,8 @@ public class InputContOpt {
 		job.setJobID("f02");
 		job.setDescription("Bbob f02");
 		job.setNumberOfRuns(9);
-		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
+				new IslandModelConfiguration(false, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f02", 10, false));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("bbob.co")));
@@ -163,7 +160,7 @@ public class InputContOpt {
 		job.setJobID("f04");
 		job.setDescription("Bbob f04");
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
+				new IslandModelConfiguration(false, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f04", 10, false));
 		
 		return job;
@@ -175,7 +172,7 @@ public class InputContOpt {
 		job.setJobID("f08");
 		job.setDescription("Bbob f08");
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
+				new IslandModelConfiguration(false, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f08", 10, false));
 		
 		return job;
@@ -187,7 +184,7 @@ public class InputContOpt {
 		job.setJobID("f10");
 		job.setDescription("Bbob f10");
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
+				new IslandModelConfiguration(false, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f10", 10, false));
 		
 		return job;
@@ -199,7 +196,7 @@ public class InputContOpt {
 		job.setJobID("f14");
 		job.setDescription("Bbob f14");
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
+				new IslandModelConfiguration(false, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f14", 10, false));
 		
 		return job;
@@ -211,7 +208,7 @@ public class InputContOpt {
 		job.setJobID("f17");
 		job.setDescription("Bbob f17");
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
+				new IslandModelConfiguration(false, 60000, 5000));
 		job.setProblem(new ProblemContinuousOpt("f17", 10, false));
 		
 		return job;

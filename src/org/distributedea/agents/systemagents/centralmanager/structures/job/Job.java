@@ -97,11 +97,6 @@ public class Job implements Concept, Serializable {
 	
 	
 	/**
-	 * Turns on broadcast computed individuals to distributed agents
-	 */
-	private boolean individualDistribution;
-
-	/**
 	 * Island model configuration
 	 */
 	private IslandModelConfiguration islandModelConfiguration; 
@@ -142,7 +137,6 @@ public class Job implements Concept, Serializable {
 		this.problem = job.getProblem();
 		this.datasetFileName = job.getDatasetFileName();
 		this.methods = job.getMethods().deepClone();
-		this.individualDistribution = job.isIndividualDistribution();
 		this.islandModelConfiguration = job.getIslandModelConfiguration().deepClone();
 		this.planner = job.planner;
 		this.plannerEndCondition = job.plannerEndCondition;
@@ -238,13 +232,6 @@ public class Job implements Concept, Serializable {
 					IMethods.class.getSimpleName() + " is not valid");
 		}
 		this.methods = methods;
-	}
-
-	public boolean isIndividualDistribution() {
-		return individualDistribution;
-	}
-	public void setIndividualDistribution(boolean individualDistribution) {
-		this.individualDistribution = individualDistribution;
 	}
 
 	public IslandModelConfiguration getIslandModelConfiguration() {
@@ -377,7 +364,6 @@ public class Job implements Concept, Serializable {
 		
 		
 		JobRun jobRun = new JobRun();
-		jobRun.setIndividualDistribution(individualDistribution);
 		jobRun.setMethods(methods.deepClone());
 		jobRun.setProblem(problem.deepClone());
 		jobRun.setDataset(dataset);

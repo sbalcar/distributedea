@@ -36,6 +36,7 @@ public class BatchHomoMethodsTSP1083 implements IInputBatch {
 		batch.setDescription("Porovnání homogeních modelů : TSP1083");
 		
 		Job jobI = InputTSP.test05();
+		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),

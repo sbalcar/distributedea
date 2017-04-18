@@ -35,13 +35,14 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 		batch.setBatchID("homoMethodsVCfrb10040");
 		batch.setDescription("Porovnání homogeních modelů : VCfrb10040");
 		
-		Job job = InputVC.test02();
+		Job jobI = InputVC.test02();
+		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolVC.class));
 
-		Job job0 = job.deepClone();
+		Job job0 = jobI.deepClone();
 		job0.setJobID("homoHillclimbing");
 		job0.setDescription("Homo-HillClimbing");
 		job0.setMethods(methods0);
@@ -51,7 +52,7 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments())),
 				new ProblemTools(ProblemToolVC.class));
 		
-		Job job1 = job.deepClone();
+		Job job1 = jobI.deepClone();
 		job1.setJobID("homoRandomsearch");
 		job1.setDescription("Homo-RandomSearch");
 		job1.setMethods(methods1);
@@ -61,7 +62,7 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) ))),
 				new ProblemTools(ProblemToolVC.class));
 
-		Job job2 = job.deepClone();
+		Job job2 = jobI.deepClone();
 		job2.setJobID("homoEvolution");
 		job2.setDescription("Homo-Evolution");
 		job2.setMethods(methods2);
@@ -71,7 +72,7 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments())),
 				new ProblemTools(ProblemToolVC.class));
 
-		Job job3 = job.deepClone();
+		Job job3 = jobI.deepClone();
 		job3.setJobID("homoBruteforce");
 		job3.setDescription("Homo-BruteForce");
 		job3.setMethods(methods3);
@@ -81,7 +82,7 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolVC.class));
 		
-		Job job4 = job.deepClone();
+		Job job4 = jobI.deepClone();
 		job4.setJobID("homoTabusearch");
 		job4.setDescription("Homo-TabuSearch");
 		job4.setMethods(methods4);
@@ -91,7 +92,7 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002")) )),
 				new ProblemTools(ProblemToolVC.class));
 		
-		Job job5 = job.deepClone();
+		Job job5 = jobI.deepClone();
 		job5.setJobID("homoSimulatedannealing");
 		job5.setDescription("Homo-SimulatedAnnealing");
 		job5.setMethods(methods5);
@@ -101,7 +102,7 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )),
 				new ProblemTools(ProblemToolVC.class));
 
-		Job job6 = job.deepClone();
+		Job job6 = jobI.deepClone();
 		job6.setJobID("homoDifferentialevolution");
 		job6.setDescription("Homo-DifferentialEvolution");
 		job6.setMethods(methods6);

@@ -110,6 +110,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	 * @param behaviour
 	 */
 	protected abstract void startComputing(ProblemStruct problemStruct,
+			IslandModelConfiguration configuration,
 			AgentConfiguration requiredAgentConfiguration) throws Exception;
 	
 	/**
@@ -539,7 +540,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	private void startComputation(final ProblemWrapper problemWrapper,
-			IslandModelConfiguration configuration) throws Exception {
+			final IslandModelConfiguration configuration) throws Exception {
 		
 		if (this.state != CompAgentState.INITIALIZED) {
 			throw new Exception("Agent is not initialized");
@@ -566,7 +567,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 				 IndividualWrapper individualWrapper = new IndividualWrapper(
 						 problemWrapper.getJobID(), description, individualEval);
 				
-				 if (problemWrapper.isIndividualDistribution()) {
+				 if (configuration.isIndividualDistribution()) {
 					 ComputingAgentService.sendIndividualToNeighboursAndToMonitor(
 							 Agent_ComputingAgent.this, individualWrapper, getLogger());
 				 } else {
@@ -577,7 +578,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		} );
 
 		// starts thread where is running computation
-		this.computingThread = new ComputingThread(this, problemStruct, agentConf);	
+		this.computingThread = new ComputingThread(this, problemStruct, configuration, agentConf);	
 		this.computingThread.start();
 
 	}

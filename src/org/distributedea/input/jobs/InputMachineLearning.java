@@ -54,9 +54,8 @@ public class InputMachineLearning {
 		job.setJobID("mlIris");
 		job.setDescription("description");
 		job.setNumberOfRuns(3);
-		job.setIndividualDistribution(false);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(150000, 5000));
+				new IslandModelConfiguration(false, 150000, 5000));
 		job.setProblem(problem);
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("iris.arff")));
@@ -86,7 +85,7 @@ public class InputMachineLearning {
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(150000, 5000));
+				new IslandModelConfiguration(false, 150000, 5000));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("zoo.arff")));
 		job.setProblem(problem);

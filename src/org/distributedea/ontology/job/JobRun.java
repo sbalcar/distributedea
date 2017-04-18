@@ -211,7 +211,6 @@ public class JobRun implements Concept {
 		
 		ProblemStruct problemStruct = new ProblemStruct();
 		problemStruct.setJobID(jobIDClone);
-		problemStruct.setIndividualDistribution(getIndividualDistribution());
 		problemStruct.setProblem(problemClone);
 		problemStruct.setDataset(datasetClone);
 		problemStruct.importProblemToolClass(problemToolClass);

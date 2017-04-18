@@ -47,9 +47,8 @@ public class InputVC {
 		job.setJobID("frb59265");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.setIndividualDistribution(true);
 		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(60000, 5000));
+				new IslandModelConfiguration(true, 60000, 5000));
 		job.setProblem(new ProblemVertexCover());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("frb59-26-5.mis")));

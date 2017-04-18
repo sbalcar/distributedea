@@ -35,11 +35,13 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		batch.setBatchID("homoMethodsBPP1000");
 		batch.setDescription("Porovnání homogeních modelů : BPP1000");
 		
+		Job jobI = InputBinPacking.test01();
+		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
+		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
 				new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class));
 
-		Job jobI = InputBinPacking.test01();
 		
 		Job job0 = jobI.deepClone();
 		job0.setJobID("homoHillclimbing");

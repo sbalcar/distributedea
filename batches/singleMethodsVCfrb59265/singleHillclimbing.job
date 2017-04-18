@@ -25,8 +25,8 @@
       </inputMethodDescription>
     </inputMethodDescriptions>
   </methods>
-  <individualDistribution>true</individualDistribution>
   <islandModelConfiguration>
+    <individualDistribution>false</individualDistribution>
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>

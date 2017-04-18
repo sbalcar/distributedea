@@ -37,6 +37,7 @@ public class BatchSingleMethodsVCfrb10040 implements IInputBatch {
 		
 		Job jobI = InputVC.test02();
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		jobI.getIslandModelConfiguration().setIndividualDistribution(false);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")) )),
@@ -45,6 +46,7 @@ public class BatchSingleMethodsVCfrb10040 implements IInputBatch {
 		Job job0 = jobI.deepClone();
 		job0.setJobID("singleHillclimbing");
 		job0.setDescription("Single-HillClimbing");
+		jobI.getIslandModelConfiguration().setIndividualDistribution(false);
 		job0.setMethods(methods0);
 
 		

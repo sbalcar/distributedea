@@ -36,6 +36,7 @@ public class BatchHomoMethodsCOf14 implements IInputBatch {
 		batch.setDescription("Porovnání homogeních modelů : COf14");
 		
 		Job jobI = InputContOpt.test14();
+		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),

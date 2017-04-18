@@ -38,9 +38,8 @@ public class BatchSingleMethodsCOf14 implements IInputBatch {
 		batch.setDescription("Porovnání samostatných metod : COf14");
 		
 		Job jobI = InputContOpt.test14();
-		jobI.setJobID("0");
-		jobI.setDescription("clone");
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		jobI.getIslandModelConfiguration().setIndividualDistribution(false);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")) )),

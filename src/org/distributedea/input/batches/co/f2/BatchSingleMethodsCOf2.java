@@ -39,9 +39,8 @@ public class BatchSingleMethodsCOf2 implements IInputBatch {
 		batch.setDescription("Porovnání samostatných metod : COf2");
 		
 		Job jobI = InputContOpt.test04_();
-		jobI.setJobID("0");
-		jobI.setDescription("clone");
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		jobI.getIslandModelConfiguration().setIndividualDistribution(false);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")) )),

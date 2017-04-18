@@ -37,6 +37,7 @@ public class BatchSingleMethodsVCfrb59265 implements IInputBatch {
 		
 		Job jobI = InputVC.test01();
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
+		jobI.getIslandModelConfiguration().setIndividualDistribution(false);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")) )),

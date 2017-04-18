@@ -97,14 +97,15 @@ public class IndividualEvaluated implements Concept {
 			return false;
 		}
 
+		try {
+			problemTool.initialization(problem, dataset, null, logger);
+		} catch (Exception e) {
+			return false;
+		}
 		double fitnessValue = problemTool
 				.fitness(individual, problem, dataset, logger);
 		
-		if (fitness != fitnessValue) {
-			return false;
-		}
-		
-		return true;
+		return fitness == fitnessValue;
 	}
 	
 	

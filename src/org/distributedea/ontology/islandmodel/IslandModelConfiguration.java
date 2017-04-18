@@ -16,6 +16,11 @@ public class IslandModelConfiguration implements Concept {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Turns on broadcast computed individuals to distributed agents
+	 */
+	private boolean individualDistribution;
+
+	/**
 	 * Period of Planner re-planning
 	 */
 	public long replanPeriodMS;
@@ -32,12 +37,14 @@ public class IslandModelConfiguration implements Concept {
 	
 	/**
 	 * Constructor
+	 * @param individualDistribution
 	 * @param replanPeriodMS
 	 * @param individualBroadcastPeriodMS
 	 */
-	public IslandModelConfiguration(long replanPeriodMS,
-			long individualBroadcastPeriodMS) {
+	public IslandModelConfiguration(boolean individualDistribution,
+			long replanPeriodMS, long individualBroadcastPeriodMS) {
 		
+		setIndividualDistribution(individualDistribution);
 		setReplanPeriodMS(replanPeriodMS);
 		setIndividualBroadcastPeriodMS(individualBroadcastPeriodMS);
 	}
@@ -52,11 +59,22 @@ public class IslandModelConfiguration implements Concept {
 					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
 		
-		setReplanPeriodMS(configuration.getReplanPeriodMS());
+		setIndividualDistribution(
+				configuration.isIndividualDistribution());
+		setReplanPeriodMS(
+				configuration.getReplanPeriodMS());
 		setIndividualBroadcastPeriodMS(
 				configuration.getIndividualBroadcastPeriodMS());
 	}
-	
+
+		
+	public boolean isIndividualDistribution() {
+		return individualDistribution;
+	}
+	public void setIndividualDistribution(boolean individualDistribution) {
+		this.individualDistribution = individualDistribution;
+	}
+
 	public long getReplanPeriodMS() {
 		return replanPeriodMS;
 	}

@@ -20,6 +20,7 @@ import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individuals.IndividualSet;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
@@ -112,7 +113,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 	
 	@Override
 	protected void startComputing(ProblemStruct problemStruct,
-			AgentConfiguration agentConf) throws Exception {
+			IslandModelConfiguration configuration, AgentConfiguration agentConf) throws Exception {
 	
 		if (problemStruct == null || ! problemStruct.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -123,7 +124,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
 		IProblem problem = problemStruct.getProblem();
 		Dataset dataset = problemStruct.getDataset();
-		boolean individualDistribution = problemStruct.getIndividualDistribution();
+		boolean individualDistribution = configuration.isIndividualDistribution();
 		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemTool.getClass());
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemStruct.exportPedigreeOfIndividual(getCALogger()), methodDescription);
