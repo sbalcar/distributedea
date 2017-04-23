@@ -33,7 +33,7 @@ public class BatchHomoMethodsTSP1083 implements IInputBatch {
 		
 		Batch batch = new Batch();
 		batch.setBatchID("homoMethodsTSP1083");
-		batch.setDescription("Porovnání homogeních modelů : TSP1083");
+		batch.setDescription("Porovnání homogenních modelů : TSP1083");
 		
 		Job jobI = InputTSP.test05();
 		jobI.getIslandModelConfiguration().setIndividualDistribution(true);

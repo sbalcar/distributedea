@@ -33,7 +33,7 @@ public class BatchHomoMethodsBPP1000 implements IInputBatch {
 		
 		Batch batch = new Batch();
 		batch.setBatchID("homoMethodsBPP1000");
-		batch.setDescription("Porovnání homogeních modelů : BPP1000");
+		batch.setDescription("Porovnání homogenních modelů : BPP1000");
 		
 		Job jobI = InputBinPacking.test01();
 		jobI.getIslandModelConfiguration().setIndividualDistribution(true);

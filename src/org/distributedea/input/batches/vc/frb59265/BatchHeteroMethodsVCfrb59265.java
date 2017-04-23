@@ -22,7 +22,6 @@ import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.Pl
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
-import org.distributedea.input.BatchExporter;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputVC;
 import org.distributedea.input.postprocessing.PostProcessing;

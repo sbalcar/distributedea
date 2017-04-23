@@ -34,7 +34,7 @@ public class BatchHomoMethodsMLZoo implements IInputBatch {
 		
 		Batch batch = new Batch();
 		batch.setBatchID("homoMethodsMLZoo");
-		batch.setDescription("Porovnání homogeních modelů : MLZoo");
+		batch.setDescription("Porovnání homogenních modelů : MLZoo");
 		
 		Job jobI = InputMachineLearning.test02();
 		jobI.getIslandModelConfiguration().setIndividualDistribution(true);

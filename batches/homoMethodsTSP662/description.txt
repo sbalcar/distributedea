@@ -1,1 +1,1 @@
-Porovnání homogeních modelů : TSP662
+Porovnání homogenních modelů : TSP662

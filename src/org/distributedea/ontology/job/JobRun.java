@@ -7,7 +7,6 @@ import jade.content.Concept;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
-import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.method.IMethods;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
@@ -27,12 +26,6 @@ public class JobRun implements Concept {
 	 * JobRun identification
 	 */
 	private JobID jobID;
-	
-	/**
-	 * Turns on broadcast computed individuals to distributed agents
-	 */
-	private boolean individualDistribution;
-	
 
 	/**
 	 * Methods
@@ -73,8 +66,6 @@ public class JobRun implements Concept {
 		}
 		
 		JobID jobIDClone = jobRun.getJobID().deepClone();
-		boolean individualDistributionClone =
-				jobRun.getIndividualDistribution();
 		IMethods methodsClone =
 				jobRun.getMethods().deepClone();
 		IProblem problemClone =
@@ -83,7 +74,6 @@ public class JobRun implements Concept {
 				jobRun.getDataset().deepClone();
 		
 		setJobID(jobIDClone);
-		setIndividualDistribution(individualDistributionClone);
 		setMethods(methodsClone);
 		setProblem(problemClone);
 		setDataset(datasetClone);
@@ -117,17 +107,6 @@ public class JobRun implements Concept {
 					IMethods.class.getSimpleName() + " is not valid");
 		}
 		this.methods = methods;
-	}
-	
-	/**
-	 * Returns flag decides about distribution of {@link IndividualWrapper}s
-	 * @return
-	 */
-	public boolean getIndividualDistribution() {
-		return individualDistribution;
-	}
-	public void setIndividualDistribution(boolean individualDistribution) {
-		this.individualDistribution = individualDistribution;
 	}
 	
 	/**

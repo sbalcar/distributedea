@@ -1,1 +1,1 @@
-Porovnání homogeních modelů : TSP1083
+Porovnání homogenních modelů : TSP1083

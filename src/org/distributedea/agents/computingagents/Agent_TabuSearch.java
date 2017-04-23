@@ -101,7 +101,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		IndividualEvaluated individualEvalI = problemTool
 				.generateIndividualEval(problem, dataset, pedigreeParams, getCALogger());
 
-		
+
 		// add actual individual in the Tabu Set
 		tabu.offer(individualEvalI);
 		

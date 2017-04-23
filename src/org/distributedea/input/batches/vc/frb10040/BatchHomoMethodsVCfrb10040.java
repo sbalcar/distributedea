@@ -33,7 +33,7 @@ public class BatchHomoMethodsVCfrb10040 implements IInputBatch {
 		
 		Batch batch = new Batch();
 		batch.setBatchID("homoMethodsVCfrb10040");
-		batch.setDescription("Porovnání homogeních modelů : VCfrb10040");
+		batch.setDescription("Porovnání homogenních modelů : VCfrb10040");
 		
 		Job jobI = InputVC.test02();
 		jobI.getIslandModelConfiguration().setIndividualDistribution(true);

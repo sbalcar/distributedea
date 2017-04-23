@@ -2,6 +2,7 @@ package org.distributedea.problems.continuousoptimization.point.tools.bbobjava;
 
 import java.util.Random;
 
+
 public class BbobOperations {
 
 	public static double[][] getRandomRotationMatrix(int d) {

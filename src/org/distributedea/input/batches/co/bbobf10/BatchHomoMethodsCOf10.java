@@ -33,7 +33,7 @@ public class BatchHomoMethodsCOf10 implements IInputBatch {
 		
 		Batch batch = new Batch();
 		batch.setBatchID("homoMethodsCOf10");
-		batch.setDescription("Porovnání homogeních modelů : COf10");
+		batch.setDescription("Porovnání homogenních modelů : COf10");
 		
 		Job jobI = InputContOpt.test10();
 		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
