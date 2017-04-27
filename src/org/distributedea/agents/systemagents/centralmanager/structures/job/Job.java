@@ -37,6 +37,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDefDouble;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDefInteger;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDefSwitch;
 import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
@@ -449,6 +450,7 @@ public class Job implements Concept, Serializable {
 		xstream.alias("argumentDef", ArgumentDef.class);
 		xstream.alias("argumentDefInteger", ArgumentDefInteger.class);
 		xstream.alias("argumentDefDouble", ArgumentDefDouble.class);
+		xstream.alias("argumentDefSwitch", ArgumentDefSwitch.class);
 		
 		xstream.alias("methods", Methods.class);
 		xstream.alias("inputMethodDescription", InputMethodDescription.class);

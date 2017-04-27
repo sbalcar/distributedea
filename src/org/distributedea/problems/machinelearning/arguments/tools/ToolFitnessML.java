@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDefSwitch;
+import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.dataset.DatasetML;
 import org.distributedea.ontology.individuals.IndividualArguments;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
@@ -22,11 +25,24 @@ public class ToolFitnessML {
 		}
 		
 		Arguments arguments = individual.getArguments();
-
+		ArgumentsDef argumentsDef = problem.getArgumentsDef();
+		
 		List<String> argumentsWeka = new ArrayList<>();
 		for (Argument argI : arguments.getArguments()) {
 			
-			String name = "-" + argI.getName();
+			String argNameI = argI.getName();
+			
+			ArgumentDef argDefI = argumentsDef.exportArgumentsDef(argNameI);
+			
+			
+			if (argDefI instanceof ArgumentDefSwitch) {
+				if (argI.exportValueAsBoolean()) {
+					argumentsWeka.add("-" + argNameI + "");
+				}
+				continue;
+			}
+			
+			String name = "-" + argNameI;
 			String value = argI.getValue();
 			
 			argumentsWeka.add(name);

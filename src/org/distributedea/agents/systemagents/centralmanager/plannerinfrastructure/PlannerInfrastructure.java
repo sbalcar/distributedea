@@ -9,6 +9,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.individuals.IndividualArguments;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -172,6 +173,9 @@ public final class PlannerInfrastructure {
 			logger.log(Level.INFO, "" + bestindividual.getFitness());
 			if (bestindividual.getIndividual() instanceof IndividualPoint) {
 				logger.log(Level.INFO, "" + bestindividual.getIndividual().toString());
+			}
+			if (bestindividual.getIndividual() instanceof IndividualArguments) {
+				logger.log(Level.INFO, "" + bestindividual.getIndividual().toLogString());
 			}
 		}
 		

@@ -30,6 +30,7 @@ public abstract class ArgumentDef implements Concept {
 	public abstract Argument exportMinValue();
 	public abstract Argument exportNeighbourValue(Argument current, double maxStep);
 	public abstract Argument exportNextValue(Argument current, double maxStep);
+	public abstract boolean exportIsTheLastValue(Argument argument);
 	
 	public abstract Argument exportCorrectedValue(Argument addend);
 	public abstract Argument exportSumValue(Argument addend1, Argument addend2);

@@ -7,6 +7,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDefDouble;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDefInteger;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDefSwitch;
 import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.dataset.DatasetML;
 import org.distributedea.ontology.individuals.IndividualArguments;
@@ -89,10 +90,95 @@ public class TestWeka {
 	    System.out.println("Fitness: " + fitness);
 	}
 
-	public static void main(String [] args) throws Exception {
+	public static void test3() throws Exception {
 		
-		test2();
+		Class<?> classifier = weka.classifiers.trees.RandomForest.class;
+		Class<?> filter = weka.filters.unsupervised.instance.Randomize.class;
+		
+		ArgumentsDef argumentsDef = new ArgumentsDef();
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("P", 20, 100));  // default 100
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("K", 1, 6));  // default 0
+		//argumentsDef.addArgumentsDef(new ArgumentDefInteger("M", 1, 2));
+		argumentsDef.addArgumentsDef(new ArgumentDefDouble("V", 0.0001, 0.5)); // default 0.003
+		
+		argumentsDef.addArgumentsDef(new ArgumentDefSwitch("U"));
+		argumentsDef.addArgumentsDef(new ArgumentDefSwitch("B"));
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("depth", 1, 20));
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("I", 50, 300));  // default 100
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("batch-size", 80, 120)); // default 100
+	    
+		ProblemMachineLearning problem = new ProblemMachineLearning(classifier, filter, argumentsDef);
+		
+		
+	    String dataset = "inputs/wilt.arff";
+	    
+	    DatasetML datasetML = new DatasetML(new File(dataset));
+/*
+	    // P-82-K-5-V-0.34053986167585115-U-false-B-false-depth-7-I-187-batch-size-86-
+	    Argument argP = new Argument("P", "82");
+	    Argument argK = new Argument("K", "5");
+
+	    Argument argV = new Argument("V", "0.34053986167585115");
+	    Argument argU = new Argument("U", "false");
+	    
+	    Argument argB = new Argument("B", "false");
+	    Argument argDe = new Argument("depth", "7");
+	    Argument argI = new Argument("I", "187");
+	    Argument argBa = new Argument("batch-size", "86");
+	    
+	    Arguments argss0 = new Arguments();
+	    argss0.addArgument(argP);
+	    argss0.addArgument(argK);
+	    argss0.addArgument(argV);
+	    argss0.addArgument(argU);
+	    argss0.addArgument(argB);
+	    argss0.addArgument(argDe);
+	    argss0.addArgument(argI);
+	    argss0.addArgument(argBa);
+*/
+	    
+	    // P-56-K-5-V-0.2937554104227731-U-true-B-false-depth-19-I-30-batch-size-116-
+	    Argument argP = new Argument("P", 56);
+	    Argument argK = new Argument("K", 5);
+
+	    Argument argV = new Argument("V", 0.2937554104227731);
+	    Argument argU = new Argument("U", true);
+	    
+	    Argument argB = new Argument("B", false);
+	    Argument argDe = new Argument("depth", 19);
+	    Argument argI = new Argument("I", 30);
+	    Argument argS = new Argument("S", 1);
+	    Argument argBa = new Argument("batch-size", 116);
+	    
+	    Arguments argss0 = new Arguments();
+	    argss0.addArgument(argP);
+	    argss0.addArgument(argK);
+	    argss0.addArgument(argV);
+	    argss0.addArgument(argU);
+	    argss0.addArgument(argB);
+	    argss0.addArgument(argDe);
+	    argss0.addArgument(argI);
+	    argss0.addArgument(argS);
+	    argss0.addArgument(argBa);
+	    
+	    
+	    
+	    //IndividualArguments individual = new IndividualArguments(argumentsDef.exportRandomGeneratedArguments());
+	    IndividualArguments individual = new IndividualArguments(argss0);
+	    
+	    
+	    ProblemToolMLRandomMove tool = new ProblemToolMLRandomMove();
+	    double fitness = tool.fitness(individual, problem, datasetML, new TrashLogger());
+	    System.out.println("Fitness: " + fitness);
+	    System.out.println(individual.toLogString());
+	}
+
+	
+	public static void main(String [] args) throws Exception {
+
+		test3();
 		System.out.println("Test exit");
+
 	}
 
 }

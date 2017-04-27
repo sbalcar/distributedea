@@ -26,8 +26,10 @@ public class OperatorMoveABit {
 		Argument argument = arguments.exportArgument(argumentDef.getName());
 		
 		Argument argumentNew = argumentDef.exportNeighbourValue(argument, maxStep);
+		Argument argumentNewCor = argumentDef.exportCorrectedValue(argumentNew);
+		
 		Arguments argumentsNew = arguments.deepClone();
-		argumentsNew.replaceArgument(argumentNew);
+		argumentsNew.replaceArgument(argumentNewCor);
 		
 		return new IndividualArguments(argumentsNew);
 	}

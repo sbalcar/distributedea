@@ -53,6 +53,8 @@ public abstract class AProblemToolML extends ProblemTool {
 		try {
 			return ToolFitnessML.evaluate(individualArg, problemML, datasetML, logger);
 		} catch (Exception e) {
+			System.out.print("------------------------------------");
+			System.out.print(individualArg.toLogString());
 			return Double.NaN;
 		}
 	}

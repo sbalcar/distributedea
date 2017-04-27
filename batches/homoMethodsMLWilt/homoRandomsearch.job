@@ -1,0 +1,73 @@
+<job>
+  <jobID>homoRandomsearch</jobID>
+  <numberOfRuns>9</numberOfRuns>
+  <description>Homo-RandomSearch</description>
+  <problem class="org.distributedea.ontology.problem.ProblemMachineLearning">
+    <classifierClassname>weka.classifiers.trees.RandomForest</classifierClassname>
+    <filterClassName>weka.filters.unsupervised.instance.Randomize</filterClassName>
+    <argumentsDef>
+      <argumentsDef>
+        <argumentDefInteger>
+          <name>P</name>
+          <min>20</min>
+          <max>100</max>
+        </argumentDefInteger>
+        <argumentDefInteger>
+          <name>K</name>
+          <min>1</min>
+          <max>6</max>
+        </argumentDefInteger>
+        <argumentDefDouble>
+          <name>V</name>
+          <min>1.0E-4</min>
+          <max>0.5</max>
+        </argumentDefDouble>
+        <argumentDefSwitch>
+          <name>U</name>
+        </argumentDefSwitch>
+        <argumentDefSwitch>
+          <name>B</name>
+        </argumentDefSwitch>
+        <argumentDefInteger>
+          <name>depth</name>
+          <min>1</min>
+          <max>20</max>
+        </argumentDefInteger>
+        <argumentDefInteger>
+          <name>I</name>
+          <min>20</min>
+          <max>30</max>
+        </argumentDefInteger>
+        <argumentDefInteger>
+          <name>batch-size</name>
+          <min>80</min>
+          <max>120</max>
+        </argumentDefInteger>
+      </argumentsDef>
+    </argumentsDef>
+  </problem>
+  <datasetFileName>inputs/wilt.arff</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_RandomSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <islandModelConfiguration>
+    <individualDistribution>true</individualDistribution>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

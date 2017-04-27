@@ -33,6 +33,19 @@ public class Argument implements Concept {
 		this.name = name;
 	}
 
+	public Argument(String name, int value) {
+		this(name, value + "");
+	}
+	
+	public Argument(String name, double value) {
+		this(name, value + "");
+	}
+
+	public Argument(String name, boolean value) {
+		this.value = String.valueOf(value);
+		this.name = name;
+	}
+
 	/**
 	 * Copy constructor
 	 * @param argument
@@ -71,6 +84,14 @@ public class Argument implements Concept {
 	 */
 	public double exportValueAsDouble() {
 		return Double.parseDouble(value);
+	}
+
+	/**
+	 * Exports value as boolean
+	 * @return
+	 */
+	public boolean exportValueAsBoolean() {
+		return Boolean.parseBoolean(value);
 	}
 	
 	/**

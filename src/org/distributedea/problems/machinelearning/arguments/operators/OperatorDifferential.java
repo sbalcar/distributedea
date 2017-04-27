@@ -36,6 +36,7 @@ public class OperatorDifferential {
 			Argument product = argumentDefI.exportProductValue(difference, differentialWeightF);
 			
 			Argument sum = argumentDefI.exportSumValue(argument1, product);
+			sum.setName(argumentName);
 			
 			argumentsNew.addArgument(
 					argumentDefI.exportCorrectedValue(sum));

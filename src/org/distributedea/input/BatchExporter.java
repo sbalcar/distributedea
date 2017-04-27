@@ -32,6 +32,9 @@ import org.distributedea.input.batches.co.bbobf17.BatchSingleMethodsCOf17;
 import org.distributedea.input.batches.co.f2.BatchHeteroMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchHomoMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchSingleMethodsCOf2;
+import org.distributedea.input.batches.machinelearning.wilt.BatchHeteroMethodsMLWilt;
+import org.distributedea.input.batches.machinelearning.wilt.BatchHomoMethodsMLWilt;
+import org.distributedea.input.batches.machinelearning.wilt.BatchSingleMethodsMLWilt;
 import org.distributedea.input.batches.machinelearning.zoo.BatchHeteroMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchHomoMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchSingleMethodsMLZoo;
@@ -184,6 +187,17 @@ public class BatchExporter {
 		IInputBatch inputBatchHeteroMethodsMLZoo = new BatchHeteroMethodsMLZoo();
 		Batch batchHeteroMethodsMLZoo = inputBatchHeteroMethodsMLZoo.batch();
 
+		
+		IInputBatch inputBatchSingleMethodsMLWilt = new BatchSingleMethodsMLWilt();
+		Batch batchSingleMethodsMLWilt = inputBatchSingleMethodsMLWilt.batch();
+
+		IInputBatch inputBatchHomoMethodsMLWilt = new BatchHomoMethodsMLWilt();
+		Batch batchHomoMethodsMLWilt = inputBatchHomoMethodsMLWilt.batch();
+
+		IInputBatch inputBatchHeteroMethodsMLWilt = new BatchHeteroMethodsMLWilt();
+		Batch batchHeteroMethodsMLWilt = inputBatchHeteroMethodsMLWilt.batch();
+
+		
 
 		IInputBatch inputBatchSingleMethodsVCfrb10040 = new BatchSingleMethodsVCfrb10040();
 		Batch batchSingleMethodsVCfrb10040 = inputBatchSingleMethodsVCfrb10040.batch();
@@ -256,9 +270,14 @@ public class BatchExporter {
 		batchesList.add(batchHeteroMethodsCOf17);
 		
 		// ML
-		batchesList.add(batchSingleMethodsMLZoo);
-		batchesList.add(batchHomoMethodsMLZoo);
-		batchesList.add(batchHeteroMethodsMLZoo);
+		//batchesList.add(batchSingleMethodsMLZoo);
+		//batchesList.add(batchHomoMethodsMLZoo);
+		//batchesList.add(batchHeteroMethodsMLZoo);
+
+		batchesList.add(batchSingleMethodsMLWilt);
+		batchesList.add(batchHomoMethodsMLWilt);
+		batchesList.add(batchHeteroMethodsMLWilt);
+		
 		
 		// VC		
 		batchesList.add(batchSingleMethodsVCfrb10040);

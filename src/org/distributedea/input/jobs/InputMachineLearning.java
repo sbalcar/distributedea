@@ -21,6 +21,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDefDouble;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDefInteger;
+import org.distributedea.ontology.argumentsdefinition.ArgumentDefSwitch;
 import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
@@ -68,9 +69,10 @@ public class InputMachineLearning {
 	}
 	
 	public static Job test02() throws IOException {
-		
+				
 		Class<?> classifier = MultilayerPerceptron.class;
 		Class<?> filter = weka.filters.unsupervised.instance.Randomize.class;
+		
 		
 		ArgumentsDef argumentsDef = new ArgumentsDef();
 		argumentsDef.addArgumentsDef(new ArgumentDefDouble("L", 0, 1)); // default 0.3
@@ -91,5 +93,39 @@ public class InputMachineLearning {
 		job.setProblem(problem);
 		
 		return job;
+	}
+	
+	public static Job test03() throws IOException {
+		
+		Class<?> classifier = weka.classifiers.trees.RandomForest.class;
+		Class<?> filter = weka.filters.unsupervised.instance.Randomize.class;
+		
+		ArgumentsDef argumentsDef = new ArgumentsDef();
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("P", 20, 100));  // default 100
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("K", 1, 6));  // default 0
+		//argumentsDef.addArgumentsDef(new ArgumentDefInteger("M", 1, 2));
+		argumentsDef.addArgumentsDef(new ArgumentDefDouble("V", 0.0001, 0.5)); // default 0.003
+		
+		argumentsDef.addArgumentsDef(new ArgumentDefSwitch("U"));
+		argumentsDef.addArgumentsDef(new ArgumentDefSwitch("B"));
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("depth", 1, 20));
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("I", 20, 30));  // default 100
+		argumentsDef.addArgumentsDef(new ArgumentDefInteger("batch-size", 80, 120)); // default 100
+	    
+		ProblemMachineLearning problem = new ProblemMachineLearning(classifier, filter, argumentsDef);
+
+		
+		Job job = test01();
+		job.setJobID("mlWilt");
+		job.setDescription("description");
+		job.setNumberOfRuns(9);
+		job.setIslandModelConfiguration(
+				new IslandModelConfiguration(false, 60000, 5000));
+		job.importDatasetFile(new File(
+				FileNames.getInputProblemFile("wilt.arff")));
+		job.setProblem(problem);
+		
+		return job;
+
 	}
 }

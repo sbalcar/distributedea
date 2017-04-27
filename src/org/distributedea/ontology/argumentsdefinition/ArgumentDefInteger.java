@@ -69,11 +69,11 @@ public class ArgumentDefInteger extends ArgumentDef {
 		Random rnd = new Random();
 		int randomValue = getMin() + rnd.nextInt(getMax() +1 - getMin());
 		
-		return new Argument(getName(), randomValue + "");
+		return new Argument(getName(), randomValue);
 	}
 	
 	public Argument exportMinValue() {
-		return new Argument(getName(), getMin() + "");
+		return new Argument(getName(), getMin());
 	}
 	
 	@Override
@@ -89,7 +89,7 @@ public class ArgumentDefInteger extends ArgumentDef {
 			value = getMax();
 		}
 		
-		return new Argument(name, value + "");
+		return new Argument(name, value);
 	}
 	
 	@Override
@@ -100,14 +100,13 @@ public class ArgumentDefInteger extends ArgumentDef {
 		Random rnd = new Random();
 		
 		int diff = 1; 
-		
-		int valueNew = value + diff;
-		
 		if (rnd.nextBoolean()) {
-			valueNew = value + diff;
+			diff *= -1;
 		}
-		
-		return new Argument(current.getName(), valueNew + "");
+
+		int valueNew = value + diff;
+				
+		return new Argument(current.getName(), valueNew);
 	}
 
 	@Override
@@ -120,8 +119,15 @@ public class ArgumentDefInteger extends ArgumentDef {
 		int value = current.exportValueAsInteger();
 		
 		int valueNew = value + 1;
-		return new Argument(current.getName(), valueNew + "");
+		return new Argument(current.getName(), valueNew);
 	}
+	
+	@Override
+	public boolean exportIsTheLastValue(Argument argument) {
+
+		return getMax() <= argument.exportValueAsInteger();
+	}
+
 	
 	@Override
 	public Argument exportSumValue(Argument addend1, Argument addend2) {
@@ -131,7 +137,7 @@ public class ArgumentDefInteger extends ArgumentDef {
 		
 		int sum = addendInt1 + addendInt2;
 		
-		return new Argument("Sum", sum + "");
+		return new Argument("Sum", sum);
 	}
 	
 	@Override
@@ -152,7 +158,7 @@ public class ArgumentDefInteger extends ArgumentDef {
 		
 		int product = (int) (value * factor2);
 		
-		return new Argument("Product", product + "");
+		return new Argument("Product", product);
 	}
 	
 	/**

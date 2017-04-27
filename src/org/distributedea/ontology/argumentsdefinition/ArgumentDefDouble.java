@@ -68,11 +68,11 @@ public class ArgumentDefDouble extends ArgumentDef {
 		Random rnd = new Random();
 		double randomValue = getMin() + (getMax() - getMin()) * rnd.nextDouble();
 		
-		return new Argument(getName(), randomValue + "");
+		return new Argument(getName(), randomValue);
 	}
 
 	public Argument exportMinValue() {
-		return new Argument(getName(), getMin() + "");
+		return new Argument(getName(), getMin());
 	}
 
 
@@ -89,7 +89,7 @@ public class ArgumentDefDouble extends ArgumentDef {
 			value = getMax();
 		}
 		
-		return new Argument(name, value + "");
+		return new Argument(name, value);
 	}
 	
 	@Override
@@ -105,7 +105,7 @@ public class ArgumentDefDouble extends ArgumentDef {
 		}
 		
 		double valueNew = value + diff;
-		return new Argument(current.getName(), valueNew + "");
+		return new Argument(current.getName(), valueNew);
 	}
 
 	@Override
@@ -118,7 +118,13 @@ public class ArgumentDefDouble extends ArgumentDef {
 		double diff = rnd.nextDouble() * maxStep;
 		
 		double valueNew = value + diff;
-		return new Argument(current.getName(), valueNew + "");
+		return new Argument(current.getName(), valueNew);
+	}
+	
+	@Override
+	public boolean exportIsTheLastValue(Argument argument) {
+
+		return getMax() <= argument.exportValueAsDouble();
 	}
 	
 	@Override
@@ -129,7 +135,7 @@ public class ArgumentDefDouble extends ArgumentDef {
 		
 		double sum = addendInt1 + addendInt2;
 		
-		return new Argument("Sum", sum + "");
+		return new Argument("Sum", sum);
 	}
 	
 	@Override
@@ -140,7 +146,7 @@ public class ArgumentDefDouble extends ArgumentDef {
 		
 		double difference = minuendDouble -subtrahendDouble;
 		
-		return new Argument("Difference", difference + "");
+		return new Argument("Difference", difference);
 	}
 	
 	@Override
@@ -150,7 +156,7 @@ public class ArgumentDefDouble extends ArgumentDef {
 		
 		double product = value * factor2;
 		
-		return new Argument("Product", product + "");
+		return new Argument("Product", product);
 	}
 	
 	/**
