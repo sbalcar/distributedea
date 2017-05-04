@@ -23,7 +23,7 @@ public class TestInputRePlan {
 		
 		MethodDescription agentToKill = new MethodDescription(agentConfiguration, problem, ProblemToolGPSEuc2D2opt.class);
 		
-		InputMethodDescription agentToCreate = agentToKill.exportInputAgentDescription();
+		InputMethodDescription agentToCreate = agentToKill.exportInputMethodDescription();
 		
 		
 		InputRePlan inputRePlan = new InputRePlan(iteration,

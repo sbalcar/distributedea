@@ -17,6 +17,8 @@ import org.distributedea.ontology.monitor.MethodStatistic;
 
 public class PlannerTheGreatestQuantityOfMaterial extends PlannerTheGreatestQuantityOfImprovement {
 
+	private int DURATION_OF_NEW_METHOD_PROTECTION = 3;
+	
 	@Override
 	protected InputRePlan replanning(Iteration iteration, History history)
 			throws Exception {
@@ -25,8 +27,8 @@ public class PlannerTheGreatestQuantityOfMaterial extends PlannerTheGreatestQuan
 		printLog(centralManager, iteration, history, logger);
 		
 		MethodHistories currentMethodsHistory = history.getMethodHistories()
-				.exportHistoryOfRunningMethods(iteration, 3);
-				
+				.exportHistoryOfRunningMethods(iteration, DURATION_OF_NEW_METHOD_PROTECTION);
+		
 		if (currentMethodsHistory.isEmpty()) {
 			return new InputRePlan(iteration);
 		}
@@ -38,9 +40,9 @@ public class PlannerTheGreatestQuantityOfMaterial extends PlannerTheGreatestQuan
 				exportMethodAchievedTheLeastQuantityOfType();
 		
 		MethodDescription methodToKill =
-				leastQuantMethodStatistic.exportAgentDescriptionClone();
+				leastQuantMethodStatistic.exportMethodDescriptionClone();
 		InputMethodDescription methodGreatestQuant =
-				greatestQuantMethodStatistic.exportInputAgentDescriptionClone();
+				greatestQuantMethodStatistic.exportInputMethodDescriptionClone();
 		
 		
 		Methods methodsWhichHaveNeverRun =
@@ -49,7 +51,7 @@ public class PlannerTheGreatestQuantityOfMaterial extends PlannerTheGreatestQuan
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 			
 			InputMethodDescription candidateMethod =
-					methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
+					methodsWhichHaveNeverRun.exportRandomMethodDescription();
 
 			return new InputRePlan(iteration, methodToKill, candidateMethod);
 		}
@@ -69,7 +71,7 @@ public class PlannerTheGreatestQuantityOfMaterial extends PlannerTheGreatestQuan
 				exportMethodAchievedTheLeastQuantityOfType();
 		
 		String minPriorityAgentName = leastQuantityMethodStatistic.
-				getAgentDescription().getAgentConfiguration().exportAgentname();
+				getMethodDescription().getAgentConfiguration().exportAgentname();
 		int leastQuantity = leastQuantityMethodStatistic.
 				getMethodStatisticResult().getNumberOfTypeIndividuals();
 		
@@ -77,7 +79,7 @@ public class PlannerTheGreatestQuantityOfMaterial extends PlannerTheGreatestQuan
 
 		
 		String maxPriorityAgentName = greatestQuantityMethodStatistic.
-				getAgentDescription().getAgentConfiguration().exportAgentname();
+				getMethodDescription().getAgentConfiguration().exportAgentname();
 		int greatestQuantity = greatestQuantityMethodStatistic.
 				getMethodStatisticResult().getNumberOfTypeIndividuals();
 		

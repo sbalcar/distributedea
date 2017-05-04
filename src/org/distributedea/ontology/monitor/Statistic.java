@@ -143,7 +143,7 @@ public class Statistic implements Concept {
 		}
 		
 		MethodStatistic method0 = this.methodStatistics.get(0);
-		MethodDescription agentDescription = method0.getAgentDescription();
+		MethodDescription agentDescription = method0.getMethodDescription();
 		
 		IProblem problem = agentDescription.getProblem();
 		
@@ -164,7 +164,7 @@ public class Statistic implements Concept {
 		}
 		
 		MethodDescription agentDescription =
-				bestMethod.getAgentDescription();
+				bestMethod.getMethodDescription();
 		IndividualEvaluated bestIndividual =
 				bestMethod.getMethodStatisticResult().getBestIndividual();
 		
@@ -180,7 +180,7 @@ public class Statistic implements Concept {
 		List<MethodDescription> agentDescriptions = new ArrayList<>();
 		for (MethodStatistic methodStatisticI : this.methodStatistics) {
 			MethodDescription agentDescriptionClonesI =
-					methodStatisticI.exportAgentDescriptionClone();
+					methodStatisticI.exportMethodDescriptionClone();
 			agentDescriptions.add(agentDescriptionClonesI);
 		}
 		return new MethodDescriptions(agentDescriptions);
@@ -231,7 +231,7 @@ public class Statistic implements Concept {
 		}
 		for (MethodStatistic methodStatisticI : this.methodStatistics) {
 			MethodDescription agentDescriptionI =
-					methodStatisticI.getAgentDescription();
+					methodStatisticI.getMethodDescription();
 			if (agentDescriptionI.equals(agentDescription)) {
 				return true;
 			}

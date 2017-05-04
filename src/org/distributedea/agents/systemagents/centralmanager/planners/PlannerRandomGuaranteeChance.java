@@ -26,6 +26,8 @@ import org.distributedea.services.ManagerAgentService;
 
 public class PlannerRandomGuaranteeChance implements IPlanner {
 	
+	private int MIN_OF_METHOD_TYPE = 3;
+	
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
 	private IslandModelConfiguration configuration;
@@ -72,8 +74,7 @@ public class PlannerRandomGuaranteeChance implements IPlanner {
 		MethodHistories currentMethodsHistory = history.getMethodHistories()
 				.exportHistoryOfRunningMethods(iteration, 0);
 		
-
-		if (currentMethodsHistory.getNumberOfMethodInstances() <= 3) {
+		if (currentMethodsHistory.getNumberOfMethodInstances() <= MIN_OF_METHOD_TYPE) {
 			MethodDescription methodToKill =
 					currentMethodsHistory.exportRandomRunningMethod();
 			
@@ -81,7 +82,7 @@ public class PlannerRandomGuaranteeChance implements IPlanner {
 					history.methodsWhichDidntRunForTheLongestTime(
 							currentMethodsHistory.exportMethodTypes());
 			InputMethodDescription methodToCreate =
-					methodTypeNotRunForTheLongestTime.exportInputAgentDescription();
+					methodTypeNotRunForTheLongestTime.exportInputMethodDescription();
 			
 			return new InputRePlan(iteration, methodToKill, methodToCreate);
 		}
@@ -97,10 +98,10 @@ public class PlannerRandomGuaranteeChance implements IPlanner {
 			MethodStatistic theWorstMethodStatistic = currentMethodsResults
 					.exportMethodAchievedTheLeastQuantityOfImprovement();
 			MethodDescription methodToKill =
-					theWorstMethodStatistic.exportAgentDescriptionClone();
+					theWorstMethodStatistic.exportMethodDescriptionClone();
 			
 			InputMethodDescription methodToCreate =
-					methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
+					methodsWhichHaveNeverRun.exportRandomMethodDescription();
 			
 			return new InputRePlan(iteration, methodToKill, methodToCreate);
 		}
@@ -112,7 +113,7 @@ public class PlannerRandomGuaranteeChance implements IPlanner {
 		
 		//random select agent to create
 		InputMethodDescription methodToCreate =
-				jobRun.getMethods().exportRandomSelectedAgentDescription();
+				jobRun.getMethods().exportRandomMethodDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate);
 	}

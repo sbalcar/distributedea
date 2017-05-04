@@ -12,7 +12,7 @@ public interface IMethods {
 	public InputAgentConfigurations exportInputAgentConfigurations();
 	public ProblemTools exportProblemTools();
 	
-	public InputMethodDescription exportRandomSelectedAgentDescription();
+	public InputMethodDescription exportRandomMethodDescription();
 	
 	public boolean valid(IAgentLogger logger);
 	

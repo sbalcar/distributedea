@@ -200,7 +200,7 @@ public class InputRePlan implements Concept {
 	public InputRePlan exportOptimalizedInpuRePlan() {
 		
 		Methods inputAgentDescriptions =
-				agentsToKill.exportInputAgentDescriptions();
+				agentsToKill.exportInputMethodDescriptions();
 		
 		Methods intersection =
 				inputAgentDescriptions.exportIntersection(agentsToCreate);

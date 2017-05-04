@@ -25,6 +25,9 @@ import org.distributedea.services.ManagerAgentService;
 
 public class PlannerLazyQuantityOfImprovement implements IPlanner {
 
+	private int DURATION_OF_NEW_METHOD_PROTECTION = 3;
+	private int DURATION_OF_PATIENCE = 3;
+	
 	protected Agent_CentralManager centralManager;
 	protected JobRun jobRun;
 	private IslandModelConfiguration configuration;
@@ -72,7 +75,7 @@ public class PlannerLazyQuantityOfImprovement implements IPlanner {
 		printLog(centralManager, iteration, history, logger);
 
 		MethodHistories currentMethodsHistory = history.getMethodHistories()
-				.exportHistoryOfRunningMethods(iteration, 3);
+				.exportHistoryOfRunningMethods(iteration, DURATION_OF_NEW_METHOD_PROTECTION);
 		
 		if (currentMethodsHistory.getNumberOfMethodInstances() <= 1) {
 			return new InputRePlan(iteration);
@@ -91,10 +94,10 @@ public class PlannerLazyQuantityOfImprovement implements IPlanner {
 					.exportMethodAchievedTheLeastQuantityOfImprovement();
 			
 			MethodDescription methodToKill =
-					leastQuantMethodStatistic.exportAgentDescriptionClone();
+					leastQuantMethodStatistic.exportMethodDescriptionClone();
 
 			InputMethodDescription candidateMethod =
-					methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
+					methodsWhichHaveNeverRun.exportRandomMethodDescription();
 			
 			return new InputRePlan(iteration, methodToKill,	candidateMethod);
 		}
@@ -108,13 +111,13 @@ public class PlannerLazyQuantityOfImprovement implements IPlanner {
 		
 		
 		MethodHistories currentleastQuantMethodsHistory = currentMethodsHistory
-				.exportHistoryWithoutImprovement(iteration, 3);
+				.exportHistoryWithoutImprovement(iteration, DURATION_OF_PATIENCE);
 		
 		MethodsStatistics leastQuantMethodStatistics =
 				currentleastQuantMethodsHistory.exportMethodsResults(iteration, history.getJobID());
 		
 		MethodDescriptions leastQuantMethods =
-				leastQuantMethodStatistics.exportAgentDescriptions();
+				leastQuantMethodStatistics.exportMethodDescriptions();
 		
 		if (leastQuantMethods.isEmpty()) {
 			return new InputRePlan(iteration);
@@ -122,9 +125,9 @@ public class PlannerLazyQuantityOfImprovement implements IPlanner {
 		
 		
 		MethodDescription methodToKill =
-				leastQuantMethods.exportRandomAgentDescription();
+				leastQuantMethods.exportRandomMethodDescription();
 		InputMethodDescription methodGreatestQuant =
-				greatestQuantMethodStatistic.exportInputAgentDescriptionClone();
+				greatestQuantMethodStatistic.exportInputMethodDescriptionClone();
 				
 		return new InputRePlan(iteration, methodToKill, methodGreatestQuant).
 				exportOptimalizedInpuRePlan();
@@ -142,7 +145,7 @@ public class PlannerLazyQuantityOfImprovement implements IPlanner {
 				exportMethodAchievedTheLeastQuantityOfImprovement();
 		
 		String minPriorityAgentName = leastQuantityMethodStatistic.
-				getAgentDescription().getAgentConfiguration().exportAgentname();
+				getMethodDescription().getAgentConfiguration().exportAgentname();
 		int leastQuantity = leastQuantityMethodStatistic.
 				getMethodStatisticResult().getNumberOfTheBestCreatedIndividuals();
 		
@@ -150,7 +153,7 @@ public class PlannerLazyQuantityOfImprovement implements IPlanner {
 
 		
 		String maxPriorityAgentName = greatestQuantityMethodStatistic.
-				getAgentDescription().getAgentConfiguration().exportAgentname();
+				getMethodDescription().getAgentConfiguration().exportAgentname();
 		int greatestQuantity = greatestQuantityMethodStatistic.
 				getMethodStatisticResult().getNumberOfTheBestCreatedIndividuals();
 		

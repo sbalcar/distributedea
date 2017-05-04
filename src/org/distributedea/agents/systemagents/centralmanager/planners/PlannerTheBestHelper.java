@@ -30,9 +30,10 @@ public class PlannerTheBestHelper implements IPlanner {
 	private IAgentLogger logger;
 	
 	private IPlanner plannerInit = null;
-	
+
+	private int SKIPPED_ITERATIONS_COUNT = 5;
 	private boolean NEW_STATISTICS_FOR_EACH_QUERY = true;
-	
+
 	public PlannerTheBestHelper() {} // for serialization
 	
 	@Override
@@ -78,7 +79,7 @@ public class PlannerTheBestHelper implements IPlanner {
 		printLog(centralManager, helpmates, logger);
 		
 		// skip killing during first iteration
-		if (iteration.getIterationNumber() < 5) {
+		if (iteration.getIterationNumber() < SKIPPED_ITERATIONS_COUNT) {
 			return new InputRePlan(iteration);
 		}
 		
@@ -88,7 +89,7 @@ public class PlannerTheBestHelper implements IPlanner {
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 		
 			InputMethodDescription candidateDescription =
-					methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
+					methodsWhichHaveNeverRun.exportRandomMethodDescription();
 			
 			Pair<MethodDescription, Integer> minPriorityPair =
 					helpmates.exportMinPrioritizedDescription();
@@ -105,7 +106,7 @@ public class PlannerTheBestHelper implements IPlanner {
 				helpmates.exportMaxPrioritizedDescription();
 		MethodDescription maxPriorityDesc = maxPriorityPair.first;
 		InputMethodDescription methodToCreate =
-				maxPriorityDesc.exportInputAgentDescription();
+				maxPriorityDesc.exportInputMethodDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate).
 				exportOptimalizedInpuRePlan();

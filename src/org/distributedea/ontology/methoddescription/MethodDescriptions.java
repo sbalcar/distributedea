@@ -94,7 +94,7 @@ public class MethodDescriptions implements Concept {
 	 * Exports random {@link MethodDescription}
 	 * @return
 	 */
-	public MethodDescription exportRandomAgentDescription() {
+	public MethodDescription exportRandomMethodDescription() {
 		
 		if (agentDescriptions.isEmpty()) {
 			return null;
@@ -108,13 +108,13 @@ public class MethodDescriptions implements Concept {
 	 * Exports {@link Methods}
 	 * @return
 	 */
-	public Methods exportInputAgentDescriptions() {
+	public Methods exportInputMethodDescriptions() {
 		
 		List<InputMethodDescription> aDescriptions = new ArrayList<>();
 		
 		for (MethodDescription agentDescriptionI : agentDescriptions) {
 			InputMethodDescription inputAgentDescriptionI =
-					agentDescriptionI.exportInputAgentDescription();
+					agentDescriptionI.exportInputMethodDescription();
 			aDescriptions.add(inputAgentDescriptionI);
 		}
 		
@@ -153,7 +153,7 @@ public class MethodDescriptions implements Concept {
 		}
 		for (MethodDescription agentDescriptionI : this.agentDescriptions) {
 			InputMethodDescription inputAgentDescriptionI =
-					agentDescriptionI.exportInputAgentDescription();
+					agentDescriptionI.exportInputMethodDescription();
 			if (inputAgentDescriptionI.equals(inputAgentDescription)) {
 				return agentDescriptionI;
 			}
@@ -161,19 +161,19 @@ public class MethodDescriptions implements Concept {
 		return null;
 	}
 
-	public boolean remove(MethodDescription agentDescription) {
-		return this.agentDescriptions.remove(agentDescription);
+	public boolean remove(MethodDescription methodDescription) {
+		return this.agentDescriptions.remove(methodDescription);
 	}
 	
-	public void removeAll(MethodDescriptions agentDescriptions) {
+	public void removeAll(MethodDescriptions methodDescriptions) {
 		this.agentDescriptions.removeAll(
-				agentDescriptions.getAgentDescriptions());
+				methodDescriptions.getAgentDescriptions());
 	}
 
-	public void removeAll(Methods inputAgentDescriptions) {
+	public void removeAll(Methods inputMethodDescriptions) {
 				
 		for (InputMethodDescription inputAgentDescriptionI :
-				inputAgentDescriptions.getInputMethodDescriptions()) {
+				inputMethodDescriptions.getInputMethodDescriptions()) {
 			
 			MethodDescription agentDescriptionI =
 					exportAgentDescription(inputAgentDescriptionI);
@@ -215,9 +215,9 @@ public class MethodDescriptions implements Concept {
 			return null;
 		}
 		List<MethodDescription> descriptionsClone = new ArrayList<>();
-		for (MethodDescription agentDescriptionI : agentDescriptions) {
+		for (MethodDescription methodDescriptionI : agentDescriptions) {
 			descriptionsClone.add(
-					agentDescriptionI.deepClone());
+					methodDescriptionI.deepClone());
 		}
 		return new MethodDescriptions(descriptionsClone);
 	}

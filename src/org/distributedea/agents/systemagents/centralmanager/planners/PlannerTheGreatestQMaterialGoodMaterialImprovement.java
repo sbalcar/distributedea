@@ -110,7 +110,7 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements IPlan
 				history.exportRunningMethods();
 
 		Methods runningInputMethods =
-				runningMethods.exportInputAgentDescriptions();
+				runningMethods.exportInputMethodDescriptions();
 		
 		Methods allMethods =
 				jobRun.getMethods().exportInputMethodDescriptions();

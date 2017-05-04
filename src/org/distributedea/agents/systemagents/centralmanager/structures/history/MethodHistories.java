@@ -408,7 +408,7 @@ public class MethodHistories {
 	 */
 	public MethodDescription exportRandomRunningMethod() {
 		
-		return exportRunningMethods().exportRandomAgentDescription();
+		return exportRunningMethods().exportRandomMethodDescription();
 	}
 	
 	/**

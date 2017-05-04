@@ -296,7 +296,7 @@ public class Methods implements IMethods, Concept {
 	}
 
 	@Override
-	public InputMethodDescription exportRandomSelectedAgentDescription() {
+	public InputMethodDescription exportRandomMethodDescription() {
 		if (inputMethodDescriptions.isEmpty()) {
 			return null;
 		}

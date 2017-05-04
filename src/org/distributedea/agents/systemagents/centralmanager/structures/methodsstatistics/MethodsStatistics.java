@@ -74,13 +74,13 @@ public class MethodsStatistics {
 	 * Returns clone of {@link MethodDescriptions}.
 	 * @return
 	 */
-	public MethodDescriptions exportAgentDescriptions() {
+	public MethodDescriptions exportMethodDescriptions() {
 		
 		List<MethodDescription> descriptions = new ArrayList<>();
 		for (MethodStatistic methodStatI : methodsStatistics) {
-			MethodDescription agentDescriptionI =
-					methodStatI.getAgentDescription();
-			descriptions.add(agentDescriptionI.deepClone());
+			MethodDescription methodDescriptionI =
+					methodStatI.getMethodDescription();
+			descriptions.add(methodDescriptionI.deepClone());
 		}
 		return new MethodDescriptions(descriptions);
 	}
@@ -139,9 +139,9 @@ public class MethodsStatistics {
 		
 		List<MethodStatistic> selectedMethods = new ArrayList<>();
 		for (MethodStatistic methodStatisticI : methodsStatistics) {
-			MethodDescription agentDescriptionI =
-					methodStatisticI.getAgentDescription();
-			Class<?> agentClassI = agentDescriptionI.exportAgentClass();
+			MethodDescription methodDescriptionI =
+					methodStatisticI.getMethodDescription();
+			Class<?> agentClassI = methodDescriptionI.exportAgentClass();
 			if (agentClassI == agentClass) {
 				selectedMethods.add(methodStatisticI);
 			}
@@ -298,10 +298,10 @@ public class MethodsStatistics {
 		}
 		
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		MethodDescription agentDescription = method0.getAgentDescription();
+		MethodDescription methodDescription = method0.getMethodDescription();
 		
 		IProblem problem =
-				agentDescription.getProblem();
+				methodDescription.getProblem();
 
 		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problem));
 		return methodsStatistics.get(methodsStatistics.size() -1);
@@ -318,10 +318,10 @@ public class MethodsStatistics {
 		}
 
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		MethodDescription agentDescription = method0.getAgentDescription();
+		MethodDescription methodDescription = method0.getMethodDescription();
 		
 		IProblem problem =
-				agentDescription.getProblem();
+				methodDescription.getProblem();
 		
 		Collections.sort(methodsStatistics, new ComparatorQualitiOfFitnessAverage(problem));
 		return methodsStatistics.get(0);
@@ -339,10 +339,10 @@ public class MethodsStatistics {
 		}
 		
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		MethodDescription agentDescription = method0.getAgentDescription();
+		MethodDescription methodDescription = method0.getMethodDescription();
 		
 		Collections.sort(methodsStatistics,
-				new ComparatorQualityOfBestIndividual(agentDescription.getProblem()));
+				new ComparatorQualityOfBestIndividual(methodDescription.getProblem()));
 		
 		return methodsStatistics.get(0);
 	}
@@ -359,10 +359,10 @@ public class MethodsStatistics {
 		}
 		
 		MethodStatistic method0 = this.methodsStatistics.get(0);
-		MethodDescription agentDescription = method0.getAgentDescription();
+		MethodDescription methodDescription = method0.getMethodDescription();
 		
 		IProblem problem =
-				agentDescription.getProblem();
+				methodDescription.getProblem();
 		
 		Collections.sort(methodsStatistics,
 				new ComparatorQualityOfBestIndividual(problem));
@@ -380,12 +380,12 @@ public class MethodsStatistics {
 		
 		MethodStatistic bestMethod =
 				exportMethodAchievedTheBestOfBestIndividuals();
-		MethodDescription agentDescription =
-				bestMethod.getAgentDescription();
+		MethodDescription methodDescription =
+				bestMethod.getMethodDescription();
 		IndividualEvaluated bestIndividual =
 				bestMethod.getMethodStatisticResult().getBestIndividual();
 		
-		return new IndividualWrapper(getJobID(), agentDescription,
+		return new IndividualWrapper(getJobID(), methodDescription,
 				bestIndividual);
 	}
 }

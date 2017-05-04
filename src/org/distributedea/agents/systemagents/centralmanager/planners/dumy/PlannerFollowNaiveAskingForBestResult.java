@@ -100,7 +100,7 @@ public class PlannerFollowNaiveAskingForBestResult implements IPlanner {
 		Methods methodsWhichHaveNeverRun =  history
 				.getMethodHistories().exportsMethodsWhichHaveNeverRun(agentDescriptions);
 		
-		InputMethodDescription candidateDescrip = methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
+		InputMethodDescription candidateDescrip = methodsWhichHaveNeverRun.exportRandomMethodDescription();
 		
 		if (candidateDescrip != null) {
 			
@@ -116,7 +116,7 @@ public class PlannerFollowNaiveAskingForBestResult implements IPlanner {
 		MethodDescription theWorstDescription =
 				theWorstIndivWrp.exportAgentDescriptionClone();
 		return new InputRePlan(iteration, theWorstDescription,
-				theBestDescription.exportInputAgentDescription());
+				theBestDescription.exportInputMethodDescription());
 	}
 	
 	private void printLog(

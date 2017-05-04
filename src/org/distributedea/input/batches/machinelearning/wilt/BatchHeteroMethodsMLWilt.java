@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerLazyQuantityOfImprovement;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandom;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerRandomGuaranteeChance;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestAverageOfFitness;
@@ -15,6 +16,7 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheG
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfGoodMaterial;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfImprovement;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheGreatestQuantityOfMaterial;
+import org.distributedea.agents.systemagents.centralmanager.planners.PlannerThePedigree;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice;
@@ -35,6 +37,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.problems.machinelearning.ProblemToolMLRandomMove;
 
 public class BatchHeteroMethodsMLWilt implements IInputBatch {
@@ -99,6 +102,11 @@ public class BatchHeteroMethodsMLWilt implements IInputBatch {
 		job9.setDescription("The Greatest Quantity Of Improvement Statistic");
 		job9.setPlanner(new PlannerTheGreatestQuantityOfImprovement());
 		
+		Job job9_ = jobI.deepClone();
+		job9_.setJobID("lazyQuantityOfImprovement");
+		job9_.setDescription("Lazy impl. of the Greatest Quantity Of Improvement Statistic");
+		job9_.setPlanner(new PlannerLazyQuantityOfImprovement());
+		
 		Job job10 = jobI.deepClone();
 		job10.setJobID("theGreatestQuantityOfMaterial");
 		job10.setDescription("The Greatest Quantity Of Genetic Material");
@@ -114,6 +122,11 @@ public class BatchHeteroMethodsMLWilt implements IInputBatch {
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
 		
+		Job job13 = jobI.deepClone();
+		job13.setJobID("thePedigree");
+		job13.setDescription("The Pedigree");
+		job13.setPlanner(new PlannerThePedigree());
+		job13.importPedigreeOfIndividualClassName(PedigreeCounter.class);
 		
 		Methods algorithms = new Methods();
 		algorithms.addMethodDescriptions(new InputMethodDescription(
@@ -123,10 +136,10 @@ public class BatchHeteroMethodsMLWilt implements IInputBatch {
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
 				ProblemToolMLRandomMove.class), 1);
 
-		Job job13 = jobI.deepClone();
-		job13.setJobID("onlyInitHillClimbingAndTabuSearch");
-		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
-		job13.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
+		Job job14 = jobI.deepClone();
+		job14.setJobID("onlyInitHillClimbingAndTabuSearch");
+		job14.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
+		job14.setPlanner(new PlannerInitialisationConcretePlan(algorithms));
 		
 		
 		batch.addJob(job0);
@@ -139,11 +152,12 @@ public class BatchHeteroMethodsMLWilt implements IInputBatch {
 		batch.addJob(job7);
 		batch.addJob(job8);
 		batch.addJob(job9);
+		batch.addJob(job9_);
 		batch.addJob(job10);
 		batch.addJob(job11);
 		batch.addJob(job12);
 		batch.addJob(job13);
-		
+		batch.addJob(job14);		
 		
 		PostProcessing psLat0 = new PostProcTableOfJob();
 		PostProcessing psLat1 = new PostProcTableOfJobRunResults(10);

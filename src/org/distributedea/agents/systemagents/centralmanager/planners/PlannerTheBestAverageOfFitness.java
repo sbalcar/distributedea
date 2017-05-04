@@ -17,6 +17,8 @@ import org.distributedea.ontology.monitor.MethodStatistic;
 
 public class PlannerTheBestAverageOfFitness extends PlannerTheGreatestQuantityOfImprovement {
 
+	private int DURATION_OF_NEW_METHOD_PROTECTION = 3;
+	
 	@Override
 	protected InputRePlan replanning(Iteration iteration, History history)
 			throws Exception {
@@ -25,7 +27,7 @@ public class PlannerTheBestAverageOfFitness extends PlannerTheGreatestQuantityOf
 		printLog(centralManager, iteration, history, logger);
 		
 		MethodHistories currentMethodsHistory = history.getMethodHistories()
-				.exportHistoryOfRunningMethods(iteration, 3);
+				.exportHistoryOfRunningMethods(iteration, DURATION_OF_NEW_METHOD_PROTECTION);
 		
 		if (currentMethodsHistory.getNumberOfMethodInstances() == 0) {
 			return new InputRePlan(iteration);
@@ -38,9 +40,9 @@ public class PlannerTheBestAverageOfFitness extends PlannerTheGreatestQuantityOf
 				exportMethodAchievedTheWorstAverageOfFitness();
 		
 		MethodDescription methodToKill =
-				worstAverageMethodStatistic.exportAgentDescriptionClone();
+				worstAverageMethodStatistic.exportMethodDescriptionClone();
 		InputMethodDescription methodGreatestQuant =
-				bestAverageMethodStatistic.exportInputAgentDescriptionClone();
+				bestAverageMethodStatistic.exportInputMethodDescriptionClone();
 		
 
 		Methods methodsWhichHaveNeverRun =
@@ -49,7 +51,7 @@ public class PlannerTheBestAverageOfFitness extends PlannerTheGreatestQuantityOf
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 
 			InputMethodDescription candidateMethod =
-					methodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
+					methodsWhichHaveNeverRun.exportRandomMethodDescription();
 			
 			return new InputRePlan(iteration, methodToKill,
 					candidateMethod);
@@ -70,7 +72,7 @@ public class PlannerTheBestAverageOfFitness extends PlannerTheGreatestQuantityOf
 				exportMethodAchievedTheWorstAverageOfFitness();
 		
 		String minPriorityAgentName = theWorstAverageMethodStatistic.
-				getAgentDescription().getAgentConfiguration().exportAgentname();
+				getMethodDescription().getAgentConfiguration().exportAgentname();
 		int theWorstAverage = theWorstAverageMethodStatistic.
 				getMethodStatisticResult().getNumberOfTypeIndividuals();
 		
@@ -78,7 +80,7 @@ public class PlannerTheBestAverageOfFitness extends PlannerTheGreatestQuantityOf
 
 		
 		String maxPriorityAgentName = theBestAverageMethodStatistic.
-				getAgentDescription().getAgentConfiguration().exportAgentname();
+				getMethodDescription().getAgentConfiguration().exportAgentname();
 		int theBestAverage = theBestAverageMethodStatistic.
 				getMethodStatisticResult().getNumberOfTypeIndividuals();
 		

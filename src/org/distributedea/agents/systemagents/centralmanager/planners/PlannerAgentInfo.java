@@ -33,6 +33,8 @@ import org.distributedea.services.ManagerAgentService;
 
 public class PlannerAgentInfo implements IPlanner {
 
+	private int DURATION_OF_NEW_METHOD_PROTECTION = 3;
+	
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
 	private IslandModelConfiguration configuration;
@@ -109,7 +111,7 @@ public class PlannerAgentInfo implements IPlanner {
 		
 		
 		MethodHistories current3MethodHistories = history.getMethodHistories()
-				.exportHistoryOfRunningMethods(iteration, 3);
+				.exportHistoryOfRunningMethods(iteration, DURATION_OF_NEW_METHOD_PROTECTION);
 		
 		if (current3MethodHistories.getNumberOfMethodInstances() <= 1) {
 			return new InputRePlan(iteration);
@@ -142,10 +144,10 @@ public class PlannerAgentInfo implements IPlanner {
 			MethodStatistic methodStatistic = current3MethodsStats.
 					exportMethodAchievedTheLeastQuantityOfImprovement();
 			MethodDescription methodToKill = methodStatistic.
-					exportAgentDescriptionClone();
+					exportMethodDescriptionClone();
 
 			InputMethodDescription candidateMethod =
-					exploitationMethodsWhichHaveNeverRun.exportRandomSelectedAgentDescription();
+					exploitationMethodsWhichHaveNeverRun.exportRandomMethodDescription();
 			return new InputRePlan(iteration, methodToKill, candidateMethod);
 		}
 		
@@ -166,7 +168,7 @@ public class PlannerAgentInfo implements IPlanner {
 			MethodStatistic methodStatisticToCreate = explorationMethodsResults.
 					exportMethodAchievedTheBestAverageOfFitness();
 			InputMethodDescription methodToCreate =
-					methodStatisticToCreate.exportInputAgentDescriptionClone();
+					methodStatisticToCreate.exportInputMethodDescriptionClone();
 			
 			// choose method to kill
 			AgentInfosWrapper exploitationMethodDescriptions =
@@ -179,7 +181,7 @@ public class PlannerAgentInfo implements IPlanner {
 			MethodStatistic methodTheLeastQuantityOfType =
 					exploitationMethodStatistics.exportMethodAchievedTheLeastQuantityOfType();
 			MethodDescription methodToKill = 
-					methodTheLeastQuantityOfType.exportAgentDescriptionClone();
+					methodTheLeastQuantityOfType.exportMethodDescriptionClone();
 			
 			return new InputRePlan(iteration, methodToKill, methodToCreate);
 		}

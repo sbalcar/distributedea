@@ -100,7 +100,7 @@ public class PlannerInitialisationOneMethodPerCore implements IPlanner {
 			
 			InputMethodDescription iAgentDescriptionI =
 					jobRun.getMethods().exportInputMethodDescriptions().
-					exportRandomSelectedAgentDescription();
+					exportRandomMethodDescription();
 			
 			inputPlan.add(aidManagerI, iAgentDescriptionI);
 			

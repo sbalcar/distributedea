@@ -69,7 +69,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	private static final long serialVersionUID = 1L;
 
-	private final static boolean DEBUG = true;
+	private final static boolean DEBUG = false;
 	
 	protected CompAgentState state = CompAgentState.INITIALIZATION;
 	
@@ -335,6 +335,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 
+	@SuppressWarnings("unused")
 	protected void processIndividualWrp(ACLMessage request, Action action) {
 		
 		IndividualWrapper individualWrapper = (IndividualWrapper)action.getAction();

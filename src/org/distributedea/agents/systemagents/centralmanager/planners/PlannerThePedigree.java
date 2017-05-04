@@ -28,6 +28,8 @@ import org.distributedea.services.ManagerAgentService;
 
 public class PlannerThePedigree implements IPlanner {
 
+	private int SKIPPED_ITERATIONS_COUNT = 5;
+	
 	private Agent_CentralManager centralManager;
 	private JobRun jobRun;
 	private IslandModelConfiguration configuration;
@@ -79,7 +81,7 @@ public class PlannerThePedigree implements IPlanner {
 		printLog(centralManager, theBestIndiwWrp, logger);
 
 		// skip killing during first iteration
-		if (iteration.getIterationNumber() < 5) {
+		if (iteration.getIterationNumber() < SKIPPED_ITERATIONS_COUNT) {
 			return new InputRePlan(iteration);
 		}
 
@@ -91,14 +93,14 @@ public class PlannerThePedigree implements IPlanner {
 		
 		
 		MethodDescription methodToKill = history
-				.exportRunningMethods().exportRandomAgentDescription();
+				.exportRunningMethods().exportRandomMethodDescription();
 		
 		MethodTypeNumbers typeNumbers = numbers.exportMethodTypeNumbers();
 		MethodTypeNumber methodTypeNumberWithMax =
 				typeNumbers.exportMethodTypeNumberWithMaxNumber();
 		
 		InputMethodDescription methodToCreate = methodTypeNumberWithMax
-				.getMethodType().exportInputAgentDescription();
+				.getMethodType().exportInputMethodDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate).
 				exportOptimalizedInpuRePlan();

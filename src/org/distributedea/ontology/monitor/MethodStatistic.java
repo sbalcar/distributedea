@@ -42,13 +42,14 @@ public class MethodStatistic implements Concept {
 		this.methodStatisticResult = methodStatisticResult;
 	}
 	
-	public MethodDescription getAgentDescription() {
+	public MethodDescription getMethodDescription() {
 		return agentDescription;
 	}
 	@Deprecated
-	public void setAgentDescription(MethodDescription agentDescription) {
-		this.agentDescription = agentDescription;
+	public void setMethodDescription(MethodDescription methodDescription) {
+		this.agentDescription = methodDescription;
 	}
+	
 	public MethodStatisticResult getMethodStatisticResult() {
 		return methodStatisticResult;
 	}
@@ -61,13 +62,13 @@ public class MethodStatistic implements Concept {
 		
 		return methodStatisticResult.getBestIndividual();
 	}
-	public MethodDescription exportAgentDescriptionClone() {
+	public MethodDescription exportMethodDescriptionClone() {
 		
-		return getAgentDescription().deepClone();
+		return getMethodDescription().deepClone();
 	}
-	public InputMethodDescription exportInputAgentDescriptionClone() {
+	public InputMethodDescription exportInputMethodDescriptionClone() {
 		
-		return exportAgentDescriptionClone().exportInputAgentDescription();
+		return exportMethodDescriptionClone().exportInputMethodDescription();
 	}
 	
 	/**

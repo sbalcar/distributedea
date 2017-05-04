@@ -8,7 +8,7 @@ import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 
-public class ToolFitnessBinPacking {
+public class ToolBPNextFitFitness {
 
 	public static double evaluate(IndividualPermutation individual,
 			DatasetBinPacking dataset, IAgentLogger logger) {

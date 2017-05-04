@@ -192,7 +192,7 @@ public class MethodDescription implements Concept {
 	 * Exports {@link InputMethodDescription}
 	 * @return
 	 */
-	public InputMethodDescription exportInputAgentDescription() {
+	public InputMethodDescription exportInputMethodDescription() {
 		if (! valid(new TrashLogger())) {
 			return null;
 		}

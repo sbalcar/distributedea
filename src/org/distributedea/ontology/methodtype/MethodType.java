@@ -151,7 +151,7 @@ public class MethodType implements Concept {
 	 * Exports {@link InputMethodDescription} of this {@link MethodType}
 	 * @return
 	 */
-	public InputMethodDescription exportInputAgentDescription() {
+	public InputMethodDescription exportInputMethodDescription() {
 	
 		InputAgentConfiguration configuration = new InputAgentConfiguration(
 				exportAgentClass().getSimpleName(), exportAgentClass(), getArguments());

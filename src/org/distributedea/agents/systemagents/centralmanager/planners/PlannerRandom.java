@@ -74,7 +74,7 @@ public class PlannerRandom implements IPlanner {
 		
 		//random select agent to create
 		InputMethodDescription methodToCreate =
-				jobRun.getMethods().exportRandomSelectedAgentDescription();
+				jobRun.getMethods().exportRandomMethodDescription();
 		
 		return new InputRePlan(iteration, methodToKill, methodToCreate);
 	}

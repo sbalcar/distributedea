@@ -9,7 +9,7 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.binpacking.ProblemBinPackingTool;
-import org.distributedea.problems.binpacking.permutation.tools.ToolFitnessBinPacking;
+import org.distributedea.problems.binpacking.permutation.tools.ToolBPNextFitFitness;
 import org.distributedea.problems.binpacking.permutation.tools.ToolGenerateFirstIndividualBinPacking;
 import org.distributedea.problems.binpacking.permutation.tools.ToolGenerateIndividualBinPacking;
 import org.distributedea.problems.binpacking.permutation.tools.ToolNextPermutationBinPacking;
@@ -44,7 +44,7 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		DatasetBinPacking problemBinPacking = (DatasetBinPacking) dataset;
 		
-		return ToolFitnessBinPacking.evaluate(individualPerm, problemBinPacking, logger);
+		return ToolBPNextFitFitness.evaluate(individualPerm, problemBinPacking, logger);
 	}
 
 	@Override

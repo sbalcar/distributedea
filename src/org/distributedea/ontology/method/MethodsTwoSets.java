@@ -111,7 +111,7 @@ public class MethodsTwoSets implements IMethods, Concept{
 	}
 
 	@Override
-	public InputMethodDescription exportRandomSelectedAgentDescription() {
+	public InputMethodDescription exportRandomMethodDescription() {
 		
 		InputAgentConfiguration agentConf =
 				getAlgorithms().exportRandomAgentConfiguration();

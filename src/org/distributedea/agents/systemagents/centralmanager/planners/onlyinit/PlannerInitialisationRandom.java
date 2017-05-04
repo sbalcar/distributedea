@@ -50,7 +50,7 @@ public class PlannerInitialisationRandom implements IPlanner {
 		InputPlan inputPlan = new InputPlan(iteration);
 		for (AID aidI : managersAID) {
 			InputMethodDescription agentDescriptionI =
-					agentDescriptions.exportRandomSelectedAgentDescription();
+					agentDescriptions.exportRandomMethodDescription();
 			inputPlan.add(aidI, agentDescriptionI);
 		}
 		
@@ -85,7 +85,7 @@ public class PlannerInitialisationRandom implements IPlanner {
 				inputPlan.add(aidI, methodNeverRunI);
 			} else {
 				InputMethodDescription methodRandomI = agentDescriptions
-						.exportRandomSelectedAgentDescription();
+						.exportRandomMethodDescription();
 				inputPlan.add(aidI, methodRandomI);
 			}
 		}

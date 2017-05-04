@@ -232,7 +232,7 @@ public class History {
 			for (MethodStatistic methodStatI : statistic.getStatistics()) {
 			
 				MethodDescription agentDescriptionI =
-						methodStatI.getAgentDescription();
+						methodStatI.getMethodDescription();
 				
 				boolean wasThisAgentKilledI = currentRePlan
 						.containsAgentToKill(agentDescriptionI);
@@ -262,7 +262,7 @@ public class History {
 		MethodStatisticResult statistic =
 				methodStatistic.getMethodStatisticResult();
 		MethodDescription agentDescription =
-				methodStatistic.getAgentDescription();
+				methodStatistic.getMethodDescription();
 		
 		MethodHistory methodHistory = methods
 				.getMethodHistoryOfRunningMethod(agentDescription);
