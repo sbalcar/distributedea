@@ -128,7 +128,7 @@ public class BatchHomoMethodsTSP1083 implements IInputBatch {
 		
 		String YLABEL1 = "hodnota fitness v kilometrech";
 		PostProcessing psMat1 = new PostProcInvestigationOfMedianJobRun(YLABEL1);
-		
+				
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
 		

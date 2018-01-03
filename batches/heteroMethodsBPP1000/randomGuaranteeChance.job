@@ -116,7 +116,9 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerRandomGuaranteeChance"/>
+  <planner class="plannerRandomGuaranteeChance">
+    <MIN__OF__METHOD__TYPE>3</MIN__OF__METHOD__TYPE>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

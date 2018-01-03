@@ -114,7 +114,10 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.PlannerLazyQuantityOfImprovement"/>
+  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.PlannerLazyQuantityOfImprovement">
+    <DURATION__OF__NEW__METHOD__PROTECTION>3</DURATION__OF__NEW__METHOD__PROTECTION>
+    <DURATION__OF__PATIENCE>3</DURATION__OF__PATIENCE>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

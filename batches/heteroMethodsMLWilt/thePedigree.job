@@ -157,7 +157,9 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerThePedigree"/>
+  <planner class="plannerThePedigree">
+    <SKIPPED__ITERATIONS__COUNT>5</SKIPPED__ITERATIONS__COUNT>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

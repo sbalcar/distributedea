@@ -157,7 +157,9 @@
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
-  <planner class="plannerTheGreatestQuantityOfImprovement"/>
+  <planner class="plannerTheGreatestQuantityOfImprovement">
+    <DURATION__OF__NEW__METHOD__PROTECTION>3</DURATION__OF__NEW__METHOD__PROTECTION>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

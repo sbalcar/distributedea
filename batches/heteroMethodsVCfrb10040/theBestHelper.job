@@ -115,6 +115,7 @@
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
   <planner class="plannerTheBestHelper">
+    <SKIPPED__ITERATIONS__COUNT>5</SKIPPED__ITERATIONS__COUNT>
     <NEW__STATISTICS__FOR__EACH__QUERY>true</NEW__STATISTICS__FOR__EACH__QUERY>
   </planner>
   <plannerEndCondition class="plannerTimeRestriction">

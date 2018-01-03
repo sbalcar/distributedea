@@ -22,6 +22,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputContOpt;
 import org.distributedea.input.postprocessing.PostProcessing;
+import org.distributedea.input.postprocessing.latex.PostProcTableSuccessOfPlanners;
 import org.distributedea.input.postprocessing.latex.PostProcTableOfJobRunResults;
 import org.distributedea.input.postprocessing.latex.PostProcTableOfJob;
 import org.distributedea.input.postprocessing.matlab.PostProcCountsOfAllottedTimeOfMethodTypes;
@@ -157,11 +158,14 @@ public class BatchHeteroMethodsCOf08 implements IInputBatch {
 		
 		PostProcessing psMat4 = new PostProcInvestigationOfInstCountOfMethodTypes(false, false);
 		
+		PostProcessing psMat5 = new PostProcTableSuccessOfPlanners();
+		
 		batch.addPostProcessings(psMat0);
 		batch.addPostProcessings(psMat1);
 		batch.addPostProcessings(psMat2);
 		batch.addPostProcessings(psMat3);
 		batch.addPostProcessings(psMat4);
+		batch.addPostProcessings(psMat5);
 		
 		return batch;
 	}
