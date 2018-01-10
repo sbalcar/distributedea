@@ -107,7 +107,7 @@ public class PostProcTableSuccessOfPlanners extends PostProcessing {
 			
 			Integer numberOfOccursI = mapJobIDAndOccurs.get(jobIDI.getJobID());
 			
-			Integer newNumberOfOccursI = 0;
+			Integer newNumberOfOccursI = 1;
 			if (numberOfOccursI != null) {
 				newNumberOfOccursI = new Integer(numberOfOccursI +1);
 			}
@@ -142,7 +142,7 @@ public class PostProcTableSuccessOfPlanners extends PostProcessing {
 			return new ArrayList<>();
 		}
 		
-		
+		//Collections.sort(values);
 		Collections.sort(values, new FitnessComparator(problem));
 		
 		int quartil3Index = values.size() / 4;
@@ -181,18 +181,23 @@ class FitnessComparator implements Comparator<Double> {
     @Override
     public int compare(Double fitness1, Double fitness2) {
     	
-    	if (fitness1 == fitness2) {
-    		return 0;
-    	}
-    	
     	boolean isFistBetter = FitnessTool.isFistFitnessBetterThanSecond(
     			fitness1, fitness2, problem);
     	
     	if (isFistBetter) {
     		return -1;
-    	} else {
+    	}
+ 
+    	
+    	boolean isFistWorst = FitnessTool.isFistFitnessWorseThanSecond(
+    			fitness1, fitness2, problem);
+ 
+    	if (isFistWorst) {
     		return 1;
     	}
+
+    	
+   		return 0;
     }
 }
 
