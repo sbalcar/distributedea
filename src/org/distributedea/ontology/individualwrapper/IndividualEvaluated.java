@@ -57,7 +57,8 @@ public class IndividualEvaluated implements Concept {
 	 */
 	public IndividualEvaluated(IndividualEvaluated individualEval) {
 		if (individualEval == null || ! individualEval.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					IndividualEvaluated.class.getSimpleName() + " is not valid");
 		}
 		this.individual = individualEval.getIndividual().deepClone();
 		this.fitness = individualEval.getFitness();

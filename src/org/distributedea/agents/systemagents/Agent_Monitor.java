@@ -11,6 +11,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -134,6 +135,38 @@ public class Agent_Monitor extends Agent_DistributedEA {
 
 			@Override
 			protected ACLMessage handleRequest(ACLMessage msgInform) {
+
+				try {
+					Serializable content =  msgInform.getContentObject();
+					
+					if (content instanceof IndividualWrapper) {
+						
+						IndividualWrapper individualWrapper =
+								(IndividualWrapper) content;
+						processIndividualWrapper(msgInform, individualWrapper);
+					}
+					
+				} catch (Exception e) {
+					getLogger().logThrowable("Problem extracting content", e);
+				}
+
+				return null;
+			}
+			
+			@Override
+			protected ACLMessage prepareResultNotification(ACLMessage request,
+					ACLMessage response) throws FailureException {
+				return null;
+			}
+
+		});
+/*		
+		addBehaviour(new AchieveREResponder(this, mesTemplateResultInform) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected ACLMessage handleRequest(ACLMessage msgInform) {
 				
 				try {
 					Action action = (Action)
@@ -166,7 +199,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 			}
 
 		});
-		
+*/		
 	}
 
 	/**

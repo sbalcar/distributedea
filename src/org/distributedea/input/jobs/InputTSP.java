@@ -32,7 +32,9 @@ import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 import org.distributedea.problems.tsp.point.permutation.ProblemToolPoint2opt;
 
 /**
- * Defines a set of TSP inputs
+ * Defines a set of TSP {@link Job}
+ * @author stepan
+ *
  */
 public class InputTSP {
 	

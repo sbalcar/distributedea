@@ -60,4 +60,5 @@ public class ProblemToolBinPackingDisplacementOfPart extends AProblemToolBinPack
 		return OperatorDifferential.create(individualPerm1, individualPerm2, individualPerm3);
 	}
 
+
 }

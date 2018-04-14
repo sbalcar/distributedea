@@ -135,7 +135,7 @@ public class InputConfiguration {
 	public static void main(String [] args) throws Exception {
 		
 		InputConfiguration input = new InputConfiguration();
-		input.exportXML(new File("configuration/"));
+		input.exportXML(new File("configuration" + File.separator));
 		
 		//InputConfiguration conf = InputConfiguration.importXML(
 		//		new File("configuration/inputConfiguration.xml"));

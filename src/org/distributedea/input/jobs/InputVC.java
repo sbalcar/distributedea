@@ -27,7 +27,9 @@ import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.problems.vertexcover.ProblemToolVC;
 
 /**
- * Defines a set of vertex cover inputs
+ * Defines a set of Vertex Cover {@link Job}
+ * @author stepan
+ *
  */
 public class InputVC {
 

@@ -1,6 +1,5 @@
 package org.distributedea.input.jobs;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,7 +29,9 @@ import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
 
 /**
- * Defines a set of Continuous Optimization
+ * Defines a set of Continuous Optimization {@link Job}
+ * @author stepan
+ *
  */
 public class InputContOpt {
 

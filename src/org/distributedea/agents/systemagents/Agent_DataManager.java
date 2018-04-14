@@ -26,7 +26,7 @@ import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.individuals.SaveTheBestIndividual;
+import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;

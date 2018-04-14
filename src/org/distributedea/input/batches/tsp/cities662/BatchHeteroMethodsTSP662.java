@@ -41,7 +41,7 @@ import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
 
-public class BatchHeteroMethodsTSP662  implements IInputBatch {
+public class BatchHeteroMethodsTSP662 implements IInputBatch {
 
 	@Override
 	public Batch batch() throws IOException {

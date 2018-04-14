@@ -94,8 +94,8 @@ public interface IProblemTool {
 			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
 	public IndividualEvaluated generateNextIndividualEval(IProblem problem,
-			Dataset dataset, IndividualEvaluated individual, PedigreeParameters pedigreeParams,
-			IAgentLogger logger);
+			Dataset dataset, IndividualEvaluated individual, long neighborIndex,
+			PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
 	
 	/**

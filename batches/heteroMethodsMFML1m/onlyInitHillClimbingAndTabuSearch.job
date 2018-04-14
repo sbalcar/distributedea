@@ -1,0 +1,406 @@
+<job>
+  <jobID>onlyInitHillClimbingAndTabuSearch</jobID>
+  <numberOfRuns>9</numberOfRuns>
+  <description>Only initialization 15x Hillclimbing and 1x Tabu search</description>
+  <problem class="org.distributedea.ontology.problem.ProblemMatrixFactorization">
+    <latFactXDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
+    <latFactYDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
+    <latentFactorWidth>10</latentFactorWidth>
+  </problem>
+  <datasetFileName>inputs/ml-1m/ratings.dat</datasetFileName>
+  <methods class="org.distributedea.ontology.method.MethodsTwoSets">
+    <algorithms>
+      <agentConfigurations>
+        <inputAgentConfiguration>
+          <agentName>Agent_HillClimbing</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+          <arguments>
+            <arguments>
+              <argument>
+                <name>numberOfNeighbors</name>
+                <value>10</value>
+              </argument>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_RandomSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_Evolution</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+          <arguments>
+            <arguments>
+              <argument>
+                <name>popSize</name>
+                <value>10</value>
+              </argument>
+              <argument>
+                <name>mutationRate</name>
+                <value>0.9</value>
+              </argument>
+              <argument>
+                <name>crossRate</name>
+                <value>0.1</value>
+              </argument>
+              <argument>
+                <name>selector</name>
+                <value>org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector</value>
+              </argument>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_BruteForce</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_TabuSearch</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+          <arguments>
+            <arguments>
+              <argument>
+                <name>tabuModelSize</name>
+                <value>50</value>
+              </argument>
+              <argument>
+                <name>numberOfNeighbors</name>
+                <value>10</value>
+              </argument>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_SimulatedAnnealing</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
+          <arguments>
+            <arguments>
+              <argument>
+                <name>temperature</name>
+                <value>10000</value>
+              </argument>
+              <argument>
+                <name>coolingRate</name>
+                <value>0.002</value>
+              </argument>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <inputAgentConfiguration>
+          <agentName>Agent_DifferentialEvolution</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
+          <arguments>
+            <arguments>
+              <argument>
+                <name>popSize</name>
+                <value>50</value>
+              </argument>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+      </agentConfigurations>
+    </algorithms>
+    <problemTools>
+      <problemTools>
+        <java-class>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</java-class>
+      </problemTools>
+    </problemTools>
+  </methods>
+  <islandModelConfiguration>
+    <individualDistribution>true</individualDistribution>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationConcretePlan">
+    <methods>
+      <inputMethodDescriptions>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_TabuSearch</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>tabuModelSize</name>
+                    <value>50</value>
+                  </argument>
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        </inputMethodDescription>
+      </inputMethodDescriptions>
+    </methods>
+  </planner>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

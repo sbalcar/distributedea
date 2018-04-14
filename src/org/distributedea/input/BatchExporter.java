@@ -38,6 +38,15 @@ import org.distributedea.input.batches.machinelearning.wilt.BatchSingleMethodsML
 import org.distributedea.input.batches.machinelearning.zoo.BatchHeteroMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchHomoMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchSingleMethodsMLZoo;
+import org.distributedea.input.batches.matrixfactorization.ml100k.BatchHeteroMethodsMFML100k;
+import org.distributedea.input.batches.matrixfactorization.ml100k.BatchHomoMethodsMFML100k;
+import org.distributedea.input.batches.matrixfactorization.ml100k.BatchSingleMethodsMFML100k;
+import org.distributedea.input.batches.matrixfactorization.ml10m100k.BatchHeteroMethodsMFML10M100K;
+import org.distributedea.input.batches.matrixfactorization.ml10m100k.BatchHomoMethodsMFML10M100K;
+import org.distributedea.input.batches.matrixfactorization.ml10m100k.BatchSingleMethodsMFML10M100K;
+import org.distributedea.input.batches.matrixfactorization.ml1m.BatchHeteroMethodsMFML1m;
+import org.distributedea.input.batches.matrixfactorization.ml1m.BatchHomoMethodsMFML1m;
+import org.distributedea.input.batches.matrixfactorization.ml1m.BatchSingleMethodsMFML1m;
 import org.distributedea.input.batches.tsp.cities1083.BatchHeteroMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
@@ -218,6 +227,40 @@ public class BatchExporter {
 		IInputBatch inputBatchHeteroMethodsVCfrb59265 = new BatchHeteroMethodsVCfrb59265();
 		Batch batchHeteroMethodsVCfrb59265 = inputBatchHeteroMethodsVCfrb59265.batch();
 		
+		
+		
+		
+		
+		IInputBatch inputBatchSingleMethodsMFML100k = new BatchSingleMethodsMFML100k();
+		Batch batchSingleMethodsMFML100k = inputBatchSingleMethodsMFML100k.batch();
+		
+		IInputBatch inputBatchHomoMethodsMFML100k = new BatchHomoMethodsMFML100k();
+		Batch batchHomoMethodsMFML100k = inputBatchHomoMethodsMFML100k.batch();
+		
+		IInputBatch inputBatchHeteroMethodsMFML100k = new BatchHeteroMethodsMFML100k();
+		Batch batchHeteroMethodsMFML100k = inputBatchHeteroMethodsMFML100k.batch();
+		
+		
+		IInputBatch inputBatchSingleMethodsMFML1m = new BatchSingleMethodsMFML1m();
+		Batch batchSingleMethodsMFML1m = inputBatchSingleMethodsMFML1m.batch();
+		
+		IInputBatch inputBatchHomoMethodsMFML1m = new BatchHomoMethodsMFML1m();
+		Batch batchHomoMethodsMFML1m = inputBatchHomoMethodsMFML1m.batch();
+		
+		IInputBatch inputBatchHeteroMethodsMFML1m = new BatchHeteroMethodsMFML1m();
+		Batch batchHeteroMethodsMFML1m = inputBatchHeteroMethodsMFML1m.batch();
+		
+
+		IInputBatch inputBatchSingleMethodsMFML10M100K = new BatchSingleMethodsMFML10M100K();
+		Batch batchSingleMethodsMFML10M100K = inputBatchSingleMethodsMFML10M100K.batch();
+		
+		IInputBatch inputBatchHomoMethodsMFML10M100K = new BatchHomoMethodsMFML10M100K();
+		Batch batchHomoMethodsMFML10M100K = inputBatchHomoMethodsMFML10M100K.batch();
+		
+		IInputBatch inputBatchHeteroMethodsMFML10M100K = new BatchHeteroMethodsMFML10M100K();
+		Batch batchHeteroMethodsMFML10M100K = inputBatchHeteroMethodsMFML10M100K.batch();
+		
+		
 		List<Batch> batchesList = new ArrayList<>();
 		
 		// TSP
@@ -287,6 +330,21 @@ public class BatchExporter {
 		batchesList.add(batchSingleMethodsVCfrb59265);
 		batchesList.add(batchHomoMethodsVCfrb59265);
 		batchesList.add(batchHeteroMethodsVCfrb59265);
+		
+		
+		// FM
+		batchesList.add(batchSingleMethodsMFML100k);
+		batchesList.add(batchHomoMethodsMFML100k);
+		batchesList.add(batchHeteroMethodsMFML100k);
+		
+		batchesList.add(batchSingleMethodsMFML1m);
+		batchesList.add(batchHomoMethodsMFML1m);
+		batchesList.add(batchHeteroMethodsMFML1m);
+		
+		batchesList.add(batchSingleMethodsMFML10M100K);
+		batchesList.add(batchHomoMethodsMFML10M100K);
+		batchesList.add(batchHeteroMethodsMFML10M100K);
+		
 		
 		// creates directory if doesn't exist
 		File batchesDir = new File(FileNames.getDirectoryOfBatches());

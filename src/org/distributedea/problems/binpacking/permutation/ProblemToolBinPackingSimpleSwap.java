@@ -58,4 +58,5 @@ public class ProblemToolBinPackingSimpleSwap extends AProblemToolBinPackingPermu
 
 		return OperatorDifferential.create(individualPerm1, individualPerm2, individualPerm3);
 	}
+
 }

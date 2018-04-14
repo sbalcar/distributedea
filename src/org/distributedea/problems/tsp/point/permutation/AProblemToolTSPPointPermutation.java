@@ -64,7 +64,8 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	
 	@Override
 	public Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, long neighborIndex,
+			IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		List<Integer> perm = individualPerm.getPermutation();

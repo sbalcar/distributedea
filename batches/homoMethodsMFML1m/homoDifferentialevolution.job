@@ -1,0 +1,41 @@
+<job>
+  <jobID>homoDifferentialevolution</jobID>
+  <numberOfRuns>9</numberOfRuns>
+  <description>Homo-DifferentialEvolution</description>
+  <problem class="org.distributedea.ontology.problem.ProblemMatrixFactorization">
+    <latFactXDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
+    <latFactYDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
+    <latentFactorWidth>10</latentFactorWidth>
+  </problem>
+  <datasetFileName>inputs/ml-1m/ratings.dat</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_DifferentialEvolution</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>popSize</name>
+                  <value>50</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <islandModelConfiguration>
+    <individualDistribution>true</individualDistribution>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

@@ -37,7 +37,8 @@ public class IndividualPermutation extends Individual {
 	public IndividualPermutation(IndividualPermutation individual) {
 		if (individual == null || ! individual.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					List.class.getSimpleName() + " is not valid");
+					IndividualPermutation.class.getSimpleName() +
+					" is not valid");
 		}
 		List<Integer> permutationNew = new ArrayList<>();
 		for (Integer valueI : individual.getPermutation()) {

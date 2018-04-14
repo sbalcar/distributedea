@@ -90,7 +90,8 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 			generationNumberI++;
 			
 			individualEvalI = problemTool.generateNextIndividualEval(problem,
-					dataset, individualEvalI, pedigreeParams, getLogger());
+					dataset, individualEvalI, generationNumberI,
+					pedigreeParams, getLogger());
 			
 			// save, log and distribute new computed Individual
 			processComputedIndividual(individualEvalI,

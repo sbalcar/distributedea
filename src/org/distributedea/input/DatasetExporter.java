@@ -14,7 +14,7 @@ public class DatasetExporter {
 		DomainDefinition domain = new AllDimensionsRestriction(
 				new Interval(-5, 5));
 		
-		File file = new File("inputs/weka.co");
+		File file = new File("inputs" + File.separator + "weka.co");
 		
 		DatasetContinuousOpt datasetCOWeka = new DatasetContinuousOpt(domain, file);
 		datasetCOWeka.getDomain().exportXML(file);

@@ -26,6 +26,11 @@ import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
 
+/**
+ * Defines a set of Bin Packing {@link Job}
+ * @author stepan
+ *
+ */
 public class InputBinPacking {
 
 	public static Job test01() throws IOException {

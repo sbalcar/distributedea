@@ -1,4 +1,4 @@
-package org.distributedea.ontology.individuals;
+package org.distributedea.ontology.data;
 
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;

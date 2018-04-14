@@ -65,7 +65,8 @@ public class ProblemToolGPSEuc2DSimpleSwap extends AProblemToolTSPGPSEuc2DPermut
 
 	@Override
 	public Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, long neighborIndex,
+			IAgentLogger logger) {
 		
 		IndividualPermutation individualPermutation = (IndividualPermutation) individual;
 		

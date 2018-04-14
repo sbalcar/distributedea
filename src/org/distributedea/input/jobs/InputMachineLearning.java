@@ -32,6 +32,11 @@ import org.distributedea.problems.machinelearning.ProblemToolMLRandomMove;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 
+/**
+ * Defines a set of Machine Learning {@link Job}
+ * @author stepan
+ *
+ */
 public class InputMachineLearning {
 
 	public static Job test01() throws IOException {

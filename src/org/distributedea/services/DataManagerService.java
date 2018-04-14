@@ -5,7 +5,7 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_DataManager;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.individuals.SaveTheBestIndividual;
+import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.saveresult.ResultOfIteration;

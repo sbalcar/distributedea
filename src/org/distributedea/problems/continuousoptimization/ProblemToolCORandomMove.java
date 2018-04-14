@@ -29,7 +29,8 @@ public class ProblemToolCORandomMove extends AProblemToolCO {
 
 	@Override
 	public Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, long neighborIndex,
+			IAgentLogger logger) {
 
 		ProblemContinuousOpt problemCO = (ProblemContinuousOpt)problem;
 		DatasetContinuousOpt datasetCO = (DatasetContinuousOpt) dataset;

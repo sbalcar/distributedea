@@ -1,5 +1,6 @@
 package org.distributedea.ontology.individualwrapper;
 
+import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
@@ -8,6 +9,8 @@ import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
+
+import com.thoughtworks.xstream.XStream;
 
 import jade.content.Concept;
 
@@ -123,6 +126,30 @@ public class IndividualWrapper implements Concept {
 			return false;
 		}
 		return true;
+	}
+	
+	
+	
+	/**
+	 * Exports to the XML String
+	 */
+	public String exportXML() {
+
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.NO_REFERENCES);
+
+		return xstream.toXML(this);
+	}
+
+	/**
+	 * Import the {@link JobID} from the String
+	 */
+	public static IndividualWrapper importXML(String xml) {
+
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.NO_REFERENCES);
+
+		return (IndividualWrapper) xstream.fromXML(xml);
 	}
 	
 	/**

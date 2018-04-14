@@ -1,0 +1,41 @@
+<job>
+  <jobID>homoHillclimbing</jobID>
+  <numberOfRuns>9</numberOfRuns>
+  <description>Homo-HillClimbing</description>
+  <problem class="org.distributedea.ontology.problem.ProblemMatrixFactorization">
+    <latFactXDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
+    <latFactYDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
+    <latentFactorWidth>10</latentFactorWidth>
+  </problem>
+  <datasetFileName>inputs/ml-100k/u.data</datasetFileName>
+  <methods class="methods">
+    <inputMethodDescriptions>
+      <inputMethodDescription>
+        <inputAgentConfiguration>
+          <agentName>Agent_HillClimbing</agentName>
+          <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+          <arguments>
+            <arguments class="java.util.Arrays$ArrayList">
+              <a class="argument-array">
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
+              </a>
+            </arguments>
+          </arguments>
+        </inputAgentConfiguration>
+        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
+  </methods>
+  <islandModelConfiguration>
+    <individualDistribution>true</individualDistribution>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+</job>

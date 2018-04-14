@@ -15,6 +15,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.IndividualArguments;
+import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individuals.IndividualSet;
@@ -27,6 +28,7 @@ import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
+import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.ProblemVertexCover;
@@ -78,16 +80,21 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		} else if (problem instanceof ProblemContinuousOpt) {
 			if (representation == IndividualPoint.class) {
 				isAble = true;
-			}			
+			}
 		} else if (problem instanceof ProblemMachineLearning) {
 			if (representation == IndividualArguments.class) {
 				isAble = true;
-			}			
+			}
 		} else if (problem instanceof ProblemVertexCover) {
 			if (representation == IndividualSet.class) {
 				isAble = true;
+			}
+		} else if (problem instanceof ProblemMatrixFactorization) {
+			if (representation == IndividualLatentFactors.class) {
+				isAble = true;
 			}			
 		}
+
 		
 		return isAble;
 	}

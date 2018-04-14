@@ -142,6 +142,10 @@ public abstract class AProblemToolCO extends ProblemTool {
 		return ToolReadSolutionCO.readSolution(fileOfSolution, logger);
 	}
 
+	/**
+	 * Returns clone
+	 * @return
+	 */
 	public AProblemToolCO deepClone() {
 		return this;
 	}

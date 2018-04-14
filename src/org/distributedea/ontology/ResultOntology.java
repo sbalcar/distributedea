@@ -7,7 +7,8 @@ import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individuals.SaveTheBestIndividual;
+import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
+import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
@@ -22,6 +23,7 @@ import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.matrixfactorization.ILatFactDefinition;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
@@ -56,6 +58,8 @@ public class ResultOntology extends BeanOntology {
             add(IndividualWrapper.class);
             add(Individual.class.getPackage().getName());
             
+            add(LatentFactor.class.getPackage().getName());
+            
             add(Pedigree.class.getPackage().getName());
             add(PedVertexFull.class.getPackage().getName());
             add(PedVertex.class.getPackage().getName());
@@ -68,6 +72,7 @@ public class ResultOntology extends BeanOntology {
             
             add(MethodDescription.class.getPackage().getName());
             add(IProblem.class.getPackage().getName());
+            add(ILatFactDefinition.class.getPackage().getName());
             
             add(Argument.class.getPackage().getName());
             add(ArgumentDef.class.getPackage().getName());

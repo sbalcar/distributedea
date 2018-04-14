@@ -23,7 +23,8 @@ public abstract class ProblemTool implements IProblemTool {
 			Dataset dataset, IAgentLogger logger);
 	
 	protected abstract Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger);
+			Dataset dataset, Individual individual, long neighborIndex,
+			IAgentLogger logger);
 	
 	protected abstract Individual improveIndividual(Individual individual,
 			IProblem problem, Dataset dataset, IAgentLogger logger) throws Exception;
@@ -70,14 +71,14 @@ public abstract class ProblemTool implements IProblemTool {
 	
 	public final IndividualEvaluated generateNextIndividualEval(
 			IProblem problem, Dataset dataset,
-			IndividualEvaluated individualEval, PedigreeParameters pedigreeParams,
-			IAgentLogger logger) {
+			IndividualEvaluated individualEval, long neighborIndex,
+			PedigreeParameters pedigreeParams, IAgentLogger logger) {
 		
 		Individual individual = individualEval.getIndividual();
 		Pedigree pedigree = individualEval.getPedigree();
 		
 		Individual individualNew = generateNextIndividual(problem, dataset,
-				individual, logger);
+				individual, neighborIndex, logger);
 		double fitness = fitness(individualNew, problem, dataset, logger);
 		
 		Pedigree pedigreeNew = Pedigree.update(pedigree, pedigreeParams);

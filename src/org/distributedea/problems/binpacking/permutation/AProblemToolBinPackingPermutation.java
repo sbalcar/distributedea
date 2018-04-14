@@ -67,7 +67,7 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 
 	@Override
 	protected Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, long neighborIndex, IAgentLogger logger) {
 
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		

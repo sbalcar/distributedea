@@ -25,7 +25,8 @@ public class ProblemToolGPSEuc2D2opt extends AProblemToolTSPGPSEuc2DPermutation 
 
 	@Override
 	protected Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, long neighborIndex,
+			IAgentLogger logger) {
 		
 		IndividualPermutation individualPerm = (IndividualPermutation) individual;
 		

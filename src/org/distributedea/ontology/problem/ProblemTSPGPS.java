@@ -10,8 +10,8 @@ import org.distributedea.ontology.dataset.DatasetTSPGPS;
  */
 public class ProblemTSPGPS extends AProblem {
 
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 1L;	
+	
 	@Override
 	public boolean exportIsMaximizationProblem() {
 		

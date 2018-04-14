@@ -28,7 +28,8 @@ public class ProblemToolMLRandomMove extends AProblemToolML {
 
 	@Override
 	protected Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, long neighborIndex,
+			IAgentLogger logger) {
 		
 		IndividualArguments individualArgs = (IndividualArguments) individual;
 		ProblemMachineLearning problemML = (ProblemMachineLearning) problem;

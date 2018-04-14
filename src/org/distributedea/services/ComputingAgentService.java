@@ -1,5 +1,6 @@
 package org.distributedea.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -604,6 +605,7 @@ public class ComputingAgentService {
 		return helpmateList;
 	}
 	
+	
 	/**
 	 * Sends Computed Solution to neighbors (all another {@link Agent_ComputingAgent})
 	 * @param agent
@@ -611,6 +613,62 @@ public class ComputingAgentService {
 	 * @param logger
 	 */
 	public static void sendIndividualToNeighboursAndToMonitor(Agent_DistributedEA agent,
+			IndividualWrapper individual, IAgentLogger logger) {
+		
+		if (agent == null) {
+			throw new IllegalArgumentException("Argument " +
+					Agent_CentralManager.class.getSimpleName() + " can't be null");
+		}
+		if (individual == null || ! individual.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					IndividualWrapper.class.getSimpleName() + " is not valid");
+		}
+		if (logger == null) {
+			throw new IllegalArgumentException("Argument " +
+					IAgentLogger.class.getSimpleName() + " can't be null");
+		}
+		
+		
+		AID [] aidOfComputingAgents = agent.searchDF(
+				Agent_ComputingAgent.class.getName());
+		if (aidOfComputingAgents == null) {
+			logger.log(Level.INFO, "Computing agent can't find any neighbour " + agent.getAID().getLocalName());
+			return;
+		}
+		List<AID> aidOfComputingAgentsWithoutSender =
+				new ArrayList<AID>(Arrays.asList(aidOfComputingAgents));
+		aidOfComputingAgentsWithoutSender.remove(agent.getAID());
+		
+		AID monitorAID = new AID(AgentNames.MONITOR.getName(), false);
+		aidOfComputingAgentsWithoutSender.add(monitorAID);
+		
+		Ontology ontology = ResultOntology.getInstance();
+
+		ACLMessage msgIndividual = new ACLMessage(ACLMessage.INFORM);
+		for (AID computingAgentI : aidOfComputingAgentsWithoutSender) {
+			msgIndividual.addReceiver(computingAgentI);	
+		}
+		msgIndividual.setSender(agent.getAID());
+		msgIndividual.setLanguage(agent.getCodec().getName());
+		msgIndividual.setOntology(ontology.getName());
+
+		try {
+			msgIndividual.setContentObject(individual);
+		} catch (Exception e) {
+			logger.logThrowable("IOException by sending " +
+					IndividualWrapper.class.getSimpleName(), e);
+		}
+		
+		agent.send(msgIndividual);
+	}
+	
+	/**
+	 * Sends Computed Solution to neighbors (all another {@link Agent_ComputingAgent})
+	 * @param agent
+	 * @param individual
+	 * @param logger
+	 */
+	public static void sendIndividualToNeighboursAndToMonitor_(Agent_DistributedEA agent,
 			IndividualWrapper individual, IAgentLogger logger) {
 		
 		if (agent == null) {
@@ -658,10 +716,10 @@ public class ComputingAgentService {
 			
 		} catch (Codec.CodecException e) {
 			logger.logThrowable("CodecException by sending " +
-					Individual.class.getSimpleName(), e);
+					IndividualWrapper.class.getSimpleName(), e);
 		} catch (OntologyException e) {
 			logger.logThrowable("OntologyException by sending " +
-					Individual.class.getSimpleName(), e);
+					IndividualWrapper.class.getSimpleName(), e);
 		}
 		
 		agent.send(msgIndividual);
@@ -699,6 +757,48 @@ public class ComputingAgentService {
 		msgIndividual.setLanguage(agent.getCodec().getName());
 		msgIndividual.setOntology(ontology.getName());
 
+		try {
+			msgIndividual.setContentObject(individual);
+		} catch (IOException e) {
+			logger.logThrowable("Exception by sending " +
+					IndividualWrapper.class.getSimpleName(), e);
+		}
+		
+		agent.send(msgIndividual);
+	}
+	
+	/**
+	 * Sends {@link IndividualWrapper} as the solution to {@link Agent_Monitor}
+	 * @param agent
+	 * @param individual
+	 * @param logger
+	 */
+	public static void sendIndividualToMonitor_(Agent_DistributedEA agent,
+			IndividualWrapper individual, IAgentLogger logger) {
+		
+		if (agent == null) {
+			throw new IllegalArgumentException("Argument " +
+					Agent_CentralManager.class.getSimpleName() + " can't be null");
+		}
+		if (individual == null || ! individual.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					IndividualWrapper.class.getSimpleName() + " is not valid");
+		}
+		if (logger == null) {
+			throw new IllegalArgumentException("Argument " +
+					IAgentLogger.class.getSimpleName() + " can't be null");
+		}
+		
+				
+		AID monitorAID = new AID(AgentNames.MONITOR.getName(), false);
+		Ontology ontology = ResultOntology.getInstance();
+
+		ACLMessage msgIndividual = new ACLMessage(ACLMessage.INFORM);
+		msgIndividual.addReceiver(monitorAID);	
+		msgIndividual.setSender(agent.getAID());
+		msgIndividual.setLanguage(agent.getCodec().getName());
+		msgIndividual.setOntology(ontology.getName());
+
 		
 		Action action = new Action(agent.getAID(), individual);
 		
@@ -707,10 +807,10 @@ public class ComputingAgentService {
 			
 		} catch (Codec.CodecException e) {
 			logger.logThrowable("CodecException by sending " +
-					Individual.class.getSimpleName(), e);
+					IndividualWrapper.class.getSimpleName(), e);
 		} catch (OntologyException e) {
 			logger.logThrowable("OntologyException by sending " +
-					Individual.class.getSimpleName(), e);
+					IndividualWrapper.class.getSimpleName(), e);
 		}
 		
 		agent.send(msgIndividual);

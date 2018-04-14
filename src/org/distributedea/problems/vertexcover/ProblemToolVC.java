@@ -29,7 +29,8 @@ public class ProblemToolVC extends AProblemToolVC {
 
 	@Override
 	protected Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, IAgentLogger logger) {
+			Dataset dataset, Individual individual, long neighborIndex,
+			IAgentLogger logger) {
 
 		IndividualSet individualSet = (IndividualSet) individual;
 
