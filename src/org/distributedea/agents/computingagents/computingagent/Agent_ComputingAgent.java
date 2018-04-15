@@ -572,7 +572,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	private void startComputation(final ProblemWrapper problemWrapper,
-			final IslandModelConfiguration configuration) throws Exception {
+			final IslandModelConfiguration islandModel) throws Exception {
 		
 		if (this.state != CompAgentState.INITIALIZED) {
 			throw new Exception("Agent is not initialized");
@@ -582,7 +582,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		final IProblem problem = problemStruct.getProblem();
 		
 		// adding cyclic behavior for sending Individual to distribution
-		this.addBehaviour(new TickerBehaviour(this, configuration.getIndividualBroadcastPeriodMS()) {
+		this.addBehaviour(new TickerBehaviour(this, islandModel.getIndividualBroadcastPeriodMS()) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -599,8 +599,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 				 IndividualWrapper individualWrapper = new IndividualWrapper(
 						 problemWrapper.getJobID(), description, individualEval);
 				
-				 if (configuration.isIndividualDistribution()) {
-					 ComputingAgentService.sendIndividualToNeighboursAndToMonitor(
+				 if (islandModel.isIndividualDistribution()) {
+					 ComputingAgentService.sendIndividualToNeighbours(
+							 Agent_ComputingAgent.this, individualWrapper,
+							 islandModel, getLogger());
+					 ComputingAgentService.sendIndividualToMonitor(
 							 Agent_ComputingAgent.this, individualWrapper, getLogger());
 				 } else {
 					 ComputingAgentService.sendIndividualToMonitor(
@@ -610,7 +613,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		} );
 
 		// starts thread where is running computation
-		this.computingThread = new ComputingThread(this, problemStruct, configuration, agentConf);	
+		this.computingThread = new ComputingThread(this, problemStruct, islandModel, agentConf);	
 		this.computingThread.start();
 
 	}

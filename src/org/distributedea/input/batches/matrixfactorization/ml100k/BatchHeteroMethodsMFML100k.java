@@ -36,6 +36,7 @@ import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMeri
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
@@ -51,7 +52,8 @@ public class BatchHeteroMethodsMFML100k implements IInputBatch {
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : MFML100k");
 		
 		Job jobI = InputMatrixFactorization.test01();
-		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
+		jobI.setIslandModelConfiguration(
+				new IslandModelConfiguration(true, 3, 60000, 30000));
 		
 		Job job0 = jobI.deepClone();
 		job0.setJobID("withoutReplanning1xAll");

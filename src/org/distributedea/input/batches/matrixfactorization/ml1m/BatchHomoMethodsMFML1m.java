@@ -24,6 +24,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization;
 
@@ -36,7 +37,8 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		batch.setDescription("Porovnání homogenních modelů : MFML1m");
 		
 		Job jobI = InputMatrixFactorization.test02();
-		jobI.getIslandModelConfiguration().setIndividualDistribution(true);
+		jobI.setIslandModelConfiguration(
+				new IslandModelConfiguration(true, 3, 60000, 30000));
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),

@@ -21,6 +21,11 @@ public class IslandModelConfiguration implements Concept {
 	private boolean individualDistribution;
 
 	/**
+	 * Turns number of neighbours to {@link Individual} distribution
+	 */
+	private int neighbourCount;
+	
+	/**
 	 * Period of Planner re-planning
 	 */
 	public long replanPeriodMS;
@@ -33,6 +38,7 @@ public class IslandModelConfiguration implements Concept {
 	
 	@Deprecated
 	public IslandModelConfiguration() { // only for Jade
+		setNeighbourCount(Integer.MAX_VALUE);
 	}
 	
 	/**
@@ -45,9 +51,28 @@ public class IslandModelConfiguration implements Concept {
 			long replanPeriodMS, long individualBroadcastPeriodMS) {
 		
 		setIndividualDistribution(individualDistribution);
+		setNeighbourCount(Integer.MAX_VALUE);
 		setReplanPeriodMS(replanPeriodMS);
 		setIndividualBroadcastPeriodMS(individualBroadcastPeriodMS);
 	}
+	
+	/**
+	 * Constructor
+	 * @param individualDistribution
+	 * @param neighbourCount
+	 * @param replanPeriodMS
+	 * @param individualBroadcastPeriodMS
+	 */
+	public IslandModelConfiguration(boolean individualDistribution,
+			int neighbourCount, long replanPeriodMS,
+			long individualBroadcastPeriodMS) {
+		
+		setIndividualDistribution(individualDistribution);
+		setNeighbourCount(neighbourCount);
+		setReplanPeriodMS(replanPeriodMS);
+		setIndividualBroadcastPeriodMS(individualBroadcastPeriodMS);
+	}
+	
 	
 	/**
 	 * Copy Constructor
@@ -61,6 +86,8 @@ public class IslandModelConfiguration implements Concept {
 		
 		setIndividualDistribution(
 				configuration.isIndividualDistribution());
+		setNeighbourCount(
+				configuration.getNeighbourCount());
 		setReplanPeriodMS(
 				configuration.getReplanPeriodMS());
 		setIndividualBroadcastPeriodMS(
@@ -74,7 +101,16 @@ public class IslandModelConfiguration implements Concept {
 	public void setIndividualDistribution(boolean individualDistribution) {
 		this.individualDistribution = individualDistribution;
 	}
+	
+	
+	public int getNeighbourCount() {
+		return neighbourCount;
+	}
+	public void setNeighbourCount(int neighbourCount) {
+		this.neighbourCount = neighbourCount;
+	}
 
+	
 	public long getReplanPeriodMS() {
 		return replanPeriodMS;
 	}

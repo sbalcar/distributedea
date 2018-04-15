@@ -115,8 +115,9 @@
   </methods>
   <islandModelConfiguration>
     <individualDistribution>true</individualDistribution>
+    <neighbourCount>3</neighbourCount>
     <replanPeriodMS>60000</replanPeriodMS>
-    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+    <individualBroadcastPeriodMS>30000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
   <planner class="plannerAgentInfo">
     <DURATION__OF__NEW__METHOD__PROTECTION>3</DURATION__OF__NEW__METHOD__PROTECTION>

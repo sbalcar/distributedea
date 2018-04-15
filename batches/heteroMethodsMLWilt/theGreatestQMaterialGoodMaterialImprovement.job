@@ -154,6 +154,7 @@
   </methods>
   <islandModelConfiguration>
     <individualDistribution>true</individualDistribution>
+    <neighbourCount>2147483647</neighbourCount>
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
   </islandModelConfiguration>
