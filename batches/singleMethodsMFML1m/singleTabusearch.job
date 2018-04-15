@@ -7,7 +7,7 @@
     <latFactYDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
     <latentFactorWidth>10</latentFactorWidth>
   </problem>
-  <datasetFileName>inputs/ml-100k/u.data</datasetFileName>
+  <datasetFileName>inputs/ml-1m/ratings.dat</datasetFileName>
   <methods class="methods">
     <inputMethodDescriptions>
       <inputMethodDescription>

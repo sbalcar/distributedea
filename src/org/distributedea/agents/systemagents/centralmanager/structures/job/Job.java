@@ -215,11 +215,11 @@ public class Job implements Concept, Serializable {
 	 * @throws IOException 
 	 */
 	public void importDatasetFile(File datasetFile) throws IOException {
-		if (datasetFile == null || ! datasetFile.isFile()) {
-			System.out.println(datasetFile);
-			throw new IllegalArgumentException("Argument " +
-					File.class.getSimpleName() + " is not valid");
-		}
+//		if (datasetFile == null || ! datasetFile.isFile()) {
+//			System.out.println(datasetFile);
+//			throw new IllegalArgumentException("Argument " +
+//					File.class.getSimpleName() + " is not valid");
+//		}
 		this.datasetFileName = datasetFile.getPath();
 	}
 

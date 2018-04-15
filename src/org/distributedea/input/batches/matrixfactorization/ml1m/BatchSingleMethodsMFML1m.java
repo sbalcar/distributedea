@@ -35,7 +35,7 @@ public class BatchSingleMethodsMFML1m implements IInputBatch {
 		batch.setBatchID("singleMethodsMFML1m");
 		batch.setDescription("Porovnání samostatných metod : MFML1m");
 		
-		Job jobI = InputMatrixFactorization.test01();
+		Job jobI = InputMatrixFactorization.test02();
 		jobI.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		jobI.getIslandModelConfiguration().setIndividualDistribution(false);
 		
