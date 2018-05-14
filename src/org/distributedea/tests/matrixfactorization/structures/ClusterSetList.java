@@ -1,4 +1,4 @@
-package org.distributedea.tests.matrixfactorization;
+package org.distributedea.tests.matrixfactorization.structures;
 
 import java.util.ArrayList;
 import java.util.List;

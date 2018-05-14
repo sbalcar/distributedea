@@ -130,7 +130,7 @@ public class IndividualLatentFactors extends Individual {
 	
 	@Override
 	public String toLogString() {
-		return null;
+		return toString();
 	}
 	
 	@Override

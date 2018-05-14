@@ -5,7 +5,6 @@ import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
-import jade.content.onto.basic.Result;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -160,46 +159,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 			}
 
 		});
-/*		
-		addBehaviour(new AchieveREResponder(this, mesTemplateResultInform) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected ACLMessage handleRequest(ACLMessage msgInform) {
-				
-				try {
-					Action action = (Action)
-							getContentManager().extractContent(msgInform);
-					
-					Concept concept = action.getAction();
-					
-					getLogger().log(Level.INFO, "Receivedd " +
-							concept.getClass().getSimpleName());
-					
-					if (concept instanceof IndividualWrapper) {
-						
-						processIndividualWrapper(msgInform, (IndividualWrapper) concept);
-						
-					}
-
-				} catch (OntologyException e) {
-					getLogger().logThrowable("Problem extracting content", e);
-				} catch (CodecException e) {
-					getLogger().logThrowable("Codec problem", e);
-				}
-
-				return null;
-			}
-			
-			@Override
-			protected ACLMessage prepareResultNotification(ACLMessage request,
-					ACLMessage response) throws FailureException {
-				return null;
-			}
-
-		});
-*/		
+		
 	}
 
 	/**
@@ -229,7 +189,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		StartMonitoring startMonitoring = (StartMonitoring) action.getAction();
 		JobID jobID = startMonitoring.getJobID();
 		IProblem problemToSolve = startMonitoring.getProblemToSolve();
-		MethodDescriptions agentsToMonitor = startMonitoring.getAgentsToMonitor();	
+		MethodDescriptions agentsToMonitor = startMonitoring.getAgentsToMonitor();
 		
 		this.model = new MonitorStatisticModel(jobID, problemToSolve);
 		this.agentsToMonitor = agentsToMonitor;
@@ -283,17 +243,14 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		reply.setLanguage(codec.getName());
 		reply.setOntology(MonitorOntology.getInstance().getName());
 		
-		Result result = new Result(action.getAction(), statistic);
-		
+		// sends individual as object
 		try {
-		    getContentManager().fillContent(reply, result);
-		} catch (CodecException e) {
-		    getLogger().logThrowable("CodecException by sending " +
-		    		Statistic.class.getSimpleName(), e);
-		} catch (OntologyException e) {
-		    getLogger().logThrowable(e.getMessage(), e);
+			reply.setContentObject(statistic);
+		} catch (Exception e) {
+			logger.logThrowable("IOException by sending " +
+					Statistic.class.getSimpleName(), e);
 		}
-
+				
 		return reply;
 	}
 }

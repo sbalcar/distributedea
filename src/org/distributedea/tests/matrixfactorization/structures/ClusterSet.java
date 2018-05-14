@@ -1,4 +1,4 @@
-package org.distributedea.tests.matrixfactorization;
+package org.distributedea.tests.matrixfactorization.structures;
 
 import java.io.File;
 import java.io.FileNotFoundException;

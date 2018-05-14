@@ -14,6 +14,8 @@ import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
+import org.distributedea.tests.matrixfactorization.structures.ClusterSet;
+import org.distributedea.tests.matrixfactorization.structures.ClusterSetList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;

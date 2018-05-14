@@ -1,5 +1,6 @@
 package org.distributedea.ontology.saveresult;
 
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
 
@@ -38,4 +39,12 @@ public class SaveResultOfIteration implements AgentAction {
 		this.results = results;
 	}
 	
+	/**
+	 * Tests validity
+	 * @param logger
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		return results != null;
+	}
 }

@@ -22,7 +22,7 @@ import jade.content.Concept;
  */
 public class IndividualWrapper implements Concept {
 
-	private static final long serialVersionUID = -3883073526379640439L;
+	private static final long serialVersionUID = 1L;
 
 	private JobID jobID;
 	

@@ -10,6 +10,7 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
@@ -55,6 +56,7 @@ public class ResultOntology extends BeanOntology {
         	
         	add(ReportHelpmate.class.getPackage().getName());
         	
+        	add(IndividualsWrappers.class);
             add(IndividualWrapper.class);
             add(Individual.class.getPackage().getName());
             

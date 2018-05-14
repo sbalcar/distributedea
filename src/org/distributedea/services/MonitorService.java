@@ -3,16 +3,14 @@ package org.distributedea.services;
 import javax.management.monitor.Monitor;
 
 import jade.content.lang.Codec;
-import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
-import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
-import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.domain.FIPAException;
 import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 
 import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
@@ -160,25 +158,15 @@ public class MonitorService {
 			return null;
 		}
 		
+		// send as object
 		Statistic statistic = null;
 		try {
-			Result result = (Result)
-					agent.getContentManager().extractContent(msgStatistic);
-
-			statistic = (Statistic) result.getValue();
-
-		} catch (UngroundedException e) {
-			logger.logThrowable("UngroundedException by receiving " +
-					Statistic.class.getSimpleName(), e);
-		} catch (CodecException e) {
-			logger.logThrowable("CodecException by receiving " +
-					Statistic.class.getSimpleName(), e);
-		} catch (OntologyException e) {
-			logger.logThrowable("OntologyException by receiving " +
+			statistic = (Statistic) msgStatistic.getContentObject();
+		} catch (UnreadableException e) {
+			logger.logThrowable("UnreadableException by receiving " +
 					Statistic.class.getSimpleName(), e);
 		}
 		
 		return statistic;
-
 	}
 }

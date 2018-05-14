@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.tests.matrixfactorization.structures.ClusterSet;
+import org.distributedea.tests.matrixfactorization.structures.MatrixOfIncidence;
 
 /**
  * Wrapper for clustering algorithm

@@ -38,8 +38,6 @@ import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
-import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.islandmodel.AIDs;
@@ -658,6 +656,7 @@ public class ComputingAgentService {
 		msgIndividual.setLanguage(agent.getCodec().getName());
 		msgIndividual.setOntology(ontology.getName());
 
+		// sends individual as object
 		try {
 			msgIndividual.setContentObject(individual);
 		} catch (Exception e) {
@@ -715,6 +714,7 @@ public class ComputingAgentService {
 		msgIndividual.setLanguage(agent.getCodec().getName());
 		msgIndividual.setOntology(ontology.getName());
 
+		// sends individual as object
 		try {
 			msgIndividual.setContentObject(individual);
 		} catch (Exception e) {
@@ -746,10 +746,6 @@ public class ComputingAgentService {
 			throw new IllegalArgumentException("Argument " +
 					IAgentLogger.class.getSimpleName() + " can't be null");
 		}
-		
-		IndividualEvaluated iEval = individual.getIndividualEvaluated();
-		Individual indiv = iEval.getIndividual();
-//		iEval.setIndividual(null);
 				
 		AID monitorAID = new AID(AgentNames.MONITOR.getName(), false);
 		Ontology ontology = ResultOntology.getInstance();
@@ -760,6 +756,7 @@ public class ComputingAgentService {
 		msgIndividual.setLanguage(agent.getCodec().getName());
 		msgIndividual.setOntology(ontology.getName());
 
+		// sends individual as object
 		try {
 			msgIndividual.setContentObject(individual);
 		} catch (IOException e) {
@@ -768,8 +765,6 @@ public class ComputingAgentService {
 		}
 		
 		agent.send(msgIndividual);
-		
-//		iEval.setIndividual(indiv);
 	}
 	
 }

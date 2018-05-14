@@ -1,5 +1,7 @@
 package org.distributedea.services;
 
+import java.io.IOException;
+
 import org.distributedea.AgentNames;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_DataManager;
@@ -11,10 +13,7 @@ import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
 
-import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
-import jade.content.onto.OntologyException;
-import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
@@ -67,14 +66,12 @@ public class DataManagerService {
 	    
 		SaveTheBestIndividual save = new SaveTheBestIndividual(iteration, individualWrp);
 		
-		Action action = new Action(agent.getAID(), save);
-		
+		// sends individual as object
 		try {
-			agent.getContentManager().fillContent(msgPartResult, action);
-		} catch (CodecException e) {
-			logger.logThrowable("Can not send " + SaveTheBestIndividual.class.getSimpleName(), e);
-		} catch (OntologyException e) {
-			logger.logThrowable("Can not send " + SaveTheBestIndividual.class.getSimpleName(), e);
+			msgPartResult.setContentObject(save);
+		} catch (IOException e) {
+			logger.logThrowable("IOException by sending " +
+					SaveTheBestIndividual.class.getSimpleName(), e);
 		}
 
 	    agent.send(msgPartResult);
@@ -122,14 +119,12 @@ public class DataManagerService {
 	    
 		SaveResultOfIteration save = new SaveResultOfIteration(result);
 		
-		Action action = new Action(agent.getAID(), save);
-		
+		// sends individual as object
 		try {
-			agent.getContentManager().fillContent(msgPartResult, action);
-		} catch (CodecException e) {
-			logger.logThrowable("Can not send " + SaveResultOfIteration.class.getSimpleName(), e);
-		} catch (OntologyException e) {
-			logger.logThrowable("Can not send " + SaveResultOfIteration.class.getSimpleName(), e);
+			msgPartResult.setContentObject(save);
+		} catch (IOException e) {
+			logger.logThrowable("IOException by sending " +
+					SaveResultOfIteration.class.getSimpleName(), e);
 		}
 
 	    agent.send(msgPartResult);

@@ -1,5 +1,6 @@
 package org.distributedea.ontology.data;
 
+import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 
@@ -20,7 +21,7 @@ public class SaveTheBestIndividual implements AgentAction {
 	private IndividualWrapper result;
 
 	@Deprecated
-	public SaveTheBestIndividual() {}
+	public SaveTheBestIndividual() {}  // only for JADE
 	
 	/**
 	 * Constructor
@@ -47,6 +48,16 @@ public class SaveTheBestIndividual implements AgentAction {
 	@Deprecated
 	public void setResult(IndividualWrapper result) {
 		this.result = result;
+	}
+	
+	/**
+	 * Tests validity
+	 * @param logger
+	 * @return
+	 */
+	public boolean valid(IAgentLogger logger) {
+		return iteratin.valid(logger) &&
+				result != null;
 	}
 	
 }

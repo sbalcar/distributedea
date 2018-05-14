@@ -1,30 +1,28 @@
 package org.distributedea.agents.systemagents;
 
-import jade.content.Concept;
-import jade.content.lang.Codec.CodecException;
 import jade.content.onto.Ontology;
-import jade.content.onto.OntologyException;
-import jade.content.onto.basic.Action;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREResponder;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-
 
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -87,27 +85,28 @@ public class Agent_DataManager extends Agent_DistributedEA {
 			@Override
 			protected ACLMessage handleRequest(ACLMessage request) {
 				
+				Serializable content = null;
 				try {
-					Action action = (Action)
-							getContentManager().extractContent(request);
-
-					Concept concept = action.getAction();
+					
+					content = request.getContentObject();
+					
 					getLogger().log(Level.INFO, "Request for " +
-							concept.getClass().getSimpleName());
+							content.getClass().getSimpleName());
 					
-					if (concept instanceof SaveTheBestIndividual) {
-						return respondToSaveTheBestIndividual(request, action);
+					if (content instanceof SaveTheBestIndividual) {
+						SaveTheBestIndividual saveResultOfComputing =
+								(SaveTheBestIndividual)content;
+						return respondToSaveTheBestIndividual(request, saveResultOfComputing);
 					
-					} else if (concept instanceof SaveResultOfIteration) {
-						return respondToSaveResults(request, action);
+					} else if (content instanceof SaveResultOfIteration) {
+						SaveResultOfIteration saveResult =
+								(SaveResultOfIteration)content;
+						return respondToSaveResults(request, saveResult);
 					}
 
-				} catch (OntologyException e) {
+				} catch (UnreadableException e) {
 					getLogger().logThrowable("Problem extracting content", e);
-				} catch (CodecException e) {
-					getLogger().logThrowable("Codec problem", e);
 				}
-
 				return null;
 			}
 
@@ -121,9 +120,12 @@ public class Agent_DataManager extends Agent_DistributedEA {
 	
 
 	protected ACLMessage respondToSaveTheBestIndividual(ACLMessage request,
-			Action action) {
-		
-		SaveTheBestIndividual saveResultOfComputing = (SaveTheBestIndividual)action.getAction();
+			SaveTheBestIndividual saveResultOfComputing) {
+		if (saveResultOfComputing == null ||
+				! saveResultOfComputing.valid(new TrashLogger())) {
+			getLogger().log(Level.SEVERE, "Cann't log the best individual");
+			return null;
+		}
 		
 		IndividualWrapper result = saveResultOfComputing.getResult();
 		
@@ -137,17 +139,16 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		}
 		
 		return null;
-	}	
+	}
 
-	protected ACLMessage respondToSaveResults(ACLMessage request, Action action) {
-		
-		SaveResultOfIteration saveResult = (SaveResultOfIteration)action.getAction();
-		ResultOfIteration results = saveResult.getResults();
-		
-		if (results == null || ! results.valid(getLogger())) {
-			getLogger().log(Level.WARNING, "Received " +
-					SaveResultOfIteration.class.getSimpleName() + " is not valid");
+	protected ACLMessage respondToSaveResults(ACLMessage request, SaveResultOfIteration saveResult) {
+		if (saveResult == null ||
+				! saveResult.valid(new TrashLogger())) {
+			getLogger().log(Level.SEVERE, "Cann't log the best individual");
+			return null;
 		}
+		
+		ResultOfIteration results = saveResult.getResults();
 		
 		String monitoringDirName = FileNames.
 				getResultDirectoryMonitoringDirectory(results.getJobID());
