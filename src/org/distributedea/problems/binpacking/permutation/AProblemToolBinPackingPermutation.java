@@ -25,9 +25,9 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 	}
 
 	@Override
-	public Dataset readDataset(File fileOfProblem, IAgentLogger logger) {
+	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger) {
 
-		return ToolReadProblemBinPacking.readProblem(fileOfProblem, logger);
+		return ToolReadProblemBinPacking.readProblem(fileOfProblem, problem, logger);
 	}
 
 	@Override

@@ -60,9 +60,9 @@ public abstract class AProblemToolML extends ProblemTool {
 	}
 	
 	@Override
-	public Dataset readDataset(File fileOfProblem, IAgentLogger logger) {
+	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger) {
 		
-		return ToolReadProblemML.readProblem(fileOfProblem, logger);
+		return ToolReadProblemML.readProblem(fileOfProblem, problem, logger);
 	}
 	
 	@Override

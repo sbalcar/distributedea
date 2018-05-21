@@ -111,7 +111,7 @@ public class TestTSP {
 				File.separator + inputFileName + ".tsp";
 		File fileOfProblem = new File(problemFileName);
 		
-		Dataset dataset = problemTool.readDataset(fileOfProblem, logger);
+		Dataset dataset = problemTool.readDataset(fileOfProblem, null, logger);
 		ProblemWrapper problemWrapper = new ProblemWrapper();
 		problemWrapper.importProblemToolClass(problemTool.getClass());
 

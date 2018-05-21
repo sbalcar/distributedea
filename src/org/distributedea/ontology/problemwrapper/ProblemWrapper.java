@@ -181,7 +181,7 @@ public class ProblemWrapper implements Concept {
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				exportProblemToolClass(), logger);
 		
-		return problemTool.readDataset(exportDatasetFile(), logger);
+		return problemTool.readDataset(exportDatasetFile(), getProblem(), logger);
 	}
 	
 	

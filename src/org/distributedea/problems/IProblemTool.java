@@ -58,7 +58,7 @@ public interface IProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public Dataset readDataset(File fileOfProblem, IAgentLogger logger);
+	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger);
 	
 	/**
 	 * Reads instance of the Solution(Individual) from the file,

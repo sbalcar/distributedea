@@ -60,7 +60,6 @@ public abstract class AProblemToolCO extends ProblemTool {
 	@Override
 	public void initialization(IProblem problem, Dataset dataset, AgentConfiguration agentConf,
 			IAgentLogger logger) throws Exception {
-////////////////////
 
     	ProblemContinuousOpt problemCO = (ProblemContinuousOpt) problem;
 		DatasetContinuousOpt datasetCO = (DatasetContinuousOpt) dataset;
@@ -120,9 +119,9 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 	
 	@Override
-	public Dataset readDataset(File fileOfProblem, IAgentLogger logger) {
+	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger) {
 		
-		return ToolReadProblemCO.readProblem(fileOfProblem, logger);
+		return ToolReadProblemCO.readProblem(fileOfProblem, problem, logger);
 	}
 	
 	@Override

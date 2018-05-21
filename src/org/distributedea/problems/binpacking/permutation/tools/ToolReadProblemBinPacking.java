@@ -10,10 +10,11 @@ import java.util.List;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
+import org.distributedea.ontology.problem.IProblem;
 
 public class ToolReadProblemBinPacking {
 
-	public static DatasetBinPacking readProblem(File datasetFile, IAgentLogger logger) {
+	public static DatasetBinPacking readProblem(File datasetFile, IProblem problem, IAgentLogger logger) {
 		
 		List<ObjectBinPack> objectsOfBinPack = new ArrayList<>();
 		

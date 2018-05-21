@@ -25,7 +25,7 @@ public class Test {
 		ProblemTool tool = new ProblemToolCORandomMove();
 		
 		File file = batchCOf2.getJobs().get(0).exportDatasetFile();
-		Dataset dataset = tool.readDataset(file, new TrashLogger());
+		Dataset dataset = tool.readDataset(file, null, new TrashLogger());
 		
 		IProblem problem = new ProblemContinuousOpt("f2", 2, false);
 		

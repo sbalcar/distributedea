@@ -42,9 +42,9 @@ public abstract class AProblemToolTSPGPSEuc2DPermutation extends ProblemTSPGPSTo
 	}
 	
 	@Override
-	public Dataset readDataset(File problemFile, IAgentLogger logger) {
+	public Dataset readDataset(File problemFile, IProblem problem, IAgentLogger logger) {
 
-		return ToolReadProblemTSPGPS.readDataset(problemFile, logger);
+		return ToolReadProblemTSPGPS.readDataset(problemFile, problem, logger);
 	}
 	
 	@Override

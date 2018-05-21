@@ -35,7 +35,9 @@ import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problem.matrixfactorization.ILatFactDefinition;
+import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.IRatingIDs;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 public class ComputingOntology extends BeanOntology {
@@ -76,6 +78,8 @@ public class ComputingOntology extends BeanOntology {
             
             add(IProblem.class.getPackage().getName());
             add(ILatFactDefinition.class.getPackage().getName());
+            add(DatasetPartitioning.class.getPackage().getName());
+            add(IRatingIDs.class.getPackage().getName());
             add(Dataset.class);
             
             add(DatasetTSPGPS.class);

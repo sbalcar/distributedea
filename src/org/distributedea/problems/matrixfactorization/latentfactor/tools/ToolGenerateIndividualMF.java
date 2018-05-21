@@ -9,9 +9,9 @@ import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactorVector;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
-import org.distributedea.ontology.problem.matrixfactorization.ILatFactDefinition;
-import org.distributedea.ontology.problem.matrixfactorization.LatFactRange;
-import org.distributedea.ontology.problem.matrixfactorization.LatFactRangeSpec;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRangeSpec;
 
 public class ToolGenerateIndividualMF {
 

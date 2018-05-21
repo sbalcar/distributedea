@@ -54,9 +54,9 @@ public abstract class AProblemToolVC extends ProblemTool {
 	}
 	
 	@Override
-	public Dataset readDataset(File fileOfProblem, IAgentLogger logger) {
+	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger) {
 		
-		return ToolReadProblemVC.readProblem(fileOfProblem, logger);
+		return ToolReadProblemVC.readProblem(fileOfProblem, problem, logger);
 	}
 	
 	@Override

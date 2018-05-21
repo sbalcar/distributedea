@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem.matrixfactorization;
+package org.distributedea.ontology.problem.matrixfactorization.latentfactor;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
@@ -6,30 +6,29 @@ import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 
 /**
  * Ontology for definition of the {@link LatentFactor} length,
- * takes given ratings as continuous interval between min and max of IDs in the dataset
+ * takes given ratings as non-continuous set of IDs
  * @author stepan
  *
  */
-public class LatFactRange implements ILatFactDefinition {
+public class LatFactSet implements ILatFactDefinition {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor
 	 */
-	public LatFactRange() {}
+	public LatFactSet() {}
 	
 	/**
 	 * Copy constructor
 	 * @param problem
 	 */
-	public LatFactRange(LatFactRange latFactRange) {
+	public LatFactSet(LatFactSet latFactRange) {
 		if (latFactRange == null || ! latFactRange.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					LatFactRange.class.getSimpleName() + " is not valid");			
+					LatFactSet.class.getSimpleName() + " is not valid");			
 		}
 	}
-	
 	
 	@Override
 	public boolean valid(IAgentLogger logger) {
@@ -38,7 +37,11 @@ public class LatFactRange implements ILatFactDefinition {
 
 	@Override
 	public ILatFactDefinition deepClone() {
-		return new LatFactRange(this);
+		return new LatFactSet(this);
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		return true;
+	}
 }

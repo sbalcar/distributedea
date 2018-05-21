@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem.matrixfactorization;
+package org.distributedea.ontology.problem.matrixfactorization.latentfactor;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
@@ -20,6 +20,7 @@ public class LatFactRangeSpec implements ILatFactDefinition {
 	/**
 	 * Constructor
 	 */
+	@Deprecated
 	public LatFactRangeSpec() { // Only for Jade
 	}
 	
@@ -74,4 +75,15 @@ public class LatFactRangeSpec implements ILatFactDefinition {
 		return new LatFactRangeSpec(this);
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+	    if (!(other instanceof LatFactRangeSpec)) {
+	        return false;
+	    }
+	    
+	    LatFactRangeSpec otherRangeSpec = (LatFactRangeSpec)other;
+	    
+		return getMin() == otherRangeSpec.getMin() &&
+				getMax() == otherRangeSpec.getMax();
+	}
 }

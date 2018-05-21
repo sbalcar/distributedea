@@ -2,9 +2,9 @@ package org.distributedea.problems.binpacking;
 
 import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.problems.tsp.ProblemTSPTool;
+import org.distributedea.problems.tsp.ProblemToolTSP;
 
-public abstract class ProblemBinPackingTool extends ProblemTSPTool {
+public abstract class ProblemBinPackingTool extends ProblemToolTSP {
 
 	@Override
 	public Class<?> datasetReprezentation() {

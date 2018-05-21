@@ -81,7 +81,7 @@ public class LocalSaver {
 	 * @param individualEval
 	 * @param jobID
 	 */
-	public void logSolution(IndividualEvaluated individualEval) {
+	public void logSolution_(IndividualEvaluated individualEval) {
 		
 		String individualString = individualEval.exportXML();
 		

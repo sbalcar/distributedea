@@ -13,10 +13,11 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.dataset.tsp.Position;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
+import org.distributedea.ontology.problem.IProblem;
 
 public class ToolReadProblemTSPGPS {
 
-	public static DatasetTSPGPS readDataset(File problemFile, IAgentLogger logger) {
+	public static DatasetTSPGPS readDataset(File problemFile, IProblem problem, IAgentLogger logger) {
 
 		List<Position> positions;
 		try {

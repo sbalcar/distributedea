@@ -13,6 +13,11 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.problem.ProblemMatrixFactorization;
+import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsComplement;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
 import org.distributedea.tests.matrixfactorization.structures.ClusterSet;
 import org.distributedea.tests.matrixfactorization.structures.ClusterSetList;
@@ -29,10 +34,19 @@ public class Visualization {
 
 	public static void main(String [ ] args) throws Exception {
 		
-		DatasetMF datasetMF = ToolReadDatasetMF.readDataset(
-//				new File("inputs" + File.separator + "ml-100k" + File.separator + "u.data"), new TrashLogger());
-				new File("inputs" + File.separator + "ml-1m" + File.separator + "ratings.dat"), new TrashLogger());
-//				new File("inputs" + File.separator + "ml-10M100K" + File.separator + "ratings.dat"), new TrashLogger());
+		DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
+				new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
+				new RatingIDsArithmeticSequence(5, 5));
+		
+		ProblemMatrixFactorization problemMF =
+				new ProblemMatrixFactorization(
+				new LatFactRange(), new LatFactRange(), 10, datasetPartitioning);
+		
+		DatasetMF datasetMF = ToolReadDatasetMF.readTrainingPartOfDataset(
+//				new File("inputs" + File.separator + "ml-100k" + File.separator + "u.data"),
+				new File("inputs" + File.separator + "ml-1m" + File.separator + "ratings.dat"),
+//				new File("inputs" + File.separator + "ml-10M100K" + File.separator + "ratings.dat"),
+				problemMF, new TrashLogger());
 
 		visualDataset(datasetMF);
 		

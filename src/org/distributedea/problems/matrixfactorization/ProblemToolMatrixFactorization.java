@@ -22,7 +22,7 @@ import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolSGD
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolSGDist1RandomMF;
 
 
-public  class ProblemToolMatrixFactorization extends ProblemTool {
+public class ProblemToolMatrixFactorization extends ProblemTool {
 
 	@Override
 	public void initialization(IProblem problem, Dataset dataset,
@@ -49,9 +49,12 @@ public  class ProblemToolMatrixFactorization extends ProblemTool {
 	}
 
 	@Override
-	public Dataset readDataset(File datasetFile, IAgentLogger logger) {
+	public Dataset readDataset(File datasetFile, IProblem problem, IAgentLogger logger) {
 		
-		return ToolReadDatasetMF.readDataset(datasetFile, logger);
+		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
+		
+		return ToolReadDatasetMF.readTrainingPartOfDataset(
+				datasetFile, problemMF, logger);
 	}
 
 	@Override

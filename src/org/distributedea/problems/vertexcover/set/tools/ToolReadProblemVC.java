@@ -12,10 +12,11 @@ import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetVertexCover;
 import org.distributedea.ontology.dataset.vertexcover.Graph;
+import org.distributedea.ontology.problem.IProblem;
 
 public class ToolReadProblemVC {
 
-	public static DatasetVertexCover readProblem(File fileOfProblem, IAgentLogger logger) {
+	public static DatasetVertexCover readProblem(File fileOfProblem, IProblem problem, IAgentLogger logger) {
 		
 		if (fileOfProblem == null || ! fileOfProblem.isFile()) {
 			throw new IllegalArgumentException("Argument " +
@@ -33,11 +34,6 @@ public class ToolReadProblemVC {
 			graph.addEdge(edgeI.first, edgeI.second);
 		}
 		
-//		List<Integer> x = graph.exportVertices();
-//		Collections.sort(x);
-//		for ( int i : x) {
-//			System.out.println(i);
-//		}
 		return new DatasetVertexCover(graph, fileOfProblem);
 	}
 	

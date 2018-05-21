@@ -87,9 +87,9 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	}
 	
 	@Override
-	public Dataset readDataset(File datasetFile, IAgentLogger logger) {
+	public Dataset readDataset(File datasetFile, IProblem problem, IAgentLogger logger) {
 
-		return ToolReadProblemTSPPoint.readDataset(datasetFile, logger);
+		return ToolReadProblemTSPPoint.readDataset(datasetFile, problem, logger);
 	}
 	
 	@Override

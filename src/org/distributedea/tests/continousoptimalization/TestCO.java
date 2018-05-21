@@ -38,7 +38,7 @@ public class TestCO {
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		IProblemTool tool = new ProblemToolCORandomMove();
 		
-		Dataset dataset = tool.readDataset(fileOfInput, null);
+		Dataset dataset = tool.readDataset(fileOfInput, problem, null);
 		tool.initialization(problem, dataset, null, null);
 		
 		IndividualEvaluated individual = tool.generateIndividualEval(problem, dataset, null, null);
@@ -58,7 +58,7 @@ public class TestCO {
 		IProblemTool tool1 = new ProblemToolCORandomMove();
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
-		Dataset dataset1 = tool1.readDataset(fileOfInput, null);
+		Dataset dataset1 = tool1.readDataset(fileOfInput, problem, null);
 		tool1.initialization(problem, dataset1, null, null);
 
 		try {
@@ -68,7 +68,7 @@ public class TestCO {
 		
 		IProblemTool tool2 = new ProblemToolCORandomMove();
 		
-		Dataset dataset2 = tool2.readDataset(fileOfInput, null);
+		Dataset dataset2 = tool2.readDataset(fileOfInput, problem, null);
 		tool2.initialization(problem, dataset2, null, null);
 		
 		
@@ -102,7 +102,7 @@ public class TestCO {
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		
 	    IProblemTool tool = new ProblemToolCORandomMove();
-	    Dataset dataset = tool.readDataset(fileOfInput, null);
+	    Dataset dataset = tool.readDataset(fileOfInput, problem, null);
 		tool.initialization(problem, dataset, null, null);
 		
 		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problem, dataset, null, null);
@@ -165,8 +165,10 @@ public class TestCO {
 		String inputFileName = "inputs" + File.separator + "f01.co";
 		File fileOfInput = new File(inputFileName);
 		
+		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
+
 		IProblemTool problemTool = new ProblemToolCORandomMove();
-		Dataset dataset = problemTool.readDataset(fileOfInput, null);
+		Dataset dataset = problemTool.readDataset(fileOfInput, problem, null);
 		
 		
 		String solutionFileName = "log" + File.separator + "result" +

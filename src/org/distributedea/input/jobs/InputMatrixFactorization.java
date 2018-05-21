@@ -24,7 +24,10 @@ import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
-import org.distributedea.ontology.problem.matrixfactorization.LatFactRange;
+import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsComplement;
 import org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization;
 
 /**
@@ -46,6 +49,10 @@ public class InputMatrixFactorization {
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )
 			));
 		
+		DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
+				new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
+				new RatingIDsArithmeticSequence(5, 5));
+		
 		Job job = new Job();
 		job.setJobID("jobID");
 		job.setDescription("description");
@@ -53,7 +60,7 @@ public class InputMatrixFactorization {
 		job.setIslandModelConfiguration(
 				new IslandModelConfiguration(true, 60000, 5000));
 		job.setProblem(new ProblemMatrixFactorization(
-				new LatFactRange(), new LatFactRange(), 10));
+				new LatFactRange(), new LatFactRange(), 10, datasetPartitioning));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("ml-100k" + File.separator + "u.data")));
 		job.setMethods(new MethodsTwoSets(
@@ -66,10 +73,14 @@ public class InputMatrixFactorization {
 	}
 	
 	public static Job test02() throws IOException {
-		
+
+		DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
+				new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
+				new RatingIDsArithmeticSequence(5, 5));
+
 		Job job = test01();
 		job.setProblem(new ProblemMatrixFactorization(
-				new LatFactRange(), new LatFactRange(), 10));
+				new LatFactRange(), new LatFactRange(), 10, datasetPartitioning));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("ml-1m" + File.separator + "ratings.dat")));
 		
@@ -77,10 +88,14 @@ public class InputMatrixFactorization {
 	}
 	
 	public static Job test03() throws IOException {
-		
+
+		DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
+				new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
+				new RatingIDsArithmeticSequence(5, 5));
+
 		Job job = test01();
 		job.setProblem(new ProblemMatrixFactorization(
-				new LatFactRange(), new LatFactRange(), 10));
+				new LatFactRange(), new LatFactRange(), 10, datasetPartitioning));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("ml-10M100K" + File.separator + "ratings.dat")));
 		

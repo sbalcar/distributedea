@@ -361,7 +361,7 @@ public class Job implements Concept, Serializable {
 		IProblemTool problemTool = problemTools.exportRandomSelectedProblemTool(logger);
 		
 		File fileOfProblem = exportDatasetFile();
-		Dataset dataset = problemTool.readDataset(fileOfProblem, logger);
+		Dataset dataset = problemTool.readDataset(fileOfProblem, getProblem(), logger);
 		
 		
 		JobRun jobRun = new JobRun();

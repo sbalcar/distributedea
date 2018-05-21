@@ -27,7 +27,10 @@ import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
-import org.distributedea.ontology.problem.matrixfactorization.LatFactRange;
+import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsComplement;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
@@ -98,14 +101,19 @@ public class Agent_Sender extends Agent_DistributedEA {
 			Calendar cal = Calendar.getInstance();
 			System.out.println("Sender:   " + dateFormat.format(cal.getTime()));
 			
+			DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
+					new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
+					new RatingIDsArithmeticSequence(5, 5));
+			
 			ProblemMatrixFactorization problemMF =
 					new ProblemMatrixFactorization(
-					new LatFactRange(), new LatFactRange(), 10);
+					new LatFactRange(), new LatFactRange(), 10, datasetPartitioning);
 			
-			DatasetMF datasetMF = ToolReadDatasetMF.readDataset(
-//					new File("inputs/ml-100k/u.data"), new TrashLogger());
-//					new File("inputs/ml-1m/ratings.dat"), new TrashLogger());
-					new File("inputs/ml-10M100K/ratings.dat"), new TrashLogger());
+			DatasetMF datasetMF = ToolReadDatasetMF.readTrainingPartOfDataset(
+//					new File("inputs" +  File.separator + "ml-100k" +  File.separator + "u.data"),
+//					new File("inputs" +  File.separator + "ml-1m" +  File.separator + "ratings.dat"),
+					new File("inputs" +  File.separator + "ml-10M100K" +  File.separator + "ratings.dat"),
+					problemMF, new TrashLogger());
 			System.out.println("Dataset readed");
 			
 			
@@ -127,8 +135,8 @@ public class Agent_Sender extends Agent_DistributedEA {
 			System.out.println("Sender:   " + dateFormat.format(cal3.getTime()));
 			
 			//send individual to receiver
-			ReceiverService.sendAsObjectIndividualToReceiver(agent, indivWrps, logger);
-			//ReceiverService.sendAsOntologyIndividualToReceiver(agent, indivWrps, logger);
+			//ReceiverService.sendAsObjectIndividualToReceiver(agent, indivWrps, logger);
+			ReceiverService.sendAsOntologyIndividualToReceiver(agent, indivWrps, logger);
 		}
 
 		@Override

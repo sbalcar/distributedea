@@ -24,7 +24,9 @@ import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problem.matrixfactorization.ILatFactDefinition;
+import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
+import org.distributedea.ontology.problem.matrixfactorization.traintest.IRatingIDs;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
@@ -75,6 +77,8 @@ public class ResultOntology extends BeanOntology {
             add(MethodDescription.class.getPackage().getName());
             add(IProblem.class.getPackage().getName());
             add(ILatFactDefinition.class.getPackage().getName());
+            add(DatasetPartitioning.class.getPackage().getName());
+            add(IRatingIDs.class.getPackage().getName());
             
             add(Argument.class.getPackage().getName());
             add(ArgumentDef.class.getPackage().getName());

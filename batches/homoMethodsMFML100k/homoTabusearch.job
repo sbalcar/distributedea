@@ -3,9 +3,21 @@
   <numberOfRuns>9</numberOfRuns>
   <description>Homo-TabuSearch</description>
   <problem class="org.distributedea.ontology.problem.ProblemMatrixFactorization">
-    <latFactXDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
-    <latFactYDef class="org.distributedea.ontology.problem.matrixfactorization.LatFactRange"/>
+    <latFactXDef class="org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange"/>
+    <latFactYDef class="org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange"/>
     <latentFactorWidth>10</latentFactorWidth>
+    <datasetPartitioning>
+      <trainingSetDef class="org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsComplement">
+        <ratingIDs class="org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence">
+          <a1>5</a1>
+          <d>5</d>
+        </ratingIDs>
+      </trainingSetDef>
+      <testingSetDef class="org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence">
+        <a1>5</a1>
+        <d>5</d>
+      </testingSetDef>
+    </datasetPartitioning>
   </problem>
   <datasetFileName>inputs/ml-100k/u.data</datasetFileName>
   <methods class="methods">

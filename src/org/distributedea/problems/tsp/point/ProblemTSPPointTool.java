@@ -2,9 +2,9 @@ package org.distributedea.problems.tsp.point;
 
 import org.distributedea.ontology.dataset.DatasetTSPPoint;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
-import org.distributedea.problems.tsp.ProblemTSPTool;
+import org.distributedea.problems.tsp.ProblemToolTSP;
 
-public abstract class ProblemTSPPointTool extends ProblemTSPTool {
+public abstract class ProblemTSPPointTool extends ProblemToolTSP {
 
 	@Override
 	public Class<?> datasetReprezentation() {

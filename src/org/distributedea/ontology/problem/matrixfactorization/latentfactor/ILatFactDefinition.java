@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem.matrixfactorization;
+package org.distributedea.ontology.problem.matrixfactorization.latentfactor;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
@@ -25,6 +25,11 @@ public interface ILatFactDefinition extends Concept {
 	public ILatFactDefinition deepClone();
 	
 	
+	/**
+	 * Returns equals
+	 * @param other
+	 * @return
+	 */
 	public boolean equals(Object other);
 	
 }

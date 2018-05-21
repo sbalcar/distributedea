@@ -296,45 +296,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			}
 
 		});
-/*		
-		addBehaviour(new AchieveREResponder(this, mesTemplateResultInform) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected ACLMessage handleRequest(ACLMessage msgInform) {
-				
-				try {
-					Action action = (Action)
-							getContentManager().extractContent(msgInform);
-					
-					Concept concept = action.getAction();
-					getLogger().log(Level.INFO, "Inform with " +
-							concept.getClass().getSimpleName());
-					
-					if (concept instanceof IndividualWrapper) {
-						processIndividualWrp(msgInform,
-							(IndividualWrapper)action.getAction());
-						
-					}
-
-				} catch (OntologyException e) {
-					getLogger().logThrowable("Problem extracting content", e);
-				} catch (CodecException e) {
-					getLogger().logThrowable("Codec problem", e);
-				}
-
-				return null;
-			}
-			
-			@Override
-			protected ACLMessage prepareResultNotification(ACLMessage request,
-					ACLMessage response) throws FailureException {
-				return null;
-			}
-
-		});
-*/		
+		
 	}
 
 	
@@ -707,10 +669,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 				getCALogger());
 		
 		//log fitness as result
-		localSaver.logComputedFitnessResult(individualEval, generationNumber);
-
+//		if (DEBUG) {
+//			localSaver.logComputedFitnessResult(individualEval, generationNumber);
+//		}
+		
 		// log individual as solution
-		localSaver.logSolution(individualEval);
+//		if (DEBUG) {
+//			localSaver.logSolution(individualEval);
+//		}
 	}
 
 	protected void processComputedIndividual(IndividualEvaluated individualEval ,
