@@ -1,4 +1,4 @@
-package org.distributedea.input.postprocessing.matlab;
+package org.distributedea.input.postprocessing.general.matlab;
 
 import java.io.File;
 import java.util.ArrayList;

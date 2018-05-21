@@ -1,4 +1,4 @@
-package org.distributedea.input.postprocessing.matlab;
+package org.distributedea.input.postprocessing.general.matlab;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,8 +7,7 @@ import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistories;
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistory;
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodStatisticResultWrapper;
+import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodTypeHistory;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
@@ -17,18 +16,25 @@ import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.batches.tsp.BatchTestTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
-import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
-import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.methodtype.MethodInstanceDescription;
+import org.distributedea.ontology.methodtype.MethodType;
 
-/**
- * Creates for each {@link JobRun} graph of {@link MethodInstanceDescription}
- * which was running through the {@link Iteration}s. 
- * @author stepan
- *
- */
-public class PostProcInvestigationOfInstPresenceOfMethods extends PostProcessingMatlab {
+public class PostProcInvestigationOfInstCountOfMethodTypes extends PostProcessingMatlab {
+	
+	private boolean legendContainsProblemTools;
+	private boolean legendContainsArguments;
+	
+	/**
+	 * Constructor
+	 * @param legendContainsProblemTools
+	 * @param legendContainsArguments
+	 */
+	public PostProcInvestigationOfInstCountOfMethodTypes(boolean legendContainsProblemTools,
+			boolean legendContainsArguments) {
+		
+		this.legendContainsProblemTools = legendContainsProblemTools;
+		this.legendContainsArguments = legendContainsArguments;
+	}
 	
 	@Override
 	public void run(Batch batch) throws Exception {
@@ -61,9 +67,9 @@ public class PostProcInvestigationOfInstPresenceOfMethods extends PostProcessing
 		MethodHistories methodHistories = history.getMethodHistories();
 		methodHistories.sortMethodInstancesByName();
 		
-		String TITLE1 = "Průběh jednotlivých metod";
-		String TITLE2 =  jobID.getBatchID() + "-" + JOB_ID + "-R" + jobID.getRunNumber();
-		String YLABEL = "jádra systému a jejich vytížení instancemi metod";
+		String TITLE1 = "Průběh jednotlivých typů metod";
+		String TITLE2 =  batch.getBatchID() + "-" + JOB_ID + "-R" + jobID.getRunNumber();
+		String YLABEL = "jádra systému a jejich vytížení";
 		
 		String OUTPUT_FILE = BATCH_ID +
 				getClass().getSimpleName().replace("PostProc", "") +
@@ -83,24 +89,25 @@ public class PostProcInvestigationOfInstPresenceOfMethods extends PostProcessing
 
 		List<String> labelsList = new ArrayList<>();
 		List<String> hsList = new ArrayList<>();
-		for (int i = 0; i < methodHistories.getMethods().size(); i++) {
+		for (int i = 0; i < methodHistories.getMethodTypeHistory().size(); i++) {
 		
-			MethodHistory methodHistoryI = methodHistories.getMethods().get(i);
+			MethodTypeHistory methodTypeHistoryI =
+					methodHistories.getMethodTypeHistory().get(i);
 			
-			MethodInstanceDescription methodInstanceI =
-					methodHistoryI.getMethodInstanceDescription();
-			List<MethodStatisticResultWrapper> statisticsI =
-					methodHistoryI.getStatistics();
-						
-			List<Double> valuesI =
-					getMethodValues(methodInstanceI, statisticsI, numOfIter, i+1);
+			MethodType methodTypeI = methodTypeHistoryI.getMethodType();
+			String labelI = methodTypeI.exportString(
+					legendContainsProblemTools, legendContainsArguments);
+			
+			List<Integer> numbersOfIstancesI = methodTypeHistoryI
+					.exportNumbersOfInstancesDuringAllIterations(numOfIter);
+			
 			String valuesStringI =
-					MatlabTool.convertDoublesToMatlamArray(valuesI);
+					MatlabTool.convertIntegersToMatlamArray(numbersOfIstancesI);
 			
 			matlabCode += "h" + i + " = " +
-			"plot([1:" + (numOfIter+1) + "], " + valuesStringI + ", '-o');" + NL;
+			"plot([1:" + (numOfIter) + "], " + valuesStringI + ", '-o');" + NL;
 			
-			labelsList.add(methodInstanceI.exportInstanceName());
+			labelsList.add(labelI);
 			
 			hsList.add("h" + i);
 		}
@@ -130,24 +137,6 @@ public class PostProcInvestigationOfInstPresenceOfMethods extends PostProcessing
 		saveAndProcessMatlab(matlabCode, OUTPUT_PATH, OUTPUT_FILE);
 	}
 
-	public List<Double> getMethodValues(MethodInstanceDescription methodInstance,
-			List<MethodStatisticResultWrapper> statistics, int numberOfIterations, double value) {
-
-		List<Double> values = new ArrayList<>();
-		for (int i = 0; i <= numberOfIterations; i++) {
-			values.add(Double.NaN);
-		}
-
-		for (MethodStatisticResultWrapper statRsltI : statistics) {
-			
-			Iteration iterationI = statRsltI.getIteration();
-			int iterationNumber = (int) iterationI.getIterationNumber();
-			
-			values.set(iterationNumber, value);
-		}
-
-		return values;
-	}
 	
 	public static void main(String [] args) throws Exception {
 		

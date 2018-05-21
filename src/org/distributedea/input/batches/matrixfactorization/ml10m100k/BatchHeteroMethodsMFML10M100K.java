@@ -25,14 +25,15 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputMatrixFactorization;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcTableOfJob;
-import org.distributedea.input.postprocessing.latex.PostProcTableOfJobRunResults;
-import org.distributedea.input.postprocessing.latex.PostProcTableSuccessOfPlanners;
-import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
-import org.distributedea.input.postprocessing.matlab.PostProcCountsOfAllottedTimeOfMethodTypes;
-import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
-import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
-import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
+import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJob;
+import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJobRunResults;
+import org.distributedea.input.postprocessing.general.latex.PostProcTableSuccessOfPlanners;
+import org.distributedea.input.postprocessing.general.matlab.PostProcBoxplot;
+import org.distributedea.input.postprocessing.general.matlab.PostProcCountsOfAllottedTimeOfMethodTypes;
+import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
+import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
+import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
+import org.distributedea.input.postprocessing.matrixfactorization.PostProcMFTestSetTableOfJobRunResults;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
@@ -164,10 +165,11 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		
 		PostProcessing psLat0 = new PostProcTableOfJob();
 		PostProcessing psLat1 = new PostProcTableOfJobRunResults(10);
+		PostProcessing psLat2 = new PostProcMFTestSetTableOfJobRunResults(10);
 		
 		batch.addPostProcessings(psLat0);
 		batch.addPostProcessings(psLat1);
-		
+		batch.addPostProcessings(psLat2);
 		
 		String YLABEL0 = "hodnota RMSE fitness";
 		PostProcessing psMat0 = new PostProcBoxplot(YLABEL0);

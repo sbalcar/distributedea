@@ -16,10 +16,10 @@ import org.distributedea.agents.systemagents.centralmanager.structures.problemto
 import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.jobs.InputTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
-import org.distributedea.input.postprocessing.latex.PostProcTableOfJobRunResults;
-import org.distributedea.input.postprocessing.latex.PostProcTableOfJob;
-import org.distributedea.input.postprocessing.matlab.PostProcBoxplot;
-import org.distributedea.input.postprocessing.matlab.PostProcInvestigationOfMedianJobRun;
+import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJob;
+import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJobRunResults;
+import org.distributedea.input.postprocessing.general.matlab.PostProcBoxplot;
+import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;

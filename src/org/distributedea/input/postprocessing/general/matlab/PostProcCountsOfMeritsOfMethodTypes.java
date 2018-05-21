@@ -1,4 +1,4 @@
-package org.distributedea.input.postprocessing.matlab;
+package org.distributedea.input.postprocessing.general.matlab;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,27 +6,39 @@ import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistories;
-import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistory;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.MatlabTool;
 import org.distributedea.input.batches.IInputBatch;
-import org.distributedea.input.batches.tsp.BatchTestTSP;
+import org.distributedea.input.batches.binpacking.objects1000.BatchHeteroMethodsBPP1000;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
-import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.methodtype.MethodInstanceDescription;
+import org.distributedea.ontology.methodtype.MethodType;
 
 /**
- * PostProcessing compares numbers of {@link Iteration}s which
- * computing agents got to computation. Creates one graph for each {@link JobRun}.
+ * PostProcessing shows for each {@link JobRun} merits on the result
+ * of {@link MethodType}s.
  * @author stepan
  *
  */
-public class PostProcCountsOfAllottedTimeOfMethods extends PostProcessingMatlab {
+public class PostProcCountsOfMeritsOfMethodTypes extends PostProcessingMatlab {
+	
+	private boolean legendContainsProblemTools;
+	private boolean legendContainsArguments;
+	
+	/**
+	 * Constructor
+	 * @param legendContainsProblemTools
+	 * @param legendContainsArguments
+	 */
+	public PostProcCountsOfMeritsOfMethodTypes(boolean legendContainsProblemTools,
+			boolean legendContainsArguments) {
+		this.legendContainsProblemTools = legendContainsProblemTools;
+		this.legendContainsArguments = legendContainsArguments;
+	}
 	
 	@Override
 	public void run(Batch batch) throws Exception {
@@ -53,7 +65,6 @@ public class PostProcCountsOfAllottedTimeOfMethods extends PostProcessingMatlab 
 		String BATCH_ID = jobID.getBatchID();
 		String JOB_ID = jobID.getJobID();
 		
-		
 		String monitoringDirNameI = FileNames.getResultDirectoryMonitoringDirectory(jobID);
 		File monitoringDirI = new File(monitoringDirNameI);
 		
@@ -62,52 +73,35 @@ public class PostProcCountsOfAllottedTimeOfMethods extends PostProcessingMatlab 
 		
 		methodHistories.sortMethodInstancesByName();
 
-		String YLABEL = "CPU jádro-iterace";
-		
-		List<Long> iterationsList = new ArrayList<>();
+		List<Long> improvementsList = new ArrayList<>();
 		List<String> labelsList = new ArrayList<>();
 		
-		for (MethodHistory methodI :
-			methodHistories.getMethods()) {
+		for (MethodType methodTypeI : methodHistories.exportMethodTypes()) {
 			
-			iterationsList.add(methodI.exportNumberOfIteration());
+			long numberOfTheBestI = methodHistories.exportNumberOfTheBestCreatedIndividuals(methodTypeI);
+			improvementsList.add(numberOfTheBestI);
 			
-			MethodInstanceDescription methodInstanceDescriptionI =
-					methodI.getMethodInstanceDescription();
-			labelsList.add(methodInstanceDescriptionI.exportInstanceName());
+			String labelI = methodTypeI.exportString(
+					legendContainsProblemTools, legendContainsArguments);
+			labelsList.add(labelI);
 		}
-
-		String iterations = MatlabTool.convertLongsToMatlamArray(iterationsList);
+		
+		String improvements = MatlabTool.convertLongsToMatlamArray(improvementsList);
 		String labels = MatlabTool.createLabels(labelsList);
 		labels = labels.replaceAll("ProblemTool", "");
 		labels = labels.replaceAll("Agent\\\\_", "");
 		
 		String OUTPUT_FILE = BATCH_ID +
 				getClass().getSimpleName().replace("PostProc", "") +
-				JOB_ID + jobID.getRunNumber();
+				JOB_ID + "" + jobID.getRunNumber();
 		String OUTPUT_PATH = FileNames.getResultDirectoryForMatlab(jobID.getBatchID());
-		
-		
-		@SuppressWarnings("unused")
-		String matlabCode_ =
-			"h = figure" + NL +
-			"hold on;" + NL +
-			"title('Časová kvanta, která dostala metody k dispozici');" + NL +
-			"ylabel('y: " + YLABEL + "', 'FontSize', 10);" + NL +
-			"bar(" + iterations + ");" + NL +
-			"labels = " + labels + ";" + NL +
-			"set(gca,'XTickLabel',labels);" + NL +
-			"set(gca,'XTickLabelRotation', -40);" + NL +
-			"hold off;" + NL +
-			"saveas(h, '" + OUTPUT_FILE + "','jpg');" + NL +
-			"exit;";
 		
 		String matlabCode =
 			"h = figure" + NL +
-			"barh(" + iterations + ");" + NL +
+			"barh(" + improvements + ");" + NL +
 			"labels = " + labels + ";" + NL +
 			"set(gca,'YTickLabel',labels);" + NL +
-			"title('Časová kvanta, která dostala metody k dispozici');" + NL +
+			"title('Počty dosažených vylepšení metodami');" + NL +
 			"h.PaperPositionMode = 'auto'" + NL +
 			"fig_pos = h.PaperPosition;" + NL +
 			"h.PaperSize = [fig_pos(3) fig_pos(4)];" + NL +
@@ -122,11 +116,12 @@ public class PostProcCountsOfAllottedTimeOfMethods extends PostProcessingMatlab 
 	public static void main(String [] args) throws Exception {
 		
 //		InputBatch batchCmp = new BatchHeteroComparingTSP();
-		IInputBatch batchCmp = new BatchTestTSP();
+		IInputBatch batchCmp = new BatchHeteroMethodsBPP1000();
 		Batch batch = batchCmp.batch();
 		
-		PostProcessing p = new PostProcCountsOfAllottedTimeOfMethods();
+		PostProcessing p = new PostProcCountsOfMeritsOfMethodTypes(false, false);
 		p.run(batch);
+		System.out.println(p.exportXML());
 	}
 	
 }

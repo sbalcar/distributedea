@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
-import org.distributedea.input.postprocessing.matlab.dumy.PostProcMonitoring;
+import org.distributedea.input.postprocessing.general.matlab.dumy.PostProcMonitoring;
 
 public class Test {
 

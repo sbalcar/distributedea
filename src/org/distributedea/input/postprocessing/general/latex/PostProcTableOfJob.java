@@ -1,4 +1,4 @@
-package org.distributedea.input.postprocessing.latex;
+package org.distributedea.input.postprocessing.general.latex;
 
 import java.io.File;
 import java.io.FileNotFoundException;

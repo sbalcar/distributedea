@@ -1,4 +1,4 @@
-package org.distributedea.input.postprocessing.latex;
+package org.distributedea.input.postprocessing.general.latex;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -82,14 +82,12 @@ public class PostProcTableOfJobRunResults extends PostProcessing {
 		"\\hline\\hline" + NL;
 
 		for (Job jobI : jobs) {
-
-			String jobIdI = jobI.getJobID();
-			IProblem problemI = jobI.getProblem();
 			
-			Map<JobID, Double> resultsOfJobsMap = FilesystemTool
-					.getTheBestPartResultOfJobForAllRuns(BATCH_ID, jobIdI, NUMBER_OF_RUNS, problemI);
+			Map<JobID, Double> resultsOfJobsMap = readResultsOfJob(
+					BATCH_ID, NUMBER_OF_RUNS, jobI);
 
-			List<Double> resultsOfJobI = new ArrayList<Double>(resultsOfJobsMap.values());
+			List<Double> resultsOfJobI = new ArrayList<Double>(
+					resultsOfJobsMap.values());
 			
 			double min = Collections.min(resultsOfJobI);
 			double max = Collections.max(resultsOfJobI);
@@ -119,6 +117,16 @@ public class PostProcTableOfJobRunResults extends PostProcessing {
 		"\\end{table}";
 
 		return latexCode;
+	}
+	
+	protected Map<JobID, Double> readResultsOfJob(String batchID,
+			int numberOfRuns, Job job) throws IOException {
+		
+		String jobId = job.getJobID();
+		IProblem problem = job.getProblem();
+		
+		return FilesystemTool.getTheBestPartResultOfJobForAllRuns(
+				batchID, jobId, numberOfRuns, problem);
 	}
 	
 	private String createTableWithResults(Batch batch) throws Exception {

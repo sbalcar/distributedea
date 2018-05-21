@@ -1,4 +1,4 @@
-package org.distributedea.input.postprocessing.matlab.dumy;
+package org.distributedea.input.postprocessing.general.matlab.dumy;
 
 import java.io.File;
 import java.io.FileNotFoundException;
