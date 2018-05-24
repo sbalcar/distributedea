@@ -6,14 +6,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
+import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
+import org.distributedea.ontology.problem.IProblem;
 
 /**
  * Ontology represents results of one {@link Iteration}. Result statistics
@@ -36,7 +40,7 @@ public class ResultOfIteration implements Concept {
 	
 	
 	/**
-	 * COnstructor
+	 * Constructor
 	 */
 	public ResultOfIteration() {
 		methodInstanceIterations = new ArrayList<>();
@@ -116,6 +120,30 @@ public class ResultOfIteration implements Concept {
 		this.rePlan = rePlan;
 	}
 
+	public IndividualHash exportTheBestIndividual(IProblem problem) {
+		if (methodInstanceIterations == null ||
+				methodInstanceIterations.isEmpty()) {
+			return null;
+		}
+		ResultOfMethodInstanceIteration method0 =
+				methodInstanceIterations.get(0);
+		MethodStatisticResult methodStatistic0 =
+				method0.getMethodStatisticResult();
+		IndividualHash theBestIndiv =
+				methodStatistic0.getBestIndividual();
+		for (ResultOfMethodInstanceIteration methodI : methodInstanceIterations) {
+			MethodStatisticResult methodStatisticI =
+					methodI.getMethodStatisticResult();
+			IndividualHash idivI =
+					methodStatisticI.getBestIndividual();
+			if (FitnessTool.isFistFitnessBetterThanSecond(
+					idivI.getFitness(), theBestIndiv.getFitness(), problem)) {
+				theBestIndiv = idivI;
+			}
+		}
+		return theBestIndiv;
+	}
+	
 	/**
 	 * Tests validity of structure
 	 * @return

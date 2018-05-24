@@ -10,8 +10,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.methodsst
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
-import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
@@ -74,11 +73,11 @@ public class PlannerThePedigree implements IPlanner {
 			 ) throws Exception {
 			
 		MethodsStatistics methodsStatistics = history.exportMethodsResults(iteration);
-		IndividualWrapper theBestIndiwWrp = methodsStatistics.exportTheBestIndividualWrp();
-		Pedigree pedigree = theBestIndiwWrp.getIndividualEvaluated().getPedigree();
+		IndividualHash theBestIndiwHash = methodsStatistics.exportTheBestIndividualWrp();
+		Pedigree pedigree = theBestIndiwHash.getPedigree();
 		
 		// pring info
-		printLog(centralManager, theBestIndiwWrp, logger);
+		printLog(centralManager, theBestIndiwHash, logger);
 
 		// skip killing during first iteration
 		if (iteration.getIterationNumber() < SKIPPED_ITERATIONS_COUNT) {
@@ -107,11 +106,9 @@ public class PlannerThePedigree implements IPlanner {
 	}
 
 	private void printLog(Agent_CentralManager centralManager,
-			IndividualWrapper theBestIndiwWrp, IAgentLogger logger) {
+			IndividualHash theBestIndiwHash, IAgentLogger logger) {
 		
-		IndividualEvaluated individualEval =
-				theBestIndiwWrp.getIndividualEvaluated();
-		Pedigree pedigree = individualEval.getPedigree();
+		Pedigree pedigree = theBestIndiwHash.getPedigree();
 		
 		MethodDescriptionNumbers methodDescriptionNumbers =
 				pedigree.exportCreditsOfMethodDescriptions();

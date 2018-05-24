@@ -1,15 +1,44 @@
-package org.distributedea.agents.systemagents.monitor.model;
+package org.distributedea.ontology.individualhash;
+
+import jade.content.Concept;
 
 import java.util.List;
 
-public class IndividualDescription {
+import org.distributedea.ontology.individuals.Individual;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.pedigree.Pedigree;
+
+/**
+ * Ontology represents compressed {@link Individual}
+ * @author stepan
+ *
+ */
+public class IndividualHash implements Concept {
+
+	private static final long serialVersionUID = 1L;
 
 	private String individualHash;
 	
 	private double fitness;
 	
+	private Pedigree pedigree;
+	
 	private List<Double> distances;
 
+	/**
+	 * Constructor
+	 * @param indivEval
+	 */
+	public IndividualHash(IndividualEvaluated indivEval) {
+		if (indivEval == null) {
+			throw new IllegalArgumentException("Argument " +
+					IndividualEvaluated.class.getSimpleName() + " is not valid");
+		}
+		setIndividualHash(indivEval.hashCode() + "");
+		setFitness(indivEval.getFitness());
+		setPedigree(indivEval.getPedigree());
+		setDistances(null);
+	}
 	
 	public String getIndividualHash() {
 		return individualHash;
@@ -24,30 +53,41 @@ public class IndividualDescription {
 	public void setFitness(double fitness) {
 		this.fitness = fitness;
 	}
+	
+	public Pedigree getPedigree() {
+		return pedigree;
+	}
+	public void setPedigree(Pedigree pedigree) {
+		this.pedigree = pedigree;
+	}
 
 	public List<Double> getDistances() {
 		return distances;
 	}
 	public void setDistances(List<Double> distances) {
 		this.distances = distances;
-	} 
+	}
 	
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof IndividualDescription)) {
+	    if (other == null || !(other instanceof IndividualHash)) {
 	        return false;
 	    }
 	    
-	    IndividualDescription idOuther = (IndividualDescription)other;
+	    IndividualHash idOuther = (IndividualHash)other;
 	    
 	    boolean areIndividualHashEqual =
 	    		this.getIndividualHash().equals(idOuther.getIndividualHash());
 	    boolean areFitnessEqual =
 	    		this.getFitness() == idOuther.getFitness();
+	    boolean arePedigreeEqual =
+	    		(this.getPedigree() == null && idOuther.getPedigree() == null) ||
+	    		(this.getPedigree() != null && this.getPedigree().equals(idOuther.getPedigree()));
 
+	    
 	    if ((this.getDistances() == null) && (idOuther.getDistances() == null)) {
-	    	return areIndividualHashEqual && areFitnessEqual;
+	    	return areIndividualHashEqual && areFitnessEqual && arePedigreeEqual;
 	    }
 
 	    if ( ((this.getDistances() == null) && (idOuther.getDistances() != null)) ||
@@ -67,7 +107,8 @@ public class IndividualDescription {
 	    	}
 	    }
 	    
-	    return areIndividualHashEqual && areFitnessEqual && areDistancesEqual;
+	    return areIndividualHashEqual && areFitnessEqual &&
+	    		arePedigreeEqual && areDistancesEqual;
 	}
 	
     @Override

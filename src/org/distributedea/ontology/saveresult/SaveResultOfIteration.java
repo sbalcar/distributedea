@@ -3,6 +3,7 @@ package org.distributedea.ontology.saveresult;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.problem.IProblem;
 
 import jade.content.AgentAction;
 
@@ -15,6 +16,8 @@ public class SaveResultOfIteration implements AgentAction {
 
 	private static final long serialVersionUID = 1L;
 
+	private IProblem problem;
+	
 	private ResultOfIteration results;
 
 	@Deprecated
@@ -24,18 +27,33 @@ public class SaveResultOfIteration implements AgentAction {
 	 * Constructor
 	 * @param results
 	 */
-	public SaveResultOfIteration(ResultOfIteration results) {
-		if (results == null || ! results.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
-		}
-		this.results = results;
+	public SaveResultOfIteration(IProblem problem,
+			ResultOfIteration results) {
+		setProblem(problem);
+		setResults(results);
 	}
 	
+	public IProblem getProblem() {
+		return problem;
+	}
+	@Deprecated
+	public void setProblem(IProblem problem) {
+		if (problem == null || ! problem.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IProblem.class.getSimpleName() + " is not valid");
+		}
+		this.problem = problem;
+	}
+
 	public ResultOfIteration getResults() {
 		return results;
 	}
 	@Deprecated
 	public void setResults(ResultOfIteration results) {
+		if (results == null || ! results.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ResultOfIteration.class.getSimpleName() + " is not valid");
+		}
 		this.results = results;
 	}
 	

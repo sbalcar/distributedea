@@ -6,6 +6,7 @@ import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.data.SaveTheBestIndividual;
@@ -61,6 +62,7 @@ public class ResultOntology extends BeanOntology {
         	add(IndividualsWrappers.class);
             add(IndividualWrapper.class);
             add(Individual.class.getPackage().getName());
+            add(IndividualHash.class.getPackage().getName());
             
             add(LatentFactor.class.getPackage().getName());
             

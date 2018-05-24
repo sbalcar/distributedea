@@ -1,12 +1,11 @@
-package org.distributedea.agents.systemagents.monitor.model;
+package org.distributedea.agents.systemagents.monitor.statisticmodel.methodmodel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.individuals.Individual;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
@@ -20,7 +19,7 @@ public class MethodStatisticModel {
 	
 	private final MethodDescription agentDescription;
 	
-	private IndividualEvaluated bestIndividual;
+	private IndividualHash bestIndividual;
 	
 	private int numberOfIndividuals = 0;
 	private int numberOfBestCreatedIndividuals = 0;
@@ -29,7 +28,7 @@ public class MethodStatisticModel {
 	
 	private int INDIVIDUALS_MAX_SIZE = 1000;
 	private int duplicateIndividualsNumber = 0;
-	private List<IndividualDescription> individuals = new ArrayList<>();
+	private List<IndividualHash> individuals = new ArrayList<>();
 	
 
 	/**
@@ -50,7 +49,7 @@ public class MethodStatisticModel {
 		return agentDescription;
 	}
 	
-	public IndividualEvaluated getBestIndividual() {
+	public IndividualHash getBestIndividual() {
 		return this.bestIndividual;
 	}
 
@@ -78,42 +77,33 @@ public class MethodStatisticModel {
 	}
 	
 
-	void addBestIndividualEvaluatedFromLastIteration(
-			IndividualEvaluated individualEval) {
+	void addBestIndividualHashFromLastIteration(
+			IndividualHash indivHash) {
 		
 		if (bestIndividual == null) {
-			addIndividualEvaluated(individualEval);
+			addIndividualHash(indivHash);
 			
 			numberOfBestCreatedIndividuals = 0;
 			numberOfBestCreatedGeneticMaterial = 0;
 		}
 	}
-	public void addIndividualEvaluated(IndividualEvaluated individualEval) {
-
+	public void addIndividualHash(IndividualHash indivHash) {
+		
 		// update best agent of method
-		if ((bestIndividual == null) ||
-			isFistIndividualWBetterThanSecond(individualEval, bestIndividual)) {
+		if ((bestIndividual == null) || FitnessTool.
+				isFistFitnessBetterThanSecond(
+				indivHash.getFitness(),
+				bestIndividual.getFitness(),
+				agentDescription.getProblem())) {
 			
-			bestIndividual = individualEval;
+			bestIndividual = indivHash;
 		}
 		
-		// transform Individual to IndividualDescription
-		double fitness = individualEval.getFitness();
-		Individual individual = individualEval.getIndividual();
-		
-		String individualHash = individual.toLogString();
-		List<Double> distances = null;
-		
-		IndividualDescription description = new IndividualDescription();
-		description.setIndividualHash(individualHash);
-		description.setFitness(fitness);
-		description.setDistances(distances);
-		
 		if (individuals.size() <= INDIVIDUALS_MAX_SIZE) {
-			if (individuals.contains(description)) {
+			if (individuals.contains(indivHash)) {
 				duplicateIndividualsNumber++;
 			} else {
-				individuals.add(description);
+				individuals.add(indivHash);
 			}
 		}		
 		incrementIndividualsCount();
@@ -126,20 +116,13 @@ public class MethodStatisticModel {
 		}
 		
 		double fitnessAverage = 0;
-		for (IndividualDescription individualDescI : individuals) {
+		for (IndividualHash individualDescI : individuals) {
 			
 			double fitnessRatio =
 					individualDescI.getFitness() / individuals.size();
 			fitnessAverage += fitnessRatio;
 		}
 		return fitnessAverage;
-	}
-	
-	private boolean isFistIndividualWBetterThanSecond(
-			IndividualEvaluated individual1, IndividualEvaluated individual2) {
-		
-		return FitnessTool.isFistIndividualEBetterThanSecond(individual1,
-						individual2, agentDescription.getProblem());
 	}
 	
 	public MethodStatistic exportMethodStatistic() {

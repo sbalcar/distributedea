@@ -25,7 +25,11 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.data.SaveTheBestIndividual;
+import org.distributedea.ontology.individualhash.IndividualHash;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
+import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
 
@@ -127,15 +131,16 @@ public class Agent_DataManager extends Agent_DistributedEA {
 			return null;
 		}
 		
-		IndividualWrapper result = saveResultOfComputing.getResult();
+		IndividualWrapper indivWrp = saveResultOfComputing.getResult();
+		IndividualEvaluated indivEval = indivWrp.getIndividualEvaluated();
+		JobID jobID = indivWrp.getJobID();
 		
-		String fileName = FileNames.getResultFile(result.getJobID());
+		String fileName = FileNames.getResultSolutionFile(jobID);
+		
 		try {
-			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
-			writer.append(result.getIndividualEvaluated().getFitness() + "\n");
-			writer.close();
-		} catch (IOException e) {
-			getLogger().logThrowable("Part result can't be logged", e);
+			indivEval.exportXML(new File(fileName));
+		} catch (Exception e) {
+			getLogger().logThrowable("", e);
 		}
 		
 		return null;
@@ -148,7 +153,9 @@ public class Agent_DataManager extends Agent_DistributedEA {
 			return null;
 		}
 		
+		IProblem problem = saveResult.getProblem();
 		ResultOfIteration results = saveResult.getResults();
+
 		
 		String monitoringDirName = FileNames.
 				getResultDirectoryMonitoringDirectory(results.getJobID());
@@ -157,11 +164,24 @@ public class Agent_DataManager extends Agent_DistributedEA {
 		if (! dir.isDirectory()) {
 			dir.mkdir();
 		}
-		
+		// export History
 		try {
 			results.exportXML(new File(monitoringDirName));
 		} catch (Exception e) {
 			getLogger().logThrowable("", e);
+		}
+		
+		
+		IndividualHash theBestIndiv =
+				results.exportTheBestIndividual(problem);
+		// export fitness
+		String fileName = FileNames.getResultFitnessFile(results.getJobID());
+		try {
+			Writer writer = new BufferedWriter(new FileWriter(fileName, true));
+			writer.append(theBestIndiv.getFitness() + "\n");
+			writer.close();
+		} catch (IOException e) {
+			getLogger().logThrowable("Part result can't be logged", e);
 		}
 		
 		return null;

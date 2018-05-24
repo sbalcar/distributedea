@@ -17,18 +17,22 @@ import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
-import org.distributedea.agents.systemagents.monitor.model.MonitorStatisticModel;
+import org.distributedea.agents.systemagents.monitor.bestindividualmodel.IndividualModel;
+import org.distributedea.agents.systemagents.monitor.statisticmodel.MonitorStatisticModel;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.MonitorOntology;
 import org.distributedea.ontology.ResultOntology;
+import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
+import org.distributedea.ontology.monitor.MethodStatistic;
+import org.distributedea.ontology.monitor.MethodStatistics;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.problem.IProblem;
@@ -45,6 +49,8 @@ public class Agent_Monitor extends Agent_DistributedEA {
 	private static final long serialVersionUID = 1L;
 	
 	private MonitorStatisticModel model;
+	
+	private IndividualModel bestIndividual;
 	
 	private MethodDescriptions agentsToMonitor;
 
@@ -100,6 +106,9 @@ public class Agent_Monitor extends Agent_DistributedEA {
 					} else if (concept instanceof StartMonitoring) {
 						
 						return respondToStartMonitoring(msgRequest, action);
+					} else if (concept instanceof AccessesResult) {
+						
+						return respondToAccessesResult(msgRequest, action);
 					}
 
 				} catch (OntologyException e) {
@@ -179,11 +188,43 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		AgentConfiguration conf = descr.getAgentConfiguration();
 		getLogger().log(Level.INFO, "Individual from : " + conf.exportAgentname());
 		
-		if (model != null) 	{
-			model.addIndividualWrp(individualWrp);
+		if (this.bestIndividual == null) {
+			this.bestIndividual = new IndividualModel(individualWrp);
+		} else {
+			this.bestIndividual.update(individualWrp, descr.getProblem());
+		}
+		
+		if (this.model != null) {
+			this.model.addIndividualWrp(individualWrp);
 		}
 	}
 
+	protected ACLMessage respondToAccessesResult(ACLMessage request, Action action) {
+		
+		@SuppressWarnings("unused")
+		AccessesResult accessesResult = (AccessesResult) action.getAction();
+		
+		IndividualWrapper bestIdnivWrp = null;
+		if (this.bestIndividual != null) {
+			bestIdnivWrp = this.bestIndividual.getIndividualWrapper();
+		}
+		
+		ACLMessage reply = request.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+		reply.setLanguage(codec.getName());
+		reply.setOntology(MonitorOntology.getInstance().getName());
+		
+		// sends IndividualWrapper as object
+		try {
+			reply.setContentObject(bestIdnivWrp);
+		} catch (Exception e) {
+			logger.logThrowable("IOException by sending " +
+					IndividualWrapper.class.getSimpleName(), e);
+		}
+		
+		return reply;
+	}
+	
 	protected ACLMessage respondToStartMonitoring(ACLMessage request, Action action) {
 		
 		StartMonitoring startMonitoring = (StartMonitoring) action.getAction();
@@ -193,6 +234,8 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		
 		this.model = new MonitorStatisticModel(jobID, problemToSolve);
 		this.agentsToMonitor = agentsToMonitor;
+		
+		this.bestIndividual = null;
 		
 		return null;
 	}
@@ -216,7 +259,9 @@ public class Agent_Monitor extends Agent_DistributedEA {
 			model = null;
 		} else {
 			
-			statistic = new Statistic(jobID);
+			MethodStatistics methStats =
+					new MethodStatistics(new ArrayList<MethodStatistic>());
+			statistic = new Statistic(jobID, methStats);
 		}
 		
 		if (! statistic.valid(getLogger())) {
@@ -243,7 +288,7 @@ public class Agent_Monitor extends Agent_DistributedEA {
 		reply.setLanguage(codec.getName());
 		reply.setOntology(MonitorOntology.getInstance().getName());
 		
-		// sends individual as object
+		// sends Statistic as object
 		try {
 			reply.setContentObject(statistic);
 		} catch (Exception e) {

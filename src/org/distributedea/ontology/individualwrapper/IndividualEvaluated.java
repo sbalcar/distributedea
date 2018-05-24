@@ -114,7 +114,7 @@ public class IndividualEvaluated implements Concept {
 	@Override
 	public boolean equals(Object other) {
 		
-	    if (!(other instanceof IndividualEvaluated)) {
+	    if (other == null || !(other instanceof IndividualEvaluated)) {
 	        return false;
 	    }
 	    

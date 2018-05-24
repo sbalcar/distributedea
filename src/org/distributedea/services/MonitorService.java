@@ -14,8 +14,11 @@ import jade.lang.acl.UnreadableException;
 
 import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
+import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.MonitorOntology;
+import org.distributedea.ontology.computing.AccessesResult;
+import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.monitor.GetStatistic;
@@ -168,5 +171,74 @@ public class MonitorService {
 		}
 		
 		return statistic;
+	}
+	
+	/**
+	 * Sends request {@link AccessesResult} for currently
+	 * the best {@link IndividualWrapper} of computing.
+	 * @param agent
+	 * @param logger
+	 * @return
+	 */
+	public static IndividualWrapper getBestIndividual(Agent_CentralManager agent,
+			IAgentLogger logger) {
+		
+		if (agent == null) {
+			throw new IllegalArgumentException("Argument " +
+					Agent_DistributedEA.class.getSimpleName() + " agent can't be null");
+		}
+		if (logger == null) {
+			throw new IllegalArgumentException("Argument " +
+					IAgentLogger.class.getSimpleName() + " is not valid");
+		}
+		
+		
+		AID monitorAID = new AID(AgentNames.MONITOR.getName(), false);
+		
+		Ontology ontology = MonitorOntology.getInstance();
+
+		ACLMessage msgAccessesResult = new ACLMessage(ACLMessage.REQUEST);
+		msgAccessesResult.addReceiver(monitorAID);
+		msgAccessesResult.setSender(agent.getAID());
+		msgAccessesResult.setLanguage(agent.getCodec().getName());
+		msgAccessesResult.setOntology(ontology.getName());
+
+		
+		AccessesResult accessesResult = new AccessesResult();
+		
+		Action action = new Action(agent.getAID(), accessesResult);
+		
+		try {
+			agent.getContentManager().fillContent(msgAccessesResult, action);
+			
+		} catch (Codec.CodecException e) {
+			logger.logThrowable("CodecException by sending " +
+					AccessesResult.class.getSimpleName(), e);
+		} catch (OntologyException e) {
+			logger.logThrowable("OntologyException by sending " +
+					AccessesResult.class.getSimpleName(), e);
+		}
+		
+		
+		ACLMessage msgIndivWrp = null;
+		try {
+			msgIndivWrp = FIPAService
+					.doFipaRequestClient(agent, msgAccessesResult);
+		} catch (FIPAException e) {
+			logger.logThrowable("FIPAException by receiving " +
+					IndividualWrapper.class.getSimpleName(), e);
+			return null;
+		}
+		
+		// send as object
+		IndividualWrapper indivWrp = null;
+		try {
+			indivWrp = (IndividualWrapper) msgIndivWrp.getContentObject();
+		} catch (UnreadableException e) {
+			logger.logThrowable("UnreadableException by receiving " +
+					IndividualWrapper.class.getSimpleName(), e);
+		}
+		
+		return indivWrp;
 	}
 }

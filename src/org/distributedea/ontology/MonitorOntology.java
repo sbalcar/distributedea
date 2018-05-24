@@ -6,7 +6,9 @@ import jade.content.onto.Ontology;
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
+import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
@@ -46,6 +48,7 @@ public class MonitorOntology extends BeanOntology {
             add(IndividualWrapper.class);
             add(IndividualEvaluated.class);
             add(Individual.class.getPackage().getName());
+            add(IndividualHash.class.getPackage().getName());
             
             add(LatentFactor.class.getPackage().getName());
             
@@ -63,6 +66,8 @@ public class MonitorOntology extends BeanOntology {
             add(ArgumentDef.class.getPackage().getName());
             add(AgentConfiguration.class.getPackage().getName());
         	
+            add(AccessesResult.class.getPackage().getName());
+            
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);
         }

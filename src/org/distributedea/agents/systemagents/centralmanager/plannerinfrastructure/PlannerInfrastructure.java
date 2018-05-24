@@ -137,9 +137,6 @@ public final class PlannerInfrastructure {
 						" did not supply data from all methods");
 			}
 			
-			IndividualWrapper bestIndividualWrapper =
-					statistic.exportBestIndividualWrapper();
-			
 			// update history by new statistic
 			history.addStatictic(statistic, iterationI);
 			
@@ -153,37 +150,52 @@ public final class PlannerInfrastructure {
 			
 			ResultOfIteration resultOfIterationI = history.
 					exportResultOfIteration(iterationI, logger);
-			saveResult(iterationI, bestIndividualWrapper,
-					resultOfIterationI);
+			
+			saveResultOfIteration(iterationI, resultOfIterationI, jobRun.getProblem());
 		}
+
+		// save model at the end of computation
+		IndividualWrapper bestIndividualWrp =
+				MonitorService.getBestIndividual(centralManager, logger);
+
+		saveBestIdividualWrp(
+				endCondition.iteration(iterationNumI), bestIndividualWrp);
 		
 		planner.exit(centralManager, logger);
 		
 	}
 	
-	private void saveResult(Iteration iteration,
-			IndividualWrapper bestIndividualWrapper,
-			ResultOfIteration resultOfIteration) {
-				
-		if (bestIndividualWrapper != null) {
-			
-			IndividualEvaluated bestindividual = bestIndividualWrapper.
-					getIndividualEvaluated();
+	private void saveResultOfIteration(Iteration iteration,
+			ResultOfIteration resultOfIteration, IProblem problem) {
+		if (resultOfIteration == null) {
+			throw new IllegalArgumentException("Argument " +
+					ResultOfIteration.class.getSimpleName() + " is not valid");
+		}
+						
+		DataManagerService.saveResultOfIteration(centralManager, iteration,
+				resultOfIteration, problem, logger);
+	}
 
-			logger.log(Level.INFO, "" + bestindividual.getFitness());
-			if (bestindividual.getIndividual() instanceof IndividualPoint) {
-				logger.log(Level.INFO, "" + bestindividual.getIndividual().toString());
-			}
-			if (bestindividual.getIndividual() instanceof IndividualArguments) {
-				logger.log(Level.INFO, "" + bestindividual.getIndividual().toLogString());
-			}
+	private void saveBestIdividualWrp(Iteration iteration,
+			IndividualWrapper bestIndividualWrp) {
+		if (bestIndividualWrp == null) {
+			throw new IllegalArgumentException("Argument " +
+					IndividualWrapper.class.getSimpleName() + " is not valid");
+		}
+		
+		IndividualEvaluated bestindividual =
+				bestIndividualWrp.getIndividualEvaluated();
+
+		logger.log(Level.INFO, "" + bestindividual.getFitness());
+		if (bestindividual.getIndividual() instanceof IndividualPoint) {
+			logger.log(Level.INFO, "" + bestindividual.getIndividual().toString());
+		}
+		if (bestindividual.getIndividual() instanceof IndividualArguments) {
+			logger.log(Level.INFO, "" + bestindividual.getIndividual().toLogString());
 		}
 		
 		DataManagerService.saveIndividualAsBestSolutionOfIteration(
-				centralManager, iteration, bestIndividualWrapper, logger);
-		
-		DataManagerService.saveResultOfIteration(centralManager, iteration,
-				resultOfIteration, logger);
+				centralManager, iteration, bestIndividualWrp, logger);
+
 	}
-	
 }

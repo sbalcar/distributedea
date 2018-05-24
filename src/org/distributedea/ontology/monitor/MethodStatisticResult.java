@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualhash.IndividualHash;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -30,7 +30,7 @@ public class MethodStatisticResult implements Concept {
 	
 	private int numberOfTypeIndividuals;
 	
-	private IndividualEvaluated bestIndividual;
+	private IndividualHash bestIndividual;
 	
 	private double fitnessAverage;
 	
@@ -63,10 +63,10 @@ public class MethodStatisticResult implements Concept {
 		this.numberOfTypeIndividuals = numberOfTypeIndividuals;
 	}
 	
-	public IndividualEvaluated getBestIndividual() {
+	public IndividualHash getBestIndividual() {
 		return bestIndividual;
 	}
-	public void setBestIndividual(IndividualEvaluated bestIndividual) {
+	public void setBestIndividual(IndividualHash bestIndividual) {
 		this.bestIndividual = bestIndividual;
 	}
 	

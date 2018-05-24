@@ -120,7 +120,7 @@ public class PostProcTableOfJobRunResults extends PostProcessing {
 	}
 	
 	protected Map<JobID, Double> readResultsOfJob(String batchID,
-			int numberOfRuns, Job job) throws IOException {
+			int numberOfRuns, Job job) throws Exception {
 		
 		String jobId = job.getJobID();
 		IProblem problem = job.getProblem();

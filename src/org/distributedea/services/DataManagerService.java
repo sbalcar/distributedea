@@ -10,6 +10,7 @@ import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
+import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
 
@@ -87,7 +88,8 @@ public class DataManagerService {
 	 * @param logger
 	 */
 	public static void saveResultOfIteration(Agent_CentralManager agent,
-			Iteration iteration, ResultOfIteration result, IAgentLogger logger) {
+			Iteration iteration, ResultOfIteration result, IProblem problem,
+			IAgentLogger logger) {
 
 		if (agent == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -101,6 +103,10 @@ public class DataManagerService {
 		if (iteration == null || ! iteration.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
 					Iteration.class.getSimpleName() + " is not valid");
+		}
+		if (problem == null || ! problem.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					IProblem.class.getSimpleName() + " is not valid");
 		}
 		if (logger == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -117,7 +123,8 @@ public class DataManagerService {
 		msgPartResult.setLanguage(agent.getCodec().getName());
 		msgPartResult.setOntology(ontology.getName());
 	    
-		SaveResultOfIteration save = new SaveResultOfIteration(result);
+		SaveResultOfIteration save =
+				new SaveResultOfIteration(problem, result);
 		
 		// sends individual as object
 		try {

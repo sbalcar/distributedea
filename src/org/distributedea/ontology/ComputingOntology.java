@@ -22,6 +22,7 @@ import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.ontology.dataset.tsp.PositionPoint;
 import org.distributedea.ontology.dataset.vertexcover.Graph;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
@@ -55,6 +56,7 @@ public class ComputingOntology extends BeanOntology {
             add(IndividualWrapper.class);
             add(IndividualEvaluated.class);
             add(Individual.class.getPackage().getName());
+            add(IndividualHash.class.getPackage().getName());
             
             add(LatentFactor.class.getPackage().getName());
             

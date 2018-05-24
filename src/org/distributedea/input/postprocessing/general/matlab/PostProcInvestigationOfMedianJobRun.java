@@ -73,7 +73,7 @@ public class PostProcInvestigationOfMedianJobRun extends PostProcessingMatlab {
 					batchID, jobI.getJobID(), jobI.getNumberOfRuns(),
 					jobI.getProblem());
 			
-			String fileNameI = FileNames.getResultFile(jobIDI);
+			String fileNameI = FileNames.getResultFitnessFile(jobIDI);
 			List<Double> valuesI = FilesystemTool.readVectorFromFile(
 					new File(fileNameI));
 			String matlabArrayI =

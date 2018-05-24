@@ -18,6 +18,7 @@ import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
+import org.distributedea.ontology.monitor.MethodStatistics;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
@@ -215,9 +216,11 @@ public class History {
 					Iteration.class.getSimpleName() + " is not valid");
 		}
 		
+		MethodStatistics methStats = statistic.getMethodStatistics();
+		
 		if (iteration.getIterationNumber() == 1) {
 			
-			for (MethodStatistic methodStatI : statistic.getStatistics()) {
+			for (MethodStatistic methodStatI : methStats.getStatistics()) {
 				addMethodStatistic(methodStatI, iteration);
 			}
 			
@@ -229,7 +232,7 @@ public class History {
 				throw new IllegalStateException();
 			}
 			
-			for (MethodStatistic methodStatI : statistic.getStatistics()) {
+			for (MethodStatistic methodStatI : methStats.getStatistics()) {
 			
 				MethodDescription agentDescriptionI =
 						methodStatI.getMethodDescription();

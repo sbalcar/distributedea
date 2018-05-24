@@ -163,15 +163,21 @@ public class FileNames {
 	}
 	
 	/**
-	 * Provides way to the centralized solution for one {@link JobRun}
+	 * Provides way to the centralized fitness for one {@link JobRun}
 	 * @param fileName
 	 * @return
 	 */
-	public static String getResultFile(JobID jobID) {
+	public static String getResultFitnessFile(JobID jobID) {
 	
 		return getResultDirectoryForJobRun(jobID) + File.separator +
 				"result-" + jobID.getJobID() + "-" + jobID.getRunNumber() + ".txt";
 	}	
+
+	public static String getResultSolutionFile(JobID jobID) {
+		
+		return getResultDirectoryForJobRun(jobID) + File.separator +
+				"solution.txt";
+	}
 	
 	public static String getResultDirectoryForMatlab(String batchID) {
 		

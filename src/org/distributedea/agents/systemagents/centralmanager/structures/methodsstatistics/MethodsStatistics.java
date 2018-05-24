@@ -11,7 +11,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.history.c
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfMaterial;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfGoodMaterial;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.comparators.methodstatistic.ComparatorQuantityOfImprovement;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
@@ -376,16 +376,12 @@ public class MethodsStatistics {
 	 * Exports the best {@link IndividualWrapper}
 	 * @return
 	 */
-	public IndividualWrapper exportTheBestIndividualWrp() {
+	public IndividualHash exportTheBestIndividualWrp() {
 		
 		MethodStatistic bestMethod =
 				exportMethodAchievedTheBestOfBestIndividuals();
-		MethodDescription methodDescription =
-				bestMethod.getMethodDescription();
-		IndividualEvaluated bestIndividual =
-				bestMethod.getMethodStatisticResult().getBestIndividual();
 		
-		return new IndividualWrapper(getJobID(), methodDescription,
-				bestIndividual);
+		return bestMethod.getMethodStatisticResult()
+				.getBestIndividual();
 	}
 }

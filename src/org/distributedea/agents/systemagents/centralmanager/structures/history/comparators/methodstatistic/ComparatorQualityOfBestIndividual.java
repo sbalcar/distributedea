@@ -3,7 +3,7 @@ package org.distributedea.agents.systemagents.centralmanager.structures.history.
 import java.util.Comparator;
 
 import org.distributedea.agents.FitnessTool;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.problem.IProblem;
 
@@ -18,16 +18,17 @@ public class ComparatorQualityOfBestIndividual implements Comparator<MethodStati
 	@Override
 	public int compare(MethodStatistic o1, MethodStatistic o2) {
 		
-		IndividualEvaluated individual1 = o1.exportBestIndividual();
-		IndividualEvaluated individual2 = o2.exportBestIndividual();
+		IndividualHash individual1 = o1.exportBestIndividual();
+		IndividualHash individual2 = o2.exportBestIndividual();
 		
 		if (individual1.getFitness() == individual2.getFitness()) {
 			return 0;
 		}
 		
 		boolean isFirstBetter = FitnessTool
-				.isFistIndividualEBetterThanSecond(individual1,
-						individual2, problem);
+				.isFistFitnessBetterThanSecond(
+						individual1.getFitness(),
+						individual2.getFitness(), problem);
 		boolean isFirstWorst = !isFirstBetter;
 		
 		if (isFirstWorst) {

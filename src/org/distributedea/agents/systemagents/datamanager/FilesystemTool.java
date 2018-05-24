@@ -69,7 +69,7 @@ public class FilesystemTool {
 					JobID.class.getSimpleName() + " is not valid");
 		}
 		
-		String fileName = FileNames.getResultFile(JobID);
+		String fileName = FileNames.getResultFitnessFile(JobID);
 		List<Double> listOfFitnessValues = FilesystemTool.readVectorFromFile(new File(fileName));
 		
 		if (listOfFitnessValues == null || listOfFitnessValues.isEmpty()) {
@@ -86,7 +86,7 @@ public class FilesystemTool {
 					JobID.class.getSimpleName() + " is not valid");
 		}
 		
-		String fileName = FileNames.getResultFile(JobID);
+		String fileName = FileNames.getResultFitnessFile(JobID);
 		List<Double> listOfFitnessValues = FilesystemTool.readVectorFromFile(new File(fileName));
 
 		if (listOfFitnessValues == null || listOfFitnessValues.isEmpty()) {

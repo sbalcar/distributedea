@@ -4,12 +4,12 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
+import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 
 /**
- * Ontology represents statistic of one method computation.
+ * Ontology represents statistic of one computational method
  * @author stepan
  *
  */
@@ -32,10 +32,12 @@ public class MethodStatistic implements Concept {
 	public MethodStatistic(MethodDescription agentDescription,
 			MethodStatisticResult methodStatisticResult) {
 		if (agentDescription == null || ! agentDescription.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					MethodDescription.class.getSimpleName() + " is not valid");
 		}
 		if (methodStatisticResult == null || ! methodStatisticResult.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					MethodStatisticResult.class.getSimpleName() + " is not valid");
 		}
 		
 		this.agentDescription = agentDescription;
@@ -58,7 +60,7 @@ public class MethodStatistic implements Concept {
 		this.methodStatisticResult = methodStatisticResult;
 	}
 	
-	public IndividualEvaluated exportBestIndividual() {
+	public IndividualHash exportBestIndividual() {
 		
 		return methodStatisticResult.getBestIndividual();
 	}
