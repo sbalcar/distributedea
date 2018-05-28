@@ -652,6 +652,7 @@ public class Visualization {
 	    }
 	}
 
+	@SuppressWarnings("unused")
 	private static void visualHistoramOfUserRMSEBaselineUserClustering8SameRaitings(
 			ClusterSet clustersOfUsers, DatasetMF datasetMF) throws Exception {
 

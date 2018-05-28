@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent;
+package org.distributedea.agents.computingagents.universal;
 
 import jade.content.Concept;
 import jade.content.lang.Codec.CodecException;
@@ -6,7 +6,6 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -22,11 +21,14 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
-import org.distributedea.agents.computingagents.computingagent.models.BestIndividualModel;
-import org.distributedea.agents.computingagents.computingagent.models.HelpersModel;
-import org.distributedea.agents.computingagents.computingagent.models.IndividualToDistributionModel;
-import org.distributedea.agents.computingagents.computingagent.models.ReceivedIndividualsModel;
+import org.distributedea.agents.computingagents.universal.behaviors.CompAgentIndivDistributionBehavior;
+import org.distributedea.agents.computingagents.universal.localsaver.LocalSaver;
+import org.distributedea.agents.computingagents.universal.models.BestIndividualModel;
+import org.distributedea.agents.computingagents.universal.models.HelpersModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReadyToSendIndividualsModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReceivedIndividualsModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ComputingOntology;
@@ -58,7 +60,6 @@ import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problems.IProblemTool;
 import org.distributedea.problems.ProblemTool;
-import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
 /**
@@ -85,10 +86,10 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	private BestIndividualModel bestIndividualModel = new BestIndividualModel();
 	
 	// the set of received Individuals from distribution
-	protected ReceivedIndividualsModel receivedIndividuals = new ReceivedIndividualsModel(DEBUG);
+	protected IReceivedIndividualsModel receivedIndividuals = new ReceivedIndivsOneQueueModel();
 	
 	// the set of Individuals to distribution
-	protected IndividualToDistributionModel individualsToDistribution = new IndividualToDistributionModel();
+	protected IReadyToSendIndividualsModel readyToSendIndividuals = new ReadyToSendIndivsTwoQueuesModel();
 	
 	private HelpersModel helpers = new HelpersModel();
 
@@ -331,13 +332,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	@SuppressWarnings("unused")
-	protected void processIndividualWrp(ACLMessage request, IndividualWrapper individualWrapper) {
+	protected void processIndividualWrp(ACLMessage request, IndividualWrapper individualWrp) {
 		
-		if (individualWrapper == null) {
+		if (individualWrp == null) {
 			getLogger().log(Level.INFO, "Received invalid " + Individual.class.getSimpleName());
 			return;
 		}
-		if (DEBUG && (! individualWrapper.valid(getLogger()))) {
+		if (DEBUG && (! individualWrp.valid(getLogger()))) {
 			getLogger().log(Level.INFO, "Received invalid " + Individual.class.getSimpleName());
 			return;
 		}
@@ -352,14 +353,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		IProblemTool problemTool = computingThread.getProblemTool();
 		
 		// add individual to received model
-		receivedIndividuals.addIndividual(individualWrapper, problem, dataset, problemTool, getLogger());
+		receivedIndividuals.addIndividual(individualWrp, problem, dataset, problemTool, getLogger());
 		
 		// update best helpers model
-		helpers.processReceivedIndiv(individualWrapper,
+		helpers.processReceivedIndiv(individualWrp,
 				bestIndividualModel.getTheBestIndividualWrp(), problem);
 		
 		// update the best Individual model
-		bestIndividualModel.update(individualWrapper, problem, getLogger());
+		bestIndividualModel.update(individualWrp, problem, getLogger());
 	}
 	
 	
@@ -423,7 +424,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		final ProblemWrapper problemWrapper =
 				startComputing.getProblemWrapper();
-		final IslandModelConfiguration configuration =
+		final IslandModelConfiguration islandModelConf =
 				startComputing.getIslandModelConfiguration();
 		
 		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
@@ -443,7 +444,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		try {
-			startComputation(problemWrapper, configuration);
+			startComputation(problemWrapper, islandModelConf);
 		} catch (Exception e) {
 			ACLMessage reply = request.createReply();
 			reply.setPerformative(ACLMessage.REFUSE);
@@ -511,7 +512,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		reply.setOntology(ResultOntology.getInstance().getName());
 		
 
-		MethodDescription description = getAgentDescription();
+		MethodDescription description = getMethodDescription();
 		
 		List<MethodDescriptionNumber> helpmateList =
 				getHelpmateList(newStatisticsForEachQuery);
@@ -533,47 +534,33 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return reply;
 	}
 
-	private void startComputation(final ProblemWrapper problemWrapper,
+	private void startComputation(final ProblemWrapper problemWrp,
 			final IslandModelConfiguration islandModel) throws Exception {
 		
 		if (this.state != CompAgentState.INITIALIZED) {
 			throw new Exception("Agent is not initialized");
 		}
 		
-		ProblemStruct problemStruct = problemWrapper.exportProblemStruct(logger);
-		final IProblem problem = problemStruct.getProblem();
+		ProblemStruct problemStruct = problemWrp.exportProblemStruct(logger);
+		
+		// initialization of structures
+		this.readyToSendIndividuals = (IReadyToSendIndividualsModel)islandModel
+				.exportReadyToSendIndividualsModel(getLogger()).newInstance();
+		
+		this.receivedIndividuals = (IReceivedIndividualsModel)islandModel
+				.exportReceivedIndividualsModel(getLogger()).newInstance();
+		
 		
 		// adding cyclic behavior for sending Individual to distribution
-		this.addBehaviour(new TickerBehaviour(this, islandModel.getIndividualBroadcastPeriodMS()) {
-
-			private static final long serialVersionUID = 1L;
-
-			protected void onTick() {
-				 getLogger().log(Level.INFO, "Tick to send individual");
-				 IndividualEvaluated individualEval = individualsToDistribution.getIndividual(problem);
-				 if (individualEval == null) {
-					 getLogger().log(Level.WARNING, "Any Individual to send availible");
-					 return;
-				 }
-				 
-				 MethodDescription description = getAgentDescription();
-
-				 IndividualWrapper individualWrapper = new IndividualWrapper(
-						 problemWrapper.getJobID(), description, individualEval);
-				
-				 if (islandModel.isIndividualDistribution()) {
-					 ComputingAgentService.sendIndividualToNeighbours(
-							 Agent_ComputingAgent.this, individualWrapper,
-							 islandModel, getLogger());
-					 ComputingAgentService.sendIndividualToMonitor(
-							 Agent_ComputingAgent.this, individualWrapper, getLogger());
-				 } else {
-					 ComputingAgentService.sendIndividualToMonitor(
-							 Agent_ComputingAgent.this, individualWrapper, getLogger());
-				 }
-			}
-		} );
-
+		CompAgentIndivDistributionBehavior indivDistributionBehavior = 
+				new CompAgentIndivDistributionBehavior(
+						this, readyToSendIndividuals,
+						problemStruct.exportMethodDescription(agentConf),
+						problemStruct, islandModel, getLogger());
+		
+		this.addBehaviour(indivDistributionBehavior);
+		
+		
 		// starts thread where is running computation
 		this.computingThread = new ComputingThread(this, problemStruct, islandModel, agentConf);	
 		this.computingThread.start();
@@ -597,27 +584,19 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		ManagerAgentService.sendKillAgent(this, getAID(), getLogger());
 	}
 	
-
-	protected void distributeIndividualToNeighours(IndividualEvaluated[] individualsEval,
-			IProblem problem, JobID jobID) {
-		
-		individualsToDistribution.addIndividual(
-				individualsEval, problem);
-	}
-	
 	protected void distributeIndividualToNeighours(List<IndividualEvaluated> individualsEval,
 			IProblem problem, JobID jobID) {
 		
-		individualsToDistribution.addIndividual(individualsEval, problem);
+		readyToSendIndividuals.addIndividual(individualsEval, problem);
 	}
 
 	protected void distributeIndividualToNeighours(IndividualEvaluated individualEval,
 			IProblem problem, JobID jobID) {
 		
-		individualsToDistribution.addIndividual(individualEval, problem);
+		readyToSendIndividuals.addIndividual(individualEval, problem);
 	}
 	
-	private MethodDescription getAgentDescription() {
+	private MethodDescription getMethodDescription() {
 
 		IProblem problem = null;
 		Class<?> problemToolClass = null;
@@ -643,11 +622,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			long generationNumber, IProblem problem, JobID jobID) {
 		
 		if (individualEval == null || ! individualEval.valid(getLogger())) {
-			individualEval.valid(getLogger());
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					IndividualEvaluated.class.getSimpleName() + " is not valid");
 		}
 		if (generationNumber != -1) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					Long.class.getSimpleName() + " is not valid");
+
 		}
 		
 		// log in local file
@@ -659,11 +640,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		IProblemTool problemTool = this.computingThread.getProblemTool();
 		
-		MethodDescription description =
+		MethodDescription methodDescript =
 				new MethodDescription(agentConf, problem, problemTool.getClass());
 		
 		IndividualWrapper computedIndividualWrp =
-				new IndividualWrapper(jobID, description, individualEval);
+				new IndividualWrapper(jobID, methodDescript, individualEval);
 
 		this.bestIndividualModel.update(computedIndividualWrp, problem,
 				getCALogger());

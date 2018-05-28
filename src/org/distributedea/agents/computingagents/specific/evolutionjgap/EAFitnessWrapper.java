@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent.evolutionjgap;
+package org.distributedea.agents.computingagents.specific.evolutionjgap;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;

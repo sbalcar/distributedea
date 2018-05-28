@@ -1,12 +1,12 @@
 package org.distributedea.agents.computingagents;
 
 
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
-import org.distributedea.agents.computingagents.computingagent.CompAgentState;
-import org.distributedea.agents.computingagents.computingagent.evolution.EvolutionPopulationModel;
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.ISelector;
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.Selector;
-import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
+import org.distributedea.agents.computingagents.specific.evolution.EvolutionPopulationModel;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.ISelector;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.Selector;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.CompAgentState;
+import org.distributedea.agents.computingagents.universal.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.arguments.Argument;
@@ -212,10 +212,10 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			populationNewI.addIndividual(bestIndividualI);
 			
 			// distribute individuals to another islands
-			distributeIndividualToNeighours(populationNewI.getIndividuals(), problem, jobID);
+			distributeIndividualToNeighours(populationNewI.getIndividualsList(), problem, jobID);
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
 
 			if (individualDistribution && recievedIndividualW != null) {
 				

@@ -6,9 +6,9 @@ import java.util.Queue;
 import java.util.logging.Level;
 
 import org.distributedea.agents.FitnessTool;
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
-import org.distributedea.agents.computingagents.computingagent.CompAgentState;
-import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.CompAgentState;
+import org.distributedea.agents.computingagents.universal.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.arguments.Argument;
@@ -148,7 +148,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeTheBestIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
 			
 			boolean isReceivedBetter =
 					FitnessTool.isFistIndividualWBetterThanSecond(

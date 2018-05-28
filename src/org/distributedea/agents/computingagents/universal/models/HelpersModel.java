@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent.models;
+package org.distributedea.agents.computingagents.universal.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;

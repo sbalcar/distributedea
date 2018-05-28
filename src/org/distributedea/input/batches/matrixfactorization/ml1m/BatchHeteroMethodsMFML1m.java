@@ -37,7 +37,6 @@ import org.distributedea.input.postprocessing.matrixfactorization.PostProcMFTest
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
-import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
@@ -53,8 +52,6 @@ public class BatchHeteroMethodsMFML1m implements IInputBatch {
 		batch.setDescription("Porovnání plánovačů v heterogenních modelech : MFML1m");
 		
 		Job jobI = InputMatrixFactorization.test02();
-		jobI.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 3, 60000, 30000));
 		
 		Job job0 = jobI.deepClone();
 		job0.setJobID("withoutReplanning1xAll");

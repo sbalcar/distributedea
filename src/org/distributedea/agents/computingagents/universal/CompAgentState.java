@@ -1,4 +1,5 @@
-package org.distributedea.agents.computingagents.computingagent;
+package org.distributedea.agents.computingagents.universal;
+
 
 /**
  * Represents internal state of {@link Agent_ComputingAgent}

@@ -1,8 +1,8 @@
 package org.distributedea.agents.computingagents;
 
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
-import org.distributedea.agents.computingagents.computingagent.CompAgentState;
-import org.distributedea.agents.computingagents.computingagent.localsaver.LocalSaver;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.CompAgentState;
+import org.distributedea.agents.computingagents.universal.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.arguments.Arguments;

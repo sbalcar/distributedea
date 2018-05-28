@@ -11,7 +11,9 @@ import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
@@ -49,6 +51,17 @@ public class InputMatrixFactorization {
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )
 			));
 		
+		IslandModelConfiguration islandModelConf = new IslandModelConfiguration();
+		islandModelConf.setIndividualDistribution(true);
+		islandModelConf.setNeighbourCount(3);
+		islandModelConf.setReplanPeriodMS(60000);
+		islandModelConf.setIndividualBroadcastPeriodMS(30000);
+		islandModelConf.importReadyToSendIndividualsModelClass(
+				ReadyToSendIndivsOneIndivModel.class);
+		islandModelConf.importReceivedIndividualsModelClass(
+				ReceivedIndivsOneIndivModel.class);
+		
+		
 		DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
 				new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
 				new RatingIDsArithmeticSequence(5, 5));
@@ -57,8 +70,7 @@ public class InputMatrixFactorization {
 		job.setJobID("jobID");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemMatrixFactorization(
 				new LatFactRange(), new LatFactRange(), 10, datasetPartitioning));
 		job.importDatasetFile(new File(

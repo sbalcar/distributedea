@@ -7,7 +7,7 @@ import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;

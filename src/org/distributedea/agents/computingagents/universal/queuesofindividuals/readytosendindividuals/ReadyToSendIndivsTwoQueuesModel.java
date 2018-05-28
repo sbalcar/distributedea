@@ -1,9 +1,10 @@
-package org.distributedea.agents.computingagents.computingagent.models;
+package org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReadyToSendIndividualsModel;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
@@ -14,7 +15,7 @@ import org.distributedea.structures.comparators.CmpIndividualEvaluated;
  * @author stepan
  *
  */
-public class IndividualToDistributionModel {
+public class ReadyToSendIndivsTwoQueuesModel implements IReadyToSendIndividualsModel {
 
 	private int MAX_NUMBER_OF_INDIVIDUAL = 10;
 	
@@ -22,24 +23,14 @@ public class IndividualToDistributionModel {
 	
 	private List<IndividualEvaluated> individualsNoSorted2 = new ArrayList<>();
 	
-	public void addIndividual(
-			List<IndividualEvaluated> individuals, IProblem problem) {
+	public void addIndividual(List<IndividualEvaluated> individualsEval,
+			IProblem problem) {
 		
-		if (individuals == null || individuals.isEmpty()) {
+		if (individualsEval == null || individualsEval.isEmpty()) {
 			return;
 		}
 		
-		addIndividual(individuals.get(0), problem);
-	}
-
-	public void addIndividual(
-			IndividualEvaluated[] individuals, IProblem problem) {
-		
-		if (individuals == null || individuals.length == 0) {
-			return;
-		}
-		
-		addIndividual(individuals[0], problem);
+		addIndividual(individualsEval.get(0), problem);
 	}
 
 	

@@ -17,7 +17,7 @@ import jade.lang.acl.ACLMessage;
 
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.logging.AgentLogger;

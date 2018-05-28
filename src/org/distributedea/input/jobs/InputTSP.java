@@ -12,7 +12,9 @@ import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
 import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce;
@@ -50,11 +52,19 @@ public class InputTSP {
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )
 			));
 		
+		IslandModelConfiguration islandModelConf = new IslandModelConfiguration();
+		islandModelConf.setIndividualDistribution(true);
+		islandModelConf.setReplanPeriodMS(60000);
+		islandModelConf.setIndividualBroadcastPeriodMS(5000);
+		islandModelConf.importReadyToSendIndividualsModelClass(
+				ReadyToSendIndivsTwoQueuesModel.class);
+		islandModelConf.importReceivedIndividualsModelClass(
+				ReceivedIndivsOneQueueModel.class);
+		
 		Job job = new Job();
 		job.setJobID("tsp01");
 		job.setNumberOfRuns(1);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("simpleTest.tsp")));
@@ -71,12 +81,14 @@ public class InputTSP {
 		
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
-				
+		
+		IslandModelConfiguration islandModelConf =
+				test01().getIslandModelConfiguration().deepClone();
+		
 		Job job = new Job();
 		job.setJobID("tsp02");
 		job.setNumberOfRuns(1);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("wi29.tsp")));
@@ -94,11 +106,14 @@ public class InputTSP {
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
 
+		IslandModelConfiguration islandModelConf =
+				test01().getIslandModelConfiguration().deepClone();
+
+		
 		Job job = new Job();
 		job.setJobID("tsp03");
 		job.setNumberOfRuns(1);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPPoint());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("djb2036.tsp")));
@@ -116,11 +131,13 @@ public class InputTSP {
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
 
+		IslandModelConfiguration islandModelConf =
+				test01().getIslandModelConfiguration().deepClone();		
+		
 		Job job = new Job();
 		job.setJobID("tsp04");
 		job.setNumberOfRuns(1);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));
@@ -138,12 +155,14 @@ public class InputTSP {
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
 
+		IslandModelConfiguration islandModelConf =
+				test01().getIslandModelConfiguration().deepClone();
+		
 		Job job = new Job();
 		job.setJobID("jobID");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xit1083.tsp")));
@@ -161,12 +180,14 @@ public class InputTSP {
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
 
+		IslandModelConfiguration islandModelConf =
+				test01().getIslandModelConfiguration().deepClone();
+		
 		Job job = new Job();
 		job.setJobID("id");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("djb2036.tsp")));
@@ -184,12 +205,14 @@ public class InputTSP {
 		InputAgentConfigurations algorithms = test01().getMethods()
 				.exportInputAgentConfigurations().deepClone();
 
+		IslandModelConfiguration islandModelConf =
+				test01().getIslandModelConfiguration().deepClone();
+		
 		Job job = new Job();
 		job.setJobID("id");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("xql662.tsp")));

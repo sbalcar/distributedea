@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent.localsaver;
+package org.distributedea.agents.computingagents.universal.localsaver;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 import org.distributedea.Configuration;
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.ontology.configuration.AgentName;
 import org.distributedea.ontology.individuals.Individual;

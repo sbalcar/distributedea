@@ -9,7 +9,7 @@ import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
@@ -25,7 +25,6 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
-import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization;
 
@@ -38,8 +37,6 @@ public class BatchHomoMethodsMFML10M100K implements IInputBatch {
 		batch.setDescription("Porovnání homogenních modelů : MFML10M100K");
 		
 		Job jobI = InputMatrixFactorization.test03();
-		jobI.setIslandModelConfiguration(
-				new IslandModelConfiguration(true, 3, 60000, 30000));
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),

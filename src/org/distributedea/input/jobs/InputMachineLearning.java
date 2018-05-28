@@ -11,7 +11,9 @@ import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
@@ -51,6 +53,15 @@ public class InputMachineLearning {
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )
 			));
 		
+		IslandModelConfiguration islandModelConf = new IslandModelConfiguration();
+		islandModelConf.setIndividualDistribution(false);
+		islandModelConf.setReplanPeriodMS(150000);
+		islandModelConf.setIndividualBroadcastPeriodMS(5000);
+		islandModelConf.importReadyToSendIndividualsModelClass(
+				ReadyToSendIndivsTwoQueuesModel.class);
+		islandModelConf.importReceivedIndividualsModelClass(
+				ReceivedIndivsOneQueueModel.class);
+
 		Class<?> classifier = weka.classifiers.trees.J48.class;
 		Class<?> filter = weka.filters.unsupervised.instance.Randomize.class;
 		ProblemMachineLearning problem = new ProblemMachineLearning(
@@ -60,8 +71,7 @@ public class InputMachineLearning {
 		job.setJobID("mlIris");
 		job.setDescription("description");
 		job.setNumberOfRuns(3);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(false, 150000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(problem);
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("iris.arff")));
@@ -91,8 +101,6 @@ public class InputMachineLearning {
 		job.setJobID("mlZoo");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(false, 150000, 5000));
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("zoo.arff")));
 		job.setProblem(problem);
@@ -101,6 +109,16 @@ public class InputMachineLearning {
 	}
 	
 	public static Job test03() throws IOException {
+		
+		IslandModelConfiguration islandModelConf = new IslandModelConfiguration();
+		islandModelConf.setIndividualDistribution(false);
+		islandModelConf.setReplanPeriodMS(60000);
+		islandModelConf.setIndividualBroadcastPeriodMS(5000);
+		islandModelConf.importReadyToSendIndividualsModelClass(
+				ReadyToSendIndivsTwoQueuesModel.class);
+		islandModelConf.importReceivedIndividualsModelClass(
+				ReceivedIndivsOneQueueModel.class);
+
 		
 		Class<?> classifier = weka.classifiers.trees.RandomForest.class;
 		Class<?> filter = weka.filters.unsupervised.instance.Randomize.class;
@@ -124,8 +142,7 @@ public class InputMachineLearning {
 		job.setJobID("mlWilt");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.setIslandModelConfiguration(
-				new IslandModelConfiguration(false, 60000, 5000));
+		job.setIslandModelConfiguration(islandModelConf);
 		job.importDatasetFile(new File(
 				FileNames.getInputProblemFile("wilt.arff")));
 		job.setProblem(problem);

@@ -47,9 +47,11 @@
   </methods>
   <islandModelConfiguration>
     <individualDistribution>false</individualDistribution>
-    <neighbourCount>2147483647</neighbourCount>
+    <neighbourCount>3</neighbourCount>
     <replanPeriodMS>60000</replanPeriodMS>
-    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+    <individualBroadcastPeriodMS>30000</individualBroadcastPeriodMS>
+    <readyToSendIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel</readyToSendIndividualsModelClassName>
+    <receivedIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel</receivedIndividualsModelClassName>
   </islandModelConfiguration>
   <planner class="plannerInitialisationRunEachMethodOnce"/>
   <plannerEndCondition class="plannerTimeRestriction">

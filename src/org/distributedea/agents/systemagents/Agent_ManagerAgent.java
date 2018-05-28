@@ -25,7 +25,7 @@ import java.util.logging.Level;
 
 import org.distributedea.Configuration;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;

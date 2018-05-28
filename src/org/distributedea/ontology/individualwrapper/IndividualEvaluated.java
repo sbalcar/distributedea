@@ -204,10 +204,28 @@ public class IndividualEvaluated implements Concept {
 	 * @return
 	 */
 	public boolean valid(IAgentLogger logger) {
-		if (individual == null || ! individual.valid(logger)) {
+		if (individual == null ||
+				(! individual.valid(logger))) {
 			return false;
 		}
-		if (pedigree != null && ! pedigree.valid(logger)) {
+		if (pedigree != null &&
+				(! pedigree.valid(logger))) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Test quickly validity - doesn't test integrity of the {@link Individual}
+	 * @return
+	 */
+	public boolean validQuickly(IAgentLogger logger) {
+		if (individual == null) {
+			return false;
+		}
+		if (pedigree != null &&
+				(! pedigree.valid(logger))) {
 			return false;
 		}
 		

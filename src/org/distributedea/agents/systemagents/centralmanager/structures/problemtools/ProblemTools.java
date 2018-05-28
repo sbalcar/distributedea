@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.problems.IProblemTool;

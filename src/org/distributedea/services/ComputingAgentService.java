@@ -22,7 +22,7 @@ import jade.lang.acl.ACLMessage;
 
 import org.distributedea.AgentNames;
 import org.distributedea.agents.Agent_DistributedEA;
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_Monitor;
 import org.distributedea.agents.systemagents.centralmanager.structures.helpers.ModelOfHelpmates;

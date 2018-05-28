@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent;
+package org.distributedea.agents.computingagents.universal;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
@@ -24,10 +24,10 @@ public class ComputingThread extends Thread {
 	
 	private ProblemStruct problemStruct;
 	
-	private AgentConfiguration requiredAgentConfiguration;
+	private AgentConfiguration requiredAgentConf;
 	
 	public ComputingThread(Agent_ComputingAgent agent, ProblemStruct problemStruct,
-			IslandModelConfiguration configuration, AgentConfiguration requiredAgentConfiguration) {
+			IslandModelConfiguration islandModelConf, AgentConfiguration requiredAgentConf) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -40,8 +40,12 @@ public class ComputingThread extends Thread {
 			throw new IllegalArgumentException("Argument " +
 					ProblemStruct.class.getSimpleName() + " is not valid");
 		}
-		if (requiredAgentConfiguration == null || ! requiredAgentConfiguration.valid(logger)) {
-			requiredAgentConfiguration.valid(logger);
+		if (islandModelConf == null || ! islandModelConf.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					IslandModelConfiguration.class.getSimpleName() + " is not valid");
+		}
+		if (requiredAgentConf == null || ! requiredAgentConf.valid(logger)) {
+			requiredAgentConf.valid(logger);
 			throw new IllegalArgumentException("Argument " +
 					AgentConfiguration.class.getSimpleName() + " is not valid");
 		}
@@ -50,9 +54,9 @@ public class ComputingThread extends Thread {
 		
 		this.problemStruct = problemStruct;
 		
-		this.configuration = configuration;
+		this.configuration = islandModelConf;
 		
-		this.requiredAgentConfiguration = requiredAgentConfiguration;
+		this.requiredAgentConf = requiredAgentConf;
 		
 	}
 
@@ -78,7 +82,7 @@ public class ComputingThread extends Thread {
 
 		try {
 			agent.startComputing(problemStruct.deepClone(),
-					configuration.deepClone(), requiredAgentConfiguration);
+					configuration.deepClone(), requiredAgentConf);
 			
 		} catch (Exception e) {
 			System.out.println("Error by computing");

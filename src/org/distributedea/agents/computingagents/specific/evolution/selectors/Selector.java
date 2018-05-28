@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent.evolution.selectors;
+package org.distributedea.agents.computingagents.specific.evolution.selectors;
 
 
 

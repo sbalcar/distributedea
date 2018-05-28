@@ -61,6 +61,7 @@ public class FilesystemInitTool {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private static void clearResultSpaceForJob(String batchID, String jobID, IAgentLogger logger) {
 		
 		String resultJobDirectoryName =

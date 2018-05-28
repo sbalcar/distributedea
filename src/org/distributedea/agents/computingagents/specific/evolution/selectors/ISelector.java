@@ -1,4 +1,4 @@
-package org.distributedea.agents.computingagents.computingagent.evolution.selectors;
+package org.distributedea.agents.computingagents.specific.evolution.selectors;
 
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;

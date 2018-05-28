@@ -1,9 +1,10 @@
-package org.distributedea.agents.computingagents.computingagent.evolution;
+package org.distributedea.agents.computingagents.specific.evolution;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.distributedea.agents.computingagents.computingagent.evolution.selectors.ISelector;
+import org.distributedea.agents.computingagents.specific.evolution.selectors.ISelector;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
@@ -35,13 +36,21 @@ public class EvolutionPopulationModel {
 		
 		this.individuals = individuals;
 	}
-	
+
 	/**
-	 * Returns {@link IndividualsEvaluated} in model
+	 * Returns List{@link List} of {@link IndividualsEvaluated}s in model
 	 * @return
 	 */
 	public IndividualEvaluated[] getIndividuals() {
 		return individuals;
+	}
+
+	/**
+	 * Returns List{@link List} of {@link IndividualsEvaluated}s in model
+	 * @return
+	 */
+	public List<IndividualEvaluated> getIndividualsList() {
+		return new ArrayList<>(Arrays.asList(individuals));
 	}
 	
 	public void addIndividual(IndividualEvaluated indivToAdd) {

@@ -25,6 +25,8 @@
     <neighbourCount>2147483647</neighbourCount>
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+    <readyToSendIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel</readyToSendIndividualsModelClassName>
+    <receivedIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel</receivedIndividualsModelClassName>
   </islandModelConfiguration>
   <planner class="plannerInitialisationRunEachMethodOnce"/>
   <plannerEndCondition class="plannerTimeRestriction">

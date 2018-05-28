@@ -1,5 +1,6 @@
-package org.distributedea.agents.computingagents.computingagent.models;
+package org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals;
 
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReceivedIndividualsModel;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -11,29 +12,19 @@ import org.distributedea.problems.IProblemTool;
  * @author stepan
  *
  */
-public class ReceivedIndividualsModel {
-
-	private boolean DEBUG;
+public class ReceivedIndivsOneQueueModel implements IReceivedIndividualsModel {
 	
 	private int MAX_NUMBER_OF_INDIVIDUAL = 10;
 	
 	private int indivCount = 0;
 	private IndividualWrapper[] individuals =
 			new IndividualWrapper[MAX_NUMBER_OF_INDIVIDUAL];
-
-	/**
-	 * Constructor
-	 * @param DEBUG
-	 */
-	public ReceivedIndividualsModel(boolean DEBUG) {
-		this.DEBUG = DEBUG;
-	}
 	
 	/**
 	 * Add Received {@link IndividualWrapper} to Model
 	 * @param individualW
 	 * @param problem
-	 * @param problem
+	 * @param dataset
 	 * @param problemTool
 	 * @param logger
 	 */
@@ -44,9 +35,6 @@ public class ReceivedIndividualsModel {
 		if (individualW == null) {
 			throw new IllegalStateException("Recieved Individual is not valid");
 		}
-		if (DEBUG && (! individualW.validation(problem, dataset, problemTool, logger))) {
-			throw new IllegalStateException("Recieved Individual is not valid");
-		}
 		
 		if (indivCount == individuals.length) {
 			indivCount = 0;
@@ -55,12 +43,8 @@ public class ReceivedIndividualsModel {
 		
 	}
 	
-	/**
-	 * Get the best {@link IndividualWrapper} from Model 
-	 * @param problem
-	 * @return
-	 */
-	public IndividualWrapper removeTheBestIndividual(IProblem problem) {
+	@Override
+	public IndividualWrapper removeIndividual(IProblem problem) {
 		
 		if (indivCount == 0) {
 			return null;

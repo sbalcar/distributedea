@@ -88,7 +88,7 @@
               </argument>
               <argument>
                 <name>selector</name>
-                <value>org.distributedea.agents.computingagents.computingagent.evolution.selectors.CompareTwoSelector</value>
+                <value>org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector</value>
               </argument>
             </arguments>
           </arguments>
@@ -157,6 +157,8 @@
     <neighbourCount>2147483647</neighbourCount>
     <replanPeriodMS>60000</replanPeriodMS>
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+    <readyToSendIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel</readyToSendIndividualsModelClassName>
+    <receivedIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel</receivedIndividualsModelClassName>
   </islandModelConfiguration>
   <planner class="org.distributedea.agents.systemagents.centralmanager.planners.PlannerLazyQuantityOfImprovement">
     <DURATION__OF__NEW__METHOD__PROTECTION>3</DURATION__OF__NEW__METHOD__PROTECTION>

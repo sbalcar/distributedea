@@ -20,13 +20,11 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
-import org.distributedea.logging.AgentLogger;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric.Params;
 
 import sun.misc.Unsafe;
 
-@SuppressWarnings({"unused" })
+
 
 /**
  * Bbob Tool which solve problem, that java is not able to link
@@ -34,6 +32,7 @@ import sun.misc.Unsafe;
  * @author stepan
  *
  */
+@SuppressWarnings("restriction")
 public class BbobTools {
 	
 	private Class<?> JAVA_CLASS = JNIfgeneric.class;
@@ -155,7 +154,7 @@ public class BbobTools {
             }
         };
 
-        @SuppressWarnings({ "unchecked" })
+        @SuppressWarnings({ "unchecked", "rawtypes" })
 		final JavaFileManager javaFileManager = new ForwardingJavaFileManager(
                 ToolProvider.getSystemJavaCompiler().getStandardFileManager(null, null, null)) {
 
@@ -179,8 +178,8 @@ public class BbobTools {
 		final Unsafe unsafe = (Unsafe) field.get(null);
 
 
-		int todo = 5;
 //		final Class aClass = unsafe.defineClass(JAVA_CLASS.getName() + number, bytes, 0, bytes.length);
+		@SuppressWarnings("rawtypes")
 		final Class aClass = unsafe.defineClass(JAVA_CLASS.getName() + number, bytes, 0, bytes.length, null, null);
 	    
 	    

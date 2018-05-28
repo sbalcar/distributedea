@@ -2,7 +2,7 @@ package org.distributedea.agents.systemagents.datamanager;
 
 import java.io.File;
 
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batches;
 import org.distributedea.ontology.job.JobID;

@@ -1,6 +1,6 @@
 package org.distributedea.ontology.helpmate;
 
-import org.distributedea.agents.computingagents.computingagent.Agent_ComputingAgent;
+import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 
 import jade.content.AgentAction;
 

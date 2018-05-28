@@ -71,10 +71,7 @@ import org.distributedea.input.batches.vc.frb59265.BatchSingleMethodsVCfrb59265;
  */
 public class BatchExporter {
 	
-	public static void main(String [] args) throws Exception {		
-		
-		//IInputBatch inputBatchTestTSP = new BatchTestTSP();
-		//Batch batchTestTSP = inputBatchTestTSP.batch();
+	public static void main(String [] args) throws Exception {
 		
 		IInputBatch inputBatchSimpleMethodsTSP1083 = new BatchSingleMethodsTSP1083();
 		Batch batchSimpleMethodsTSP1083 = inputBatchSimpleMethodsTSP1083.batch();
@@ -118,12 +115,15 @@ public class BatchExporter {
 
 		
 		IInputBatch inputBatchSingleMethodsCOf2 = new BatchSingleMethodsCOf2();
+		@SuppressWarnings("unused")
 		Batch batchSingleMethodsCOf2 = inputBatchSingleMethodsCOf2.batch();
 
 		IInputBatch inputBatchHomoCOF2 = new BatchHomoMethodsCOf2();
+		@SuppressWarnings("unused")
 		Batch batchHomoCOF2 = inputBatchHomoCOF2.batch();
 
 		IInputBatch inputBatchHeteroCOF2 = new BatchHeteroMethodsCOf2();
+		@SuppressWarnings("unused")
 		Batch batchHeteroCOF2 = inputBatchHeteroCOF2.batch();
 		
 		
@@ -188,12 +188,15 @@ public class BatchExporter {
 
 		
 		IInputBatch inputBatchSingleMethodsMLZoo = new BatchSingleMethodsMLZoo();
+		@SuppressWarnings("unused")
 		Batch batchSingleMethodsMLZoo = inputBatchSingleMethodsMLZoo.batch();
 
 		IInputBatch inputBatchHomoMethodsMLZoo = new BatchHomoMethodsMLZoo();
+		@SuppressWarnings("unused")
 		Batch batchHomoMethodsMLZoo = inputBatchHomoMethodsMLZoo.batch();
 
 		IInputBatch inputBatchHeteroMethodsMLZoo = new BatchHeteroMethodsMLZoo();
+		@SuppressWarnings("unused")
 		Batch batchHeteroMethodsMLZoo = inputBatchHeteroMethodsMLZoo.batch();
 
 		

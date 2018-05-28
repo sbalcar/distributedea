@@ -33,9 +33,13 @@ public class FitnessTool {
 	public static boolean isFistIndividualWBetterThanSecond(IndividualWrapper individual1,
 			IndividualWrapper individual2, IProblem problem) {
 		
+		if (individual1 == null && individual2 == null) {
+			return false;
+		}
 		if (individual1 == null) {
 			return false;
-		} else if (individual2 == null) {
+		}
+		if (individual2 == null) {
 			return true;
 		}
 		

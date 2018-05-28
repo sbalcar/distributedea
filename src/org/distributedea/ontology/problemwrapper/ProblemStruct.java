@@ -6,8 +6,10 @@ import jade.content.Concept;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
@@ -237,6 +239,17 @@ public class ProblemStruct implements Concept {
 		wrapper.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));
 		return wrapper;
 	}
+	
+	/**
+	 * Export MethodDescription
+	 * @param agentConf
+	 * @return
+	 */
+	public MethodDescription exportMethodDescription(AgentConfiguration agentConf) {
+			return new MethodDescription(agentConf, getProblem(),
+					exportProblemToolClass(new TrashLogger()));
+	}
+
 	
 	/**
 	 * Returns clone

@@ -4,8 +4,10 @@ import java.io.File;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.job.JobID;
+import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.problems.IProblemTool;
@@ -239,6 +241,14 @@ public class ProblemWrapper implements Concept {
 		return struct;
 	}
 	
+	/**
+	 * Export MethodDescription
+	 * @param agentConf
+	 * @return
+	 */
+	public MethodDescription exportMethodDescription(AgentConfiguration agentConf) {
+			return new MethodDescription(agentConf, getProblem(), exportProblemToolClass());
+	}
 	
 	/**
 	 * Test validity

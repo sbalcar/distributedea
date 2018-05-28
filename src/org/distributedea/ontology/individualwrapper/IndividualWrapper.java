@@ -5,6 +5,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
@@ -116,18 +117,39 @@ public class IndividualWrapper implements Concept {
 	 */
 	public boolean valid(IAgentLogger logger) {
 		
-		if (jobID == null || ! jobID.valid(logger)) {
+		if (jobID == null || (! jobID.valid(logger))) {
 			return false;
 		}
-		if (methodDescription == null || ! methodDescription.valid(logger)) {
+		if (methodDescription == null ||
+				(! methodDescription.valid(logger))) {
 			return false;
 		}
-		if (individualEvaluated == null || ! individualEvaluated.valid(logger)) {
+		if (individualEvaluated == null ||
+				(! individualEvaluated.valid(logger))) {
 			return false;
 		}
 		return true;
 	}
 	
+	/**
+	 * Test quickly validity - doesn't test integrity of the {@link Individual}
+	 * @return
+	 */
+	public boolean validQuickly(IAgentLogger logger) {
+		
+		if (jobID == null || (! jobID.valid(logger))) {
+			return false;
+		}
+		if (methodDescription == null ||
+				(! methodDescription.valid(logger))) {
+			return false;
+		}
+		if (individualEvaluated == null ||
+				(! individualEvaluated.validQuickly(logger))) {
+			return false;
+		}
+		return true;
+	}
 	
 	
 	/**

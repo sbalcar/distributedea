@@ -2,6 +2,8 @@ package org.distributedea.ontology.islandmodel;
 
 import jade.content.Concept;
 
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReadyToSendIndividualsModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReceivedIndividualsModel;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.Individual;
@@ -28,70 +30,51 @@ public class IslandModelConfiguration implements Concept {
 	/**
 	 * Period of Planner re-planning
 	 */
-	public long replanPeriodMS;
+	private long replanPeriodMS;
 
 	/**
 	 * Period of sending {@link Individual} from Computing Agent to another Computing Agents
 	 */
-	public long individualBroadcastPeriodMS;
-
-	
-	@Deprecated
-	public IslandModelConfiguration() { // only for Jade
-		setNeighbourCount(Integer.MAX_VALUE);
-	}
+	private long individualBroadcastPeriodMS;
 	
 	/**
-	 * Constructor
-	 * @param individualDistribution
-	 * @param replanPeriodMS
-	 * @param individualBroadcastPeriodMS
+	 * Specify about type of {@link IReadyToSendIndividualsModel}
 	 */
-	public IslandModelConfiguration(boolean individualDistribution,
-			long replanPeriodMS, long individualBroadcastPeriodMS) {
-		
-		setIndividualDistribution(individualDistribution);
-		setNeighbourCount(Integer.MAX_VALUE);
-		setReplanPeriodMS(replanPeriodMS);
-		setIndividualBroadcastPeriodMS(individualBroadcastPeriodMS);
-	}
+	private String readyToSendIndividualsModelClassName;
 	
 	/**
-	 * Constructor
-	 * @param individualDistribution
-	 * @param neighbourCount
-	 * @param replanPeriodMS
-	 * @param individualBroadcastPeriodMS
+	 * Specify about type of {@link IReceivedIndividualsModel}
 	 */
-	public IslandModelConfiguration(boolean individualDistribution,
-			int neighbourCount, long replanPeriodMS,
-			long individualBroadcastPeriodMS) {
-		
-		setIndividualDistribution(individualDistribution);
-		setNeighbourCount(neighbourCount);
-		setReplanPeriodMS(replanPeriodMS);
-		setIndividualBroadcastPeriodMS(individualBroadcastPeriodMS);
+	private String receivedIndividualsModelClassName;
+	
+	
+	public IslandModelConfiguration() {
+		setNeighbourCount(Integer.MAX_VALUE);
 	}
 	
 	
 	/**
 	 * Copy Constructor
-	 * @param configuration
+	 * @param islandModelConf
 	 */
-	public IslandModelConfiguration(IslandModelConfiguration configuration) {
-		if (configuration == null || ! configuration.valid(new TrashLogger())) {
+	public IslandModelConfiguration(IslandModelConfiguration islandModelConf) {
+		if (islandModelConf == null || ! islandModelConf.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
 		
 		setIndividualDistribution(
-				configuration.isIndividualDistribution());
+				islandModelConf.isIndividualDistribution());
 		setNeighbourCount(
-				configuration.getNeighbourCount());
+				islandModelConf.getNeighbourCount());
 		setReplanPeriodMS(
-				configuration.getReplanPeriodMS());
+				islandModelConf.getReplanPeriodMS());
 		setIndividualBroadcastPeriodMS(
-				configuration.getIndividualBroadcastPeriodMS());
+				islandModelConf.getIndividualBroadcastPeriodMS());
+		importReadyToSendIndividualsModelClass(
+				islandModelConf.exportReadyToSendIndividualsModel(new TrashLogger()));
+		importReceivedIndividualsModelClass(
+				islandModelConf.exportReceivedIndividualsModel(new TrashLogger()));
 	}
 
 		
@@ -115,7 +98,10 @@ public class IslandModelConfiguration implements Concept {
 		return replanPeriodMS;
 	}
 	public void setReplanPeriodMS(long replanPeriodMS) {
-		
+		if (replanPeriodMS <= 0) {
+			throw new IllegalArgumentException("Argument " +
+					Long.class.getSimpleName() + " is nto valid");
+		}		
 		this.replanPeriodMS = replanPeriodMS;
 	}
 
@@ -123,9 +109,90 @@ public class IslandModelConfiguration implements Concept {
 		return individualBroadcastPeriodMS;
 	}
 	public void setIndividualBroadcastPeriodMS(long individualBroadcastPeriodMS) {
+		if (individualBroadcastPeriodMS <= 0) {
+			throw new IllegalArgumentException("Argument " +
+					Long.class.getSimpleName() + " is nto valid");
+		}
 		this.individualBroadcastPeriodMS = individualBroadcastPeriodMS;
 	}
 
+	@Deprecated
+	public String getReadyToSendIndividualsModelClassName() {
+		return readyToSendIndividualsModelClassName;
+	}
+	@Deprecated
+	public void setReadyToSendIndividualsModelClassName(
+			String readyToSendIndividualsModelClassName) {
+		this.readyToSendIndividualsModelClassName = readyToSendIndividualsModelClassName;
+	}
+	
+	@Deprecated
+	public String getReceivedIndividualsModelClassName() {
+		return receivedIndividualsModelClassName;
+	}
+	@Deprecated
+	public void setReceivedIndividualsModelClassName(
+			String receivedIndividualsModelClassName) {
+		this.receivedIndividualsModelClassName = receivedIndividualsModelClassName;
+	}
+
+	
+	/**
+	 * Exports {@link IReadyToSendIndividualsModel} class
+	 * @param logger
+	 * @return
+	 */
+	public Class<?> exportReadyToSendIndividualsModel(IAgentLogger logger) {
+		
+		try {
+			return Class.forName(getReadyToSendIndividualsModelClassName());
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	/**
+	 * Import {@link IReadyToSendIndividualsModel} class
+	 * @param problemToSolve
+	 */
+	public void importReadyToSendIndividualsModelClass(Class<?> readyToSendIndividualsModelClassName) {
+		if (readyToSendIndividualsModelClassName == null) {
+			setReadyToSendIndividualsModelClassName(null);
+			return;
+		}
+		setReadyToSendIndividualsModelClassName(
+				readyToSendIndividualsModelClassName.getName());
+	}
+	
+
+	/**
+	 * Exports {@link IReceivedIndividualsModel} class
+	 * @param logger
+	 * @return
+	 */
+	public Class<?> exportReceivedIndividualsModel(IAgentLogger logger) {
+		
+		try {
+			return Class.forName(getReceivedIndividualsModelClassName());
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	/**
+	 * Import {@link IReceivedIndividualsModel} class
+	 * @param problemToSolve
+	 */
+	public void importReceivedIndividualsModelClass(Class<?> receivedIndividualsModel) {
+		if (receivedIndividualsModel == null) {
+			setReceivedIndividualsModelClassName(null);
+			return;
+		}
+		setReceivedIndividualsModelClassName(
+				receivedIndividualsModel.getName());
+	}
+
+	
+	
+	
 	/**
 	 * Tests validity
 	 * @return
@@ -136,6 +203,12 @@ public class IslandModelConfiguration implements Concept {
 			return false;
 		}
 		if (getIndividualBroadcastPeriodMS() <= 0) {
+			return false;
+		}
+		if (exportReadyToSendIndividualsModel(logger) == null) {
+			return false;
+		}
+		if (exportReceivedIndividualsModel(logger) == null) {
 			return false;
 		}
 		

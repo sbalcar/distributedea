@@ -121,7 +121,7 @@ public final class PlannerInfrastructure {
 			
 			// sleep
 			try {
-				int todo;
+				//int todoo;
 				if (iterationNumI == 1)
 					Thread.sleep(3000);
 				Thread.sleep(configuration.getReplanPeriodMS());
