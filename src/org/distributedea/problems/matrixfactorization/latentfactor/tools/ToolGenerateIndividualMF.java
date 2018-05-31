@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactorVector;
@@ -18,6 +19,8 @@ public class ToolGenerateIndividualMF {
 	public static IndividualLatentFactors generateIndividual(ProblemMatrixFactorization problemMF,
 			DatasetMF datasetMF, IAgentLogger logger) {
 		
+		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		
 		ILatFactDefinition userIdsDef = problemMF.getLatFactYDef();
 		ILatFactDefinition itemIdsDef = problemMF.getLatFactXDef();
 		
@@ -27,8 +30,8 @@ public class ToolGenerateIndividualMF {
 		int numberOfItems;
 		
 		if (userIdsDef instanceof LatFactRange) {
-			numberOfUsers = datasetMF.exportMaxUserID()
-					-datasetMF.exportMinUserID() +1;
+			numberOfUsers = datasetModel.exportMaxUserID()
+					-datasetModel.exportMinUserID() +1;
 			
 		} else if (userIdsDef instanceof LatFactRangeSpec) {
 			LatFactRangeSpec latFactRangeSpec = (LatFactRangeSpec) userIdsDef;
@@ -36,13 +39,13 @@ public class ToolGenerateIndividualMF {
 			numberOfUsers = latFactRangeSpec.getMax()
 					-latFactRangeSpec.getMin() +1;
 		} else {
-			numberOfUsers = datasetMF.exportNumberOfUsers();
+			numberOfUsers = datasetModel.exportNumberOfUsers();
 		}
 
 		
 		if (itemIdsDef instanceof LatFactRange) {
-			numberOfItems = datasetMF.exportMaxItemID()
-					-datasetMF.exportMinItemID() +1;
+			numberOfItems = datasetModel.exportMaxItemID()
+					-datasetModel.exportMinItemID() +1;
 			
 		} else if (itemIdsDef instanceof LatFactRangeSpec) {
 			LatFactRangeSpec latFactRangeSpec = (LatFactRangeSpec) itemIdsDef;
@@ -50,7 +53,7 @@ public class ToolGenerateIndividualMF {
 			numberOfItems = latFactRangeSpec.getMax()
 					-latFactRangeSpec.getMin() +1;
 		} else {
-			numberOfItems = datasetMF.exportNumberOfItems();
+			numberOfItems = datasetModel.exportNumberOfItems();
 		}
 		
 		LatentFactor latentFactorX =

@@ -13,6 +13,8 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
@@ -33,12 +35,13 @@ public class TestCO {
 	private void test1() throws Exception {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
-		File fileOfInput = new File(inputFileName);
+		IDatasetDescription datasetDescr =
+				new DatasetDescription(new File(inputFileName));
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		IProblemTool tool = new ProblemToolCORandomMove();
 		
-		Dataset dataset = tool.readDataset(fileOfInput, problem, null);
+		Dataset dataset = tool.readDataset(datasetDescr, problem, null);
 		tool.initialization(problem, dataset, null, null);
 		
 		IndividualEvaluated individual = tool.generateIndividualEval(problem, dataset, null, null);
@@ -53,12 +56,13 @@ public class TestCO {
 	private void test2() throws Exception {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
-		File fileOfInput = new File(inputFileName);
+		IDatasetDescription datasetDescr =
+				new DatasetDescription(new File(inputFileName));
 		
 		IProblemTool tool1 = new ProblemToolCORandomMove();
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
-		Dataset dataset1 = tool1.readDataset(fileOfInput, problem, null);
+		Dataset dataset1 = tool1.readDataset(datasetDescr, problem, null);
 		tool1.initialization(problem, dataset1, null, null);
 
 		try {
@@ -68,7 +72,7 @@ public class TestCO {
 		
 		IProblemTool tool2 = new ProblemToolCORandomMove();
 		
-		Dataset dataset2 = tool2.readDataset(fileOfInput, problem, null);
+		Dataset dataset2 = tool2.readDataset(datasetDescr, problem, null);
 		tool2.initialization(problem, dataset2, null, null);
 		
 		
@@ -97,12 +101,13 @@ public class TestCO {
 	private void test3() throws BbobException, Exception {
 	    
 	    String inputFileName = "inputs" + File.separator + "f01.co";
-	    File fileOfInput = new File(inputFileName);
+		IDatasetDescription datasetDescr =
+				new DatasetDescription(new File(inputFileName));
 	    
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		
 	    IProblemTool tool = new ProblemToolCORandomMove();
-	    Dataset dataset = tool.readDataset(fileOfInput, problem, null);
+	    Dataset dataset = tool.readDataset(datasetDescr, problem, null);
 		tool.initialization(problem, dataset, null, null);
 		
 		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problem, dataset, null, null);
@@ -163,12 +168,13 @@ public class TestCO {
 	private void test4() {
 		
 		String inputFileName = "inputs" + File.separator + "f01.co";
-		File fileOfInput = new File(inputFileName);
+		IDatasetDescription datasetDescr =
+				new DatasetDescription(new File(inputFileName));
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 
 		IProblemTool problemTool = new ProblemToolCORandomMove();
-		Dataset dataset = problemTool.readDataset(fileOfInput, problem, null);
+		Dataset dataset = problemTool.readDataset(datasetDescr, problem, null);
 		
 		
 		String solutionFileName = "log" + File.separator + "result" +

@@ -2,8 +2,10 @@
   <jobID>theGreatestQGoodMaterialImprovementFitness</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>The Combination of Greatest Quantity Good Material, Improvement and Fitness</description>
-  <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
-  <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
+  <problem class="problemVertexCover"/>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
+  </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

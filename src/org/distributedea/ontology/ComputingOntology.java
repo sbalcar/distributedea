@@ -22,6 +22,8 @@ import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.ontology.dataset.tsp.PositionPoint;
 import org.distributedea.ontology.dataset.vertexcover.Graph;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.IRatingIDs;
 import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
@@ -36,9 +38,7 @@ import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.IRatingIDs;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 public class ComputingOntology extends BeanOntology {
@@ -77,10 +77,8 @@ public class ComputingOntology extends BeanOntology {
             
             add(JobID.class);
             
-            
             add(IProblem.class.getPackage().getName());
             add(ILatFactDefinition.class.getPackage().getName());
-            add(DatasetPartitioning.class.getPackage().getName());
             add(IRatingIDs.class.getPackage().getName());
             add(Dataset.class);
             
@@ -101,6 +99,8 @@ public class ComputingOntology extends BeanOntology {
 
             add(DatasetMF.class);
             add(ObjectRaiting.class.getPackage().getName());
+            
+            add(IDatasetDescription.class.getPackage().getName());
             
         } catch (Exception e) {
         	ConsoleLogger.logThrowable("Unexpected error occured:", e);

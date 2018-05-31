@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
 
 /**
@@ -71,9 +72,9 @@ public class MatrixOfIncidence {
 	 * Creates Incidence Matrix for {@link DatasetMF}
 	 * @param datasetMF
 	 */
-	public void createUserMatrix(DatasetMF datasetMF) {
+	public void createUserMatrix(DatasetModel datasetModel) {
 		
-		Set<Integer> userIDsSet = datasetMF.exportUserIDs();
+		Set<Integer> userIDsSet = datasetModel.exportUserIDs();
 		
 		for (int userIdI : userIDsSet) {
 			for (int userIdJ : userIDsSet) {
@@ -81,10 +82,10 @@ public class MatrixOfIncidence {
 					continue;
 				}
 				
-				int indexI = datasetMF.exportIndexOfUser(userIdI);
-				int indexJ = datasetMF.exportIndexOfUser(userIdJ);
+				int indexI = datasetModel.exportIndexOfUser(userIdI);
+				int indexJ = datasetModel.exportIndexOfUser(userIdJ);
 				
-				int incidenceI = countIncidence(userIdI, userIdJ, datasetMF);
+				int incidenceI = countIncidence(userIdI, userIdJ, datasetModel);
 				
 				increment(indexI, indexJ, incidenceI);
 				if (userIdI != userIdJ) {
@@ -96,10 +97,10 @@ public class MatrixOfIncidence {
 	}
 	
 	private int countIncidence(int userId1, int userId2,
-			DatasetMF datasetMF) {
+			DatasetModel datasetModel) {
 		
-		ObjectRaitingList objects1 = datasetMF.exportRaitingsOfUser(userId1);
-		ObjectRaitingList objects2 = datasetMF.exportRaitingsOfUser(userId2);
+		ObjectRaitingList objects1 = datasetModel.exportRaitingsOfUser(userId1);
+		ObjectRaitingList objects2 = datasetModel.exportRaitingsOfUser(userId2);
 		
 		ObjectRaitingList intersectionI = objects1
 				.exportIntesectionOfObjectWithIdenticalRaiting(objects2);

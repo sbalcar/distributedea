@@ -8,6 +8,8 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.IRatingIDs;
 import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
@@ -24,9 +26,7 @@ import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.IRatingIDs;
 
 
 public class MonitorOntology extends BeanOntology {
@@ -41,7 +41,7 @@ public class MonitorOntology extends BeanOntology {
             add(JobID.class);
             add(IProblem.class.getPackage().getName());
             add(ILatFactDefinition.class.getPackage().getName());
-            add(DatasetPartitioning.class.getPackage().getName());
+            add(IDatasetDescription.class.getPackage().getName());
             add(IRatingIDs.class.getPackage().getName());
             add(MethodDescriptions.class);
             

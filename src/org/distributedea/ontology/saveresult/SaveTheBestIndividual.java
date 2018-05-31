@@ -1,4 +1,4 @@
-package org.distributedea.ontology.data;
+package org.distributedea.ontology.saveresult;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;

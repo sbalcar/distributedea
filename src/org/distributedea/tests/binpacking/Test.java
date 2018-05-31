@@ -8,6 +8,7 @@ import org.distributedea.input.batches.IInputBatch;
 import org.distributedea.input.batches.binpacking.objects1000.BatchSingleMethodsBPP1000;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
@@ -24,8 +25,8 @@ public class Test {
 		
 		ProblemTool tool = new ProblemToolBinPackingDisplacementOfPart();
 		
-		File file = batch.getJobs().get(0).exportDatasetFile();
-		Dataset dataset = tool.readDataset(file, null, new TrashLogger());
+		IDatasetDescription datasetDescr = batch.getJobs().get(0).getDatasetDescription();
+		Dataset dataset = tool.readDataset(datasetDescr, null, new TrashLogger());
 		
 		IProblem problem = new ProblemBinPacking(1);
 		
@@ -33,7 +34,7 @@ public class Test {
 				tool.generateIndividualEval(problem, dataset, null, new TrashLogger());
 
 		String fileOfSolution = FileNames.getDirectoryOfInputs() + File.separator +
-				"solutions" + File.separator + file.getName();
+				"solutions" + File.separator + datasetDescr.toLogString();
 		Individual bestIndividual = tool.readSolution(new File(fileOfSolution), dataset, new TrashLogger());
 		double fitness = tool.fitness(bestIndividual, problem, dataset, new TrashLogger());
 		

@@ -2,7 +2,6 @@ package org.distributedea.agents.systemagents.centralmanager.structures.job;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Scanner;
@@ -10,6 +9,10 @@ import java.util.logging.Level;
 
 import javax.xml.bind.JAXBException;
 
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.PlannerInfrastructure;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.IPlannerEndCondition;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
@@ -42,6 +45,13 @@ import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsArithmeticSequence;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsComplement;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsEmptySet;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsFullSet;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
@@ -50,6 +60,16 @@ import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problem.ProblemBinPacking;
+import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.ProblemMachineLearning;
+import org.distributedea.ontology.problem.ProblemMatrixFactorization;
+import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problem.ProblemTSPPoint;
+import org.distributedea.ontology.problem.ProblemVertexCover;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRangeSpec;
+import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactSet;
 import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
@@ -89,7 +109,7 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Defines the filename with the input {@link Dataset}
 	 */
-	private String datasetFileName;
+	private IDatasetDescription datasetDescription;
 	
 	/**
 	 * Defines the methods
@@ -136,7 +156,7 @@ public class Job implements Concept, Serializable {
 		this.numberOfRuns = job.getNumberOfRuns();
 		this.description = job.getDescription();
 		this.problem = job.getProblem();
-		this.datasetFileName = job.getDatasetFileName();
+		this.datasetDescription = job.getDatasetDescription().deepClone();
 		this.methods = job.getMethods().deepClone();
 		this.islandModelConfiguration = job.getIslandModelConfiguration().deepClone();
 		this.planner = job.planner;
@@ -185,42 +205,16 @@ public class Job implements Concept, Serializable {
 		this.problem = problem;
 	}
 
-	@Deprecated
-	public String getDatasetFileName() {
-		File file = exportDatasetFile();
-		if (file == null) {
-			return null;
-		}
-		return file.getPath();
+	public IDatasetDescription getDatasetDescription() {
+		return this.datasetDescription;
 	}
-	@Deprecated
-	public void setDatasetFileName(String fileName) {
-		try {
-			importDatasetFile(new File(fileName));
-		} catch(Exception e) {
-			throw new IllegalArgumentException();
+	public void setDatasetDescription(IDatasetDescription datasetDescription) {
+		if (datasetDescription == null ||
+				! datasetDescription.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IDatasetDescription.class.getSimpleName() + " is not valid");
 		}
-	}
-	/**
-	 * Exports {@link File} with {@link Dataset} assignment
-	 */
-	public File exportDatasetFile() {
-		if (datasetFileName == null) {
-			return null;
-		}
-		return new File(datasetFileName);
-	}
-	/**
-	 * Imports {@link File} with {@link Dataset} assignment
-	 * @throws IOException 
-	 */
-	public void importDatasetFile(File datasetFile) throws IOException {
-//		if (datasetFile == null || ! datasetFile.isFile()) {
-//			System.out.println(datasetFile);
-//			throw new IllegalArgumentException("Argument " +
-//					File.class.getSimpleName() + " is not valid");
-//		}
-		this.datasetFileName = datasetFile.getPath();
+		this.datasetDescription = datasetDescription;
 	}
 
 
@@ -324,7 +318,8 @@ public class Job implements Concept, Serializable {
 		if (getProblem() == null || ! getProblem().valid(logger)) {
 			return false;
 		}
-		if (exportDatasetFile() == null) {
+		if (getDatasetDescription() == null ||
+				! getDatasetDescription().valid(logger)) {
 			return false;
 		}
 		if (getMethods() == null || ! getMethods().valid(logger)) {
@@ -360,13 +355,14 @@ public class Job implements Concept, Serializable {
 		ProblemTools problemTools = methods.exportProblemTools();
 		IProblemTool problemTool = problemTools.exportRandomSelectedProblemTool(logger);
 		
-		File fileOfProblem = exportDatasetFile();
+		IDatasetDescription fileOfProblem = getDatasetDescription();
 		Dataset dataset = problemTool.readDataset(fileOfProblem, getProblem(), logger);
 		
 		
 		JobRun jobRun = new JobRun();
 		jobRun.setMethods(methods.deepClone());
 		jobRun.setProblem(problem.deepClone());
+		jobRun.setDatasetDescription(getDatasetDescription().deepClone());
 		jobRun.setDataset(dataset);
 		
 		jobRun.setJobID(new JobID(batchID, jobID, runNumber));
@@ -455,6 +451,23 @@ public class Job implements Concept, Serializable {
 		xstream.alias("methods", Methods.class);
 		xstream.alias("inputMethodDescription", InputMethodDescription.class);
 		
+		xstream.alias("datasetDescription", DatasetDescription.class);
+		xstream.alias("datasetDescriptionMF", DatasetDescriptionMF.class);
+		xstream.alias("ratingIDsArithmeticSequence", RatingIDsArithmeticSequence.class);
+		xstream.alias("ratingIDsComplement", RatingIDsComplement.class);
+		xstream.alias("ratingIDsEmptySet", RatingIDsEmptySet.class);
+		xstream.alias("ratingIDsFullSet", RatingIDsFullSet.class);
+		
+		xstream.alias("problemBinPacking", ProblemBinPacking.class);
+		xstream.alias("problemContinuousOpt", ProblemContinuousOpt.class);
+		xstream.alias("problemMachineLearning", ProblemMachineLearning.class);
+		xstream.alias("problemMatrixFactorization", ProblemMatrixFactorization.class);
+		xstream.alias("latFactRange", LatFactRange.class);
+		xstream.alias("latFactRangeSpec", LatFactRangeSpec.class);
+		xstream.alias("latFactSet", LatFactSet.class);
+		xstream.alias("problemTSPGPS", ProblemTSPGPS.class);
+		xstream.alias("problemTSPPoint", ProblemTSPPoint.class);
+		xstream.alias("problemVertexCover", ProblemVertexCover.class);
 		
 		xstream.alias("plannerInitialisationOneMethodPerCore", PlannerInitialisationOneMethodPerCore.class);
 		xstream.alias("plannerInitialisationRandom", PlannerInitialisationRandom.class);
@@ -474,6 +487,12 @@ public class Job implements Concept, Serializable {
 		xstream.alias("plannerThePedigree", PlannerThePedigree.class);
 		
 		xstream.alias("plannerTimeRestriction", PlannerEndCondIterationCountRestriction.class);
+		
+		
+		xstream.alias("readyToSendIndivsOneIndivModel", ReadyToSendIndivsOneIndivModel.class);
+		xstream.alias("readyToSendIndivsTwoQueuesModel", ReadyToSendIndivsTwoQueuesModel.class);
+		xstream.alias("receivedIndivsOneIndivModel", ReceivedIndivsOneIndivModel.class);
+		xstream.alias("receivedIndivsOneQueueModel", ReceivedIndivsOneQueueModel.class);
 	}	
 	
 	/**

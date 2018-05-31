@@ -6,6 +6,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
@@ -58,7 +59,7 @@ public interface IProblemTool {
 	 * @param logger
 	 * @return
 	 */
-	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger);
+	public Dataset readDataset(IDatasetDescription datasetDescription, IProblem problem, IAgentLogger logger);
 	
 	/**
 	 * Reads instance of the Solution(Individual) from the file,

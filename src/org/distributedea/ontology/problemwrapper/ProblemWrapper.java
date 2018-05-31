@@ -1,11 +1,10 @@
 package org.distributedea.ontology.problemwrapper;
 
-import java.io.File;
-
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
@@ -38,7 +37,7 @@ public class ProblemWrapper implements Concept {
 	/**
 	 * Data set
 	 */
-	private String datasetFileName;
+	private IDatasetDescription datasetDescription;
 	
 	/**
 	 * Problem Tool to use for solving Problem 
@@ -67,7 +66,7 @@ public class ProblemWrapper implements Concept {
 		}
 		jobID = problemWrapper.getJobID().deepClone();
 		setProblem(problemWrapper.getProblem().deepClone());
-		importDatasetFile(problemWrapper.exportDatasetFile());
+		setDatasetDescription(problemWrapper.getDatasetDescription().deepClone());
 		importProblemToolClass(problemWrapper.exportProblemToolClass());
 		importPedigreeOfIndividualClassName(
 				problemWrapper.exportPedigreeOfIndividual(new TrashLogger()));
@@ -104,42 +103,18 @@ public class ProblemWrapper implements Concept {
 		this.problem = problem;
 	}
 
-	@Deprecated
-	public String getDatasetFileName() {
-		File file = exportDatasetFile();
-		if (file == null) {
-			return null;
-		}
-		return file.getAbsolutePath();
+	public IDatasetDescription getDatasetDescription() {
+		return datasetDescription;
 	}
-	@Deprecated
-	public void setDatasetFileName(String fileName) {
-		try {
-			importDatasetFile(new File(fileName));
-		} catch(Exception e) {
-			throw new IllegalArgumentException();
+
+	public void setDatasetDescription(IDatasetDescription datasetDescription) {
+		if (datasetDescription == null ||
+				! datasetDescription.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IProblem.class.getSimpleName() + " is not valid");
 		}
-	}
-	/**
-	 * Exports File with {@link Dataset} assignment
-	 */
-	public File exportDatasetFile() {
-		if (datasetFileName == null) {
-			return null;
-		}
-		return new File(datasetFileName);
-	}
-	/**
-	 * Imports File with {@link Dataset} assignment
-	 */
-	public void importDatasetFile(File datasetFile) {
-		if (datasetFile == null) {
-			throw new IllegalArgumentException();
-		}
-		if (! datasetFile.exists() || ! datasetFile.isFile()) {
-			throw new IllegalArgumentException();
-		}
-		this.datasetFileName = datasetFile.getAbsolutePath();
+
+		this.datasetDescription = datasetDescription;
 	}
 
 	@Deprecated
@@ -183,7 +158,7 @@ public class ProblemWrapper implements Concept {
 		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
 				exportProblemToolClass(), logger);
 		
-		return problemTool.readDataset(exportDatasetFile(), getProblem(), logger);
+		return problemTool.readDataset(getDatasetDescription(), getProblem(), logger);
 	}
 	
 	
@@ -236,6 +211,7 @@ public class ProblemWrapper implements Concept {
 		struct.setJobID(getJobID());
 		struct.setProblem(problem.deepClone());
 		struct.setDataset(exportDataset(logger));
+		struct.setDatasetDescription(getDatasetDescription().deepClone());
 		struct.importProblemToolClass(exportProblemToolClass());
 		struct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(logger));
 		return struct;
@@ -263,8 +239,8 @@ public class ProblemWrapper implements Concept {
 		if (exportProblemToolClass() == null) {
 			return false;
 		}
-		File problemFile = exportDatasetFile();
-		if (problemFile == null || ! problemFile.isFile()) {
+		if (getDatasetDescription() == null ||
+				! getDatasetDescription().valid(logger)) {
 			return false;
 		}
 		return true;

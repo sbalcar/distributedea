@@ -12,9 +12,6 @@ public class DatasetVertexCover extends Dataset {
 
 	private Graph graph;
 	
-	/** Dataset File */
-	private String datasetFileName;
-	
 	
 	@Deprecated
 	public DatasetVertexCover() {
@@ -26,7 +23,6 @@ public class DatasetVertexCover extends Dataset {
 	 * @param graph
 	 */
 	public DatasetVertexCover(Graph graph, File datasetFile) {
-		importDatasetFile(datasetFile);
 		setGraph(graph);
 	}
 
@@ -43,7 +39,6 @@ public class DatasetVertexCover extends Dataset {
 		
 		Graph graphClone = datasetVertexCover.getGraph().deepClone();
 		
-		importDatasetFile(datasetVertexCover.exportDatasetFile());
 		setGraph(graphClone);
 	}
 
@@ -59,40 +54,6 @@ public class DatasetVertexCover extends Dataset {
 					Graph.class.getSimpleName() + " is not valid");
 		}
 		this.graph = graph;
-	}
-
-	
-	@Deprecated
-	public String getDatasetFileName() {
-		return datasetFileName;
-	}
-	@Deprecated
-	public void setDatasetFileName(String datasetFileName) {
-		this.datasetFileName = datasetFileName;
-	}
-
-	/**
-	 * Exports File with {@link Dataset} assignment
-	 */
-	@Override
-	public File exportDatasetFile() {
-		if (datasetFileName == null) {
-			return null;
-		}
-		return new File(datasetFileName);
-	}
-	/**
-	 * Imports File with {@link Dataset} assignment
-	 */
-	@Override
-	public void importDatasetFile(File datasetFile) {
-		if (datasetFile == null) {
-			throw new IllegalArgumentException();
-		}
-		if (! datasetFile.exists() || ! datasetFile.isFile()) {
-			throw new IllegalArgumentException();
-		}
-		this.datasetFileName = datasetFile.getAbsolutePath();
 	}
 
 

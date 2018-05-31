@@ -2,6 +2,7 @@ package org.distributedea.problems.matrixfactorization.latentfactor.tools;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
@@ -17,18 +18,20 @@ public class ToolSGDist1RandomInEachRowMF {
 			ProblemMatrixFactorization problemMF,
 			DatasetMF datasetMF, IAgentLogger logger) {
 		
+		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		
 		IndividualLatentFactors idividualClone =
 				(IndividualLatentFactors) individual.deepClone();
 		
-		for (int userIdI : datasetMF.exportUserIDs()) {
+		for (int userIdI : datasetModel.exportUserIDs()) {
 		
 			ObjectRaitingList raitingsOfUserI =
-					datasetMF.exportRaitingsOfUser(userIdI);
+					datasetModel.exportRaitingsOfUser(userIdI);
 			ObjectRaiting raitingI =
 					raitingsOfUserI.exportRandomObjectRaiting();
 			
-			int rowIndex = datasetMF.exportIndexOfUser(raitingI.getUserID());
-			int colIndex = datasetMF.exportIndexOfItem(raitingI.getItemID());
+			int rowIndex = datasetModel.exportIndexOfUser(raitingI.getUserID());
+			int colIndex = datasetModel.exportIndexOfItem(raitingI.getItemID());
 			double raitingValue = raitingI.getRaiting();
 			
 			ToolSGDist1RandomMF.improveObjectRaiting(idividualClone,

@@ -1,4 +1,4 @@
-package org.distributedea.ontology.saveresult;
+package org.distributedea.ontology.saveresult.resultofiteration;
 
 import java.io.File;
 import java.io.IOException;

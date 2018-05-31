@@ -22,7 +22,7 @@ import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.saveresult.ResultOfIteration;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfIteration;
 import org.distributedea.services.DataManagerService;
 import org.distributedea.services.MonitorService;
 

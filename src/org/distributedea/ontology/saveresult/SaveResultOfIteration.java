@@ -4,6 +4,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfIteration;
 
 import jade.content.AgentAction;
 

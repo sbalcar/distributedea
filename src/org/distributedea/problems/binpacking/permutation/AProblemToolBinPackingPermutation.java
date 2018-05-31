@@ -5,6 +5,8 @@ import java.io.File;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetBinPacking;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
@@ -25,9 +27,10 @@ public abstract class AProblemToolBinPackingPermutation extends ProblemBinPackin
 	}
 
 	@Override
-	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger) {
+	public Dataset readDataset(IDatasetDescription datasetDescription, IProblem problem, IAgentLogger logger) {
 
-		return ToolReadProblemBinPacking.readProblem(fileOfProblem, problem, logger);
+		DatasetDescription datasetDescr = (DatasetDescription) datasetDescription;
+		return ToolReadProblemBinPacking.readProblem(datasetDescr, problem, logger);
 	}
 
 	@Override

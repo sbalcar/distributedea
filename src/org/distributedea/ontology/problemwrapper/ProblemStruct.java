@@ -1,6 +1,5 @@
 package org.distributedea.ontology.problemwrapper;
 
-import java.io.File;
 
 import jade.content.Concept;
 
@@ -8,6 +7,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
@@ -41,6 +41,11 @@ public class ProblemStruct implements Concept {
 	private IProblem problem;
 	
 	/**
+	 * Data set description
+	 */
+	private IDatasetDescription datasetDescription;
+
+	/**
 	 * Data set
 	 */
 	private Dataset dataset;
@@ -73,6 +78,8 @@ public class ProblemStruct implements Concept {
 				problemStruct.exportProblemToolClass(new TrashLogger());
 		IProblem problemClone =
 				problemStruct.getProblem().deepClone();
+		IDatasetDescription datasetDescrClone =
+				problemStruct.getDatasetDescription().deepClone();
 		Dataset datasetClone = problemStruct.getDataset().deepClone();
 		Class<?> pedigreeOfIndividualClassClone = 
 				problemStruct.exportPedigreeOfIndividual(new TrashLogger());
@@ -81,6 +88,7 @@ public class ProblemStruct implements Concept {
 		this.setJobID(jobIDClone);
 		this.importProblemToolClass(problemToolClassClone);
 		this.setProblem(problemClone);
+		this.setDatasetDescription(datasetDescrClone);
 		this.setDataset(datasetClone);
 		this.importPedigreeOfIndividualClassName(pedigreeOfIndividualClassClone);
 	}
@@ -165,6 +173,20 @@ public class ProblemStruct implements Concept {
 		this.problem = problem;
 	}
 
+	
+	public IDatasetDescription getDatasetDescription() {
+		return datasetDescription;
+	}
+
+	public void setDatasetDescription(IDatasetDescription datasetDescription) {
+		if (datasetDescription == null ||
+				! datasetDescription.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IDatasetDescription.class.getSimpleName() + " is not valid");
+		}		
+		this.datasetDescription = datasetDescription;
+	}
+
 	/**
 	 * Returns {@link Problem} to solve
 	 * @return
@@ -228,13 +250,12 @@ public class ProblemStruct implements Concept {
 		}
 		JobID jobIDCone = jobID.deepClone();
 		IProblem problemClone = problem.deepClone();
-		File problemFileClone = getDataset().exportDatasetFile();
 		Class<?> problemToolClass = exportProblemToolClass(new TrashLogger());
 		
 		ProblemWrapper wrapper = new ProblemWrapper();
 		wrapper.setJobID(jobIDCone);
 		wrapper.setProblem(problemClone);
-		wrapper.importDatasetFile(problemFileClone);
+		wrapper.setDatasetDescription(getDatasetDescription().deepClone());
 		wrapper.importProblemToolClass(problemToolClass);
 		wrapper.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));
 		return wrapper;
@@ -273,6 +294,9 @@ public class ProblemStruct implements Concept {
 			return false;
 		}
 		if (problem == null || ! problem.valid(logger)) {
+			return false;
+		}
+		if (datasetDescription == null || ! datasetDescription.valid(logger)) {
 			return false;
 		}
 		if (dataset == null || ! dataset.valid(logger)) {

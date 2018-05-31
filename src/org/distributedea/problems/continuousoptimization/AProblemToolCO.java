@@ -6,6 +6,8 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.IProblem;
@@ -119,9 +121,11 @@ public abstract class AProblemToolCO extends ProblemTool {
 	}
 	
 	@Override
-	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger) {
+	public Dataset readDataset(IDatasetDescription datasetDescription,
+			IProblem problem, IAgentLogger logger) {
 		
-		return ToolReadProblemCO.readProblem(fileOfProblem, problem, logger);
+		DatasetDescription datasetDescr = (DatasetDescription) datasetDescription;
+		return ToolReadProblemCO.readProblem(datasetDescr, problem, logger);
 	}
 	
 	@Override

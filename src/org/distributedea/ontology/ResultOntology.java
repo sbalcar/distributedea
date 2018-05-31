@@ -5,11 +5,12 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.IRatingIDs;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
 import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
-import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.iteration.Iteration;
@@ -25,12 +26,11 @@ import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.IRatingIDs;
-import org.distributedea.ontology.saveresult.ResultOfIteration;
-import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
+import org.distributedea.ontology.saveresult.SaveTheBestIndividual;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfIteration;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfMethodInstanceIteration;
 
 import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
@@ -78,8 +78,8 @@ public class ResultOntology extends BeanOntology {
             
             add(MethodDescription.class.getPackage().getName());
             add(IProblem.class.getPackage().getName());
+            add(IDatasetDescription.class.getPackage().getName());
             add(ILatFactDefinition.class.getPackage().getName());
-            add(DatasetPartitioning.class.getPackage().getName());
             add(IRatingIDs.class.getPackage().getName());
             
             add(Argument.class.getPackage().getName());

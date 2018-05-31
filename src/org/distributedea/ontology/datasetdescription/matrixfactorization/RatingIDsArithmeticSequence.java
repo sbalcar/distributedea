@@ -1,4 +1,4 @@
-package org.distributedea.ontology.problem.matrixfactorization.traintest;
+package org.distributedea.ontology.datasetdescription.matrixfactorization;
 
 import org.distributedea.logging.IAgentLogger;
 

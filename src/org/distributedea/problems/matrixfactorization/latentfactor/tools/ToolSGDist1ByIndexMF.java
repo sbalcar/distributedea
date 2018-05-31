@@ -2,6 +2,7 @@ package org.distributedea.problems.matrixfactorization.latentfactor.tools;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
@@ -18,13 +19,15 @@ public class ToolSGDist1ByIndexMF {
 			ProblemMatrixFactorization problemMF, DatasetMF datasetMF,
 			IAgentLogger logger) {
 	
-		int index = (int) (neighborIndex % datasetMF.exportNumberOfRaitings());
+		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
 		
-		ObjectRaitingList raitings = datasetMF.exportObjectRaitingList();
+		int index = (int) (neighborIndex % datasetModel.exportNumberOfRaitings());
+		
+		ObjectRaitingList raitings = datasetModel.exportObjectRaitingList();
 		ObjectRaiting raiting = raitings.getRaitings().get(index);
 
-		int rowIndex = datasetMF.exportIndexOfUser(raiting.getUserID());
-		int colIndex = datasetMF.exportIndexOfItem(raiting.getItemID());
+		int rowIndex = datasetModel.exportIndexOfUser(raiting.getUserID());
+		int colIndex = datasetModel.exportIndexOfItem(raiting.getItemID());
 		double raitingValue = raiting.getRaiting();
 
 		IndividualLatentFactors idividualClone =

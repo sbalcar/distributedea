@@ -7,6 +7,8 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.dataset.tsp.Position;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
@@ -42,9 +44,11 @@ public abstract class AProblemToolTSPGPSEuc2DPermutation extends ProblemTSPGPSTo
 	}
 	
 	@Override
-	public Dataset readDataset(File problemFile, IProblem problem, IAgentLogger logger) {
+	public Dataset readDataset(IDatasetDescription datasetDescription,
+			IProblem problem, IAgentLogger logger) {
 
-		return ToolReadProblemTSPGPS.readDataset(problemFile, problem, logger);
+		DatasetDescription datasetDescr = (DatasetDescription) datasetDescription;
+		return ToolReadProblemTSPGPS.readDataset(datasetDescr, problem, logger);
 	}
 	
 	@Override

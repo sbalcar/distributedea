@@ -10,8 +10,6 @@ import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
-import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
-import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Batch;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
@@ -27,7 +25,6 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
-import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization;
 
@@ -39,19 +36,7 @@ public class BatchHomoMethodsMFML100k implements IInputBatch {
 		batch.setBatchID("homoMethodsMFML100k");
 		batch.setDescription("Porovnání homogenních modelů : MFML100k");
 		
-		IslandModelConfiguration islandModelConf = new IslandModelConfiguration();
-		islandModelConf.setIndividualDistribution(true);
-		islandModelConf.setNeighbourCount(3);
-		islandModelConf.setReplanPeriodMS(60000);
-		islandModelConf.setIndividualBroadcastPeriodMS(30000);
-		islandModelConf.importReadyToSendIndividualsModelClass(
-				ReadyToSendIndivsTwoQueuesModel.class);
-		islandModelConf.importReceivedIndividualsModelClass(
-				ReceivedIndivsOneQueueModel.class);
-
-		
 		Job jobI = InputMatrixFactorization.test01();
-		jobI.setIslandModelConfiguration(islandModelConf);
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),

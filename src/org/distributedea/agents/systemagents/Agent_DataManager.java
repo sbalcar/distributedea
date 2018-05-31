@@ -24,14 +24,14 @@ import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.ResultOntology;
-import org.distributedea.ontology.data.SaveTheBestIndividual;
 import org.distributedea.ontology.individualhash.IndividualHash;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.saveresult.ResultOfIteration;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
+import org.distributedea.ontology.saveresult.SaveTheBestIndividual;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfIteration;
 
 
 /**

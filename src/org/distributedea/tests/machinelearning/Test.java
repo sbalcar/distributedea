@@ -27,7 +27,8 @@ public class Test {
 				
 		ProblemTool tool = new ProblemToolCORandomMove();
 		
-		Dataset dataset = tool.readDataset(job.exportDatasetFile(), problem, 
+		
+		Dataset dataset = tool.readDataset(job.getDatasetDescription(), problem, 
 				new TrashLogger());
 		
 		IndividualPoint individual = new IndividualPoint(

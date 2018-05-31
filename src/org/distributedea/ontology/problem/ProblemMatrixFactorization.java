@@ -3,7 +3,6 @@ package org.distributedea.ontology.problem;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
 
 /**
@@ -21,8 +20,6 @@ public class ProblemMatrixFactorization extends AProblem {
 	/** Width of latent factor **/
 	private int latentFactorWidth;
 
-	private DatasetPartitioning datasetPartitioning;
-
 	
 	@Deprecated
 	public ProblemMatrixFactorization() {} // only for JADE
@@ -32,12 +29,10 @@ public class ProblemMatrixFactorization extends AProblem {
 	 * @param sizeOfBin
 	 */
 	public ProblemMatrixFactorization(ILatFactDefinition latFactXDef,
-			ILatFactDefinition latFactYDef, int latentFactorWidth,
-			DatasetPartitioning datasetPartitioning) {
+			ILatFactDefinition latFactYDef, int latentFactorWidth) {
 		this.setLatFactXDef(latFactXDef);
 		this.setLatFactYDef(latFactYDef);
 		this.setLatentFactorWidth(latentFactorWidth);
-		this.setDatasetPartitioning(datasetPartitioning);
 	}
 
 	/**
@@ -52,7 +47,6 @@ public class ProblemMatrixFactorization extends AProblem {
 		this.setLatFactXDef(problem.getLatFactXDef().deepClone());
 		this.setLatFactYDef(problem.getLatFactYDef().deepClone());		
 		this.setLatentFactorWidth(problem.getLatentFactorWidth());
-		this.setDatasetPartitioning(problem.getDatasetPartitioning().deepClone());
 	}
 	
 	
@@ -97,20 +91,6 @@ public class ProblemMatrixFactorization extends AProblem {
 	}
 
 	
-	public DatasetPartitioning getDatasetPartitioning() {
-		return datasetPartitioning;
-	}
-	@Deprecated
-	public void setDatasetPartitioning(DatasetPartitioning datasetPartitioning) {
-		if (datasetPartitioning == null ||
-				! datasetPartitioning.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					DatasetPartitioning.class.getSimpleName() + " is not valid");
-		}
-		this.datasetPartitioning = datasetPartitioning;
-	}
-
-	
 	@Override
 	public boolean exportIsMaximizationProblem() {
 		
@@ -128,8 +108,7 @@ public class ProblemMatrixFactorization extends AProblem {
 	
 		return getLatentFactorWidth() > 0 &&
 				getLatFactXDef() != null && getLatFactXDef().valid(logger) &&
-				getLatFactYDef() != null && getLatFactYDef().valid(logger) &&
-				getDatasetPartitioning() != null && getDatasetPartitioning().valid(logger);
+				getLatFactYDef() != null && getLatFactYDef().valid(logger);
 	}
 
 	@Override
@@ -149,8 +128,7 @@ public class ProblemMatrixFactorization extends AProblem {
 	    
 	    return getLatFactXDef().equals(outherMF.getLatFactXDef()) &&
 	    		getLatFactYDef().equals(outherMF.getLatFactYDef()) &&
-	    		getLatentFactorWidth() == outherMF.getLatentFactorWidth() &&
-	    		getDatasetPartitioning().equals(outherMF.getDatasetPartitioning());
+	    		getLatentFactorWidth() == outherMF.getLatentFactorWidth();
 	}
 	
 }

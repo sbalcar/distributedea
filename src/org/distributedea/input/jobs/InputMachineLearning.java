@@ -27,6 +27,7 @@ import org.distributedea.ontology.argumentsdefinition.ArgumentDefSwitch;
 import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
@@ -73,8 +74,8 @@ public class InputMachineLearning {
 		job.setNumberOfRuns(3);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(problem);
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("iris.arff")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("iris.arff"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolMLRandomMove.class) ));
 		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
@@ -101,8 +102,8 @@ public class InputMachineLearning {
 		job.setJobID("mlZoo");
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("zoo.arff")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("zoo.arff"))));
 		job.setProblem(problem);
 		
 		return job;
@@ -143,8 +144,8 @@ public class InputMachineLearning {
 		job.setDescription("description");
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(islandModelConf);
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("wilt.arff")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("wilt.arff"))));
 		job.setProblem(problem);
 		
 		return job;

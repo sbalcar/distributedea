@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
 import org.distributedea.tests.matrixfactorization.structures.ClusterSet;
 import org.distributedea.tests.matrixfactorization.structures.MatrixOfIncidence;
 
@@ -29,13 +31,15 @@ public class ClusteringAlgorithm {
 	public static ClusterSet createSpecifiedNumberOfUserBasedClusters(DatasetMF datasetMF,
 			int numberOfClusters) throws Exception {
 		
+		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		
 		// creating matrix of incidence
 		MatrixOfIncidence matrix =
-				new MatrixOfIncidence(datasetMF.exportUserIDs());
-		matrix.createUserMatrix(datasetMF);
+				new MatrixOfIncidence(datasetModel.exportUserIDs());
+		matrix.createUserMatrix(datasetModel);
 				
 		List<Integer> userIDsList =
-				new ArrayList<Integer>(datasetMF.exportUserIDs());
+				new ArrayList<Integer>(datasetModel.exportUserIDs());
 		Collections.shuffle(userIDsList);
 		
 		List<Integer> initClusterDefByUserIDs =
@@ -46,13 +50,13 @@ public class ClusteringAlgorithm {
 				new ClusterSet(new HashSet<Integer>(initClusterDefByUserIDs));
 		
 		List<Integer> matrOfIncIndexes =
-				datasetMF.exportIndexOfUsers(initClusterDefByUserIDs);
+				datasetModel.exportIndexOfUsers(initClusterDefByUserIDs);
 		
-		for (int userIdI : datasetMF.exportUserIDs()) {
+		for (int userIdI : datasetModel.exportUserIDs()) {
 			if (initClusterDefByUserIDs.contains(userIdI)) {
 				continue;
 			}
-			int matrOfIncIndexI = datasetMF.exportIndexOfUser(userIdI);
+			int matrOfIncIndexI = datasetModel.exportIndexOfUser(userIdI);
 			
 			int theNearstMatrOfIncIndex = matrix
 					.getGivenIndexOfTheHighestIncidenceBetween(matrOfIncIndexI, matrOfIncIndexes);
@@ -75,22 +79,24 @@ public class ClusteringAlgorithm {
 	 */
 	public static ClusterSet createTransitivelySimilarUserBasedClusters(DatasetMF datasetMF,
 			int sizeOfRatingIntersection) throws Exception {
-				
+		
+		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+
 		MatrixOfIncidence matrix =
-				new MatrixOfIncidence(datasetMF.exportUserIDs());
-		matrix.createUserMatrix(datasetMF);
+				new MatrixOfIncidence(datasetModel.exportUserIDs());
+		matrix.createUserMatrix(datasetModel);
 
 		ClusterSet cluster =
-				new ClusterSet(datasetMF.exportUserIDs());
-		for (int userIdI : datasetMF.exportUserIDs()) {
-			for (int userIdJ : datasetMF.exportUserIDs()) {
+				new ClusterSet(datasetModel.exportUserIDs());
+		for (int userIdI : datasetModel.exportUserIDs()) {
+			for (int userIdJ : datasetModel.exportUserIDs()) {
 				
 				if (userIdI >= userIdJ) {
 					continue;
 				}
 				
-				int indexI = datasetMF.exportIndexOfUser(userIdI);
-				int indexJ = datasetMF.exportIndexOfUser(userIdJ);
+				int indexI = datasetModel.exportIndexOfUser(userIdI);
+				int indexJ = datasetModel.exportIndexOfUser(userIdJ);
 				
 				int incidenceI = matrix.get(indexI, indexJ);
 				
@@ -111,15 +117,17 @@ public class ClusteringAlgorithm {
 	//////////////////////////////////////////////////////////////////////////
 	@SuppressWarnings("unused")
 	private static ClusterSet createClustersOfUsers2(DatasetMF datasetMF,
-			int sizeOfRatingIntersection) throws Exception {
+			DatasetDescriptionMF datasetDescrMF, int sizeOfRatingIntersection) throws Exception {
 		
-		if (datasetMF.getRatingFileName().equals("u.data") &&
+		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		
+		if (datasetDescrMF.getTrainingSetDef().equals("u.data") &&
 				sizeOfRatingIntersection == 8) {
 			return ClusterSet.importXML(new File("cluster8.ml"));
 		}
 		
 		List<Set<Integer>> clustersOfUsers = new ArrayList<>();
-		for (int userIdI : datasetMF.exportUserIDs()) {
+		for (int userIdI : datasetModel.exportUserIDs()) {
 			
 			Set<Integer> clusterI = new HashSet<Integer>();
 			clusterI.add(userIdI);
@@ -165,7 +173,8 @@ public class ClusteringAlgorithm {
 			Set<Integer> cluster2, DatasetMF datasetMF,
 			int sizeOfRatingIntersection) {
 		
-		ObjectRaitingList raitings = datasetMF.exportObjectRaitingList();
+		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		ObjectRaitingList raitings = datasetModel.exportObjectRaitingList();
 
 		for (int userIdI : cluster1) {
 			for (int userIdJ : cluster2) {

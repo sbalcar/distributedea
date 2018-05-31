@@ -2,12 +2,14 @@
   <jobID>lazyQuantityOfImprovement</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Lazy impl. of the Greatest Quantity Of Improvement Statistic</description>
-  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+  <problem class="problemContinuousOpt">
     <functionID>f10</functionID>
     <dimension>10</dimension>
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>
-  <datasetFileName>inputs/bbob.co</datasetFileName>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/bbob.co</datasetFileName>
+  </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

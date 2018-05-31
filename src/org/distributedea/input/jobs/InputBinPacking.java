@@ -23,6 +23,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemBinPacking;
@@ -62,8 +63,8 @@ public class InputBinPacking {
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemBinPacking(1));
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("bp1000.bpp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("bp1000.bpp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms,new ProblemTools(ProblemToolBinPackingDisplacementOfPart.class)));
 		

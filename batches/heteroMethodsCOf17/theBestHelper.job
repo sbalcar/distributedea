@@ -2,12 +2,14 @@
   <jobID>theBestHelper</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Follow up Helpers</description>
-  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+  <problem class="problemContinuousOpt">
     <functionID>f17</functionID>
     <dimension>10</dimension>
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>
-  <datasetFileName>inputs/bbob.co</datasetFileName>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/bbob.co</datasetFileName>
+  </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

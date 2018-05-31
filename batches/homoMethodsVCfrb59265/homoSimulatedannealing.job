@@ -2,8 +2,10 @@
   <jobID>homoSimulatedannealing</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Homo-SimulatedAnnealing</description>
-  <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
-  <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
+  <problem class="problemVertexCover"/>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
+  </datasetDescription>
   <methods class="methods">
     <inputMethodDescriptions>
       <inputMethodDescription>

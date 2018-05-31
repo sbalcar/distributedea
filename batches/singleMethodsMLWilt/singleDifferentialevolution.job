@@ -2,7 +2,7 @@
   <jobID>singleDifferentialevolution</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Single-DifferentialEvolution</description>
-  <problem class="org.distributedea.ontology.problem.ProblemMachineLearning">
+  <problem class="problemMachineLearning">
     <classifierClassname>weka.classifiers.trees.RandomForest</classifierClassname>
     <filterClassName>weka.filters.unsupervised.instance.Randomize</filterClassName>
     <argumentsDef>
@@ -46,7 +46,9 @@
       </argumentsDef>
     </argumentsDef>
   </problem>
-  <datasetFileName>inputs/wilt.arff</datasetFileName>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/wilt.arff</datasetFileName>
+  </datasetDescription>
   <methods class="methods">
     <inputMethodDescriptions>
       <inputMethodDescription>

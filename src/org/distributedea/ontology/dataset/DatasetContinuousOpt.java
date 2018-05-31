@@ -19,9 +19,6 @@ public class DatasetContinuousOpt extends Dataset {
 	/** Limiting the space intervals */
 	private DomainDefinition domain;
 	
-	/** Dataset File name */
-	private String datasetFileName;
-	
 	@Deprecated
 	public DatasetContinuousOpt() {
 	}
@@ -29,7 +26,6 @@ public class DatasetContinuousOpt extends Dataset {
 	public DatasetContinuousOpt(DomainDefinition domain,
 			File datasetFile) {
 		setDomain(domain);
-		importDatasetFile(datasetFile);
 	}
 	
 	/**
@@ -43,7 +39,6 @@ public class DatasetContinuousOpt extends Dataset {
 		}
 		
 		setDomain(problem.getDomain().deepClone());
-		setDatasetFileName(problem.getDatasetFileName());
 	}
 
 	
@@ -54,46 +49,6 @@ public class DatasetContinuousOpt extends Dataset {
 		this.domain = domain;
 	}
 	
-	@Deprecated
-	public String getDatasetFileName() {
-		File file = exportDatasetFile();
-		if (file == null) {
-			return null;
-		}
-		return file.getAbsolutePath();
-	}
-	@Deprecated
-	public void setDatasetFileName(String fileName) {
-		try {
-			importDatasetFile(new File(fileName));
-		} catch(Exception e) {
-			throw new IllegalArgumentException();
-		}
-	}
-	
-	/**
-	 * Exports File with {@link Dataset} assignment
-	 */
-	@Override
-	public File exportDatasetFile() {
-		if (datasetFileName == null) {
-			return null;
-		}
-		return new File(datasetFileName);
-	}
-	/**
-	 * Imports File with {@link Dataset} assignment
-	 */
-	@Override
-	public void importDatasetFile(File datasetFile) {
-		if (datasetFile == null) {
-			throw new IllegalArgumentException();
-		}
-		if (! datasetFile.exists() || ! datasetFile.isFile()) {
-			throw new IllegalArgumentException();
-		}
-		this.datasetFileName = datasetFile.getAbsolutePath();
-	}
 	
 	/**
 	 * Import the {@link DatasetContinuousOpt} from the file

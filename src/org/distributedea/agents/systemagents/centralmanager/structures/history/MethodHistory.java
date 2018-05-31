@@ -14,7 +14,7 @@ import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfMethodInstanceIteration;
 
 /**
  * Structure represents history across all iterations of one method instance.

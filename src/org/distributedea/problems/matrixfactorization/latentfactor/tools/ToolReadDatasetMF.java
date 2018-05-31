@@ -11,9 +11,9 @@ import java.util.StringTokenizer;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
+import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.IRatingIDs;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
-import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.IRatingIDs;
 
 /**
  * Tool as reader of the {@link DatasetMF} dataset
@@ -22,25 +22,27 @@ import org.distributedea.ontology.problem.matrixfactorization.traintest.IRatingI
  */
 public class ToolReadDatasetMF {
 
-	public static DatasetMF readTrainingPartOfDataset(File datasetFile,
+	public static DatasetMF readDataset(DatasetDescriptionMF datasetDescription,
 			ProblemMatrixFactorization problem, IAgentLogger logger) {
 		
-		DatasetPartitioning partition = problem.getDatasetPartitioning();
+		File trainingFile = datasetDescription.exportDatasetTrainingFile();
+		IRatingIDs trainingSetDef = datasetDescription.getTrainingSetDef();
 		
-		return readSelectedIDsOfDataset(datasetFile,
-				partition.getTrainingSetDef(), logger);		
+		File testingFile = datasetDescription.exportDatasetTestingFile();
+		IRatingIDs testingSetDef = datasetDescription.getTestingSetDef();
+		
+		
+		List<ObjectRaiting> trainingDataset = readSelectedIDsOfDataset(
+				trainingFile, trainingSetDef, logger);
+		
+		List<ObjectRaiting> testingDataset = readSelectedIDsOfDataset(
+				testingFile, testingSetDef, logger);
+		
+		return new DatasetMF(trainingDataset, testingDataset);
 	}
 	
-	public static DatasetMF readTestingPartOfDataset(File datasetFile,
-			ProblemMatrixFactorization problem, IAgentLogger logger) {
 		
-		DatasetPartitioning partition = problem.getDatasetPartitioning();
-		
-		return readSelectedIDsOfDataset(datasetFile,
-				partition.getTestingSetDef(), logger);
-	}
-	
-	private static DatasetMF readSelectedIDsOfDataset(File datasetFile,
+	private static List<ObjectRaiting> readSelectedIDsOfDataset(File datasetFile,
 			IRatingIDs selectedIDs, IAgentLogger logger) {
 		
 		String delimiter = "\t";;
@@ -57,7 +59,7 @@ public class ToolReadDatasetMF {
 			List<ObjectRaiting> raitings = read(br, selectedIDs,
 					ratingMult, delimiter, logger);
 			
-			return new DatasetMF(raitings, datasetFile);
+			return raitings;
 			
 		} catch (Exception e) {
 			logger.logThrowable("Problem with reading " +

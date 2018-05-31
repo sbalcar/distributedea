@@ -5,6 +5,8 @@ import java.io.File;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -109,9 +111,10 @@ public class TestTSP {
 		
 		String problemFileName = FileNames.getDirectoryOfInputs() +
 				File.separator + inputFileName + ".tsp";
-		File fileOfProblem = new File(problemFileName);
+		IDatasetDescription datasetDescr =
+				new DatasetDescription(new File(problemFileName));
 		
-		Dataset dataset = problemTool.readDataset(fileOfProblem, null, logger);
+		Dataset dataset = problemTool.readDataset(datasetDescr, null, logger);
 		ProblemWrapper problemWrapper = new ProblemWrapper();
 		problemWrapper.importProblemToolClass(problemTool.getClass());
 

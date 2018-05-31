@@ -216,12 +216,13 @@ public class ComputingAgentService {
 	 * @param agent
 	 * @param computingAgentAID
 	 * @param problemStruct
+	 * @param islandModelConf
 	 * @param logger
 	 * @return
 	 */
 	public static boolean sendStartComputing(Agent_DistributedEA agent,
 			AID computingAgentAID, ProblemStruct problemStruct,
-			IslandModelConfiguration configuration, IAgentLogger logger) {
+			IslandModelConfiguration islandModelConf, IAgentLogger logger) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -235,7 +236,7 @@ public class ComputingAgentService {
 			throw new IllegalArgumentException("Argument " +
 					ProblemStruct.class.getSimpleName() + " is not valid");
 		}
-		if (configuration == null || ! configuration.valid(logger)) {
+		if (islandModelConf == null || ! islandModelConf.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
 					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
@@ -258,7 +259,7 @@ public class ComputingAgentService {
 		}
 		
 		StartComputing startComputing = new StartComputing(
-				problemWrp, configuration);
+				problemWrp, islandModelConf);
 		
 		Action action = new Action(agent.getAID(), startComputing);
 		
@@ -372,8 +373,8 @@ public class ComputingAgentService {
 	 * @param logger
 	 * @return
 	 */
-	public static List<IndividualWrapper> sendAccessesResult(Agent_DistributedEA centralManager,
-			IAgentLogger logger) {
+	public static List<IndividualWrapper> sendAccessesResult(
+			Agent_DistributedEA centralManager, IAgentLogger logger) {
 		
 		if (centralManager == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -440,8 +441,8 @@ public class ComputingAgentService {
 		return new IndividualsWrappers(individuals);
 	}
 
-	public static IndividualsWrappers sendAccessesResult_(Agent_DistributedEA centralManager,
-			IAgentLogger logger) {
+	public static IndividualsWrappers sendAccessesResult_(
+			Agent_DistributedEA centralManager, IAgentLogger logger) {
 
 		List<IndividualWrapper> results = sendAccessesResult(centralManager, logger);
 		

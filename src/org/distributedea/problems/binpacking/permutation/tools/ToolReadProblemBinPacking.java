@@ -10,11 +10,15 @@ import java.util.List;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.problem.IProblem;
 
 public class ToolReadProblemBinPacking {
 
-	public static DatasetBinPacking readProblem(File datasetFile, IProblem problem, IAgentLogger logger) {
+	public static DatasetBinPacking readProblem(DatasetDescription datasetDescription,
+			IProblem problem, IAgentLogger logger) {
+		
+		File datasetFile = datasetDescription.exportDatasetFile();
 		
 		List<ObjectBinPack> objectsOfBinPack = new ArrayList<>();
 		
@@ -50,7 +54,7 @@ public class ToolReadProblemBinPacking {
 			}
 		}
 		
-		return new DatasetBinPacking(objectsOfBinPack, datasetFile);
+		return new DatasetBinPacking(objectsOfBinPack);
 	}
 	
 }

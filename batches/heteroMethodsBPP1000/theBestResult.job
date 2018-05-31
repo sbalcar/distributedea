@@ -2,10 +2,12 @@
   <jobID>theBestResult</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>The Best Result Quantity Of Improvement Statistic</description>
-  <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
+  <problem class="problemBinPacking">
     <sizeOfBin>1</sizeOfBin>
   </problem>
-  <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

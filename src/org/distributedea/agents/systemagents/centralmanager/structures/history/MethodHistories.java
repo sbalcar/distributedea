@@ -18,7 +18,7 @@ import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
-import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfMethodInstanceIteration;
 
 /**
  * Structure represents {@link List} of {@link MethodHistory}

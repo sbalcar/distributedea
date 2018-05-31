@@ -2,10 +2,12 @@
   <jobID>homoEvolution</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Homo-Evolution</description>
-  <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
+  <problem class="problemBinPacking">
     <sizeOfBin>1</sizeOfBin>
   </problem>
-  <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  </datasetDescription>
   <methods class="methods">
     <inputMethodDescriptions>
       <inputMethodDescription>

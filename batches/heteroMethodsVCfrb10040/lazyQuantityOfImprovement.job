@@ -2,8 +2,10 @@
   <jobID>lazyQuantityOfImprovement</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Lazy impl. of the Greatest Quantity Of Improvement Statistic</description>
-  <problem class="org.distributedea.ontology.problem.ProblemVertexCover"/>
-  <datasetFileName>inputs/frb100-40.mis</datasetFileName>
+  <problem class="problemVertexCover"/>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/frb100-40.mis</datasetFileName>
+  </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

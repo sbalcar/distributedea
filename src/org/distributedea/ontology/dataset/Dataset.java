@@ -1,7 +1,5 @@
 package org.distributedea.ontology.dataset;
 
-import java.io.File;
-
 import org.distributedea.logging.IAgentLogger;
 
 import jade.content.Concept;
@@ -14,18 +12,7 @@ public abstract class Dataset implements Concept {
 
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * Export {@link File} with {@link Dataset}
-	 * @return
-	 */
-	public abstract File exportDatasetFile();
-	/**
-	 * Import {@link File} with {@link Dataset} to solve
-	 * @param problemFile
-	 */
-	public abstract void importDatasetFile(File problemFile);
 	
-
 	/**
 	 * Tests validity
 	 * @return

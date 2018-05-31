@@ -2,10 +2,12 @@
   <jobID>random</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Random Init, Random Kill &amp; Random Run</description>
-  <problem class="org.distributedea.ontology.problem.ProblemBinPacking">
+  <problem class="problemBinPacking">
     <sizeOfBin>1</sizeOfBin>
   </problem>
-  <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/bp1000.bpp</datasetFileName>
+  </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>

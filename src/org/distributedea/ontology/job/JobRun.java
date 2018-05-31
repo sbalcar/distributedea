@@ -7,6 +7,7 @@ import jade.content.Concept;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.method.IMethods;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
@@ -37,6 +38,11 @@ public class JobRun implements Concept {
 	 */
 	private IProblem problem;
 	
+	/**
+	 * Defines the filename with the input {@link Dataset}
+	 */
+	private IDatasetDescription datasetDescription;
+
 	/**
 	 * Dataset
 	 */
@@ -124,6 +130,21 @@ public class JobRun implements Concept {
 		}
 		this.problem = problem;
 	}
+	
+	
+
+	public IDatasetDescription getDatasetDescription() {
+		return datasetDescription;
+	}
+
+	public void setDatasetDescription(IDatasetDescription datasetDescription) {
+		if (datasetDescription == null ||
+				! datasetDescription.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IDatasetDescription.class.getSimpleName() + " is not valid");
+		}
+		this.datasetDescription = datasetDescription;
+	}
 
 	/**
 	 * Returns {@link Problem} to solve
@@ -187,10 +208,13 @@ public class JobRun implements Concept {
 		
 		IProblem problemClone = getProblem().deepClone();
 		Dataset datasetClone = getDataset().deepClone();
+		IDatasetDescription datasetDescrClone =
+				getDatasetDescription().deepClone();
 		
 		ProblemStruct problemStruct = new ProblemStruct();
 		problemStruct.setJobID(jobIDClone);
 		problemStruct.setProblem(problemClone);
+		problemStruct.setDatasetDescription(datasetDescrClone);
 		problemStruct.setDataset(datasetClone);
 		problemStruct.importProblemToolClass(problemToolClass);
 		problemStruct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));

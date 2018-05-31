@@ -23,6 +23,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemVertexCover;
@@ -62,8 +63,8 @@ public class InputVC {
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemVertexCover());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("frb59-26-5.mis")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("frb59-26-5.mis"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolVC.class)));
 		
@@ -78,8 +79,8 @@ public class InputVC {
 		Job job = test01();
 		job.setJobID("frb10040");
 		job.setDescription("description");
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("frb100-40.mis")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("frb100-40.mis"))));
 		
 		return job;
 	}

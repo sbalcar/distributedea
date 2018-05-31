@@ -57,7 +57,7 @@ public class PostProcTableOfJob extends PostProcessing {
 		long replanPeriodS = islandModel.getReplanPeriodMS() / 1000;
 		String isIndividualDistribution = job.getIslandModelConfiguration()
 				.isIndividualDistribution() ? "ano" : "ne" ;
-		String problemFileName = job.exportDatasetFile().getName();
+		String problemFileName = job.getDatasetDescription().toLogString();
 		String planner = job.getPlanner().getClass().getSimpleName();
 		IPlannerEndCondition plannerEndCondition = job.getPlannerEndCondition();
 		String plannerEndConditionStr = plannerEndCondition.toString();

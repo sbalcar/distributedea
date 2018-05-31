@@ -20,9 +20,6 @@ public class DatasetTSPGPS extends DatasetTSP {
 	/** List of TSP-GPS points */
 	private List<PositionGPS> positions;
 	
-	/** Problem File */
-	private String problemFileName;
-
 
 	@Deprecated
 	public DatasetTSPGPS() { // only for Jade
@@ -36,7 +33,6 @@ public class DatasetTSPGPS extends DatasetTSP {
 	 */
 	public DatasetTSPGPS(List<PositionGPS> positions, File problemFile) {
 		this.positions = positions;
-		this.importDatasetFile(problemFile);
 	}
 	
 	/**
@@ -57,7 +53,6 @@ public class DatasetTSPGPS extends DatasetTSP {
 		}
 		setPositions(positionsClone);
 		
-		setProblemFileName(problem.getProblemFileName());
 	}
 	
 	public List<PositionGPS> getPositions() {
@@ -88,46 +83,6 @@ public class DatasetTSPGPS extends DatasetTSP {
 		}
 		
 		return null;
-	}
-	
-	@Deprecated
-	public String getProblemFileName() {
-		File file = exportDatasetFile();
-		if (file == null) {
-			return null;
-		}
-		return file.getAbsolutePath();
-	}
-	@Deprecated
-	public void setProblemFileName(String fileName) {
-		try {
-			importDatasetFile(new File(fileName));
-		} catch(Exception e) {
-			throw new IllegalArgumentException();
-		}
-	}
-	/**
-	 * Exports File with {@link Problem} assignment
-	 */
-	@Override
-	public File exportDatasetFile() {
-		if (problemFileName == null) {
-			return null;
-		}
-		return new File(problemFileName);
-	}
-	/**
-	 * Imports File with {@link Problem} assignment
-	 */
-	@Override
-	public void importDatasetFile(File problemFile) {
-		if (problemFile == null) {
-			throw new IllegalArgumentException();
-		}
-		if ((! problemFile.exists()) || (! problemFile.isFile())) {
-			throw new IllegalArgumentException();
-		}
-		this.problemFileName = problemFile.getAbsolutePath();
 	}
 	
 	public int numberOfPositions() {

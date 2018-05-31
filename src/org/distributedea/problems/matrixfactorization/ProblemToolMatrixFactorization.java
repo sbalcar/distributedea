@@ -6,6 +6,8 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.problem.IProblem;
@@ -49,12 +51,16 @@ public class ProblemToolMatrixFactorization extends ProblemTool {
 	}
 
 	@Override
-	public Dataset readDataset(File datasetFile, IProblem problem, IAgentLogger logger) {
+	public Dataset readDataset(IDatasetDescription datasetDescription,
+			IProblem problem, IAgentLogger logger) {
 		
-		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
+		DatasetDescriptionMF datasetDescr =
+				(DatasetDescriptionMF)datasetDescription;
+		ProblemMatrixFactorization problemMF =
+				(ProblemMatrixFactorization) problem;
 		
-		return ToolReadDatasetMF.readTrainingPartOfDataset(
-				datasetFile, problemMF, logger);
+		return ToolReadDatasetMF.readDataset(
+				datasetDescr, problemMF, logger);
 	}
 
 	@Override
@@ -75,7 +81,8 @@ public class ProblemToolMatrixFactorization extends ProblemTool {
 				(ProblemMatrixFactorization) problem;
 		DatasetMF datasetMF = (DatasetMF) dataset;
 		
-		return ToolFitnessRMSEMF.evaluate(individualLF, problemMF, datasetMF, logger);
+		return ToolFitnessRMSEMF.evaluateTestingDataset(
+				individualLF, problemMF, datasetMF, logger);
 	}
 
 	@Override

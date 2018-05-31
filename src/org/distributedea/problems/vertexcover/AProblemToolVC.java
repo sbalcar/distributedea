@@ -6,6 +6,8 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetVertexCover;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualSet;
 import org.distributedea.ontology.problem.IProblem;
@@ -54,9 +56,10 @@ public abstract class AProblemToolVC extends ProblemTool {
 	}
 	
 	@Override
-	public Dataset readDataset(File fileOfProblem, IProblem problem, IAgentLogger logger) {
+	public Dataset readDataset(IDatasetDescription datasetDescription, IProblem problem, IAgentLogger logger) {
 		
-		return ToolReadProblemVC.readProblem(fileOfProblem, problem, logger);
+		DatasetDescription datasetDescr = (DatasetDescription) datasetDescription;
+		return ToolReadProblemVC.readProblem(datasetDescr, problem, logger);
 	}
 	
 	@Override

@@ -2,12 +2,14 @@
   <jobID>singleDifferentialevolution</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Single-DifferentialEvolution</description>
-  <problem class="org.distributedea.ontology.problem.ProblemContinuousOpt">
+  <problem class="problemContinuousOpt">
     <functionID>f10</functionID>
     <dimension>10</dimension>
     <isMaximizationProblem>false</isMaximizationProblem>
   </problem>
-  <datasetFileName>inputs/bbob.co</datasetFileName>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/bbob.co</datasetFileName>
+  </datasetDescription>
   <methods class="methods">
     <inputMethodDescriptions>
       <inputMethodDescription>

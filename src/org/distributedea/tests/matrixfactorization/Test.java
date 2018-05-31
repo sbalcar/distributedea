@@ -5,12 +5,12 @@ import java.io.IOException;
 
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsArithmeticSequence;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsComplement;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
-import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsComplement;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
@@ -26,48 +26,50 @@ public class Test {
 	
 	private static void fitnessOfRandomIndiv() {
 	
-		DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
-				new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
-				new RatingIDsArithmeticSequence(5, 5));
-		
 		ProblemMatrixFactorization problemMF =
 				new ProblemMatrixFactorization(
-				new LatFactRange(), new LatFactRange(), 10, datasetPartitioning);
+				new LatFactRange(), new LatFactRange(), 10);
+
+		RatingIDsArithmeticSequence sequence = new RatingIDsArithmeticSequence(5, 5);
+						
+		File file =
+				new File("inputs" + File.separator + "ml-100k" + File.separator + "u.data");
+//		        new File("inputs" + File.separator + "ml-1m" + File.separator + "ratings.dat");
+//		        new File("inputs" + File.separator + "ml-10M100K" + File.separator + "ratings.dat");
 		
-		DatasetMF datasetTrainMF = ToolReadDatasetMF.readTrainingPartOfDataset(
-				new File("inputs" + File.separator + "ml-100k" + File.separator + "u.data"),
-//				new File("inputs" + File.separator + "ml-1m" + File.separator + "ratings.dat"),
-//				new File("inputs" + File.separator + "ml-10M100K" + File.separator + "ratings.dat"),
-				problemMF, new TrashLogger());
+		DatasetDescriptionMF datasetDescr = new DatasetDescriptionMF(
+				file, new RatingIDsComplement(sequence), file, sequence);
+
+		
+		DatasetMF datasetMF = ToolReadDatasetMF.readDataset(
+				datasetDescr, problemMF, new TrashLogger());
+		
+				
 		System.out.println("Dataset readed");
 		
 		IndividualLatentFactors individualLF = 
 				ToolGenerateIndividualMF.generateIndividual(
-						problemMF, datasetTrainMF, new TrashLogger());
+						problemMF, datasetMF, new TrashLogger());
 		
-		double fitness = ToolFitnessRMSEMF.evaluate(individualLF, problemMF,
-				datasetTrainMF, new TrashLogger());
+		double fitnessTrain = ToolFitnessRMSEMF.evaluateTrainingDataset(
+				individualLF, problemMF, datasetMF, new TrashLogger());
 		
-		System.out.println("Fi: " + fitness);
+		System.out.println("Fi: " + fitnessTrain);
 		
 		
 		IndividualLatentFactors individualLFI = individualLF;
 		for (int i = 0; i < 20000; i++) {
 			
 			individualLFI = ToolSGDist1RandomMF.improve(individualLFI,
-					problemMF, datasetTrainMF, new TrashLogger());
-			double fitnessI = ToolFitnessRMSEMF.evaluate(individualLFI,
-					problemMF, datasetTrainMF, new TrashLogger());
+					problemMF, datasetMF, new TrashLogger());
+			double fitnessI = ToolFitnessRMSEMF.evaluateTrainingDataset(
+					individualLFI, problemMF, datasetMF, new TrashLogger());
 		
 			System.out.println("Fi" + i + ": " + fitnessI);
 		}
 		
-		DatasetMF datasetTestMF = ToolReadDatasetMF.readTestingPartOfDataset(
-				new File("inputs" + File.separator + "ml-100k" + File.separator + "u.data"),
-				problemMF, new TrashLogger());
-
-		double fitnessResult = ToolFitnessRMSEMF.evaluate(individualLFI, problemMF,
-				datasetTestMF, new TrashLogger());
+		double fitnessResult = ToolFitnessRMSEMF.evaluateTestingDataset(
+				individualLFI, problemMF, datasetMF, new TrashLogger());
 
 		System.out.println("");
 		System.out.println("Testing");

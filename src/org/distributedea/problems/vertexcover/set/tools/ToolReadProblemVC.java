@@ -12,13 +12,15 @@ import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetVertexCover;
 import org.distributedea.ontology.dataset.vertexcover.Graph;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.problem.IProblem;
 
 public class ToolReadProblemVC {
 
-	public static DatasetVertexCover readProblem(File fileOfProblem, IProblem problem, IAgentLogger logger) {
+	public static DatasetVertexCover readProblem(DatasetDescription datasetDescription,
+			IProblem problem, IAgentLogger logger) {
 		
-		if (fileOfProblem == null || ! fileOfProblem.isFile()) {
+		if (datasetDescription == null || ! datasetDescription.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
 					File.class.getSimpleName() + " is not valid");
 		}
@@ -27,14 +29,15 @@ public class ToolReadProblemVC {
 					IAgentLogger.class.getSimpleName() + " is not valid");
 		}
 		
-		List<Pair<Integer, Integer>> edges = readProblemVC(fileOfProblem, logger);
+		File file = datasetDescription.exportDatasetFile();
+		List<Pair<Integer, Integer>> edges = readProblemVC(file, logger);
 		
 		Graph graph = new Graph();
 		for (Pair<Integer, Integer> edgeI : edges) {
 			graph.addEdge(edgeI.first, edgeI.second);
 		}
 		
-		return new DatasetVertexCover(graph, fileOfProblem);
+		return new DatasetVertexCover(graph, file);
 	}
 	
 	

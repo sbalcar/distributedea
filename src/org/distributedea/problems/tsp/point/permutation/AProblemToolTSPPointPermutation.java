@@ -8,6 +8,8 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetTSPPoint;
 import org.distributedea.ontology.dataset.tsp.Position;
 import org.distributedea.ontology.dataset.tsp.PositionPoint;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.IProblem;
@@ -87,9 +89,11 @@ public abstract class AProblemToolTSPPointPermutation extends ProblemTSPPointToo
 	}
 	
 	@Override
-	public Dataset readDataset(File datasetFile, IProblem problem, IAgentLogger logger) {
+	public Dataset readDataset(IDatasetDescription datasetDescription,
+			IProblem problem, IAgentLogger logger) {
 
-		return ToolReadProblemTSPPoint.readDataset(datasetFile, problem, logger);
+		DatasetDescription datasetDescr = (DatasetDescription) datasetDescription;
+		return ToolReadProblemTSPPoint.readDataset(datasetDescr, problem, logger);
 	}
 	
 	@Override

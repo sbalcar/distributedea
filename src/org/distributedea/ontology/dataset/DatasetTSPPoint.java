@@ -19,10 +19,6 @@ public class DatasetTSPPoint extends DatasetTSP {
 	/** List of TSP points */
 	private List<PositionPoint> positions;
 	
-	/** Problem File */
-	private String problemFileName;
-	
-	
 	
 	@Deprecated
 	public DatasetTSPPoint() { // only for Jade
@@ -37,7 +33,6 @@ public class DatasetTSPPoint extends DatasetTSP {
 	public DatasetTSPPoint(List<PositionPoint> positions,
 			File fileOfProblem) {
 		this.positions = positions;
-		this.importDatasetFile(fileOfProblem);
 	}
 	
 	/**
@@ -54,7 +49,6 @@ public class DatasetTSPPoint extends DatasetTSP {
 		}
 		
 		setPositions(positionsClone);
-		setProblemFileName(dataset.getProblemFileName());
 	}
 	
 	public List<PositionPoint> getPositions() {
@@ -84,46 +78,6 @@ public class DatasetTSPPoint extends DatasetTSP {
 			}
 		}
 		return null;
-	}
-
-	@Deprecated
-	public String getProblemFileName() {
-		File file = exportDatasetFile();
-		if (file == null) {
-			return null;
-		}
-		return file.getAbsolutePath();
-	}
-	@Deprecated
-	public void setProblemFileName(String fileName) {
-		try {
-			importDatasetFile(new File(fileName));
-		} catch(Exception e) {
-			throw new IllegalArgumentException();
-		}
-	}
-	/**
-	 * Exports File with {@link Problem} assignment
-	 */
-	@Override
-	public File exportDatasetFile() {
-		if (problemFileName == null) {
-			return null;
-		}
-		return new File(problemFileName);
-	}
-	/**
-	 * Imports File with {@link Problem} assignment
-	 */
-	@Override
-	public void importDatasetFile(File problemFile) {
-		if (problemFile == null) {
-			throw new IllegalArgumentException();
-		}
-		if (! problemFile.exists() || ! problemFile.isFile()) {
-			throw new IllegalArgumentException();
-		}
-		this.problemFileName = problemFile.getAbsolutePath();
 	}
 	
 	@Override

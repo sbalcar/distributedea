@@ -20,6 +20,9 @@ import org.distributedea.ontology.ResultOntology;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsEmptySet;
+import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsFullSet;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
@@ -27,10 +30,7 @@ import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
-import org.distributedea.ontology.problem.matrixfactorization.DatasetPartitioning;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence;
-import org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsComplement;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
@@ -101,19 +101,21 @@ public class Agent_Sender extends Agent_DistributedEA {
 			Calendar cal = Calendar.getInstance();
 			System.out.println("Sender:   " + dateFormat.format(cal.getTime()));
 			
-			DatasetPartitioning datasetPartitioning = new DatasetPartitioning(
-					new RatingIDsComplement(new RatingIDsArithmeticSequence(5, 5)),
-					new RatingIDsArithmeticSequence(5, 5));
-			
+
 			ProblemMatrixFactorization problemMF =
 					new ProblemMatrixFactorization(
-					new LatFactRange(), new LatFactRange(), 10, datasetPartitioning);
-			
-			DatasetMF datasetMF = ToolReadDatasetMF.readTrainingPartOfDataset(
-//					new File("inputs" +  File.separator + "ml-100k" +  File.separator + "u.data"),
-//					new File("inputs" +  File.separator + "ml-1m" +  File.separator + "ratings.dat"),
-					new File("inputs" +  File.separator + "ml-10M100K" +  File.separator + "ratings.dat"),
-					problemMF, new TrashLogger());
+					new LatFactRange(), new LatFactRange(), 10);
+
+			File file =
+//					new File("inputs" +  File.separator + "ml-100k" +  File.separator + "u.data");
+//					new File("inputs" +  File.separator + "ml-1m" +  File.separator + "ratings.dat");
+					new File("inputs" +  File.separator + "ml-10M100K" +  File.separator + "ratings.dat");
+
+			DatasetDescriptionMF datasetDescr = new DatasetDescriptionMF(
+					file, new RatingIDsFullSet(), file, new RatingIDsEmptySet());
+					
+			DatasetMF datasetMF = ToolReadDatasetMF.readDataset(
+					datasetDescr, problemMF, new TrashLogger());
 			System.out.println("Dataset readed");
 			
 			
@@ -168,7 +170,7 @@ public class Agent_Sender extends Agent_DistributedEA {
 				ToolGenerateIndividualMF.generateIndividual(
 						problemMF, datasetMF, new TrashLogger());
 		
-		double fitness = ToolFitnessRMSEMF.evaluate(individualLF, problemMF,
+		double fitness = ToolFitnessRMSEMF.evaluateTrainingDataset(individualLF, problemMF,
 				datasetMF, new TrashLogger());
 		
 		IndividualEvaluated indivE = new IndividualEvaluated(individualLF,

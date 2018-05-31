@@ -2,8 +2,10 @@
   <jobID>singleBruteforce</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>Single-BruteForce</description>
-  <problem class="org.distributedea.ontology.problem.ProblemTSPGPS"/>
-  <datasetFileName>inputs/xit1083.tsp</datasetFileName>
+  <problem class="problemTSPGPS"/>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/xit1083.tsp</datasetFileName>
+  </datasetDescription>
   <methods class="methods">
     <inputMethodDescriptions>
       <inputMethodDescription>

@@ -25,6 +25,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
@@ -63,8 +64,8 @@ public class InputContOpt {
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("bbob.co")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("bbob.co"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class) ));
 		job.setPlanner(new PlannerDummy());
@@ -86,8 +87,8 @@ public class InputContOpt {
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("bbob.co")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("bbob.co"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
@@ -111,8 +112,8 @@ public class InputContOpt {
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemContinuousOpt("f01", 2, true));
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("bbob.co")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("bbob.co"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
@@ -136,8 +137,8 @@ public class InputContOpt {
 		job.setNumberOfRuns(3);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemContinuousOpt("f2", 2, false));
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("f2.co")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("f2.co"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		
@@ -161,8 +162,8 @@ public class InputContOpt {
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemContinuousOpt("f02", 10, false));
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("bbob.co")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("bbob.co"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolCORandomMove.class)));
 		

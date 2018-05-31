@@ -13,15 +13,19 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.dataset.tsp.Position;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.problem.IProblem;
 
 public class ToolReadProblemTSPGPS {
 
-	public static DatasetTSPGPS readDataset(File problemFile, IProblem problem, IAgentLogger logger) {
+	public static DatasetTSPGPS readDataset(DatasetDescription datasetDescription,
+			IProblem problem, IAgentLogger logger) {
 
+		File file = datasetDescription.exportDatasetFile();
+		
 		List<Position> positions;
 		try {
-			positions = readProblemTSP(problemFile, logger);
+			positions = readProblemTSP(file, logger);
 		} catch (Exception e) {
 			logger.logThrowable("Can not read " +
 					Dataset.class.getSimpleName(), e);
@@ -33,7 +37,7 @@ public class ToolReadProblemTSPGPS {
 			positionsGPS.add((PositionGPS) positionI);
 		}
 		
-		return new DatasetTSPGPS(positionsGPS, problemFile);
+		return new DatasetTSPGPS(positionsGPS, file);
 	}
 	
 	/**

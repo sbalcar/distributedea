@@ -2,24 +2,25 @@
   <jobID>thePedigree</jobID>
   <numberOfRuns>9</numberOfRuns>
   <description>The Pedigree</description>
-  <problem class="org.distributedea.ontology.problem.ProblemMatrixFactorization">
-    <latFactXDef class="org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange"/>
-    <latFactYDef class="org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange"/>
+  <problem class="problemMatrixFactorization">
+    <latFactXDef class="latFactRange"/>
+    <latFactYDef class="latFactRange"/>
     <latentFactorWidth>10</latentFactorWidth>
-    <datasetPartitioning>
-      <trainingSetDef class="org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsComplement">
-        <ratingIDs class="org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence">
-          <a1>5</a1>
-          <d>5</d>
-        </ratingIDs>
-      </trainingSetDef>
-      <testingSetDef class="org.distributedea.ontology.problem.matrixfactorization.traintest.RatingIDsArithmeticSequence">
+  </problem>
+  <datasetDescription class="datasetDescriptionMF">
+    <datasetTrainingFileName>inputs/ml-100k/u.data</datasetTrainingFileName>
+    <trainingSetDef class="ratingIDsComplement">
+      <ratingIDs class="ratingIDsArithmeticSequence">
         <a1>5</a1>
         <d>5</d>
-      </testingSetDef>
-    </datasetPartitioning>
-  </problem>
-  <datasetFileName>inputs/ml-100k/u.data</datasetFileName>
+      </ratingIDs>
+    </trainingSetDef>
+    <datasetTestingFileName>inputs/ml-100k/u.data</datasetTestingFileName>
+    <testingSetDef class="ratingIDsArithmeticSequence">
+      <a1>5</a1>
+      <d>5</d>
+    </testingSetDef>
+  </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
       <agentConfigurations>
@@ -129,7 +130,7 @@
     <individualDistribution>true</individualDistribution>
     <neighbourCount>3</neighbourCount>
     <replanPeriodMS>60000</replanPeriodMS>
-    <individualBroadcastPeriodMS>30000</individualBroadcastPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
     <readyToSendIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel</readyToSendIndividualsModelClassName>
     <receivedIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel</receivedIndividualsModelClassName>
   </islandModelConfiguration>

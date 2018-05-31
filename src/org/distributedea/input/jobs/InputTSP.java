@@ -26,6 +26,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -66,8 +67,8 @@ public class InputTSP {
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("simpleTest.tsp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("simpleTest.tsp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 		
@@ -90,8 +91,8 @@ public class InputTSP {
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("wi29.tsp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("wi29.tsp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 				
@@ -115,8 +116,8 @@ public class InputTSP {
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPPoint());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("djb2036.tsp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("djb2036.tsp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolPoint2opt.class)));
 		
@@ -139,8 +140,8 @@ public class InputTSP {
 		job.setNumberOfRuns(1);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("xit1083.tsp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("xit1083.tsp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 		
@@ -164,8 +165,8 @@ public class InputTSP {
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("xit1083.tsp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("xit1083.tsp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 		
@@ -189,8 +190,8 @@ public class InputTSP {
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("djb2036.tsp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("djb2036.tsp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 		
@@ -214,8 +215,8 @@ public class InputTSP {
 		job.setNumberOfRuns(9);
 		job.setIslandModelConfiguration(islandModelConf);
 		job.setProblem(new ProblemTSPGPS());
-		job.importDatasetFile(new File(
-				FileNames.getInputProblemFile("xql662.tsp")));
+		job.setDatasetDescription(new DatasetDescription(
+				new File(FileNames.getInputProblemFile("xql662.tsp"))));
 		job.setMethods(new MethodsTwoSets(
 				algorithms, new ProblemTools(ProblemToolGPSEuc2D2opt.class)));
 		

@@ -9,6 +9,7 @@ import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJobRunResults;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
+import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.job.JobID;
@@ -32,9 +33,11 @@ public class PostProcMFTestSetTableOfJobRunResults extends PostProcTableOfJobRun
 		
 		ProblemMatrixFactorization problemMF =
 				(ProblemMatrixFactorization) problem;
+		DatasetDescriptionMF datasetDescr =
+				(DatasetDescriptionMF) job.getDatasetDescription();
 		
-		DatasetMF datasetTestMF = ToolReadDatasetMF.readTestingPartOfDataset(
-				job.exportDatasetFile(), problemMF, new TrashLogger());
+		DatasetMF datasetTestMF = ToolReadDatasetMF.readDataset(
+				datasetDescr, problemMF, new TrashLogger());
 		
 		Map<JobID, Double> results = new HashMap<>();
 		
@@ -49,7 +52,7 @@ public class PostProcMFTestSetTableOfJobRunResults extends PostProcTableOfJobRun
 			IndividualLatentFactors individualLFI =
 					(IndividualLatentFactors) indivEvalI.getIndividual();
 			
-			double fitnessResult = ToolFitnessRMSEMF.evaluate(individualLFI,
+			double fitnessResult = ToolFitnessRMSEMF.evaluateTrainingDataset(individualLFI,
 					problemMF, datasetTestMF, new TrashLogger());
 
 			results.put(jobIdI, fitnessResult);

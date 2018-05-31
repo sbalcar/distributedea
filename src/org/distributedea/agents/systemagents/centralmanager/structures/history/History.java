@@ -22,8 +22,8 @@ import org.distributedea.ontology.monitor.MethodStatistics;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
-import org.distributedea.ontology.saveresult.ResultOfIteration;
-import org.distributedea.ontology.saveresult.ResultOfMethodInstanceIteration;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfIteration;
+import org.distributedea.ontology.saveresult.resultofiteration.ResultOfMethodInstanceIteration;
 
 /**
  * Data structure preserving the history of one run of the {@link Job}
