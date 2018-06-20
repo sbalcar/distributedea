@@ -133,6 +133,8 @@
     <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
     <readyToSendIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel</readyToSendIndividualsModelClassName>
     <receivedIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel</receivedIndividualsModelClassName>
+    <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneEach5sInserter</readyToSendIndividualInserterClassName>
+    <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneEach5sSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
   <planner class="plannerTheBestAverageOfFitness">
     <DURATION__OF__NEW__METHOD__PROTECTION defined-in="plannerTheGreatestQuantityOfImprovement">3</DURATION__OF__NEW__METHOD__PROTECTION>

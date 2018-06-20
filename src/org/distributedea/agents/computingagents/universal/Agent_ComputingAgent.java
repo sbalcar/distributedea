@@ -29,6 +29,8 @@ import org.distributedea.agents.computingagents.universal.queuesofindividuals.IR
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReceivedIndividualsModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.IReadyToSendIndividualsInserter;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.IReceivedIndividualSelector;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ComputingOntology;
@@ -83,15 +85,22 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 	protected LocalSaver localSaver = null;
 	
-	private BestIndividualModel bestIndividualModel = new BestIndividualModel();
-	
-	// the set of received Individuals from distribution
-	protected IReceivedIndividualsModel receivedIndividuals = new ReceivedIndivsOneQueueModel();
-	
-	// the set of Individuals to distribution
-	protected IReadyToSendIndividualsModel readyToSendIndividuals = new ReadyToSendIndivsTwoQueuesModel();
+	// data model for the best created or received individual
+	protected BestIndividualModel bestIndividualModel = new BestIndividualModel();
 	
 	private HelpersModel helpers = new HelpersModel();
+	
+	// selector of received individual
+	protected IReceivedIndividualSelector receivedIndividualSelector = null;
+	
+	// inserter of created individual to distribution
+	protected IReadyToSendIndividualsInserter readyToSendIndividualsInserter = null;
+	
+	// the set of received Individuals from distribution
+	private IReceivedIndividualsModel receivedIndividuals = new ReceivedIndivsOneQueueModel();
+	
+	// the set of Individuals to distribution
+	private IReadyToSendIndividualsModel readyToSendIndividuals = new ReadyToSendIndivsTwoQueuesModel();
 
 	
 	// computing thread
@@ -173,7 +182,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	
 	
-	private AgentConfiguration processJadeArguments(Object[] jadeArguments) {
+	private AgentConfiguration processAgentArguments(Object[] jadeArguments) {
 		
 		Object argumentObj0 = jadeArguments[0];
 		AgentName agentName = AgentName.importXML((String) argumentObj0);
@@ -185,11 +194,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		return new AgentConfiguration(agentName, this.getClass(), arguments);
 	}
 	
+	
+	
 	@Override
 	protected void setup() {
 		
 		// process Jade arguments
-		this.agentConf = processJadeArguments(getArguments());
+		this.agentConf = processAgentArguments(getArguments());
 		try {
 			processArguments(this.agentConf.getArguments());
 		} catch (Exception e1) {
@@ -515,7 +526,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		MethodDescription description = getMethodDescription();
 		
 		List<MethodDescriptionNumber> helpmateList =
-				getHelpmateList(newStatisticsForEachQuery);
+				helpers.getPrioritiesOfHelpersAndClean(newStatisticsForEachQuery);
 		StatisticOfHelpmates statisticOfHelpmates =
 				new StatisticOfHelpmates(description, helpmateList);
 		
@@ -546,10 +557,15 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		// initialization of structures
 		this.readyToSendIndividuals = (IReadyToSendIndividualsModel)islandModel
 				.exportReadyToSendIndividualsModel(getLogger()).newInstance();
+		this.readyToSendIndividualsInserter = (IReadyToSendIndividualsInserter) islandModel
+				.exportReadyToSendIndividualInserter(getLogger()).newInstance();
+		this.readyToSendIndividualsInserter.init(this.readyToSendIndividuals);
 		
 		this.receivedIndividuals = (IReceivedIndividualsModel)islandModel
 				.exportReceivedIndividualsModel(getLogger()).newInstance();
-		
+		this.receivedIndividualSelector = (IReceivedIndividualSelector) islandModel
+				.exportReceivedIndividualSelector(getLogger()).newInstance();
+		this.receivedIndividualSelector.init(this.receivedIndividuals);
 		
 		// adding cyclic behavior for sending Individual to distribution
 		CompAgentIndivDistributionBehavior indivDistributionBehavior = 
@@ -567,33 +583,11 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 	}
 	
-	private List<MethodDescriptionNumber> getHelpmateList(boolean newStatisticsForEachQuery) {
-		
-		List<MethodDescriptionNumber> helpmateList = this.helpers.getPrioritiesOfHelpers();
-		if (newStatisticsForEachQuery) {
-			this.helpers.clean();
-		}
-		return helpmateList;
-	}
-	
-	
 	protected void commitSuicide() {
 		
 		getLogger().log(Level.INFO, "Waiting for killing himself");
 
 		ManagerAgentService.sendKillAgent(this, getAID(), getLogger());
-	}
-	
-	protected void distributeIndividualToNeighours(List<IndividualEvaluated> individualsEval,
-			IProblem problem, JobID jobID) {
-		
-		readyToSendIndividuals.addIndividual(individualsEval, problem);
-	}
-
-	protected void distributeIndividualToNeighours(IndividualEvaluated individualEval,
-			IProblem problem, JobID jobID) {
-		
-		readyToSendIndividuals.addIndividual(individualEval, problem);
 	}
 	
 	private MethodDescription getMethodDescription() {

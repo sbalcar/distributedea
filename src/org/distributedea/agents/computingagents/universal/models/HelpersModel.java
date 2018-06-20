@@ -79,4 +79,18 @@ public class HelpersModel {
 	public void clean() {
 		this.helpers = new HashMap<MethodDescription, Integer>();
 	}
+	
+	/**
+	 * Get priorities and optionally clean structure 
+	 * @param cleanAfterGet
+	 * @return
+	 */
+	public List<MethodDescriptionNumber> getPrioritiesOfHelpersAndClean(boolean cleanAfterGet) {
+		
+		List<MethodDescriptionNumber> helpmateList = getPrioritiesOfHelpers();
+		if (cleanAfterGet) {
+			clean();
+		}
+		return helpmateList;
+	}
 }

@@ -14,6 +14,8 @@ import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneEach5sInserter;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneEach5sSelector;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
@@ -57,6 +59,10 @@ public class InputMatrixFactorization {
 		islandModelConf.setNeighbourCount(3);
 		islandModelConf.setReplanPeriodMS(60000);
 		islandModelConf.setIndividualBroadcastPeriodMS(5000);
+		islandModelConf.importReadyToSendIndividualInserterClass(
+				ReadyToSendIndividualsOnlyOneEach5sInserter.class);
+		islandModelConf.importReceivedIndividualSelectorClass(
+				ReceivedIndivRemoveOneEach5sSelector.class);
 		islandModelConf.importReadyToSendIndividualsModelClass(
 				ReadyToSendIndivsOneIndivModel.class);
 		islandModelConf.importReceivedIndividualsModelClass(

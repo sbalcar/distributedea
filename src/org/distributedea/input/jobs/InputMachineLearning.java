@@ -14,6 +14,8 @@ import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
@@ -58,6 +60,10 @@ public class InputMachineLearning {
 		islandModelConf.setIndividualDistribution(false);
 		islandModelConf.setReplanPeriodMS(150000);
 		islandModelConf.setIndividualBroadcastPeriodMS(5000);
+		islandModelConf.importReadyToSendIndividualInserterClass(
+				ReadyToSendIndividualsOnlyOneInserter.class);
+		islandModelConf.importReceivedIndividualSelectorClass(
+				ReceivedIndivRemoveOneSelector.class);
 		islandModelConf.importReadyToSendIndividualsModelClass(
 				ReadyToSendIndivsTwoQueuesModel.class);
 		islandModelConf.importReceivedIndividualsModelClass(
@@ -115,6 +121,10 @@ public class InputMachineLearning {
 		islandModelConf.setIndividualDistribution(false);
 		islandModelConf.setReplanPeriodMS(60000);
 		islandModelConf.setIndividualBroadcastPeriodMS(5000);
+		islandModelConf.importReadyToSendIndividualInserterClass(
+				ReadyToSendIndividualsOnlyOneInserter.class);
+		islandModelConf.importReceivedIndividualSelectorClass(
+				ReceivedIndivRemoveOneSelector.class);
 		islandModelConf.importReadyToSendIndividualsModelClass(
 				ReadyToSendIndivsTwoQueuesModel.class);
 		islandModelConf.importReceivedIndividualsModelClass(

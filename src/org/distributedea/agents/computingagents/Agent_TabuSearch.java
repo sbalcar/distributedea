@@ -110,7 +110,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 				generationNumberI, problem, jobID);
 		
 		// send new Individual to distributed neighbors
-		distributeIndividualToNeighours(individualEvalI, problem, jobID);
+		readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 
 		
 		while (state == CompAgentState.COMPUTING) {
@@ -136,8 +136,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			}
 			
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(neighbor, problem, jobID);
-			
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 			
 			// add actual individual in the Tabu Set
 			tabu.offer(individualEvalI);
@@ -148,7 +147,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 			
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividualSelector.getIndividual(problem);
 			
 			boolean isReceivedBetter =
 					FitnessTool.isFistIndividualWBetterThanSecond(

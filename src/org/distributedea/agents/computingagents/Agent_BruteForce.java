@@ -81,7 +81,7 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 				generationNumberI, problem, jobID);
 		
 		// logs data
-		distributeIndividualToNeighours(individualEvalI, problem, jobID);
+		readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 		
 		
 		while (individualEvalI != null && state == CompAgentState.COMPUTING) {
@@ -98,11 +98,10 @@ public class Agent_BruteForce extends Agent_ComputingAgent {
 					generationNumberI, problem, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(individualEvalI, problem, jobID);
-			
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 			
 			// take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividualSelector.getIndividual(problem);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(

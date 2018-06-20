@@ -167,7 +167,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 					problem, dataset, pedigreeParams, getCALogger());
 			
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 			
 			individuals.add(individualEvalI);
 		}		
@@ -247,10 +247,11 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 					problemTool, conf);
 			
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(populationOntol, problem, jobID);
+			readyToSendIndividualsInserter.insertIndivs(
+					populationOntol, problem);
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividualSelector.getIndividual(problem);
 			
 			if (individualDistribution &&
 					FitnessTool.isFirstIndividualWBetterThanSecond(

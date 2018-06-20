@@ -152,7 +152,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 					generateIndividualEval(problem, dataset, pedigreeParams, getCALogger());
 			
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 
 			population.add(individualEvalI);
 		}
@@ -202,10 +202,10 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			// send new Individual to distributed neighbors
 			IndividualEvaluated theBestOfPopulation = model.getBestIndividual(problem);
-			distributeIndividualToNeighours(theBestOfPopulation, problem, jobID);
+			readyToSendIndividualsInserter.insertIndiv(theBestOfPopulation, problem);
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividualSelector.getIndividual(problem);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(

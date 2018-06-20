@@ -4,6 +4,7 @@ import jade.content.Concept;
 
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReadyToSendIndividualsModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReceivedIndividualsModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.IReceivedIndividualSelector;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.Individual;
@@ -48,6 +49,11 @@ public class IslandModelConfiguration implements Concept {
 	private String receivedIndividualsModelClassName;
 	
 	
+	private String readyToSendIndividualInserterClassName;
+	
+	private String receivedIndividualSelectorClassName;
+	
+	
 	public IslandModelConfiguration() {
 		setNeighbourCount(Integer.MAX_VALUE);
 	}
@@ -73,8 +79,12 @@ public class IslandModelConfiguration implements Concept {
 				islandModelConf.getIndividualBroadcastPeriodMS());
 		importReadyToSendIndividualsModelClass(
 				islandModelConf.exportReadyToSendIndividualsModel(new TrashLogger()));
+		importReadyToSendIndividualInserterClass(
+				islandModelConf.exportReadyToSendIndividualInserter(new TrashLogger()));
 		importReceivedIndividualsModelClass(
 				islandModelConf.exportReceivedIndividualsModel(new TrashLogger()));
+		importReceivedIndividualSelectorClass(
+				islandModelConf.exportReceivedIndividualSelector(new TrashLogger()));
 	}
 
 		
@@ -135,8 +145,28 @@ public class IslandModelConfiguration implements Concept {
 			String receivedIndividualsModelClassName) {
 		this.receivedIndividualsModelClassName = receivedIndividualsModelClassName;
 	}
-
 	
+	@Deprecated
+	public String getReadyToSendIndividualInserterClassName() {
+		return readyToSendIndividualInserterClassName;
+	}
+	@Deprecated
+	public void setReadyToSendIndividualInserterClassName(
+			String readyToSendIndividualInserterClassName) {
+		this.readyToSendIndividualInserterClassName = readyToSendIndividualInserterClassName;
+	}
+	
+	@Deprecated
+	public String getReceivedIndividualSelectorClassName() {
+		return receivedIndividualSelectorClassName;
+	}
+	@Deprecated
+	public void setReceivedIndividualSelectorClassName(
+			String receivedIndividualSelectorClassName) {
+		this.receivedIndividualSelectorClassName = receivedIndividualSelectorClassName;
+	}
+
+
 	/**
 	 * Exports {@link IReadyToSendIndividualsModel} class
 	 * @param logger
@@ -191,6 +221,57 @@ public class IslandModelConfiguration implements Concept {
 	}
 
 	
+	/**
+	 * Exports {@link IReceivedIndividualSelector} class
+	 * @param logger
+	 * @return
+	 */
+	public Class<?> exportReceivedIndividualSelector(IAgentLogger logger) {
+		
+		try {
+			return Class.forName(getReceivedIndividualSelectorClassName());
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	/**
+	 * Import {@link IReceivedIndividualSelector} class
+	 * @param problemToSolve
+	 */
+	public void importReceivedIndividualSelectorClass(Class<?> receivedIndividualSelector) {
+		if (receivedIndividualSelector == null) {
+			setReceivedIndividualSelectorClassName(null);
+			return;
+		}
+		setReceivedIndividualSelectorClassName(
+				receivedIndividualSelector.getName());
+	}
+	
+	/**
+	 * Exports {@link ReadyToSendIndividualInserter} class
+	 * @param logger
+	 * @return
+	 */
+	public Class<?> exportReadyToSendIndividualInserter(IAgentLogger logger) {
+		
+		try {
+			return Class.forName(getReadyToSendIndividualInserterClassName());
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	/**
+	 * Import {@link ReadyToSendIndividualInserter} class
+	 * @param problemToSolve
+	 */
+	public void importReadyToSendIndividualInserterClass(Class<?> readyToSendIndividualInserter) {
+		if (readyToSendIndividualInserter == null) {
+			setReadyToSendIndividualInserterClassName(null);
+			return;
+		}
+		setReadyToSendIndividualInserterClassName(
+				readyToSendIndividualInserter.getName());
+	}
 	
 	
 	/**
@@ -209,6 +290,12 @@ public class IslandModelConfiguration implements Concept {
 			return false;
 		}
 		if (exportReceivedIndividualsModel(logger) == null) {
+			return false;
+		}
+		if (exportReadyToSendIndividualInserter(logger) == null) {
+			return false;
+		}
+		if (exportReceivedIndividualSelector(logger) == null) {
 			return false;
 		}
 		

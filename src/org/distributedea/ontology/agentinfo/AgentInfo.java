@@ -49,7 +49,8 @@ public class AgentInfo implements Concept {
 	}
 	public void importComputingAgentClassName(Class<?> computingAgent) {
 		if (computingAgent == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					Class.class.getSimpleName() + " is not valid");
 		}
 		computingAgentClassName = computingAgent.getName();
 	}

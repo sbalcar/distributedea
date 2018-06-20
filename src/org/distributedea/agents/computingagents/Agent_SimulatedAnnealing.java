@@ -152,7 +152,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 				problemTool.generateIndividualEval(problem, dataset, pedigreeParams, getCALogger());
 		
 		// send new Individual to distributed neighbors
-		distributeIndividualToNeighours(individualEvalI, problem, jobID);
+		readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 		
 		// logs data
 		processIndividualFromInitGeneration(individualEvalI,
@@ -186,10 +186,10 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
         			generationNumberI, problem, jobID, localSaver);
             
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
             
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividualSelector.getIndividual(problem);
 			
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
@@ -223,13 +223,15 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 	private double acceptanceProbability(IndividualEvaluated individual, IndividualEvaluated individualNew,
     		double temperature, IProblem problem) {
 		
+		// accept the new better solution
+		if (FitnessTool.isFirstIndividualEBetterThanSecond(
+				individualNew, individual, problem)) {
+			return 1.0;
+		}
+		
 		double energy = individual.getFitness();
 		double newEnergy = individualNew.getFitness();
 		
-        // accept the new better solution
-        if (FitnessTool.isFistFitnessBetterThanSecond(newEnergy, energy, problem)) {
-            return 1.0;
-        }
         // for worse solution calculates an acceptance probability
         return Math.exp(-1 * Math.abs(energy - newEnergy) / temperature);
 	}

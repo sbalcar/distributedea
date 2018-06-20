@@ -179,7 +179,7 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 					generateIndividualEval(problem, dataset, pedigreeParams, getCALogger());
 		
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 
 			individuals[i] = individualEvalI;
 		}
@@ -212,10 +212,11 @@ public class Agent_Evolution extends Agent_ComputingAgent {
 			populationNewI.addIndividual(bestIndividualI);
 			
 			// distribute individuals to another islands
-			distributeIndividualToNeighours(populationNewI.getIndividualsList(), problem, jobID);
+			readyToSendIndividualsInserter.insertIndivs(
+					populationNewI.getIndividualsList(), problem);
 			
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividualSelector.getIndividual(problem);
 
 			if (individualDistribution && recievedIndividualW != null) {
 				

@@ -236,6 +236,7 @@ public class Job implements Concept, Serializable {
 			IslandModelConfiguration islandModelConfiguration) {
 		if (islandModelConfiguration == null ||
 				! islandModelConfiguration.valid(new TrashLogger())) {
+			islandModelConfiguration.valid(new TrashLogger());
 			throw new IllegalArgumentException("Argument " +
 					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}

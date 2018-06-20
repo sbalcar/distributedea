@@ -147,7 +147,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 				pedigreeParams, getCALogger());
 
 		// send new Individual to distributed neighbors
-		distributeIndividualToNeighours(individualEvalI, problem, jobID);
+		readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 
 		// logs data
 		processIndividualFromInitGeneration(individualEvalI,
@@ -179,11 +179,10 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 					generationNumberI, problem, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(individualEvalI, problem, jobID);
-
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 
 			//take received individual to new generation
-			IndividualWrapper recievedIndividualW = receivedIndividuals.removeIndividual(problem);
+			IndividualWrapper recievedIndividualW = receivedIndividualSelector.getIndividual(problem);
 			if (individualDistribution &&
 					FitnessTool.isFistIndividualWBetterThanSecond(
 							recievedIndividualW, individualEvalI, problem)) {

@@ -86,7 +86,7 @@ public class Agent_RandomSearch extends Agent_ComputingAgent {
 					generationNumberI, problem, jobID, localSaver);
 			
 			// send new Individual to distributed neighbors
-			distributeIndividualToNeighours(individualEvalI, problem, jobID);
+			readyToSendIndividualsInserter.insertIndiv(individualEvalI, problem);
 		}
 	
 		problemTool.exit();
