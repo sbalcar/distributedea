@@ -168,6 +168,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 			
 			if (temperatureI <= 1) {
 				temperatureI = temperature;
+				individualEvalI = bestIndividualModel.getTheBestIndividualEval();
 			}
 			
 			IndividualEvaluated individualEvalNewI = 
@@ -231,6 +232,11 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		
 		double energy = individual.getFitness();
 		double newEnergy = individualNew.getFitness();
+		
+		if (energy < 1 || newEnergy < 1) {
+			energy *= 1000;
+			newEnergy *= 1000;
+		}
 		
         // for worse solution calculates an acceptance probability
         return Math.exp(-1 * Math.abs(energy - newEnergy) / temperature);

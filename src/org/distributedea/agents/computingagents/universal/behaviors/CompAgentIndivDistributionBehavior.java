@@ -62,12 +62,9 @@ public class CompAgentIndivDistributionBehavior extends TickerBehaviour {
 		 if (islandModelConf.isIndividualDistribution()) {
 			 ComputingAgentService.sendIndividualToNeighbours(
 					 agent, individualWrapper, islandModelConf, logger);
-			 ComputingAgentService.sendIndividualToMonitor(
-					 agent, individualWrapper, logger);
-		 } else {
-			 ComputingAgentService.sendIndividualToMonitor(
-					 agent, individualWrapper, logger);
 		 }
+		 ComputingAgentService.sendIndividualToMonitor(
+				 agent, individualWrapper, logger);		 
 	}
 
 }

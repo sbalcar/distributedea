@@ -2,6 +2,7 @@ package org.distributedea.agents.computingagents.universal.models;
 
 import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.IProblem;
 
@@ -15,6 +16,14 @@ public class BestIndividualModel {
 	 */
 	public IndividualWrapper getTheBestIndividualWrp() {
 		return bestIndividualWrp;
+	}
+
+	/**
+	 * Returns the best {@link IndividualEvaluated}
+	 * @return
+	 */
+	public IndividualEvaluated getTheBestIndividualEval() {
+		return bestIndividualWrp.getIndividualEvaluated();
 	}
 	
 	/**
