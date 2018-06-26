@@ -15,4 +15,5 @@ public interface IReadyToSendIndividualsModel {
 	
 	public IndividualEvaluated getIndividual(IProblem problem);
 	
+	public IndividualEvaluated removeIndividual(IProblem problem);
 }

@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.IReadyToSendIndividualsModel;
-import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
- * Structure serves as model for {@link Individual}s to send
+ * Structure serves as model for {@link IndividualEvaluated}s ready to send,
+ * structurally formed from two queues of {@link IndividualEvaluated}s (size=10)
  * @author stepan
  *
  */
@@ -55,7 +55,7 @@ public class ReadyToSendIndivsTwoQueuesModel implements IReadyToSendIndividualsM
 				
 	}
 	
-	public synchronized IndividualEvaluated getIndividual(IProblem problem) {
+	public synchronized IndividualEvaluated removeIndividual(IProblem problem) {
 		if (individualsNoSorted.isEmpty()) {
 			return null;
 		} else if (individualsNoSorted.size() == 1) {
@@ -82,6 +82,16 @@ public class ReadyToSendIndivsTwoQueuesModel implements IReadyToSendIndividualsM
 			Collections.sort(individualsNoSorted, new CmpIndividualEvaluated(problem));
 			return individualsNoSorted.remove(0);
 		}
+	}
+
+
+	@Override
+	public IndividualEvaluated getIndividual(IProblem problem) {
+		if (individualsNoSorted.isEmpty()) {
+			return null;
+		}
+		
+		return individualsNoSorted.get(0);
 	}
 	
 }

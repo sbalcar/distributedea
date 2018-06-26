@@ -9,9 +9,9 @@ import java.util.logging.Level;
 
 import javax.xml.bind.JAXBException;
 
-import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneLastIndivModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
-import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneLastIndivModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.PlannerInfrastructure;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.IPlannerEndCondition;
@@ -490,9 +490,9 @@ public class Job implements Concept, Serializable {
 		xstream.alias("plannerTimeRestriction", PlannerEndCondIterationCountRestriction.class);
 		
 		
-		xstream.alias("readyToSendIndivsOneIndivModel", ReadyToSendIndivsOneIndivModel.class);
+		xstream.alias("readyToSendIndivsOneIndivModel", ReadyToSendIndivsOneLastIndivModel.class);
 		xstream.alias("readyToSendIndivsTwoQueuesModel", ReadyToSendIndivsTwoQueuesModel.class);
-		xstream.alias("receivedIndivsOneIndivModel", ReceivedIndivsOneIndivModel.class);
+		xstream.alias("receivedIndivsOneIndivModel", ReceivedIndivsOneLastIndivModel.class);
 		xstream.alias("receivedIndivsOneQueueModel", ReceivedIndivsOneQueueModel.class);
 	}	
 	

@@ -361,10 +361,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		IProblem problem = computingThread.getProblemDefinition();
 		Dataset dataset = computingThread.getDataset();
-		IProblemTool problemTool = computingThread.getProblemTool();
 		
 		// add individual to received model
-		receivedIndividuals.addIndividual(individualWrp, problem, dataset, problemTool, getLogger());
+		receivedIndividuals.addIndividual(individualWrp, problem, dataset, getLogger());
 		
 		// update best helpers model
 		helpers.processReceivedIndiv(individualWrp,

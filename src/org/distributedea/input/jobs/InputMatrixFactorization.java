@@ -12,9 +12,13 @@ import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector;
-import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneIndivModel;
-import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneIndivModel;
-import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneEach5sInserter;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsOneLastIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsThreeLastIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneLastIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsThreeLastIndivModel;
+import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter;
 import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneEach5sSelector;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
@@ -60,13 +64,13 @@ public class InputMatrixFactorization {
 		islandModelConf.setReplanPeriodMS(60000);
 		islandModelConf.setIndividualBroadcastPeriodMS(5000);
 		islandModelConf.importReadyToSendIndividualInserterClass(
-				ReadyToSendIndividualsOnlyOneEach5sInserter.class);
+				ReadyToSendIndividualsOnlyOneInserter.class);
 		islandModelConf.importReceivedIndividualSelectorClass(
 				ReceivedIndivRemoveOneEach5sSelector.class);
 		islandModelConf.importReadyToSendIndividualsModelClass(
-				ReadyToSendIndivsOneIndivModel.class);
+				ReadyToSendIndivsTwoQueuesModel.class);
 		islandModelConf.importReceivedIndividualsModelClass(
-				ReceivedIndivsOneIndivModel.class);
+				ReceivedIndivsOneQueueModel.class);
 		
 		File file = new File(FileNames.getInputProblemFile(
 				"ml-100k" + File.separator + "u.data"));
@@ -110,6 +114,14 @@ public class InputMatrixFactorization {
 				new LatFactRange(), new LatFactRange(), 10));
 		job.setDatasetDescription(datasetDescr);
 		
+		IslandModelConfiguration islandModelConf =
+				job.getIslandModelConfiguration();
+		islandModelConf.importReadyToSendIndividualsModelClass(
+				ReadyToSendIndivsThreeLastIndivModel.class);
+		islandModelConf.importReceivedIndividualsModelClass(
+				ReceivedIndivsThreeLastIndivModel.class);
+		
+		
 		return job;
 	}
 	
@@ -128,6 +140,13 @@ public class InputMatrixFactorization {
 		job.setProblem(new ProblemMatrixFactorization(
 				new LatFactRange(), new LatFactRange(), 10));
 		job.setDatasetDescription(datasetDescr);
+		
+		IslandModelConfiguration islandModelConf =
+				job.getIslandModelConfiguration();
+		islandModelConf.importReadyToSendIndividualsModelClass(
+				ReadyToSendIndivsOneLastIndivModel.class);
+		islandModelConf.importReceivedIndividualsModelClass(
+				ReceivedIndivsOneLastIndivModel.class);
 		
 		return job;
 	}

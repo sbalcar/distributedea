@@ -47,10 +47,11 @@ public class ReadyToSendIndividualsOnlyOneEach5sInserter extends AReadyToSendInd
 		
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTimeInMillis(lastInsertTimestamp.getTime());
-	    cal.add(Calendar.SECOND, -TIME_INTERVAL_SECONDS); // subtract given seconds
+	    cal.add(Calendar.SECOND, TIME_INTERVAL_SECONDS); // subtract given seconds
 	    Timestamp nextInsertTimestamp = new Timestamp(cal.getTime().getTime());
 		
 		if (nextInsertTimestamp.before(timestampNow)) {
+			lastInsertTimestamp = timestampNow;
 			readyToSendIndividuals.addIndividual(individualEval, problem);
 		}
 	}

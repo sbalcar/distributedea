@@ -49,7 +49,7 @@ public class CompAgentIndivDistributionBehavior extends TickerBehaviour {
 		 IProblem problem = problemStruct.getProblem();
 		 
 		 IndividualEvaluated individualEval =
-				 readyToSendIndividuals.getIndividual(problem);
+				 readyToSendIndividuals.removeIndividual(problem);
 		 
 		 if (individualEval == null) {
 			 logger.log(Level.WARNING, "Any Individual to send availible");

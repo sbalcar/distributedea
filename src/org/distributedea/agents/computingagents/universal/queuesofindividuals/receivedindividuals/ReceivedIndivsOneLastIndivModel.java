@@ -6,15 +6,20 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.IProblemTool;
 
-public class ReceivedIndivsOneIndivModel implements IReceivedIndividualsModel {
+/**
+ * Model for a set of received {@link IndividualWrapper} from distribution,
+ * structurally formed from one last {@link IndividualWrapper}
+ * @author stepan
+ *
+ */
+public class ReceivedIndivsOneLastIndivModel implements IReceivedIndividualsModel {
 
 	private IndividualWrapper individualW;
 	
 	@Override
 	public void addIndividual(IndividualWrapper individualW, IProblem problem,
-			Dataset dataset, IProblemTool problemTool, IAgentLogger logger) {
+			Dataset dataset, IAgentLogger logger) {
 		
 		if (this.individualW == null ||
 				FitnessTool.isFistIndividualWBetterThanSecond(
@@ -26,6 +31,16 @@ public class ReceivedIndivsOneIndivModel implements IReceivedIndividualsModel {
 
 	@Override
 	public IndividualWrapper removeIndividual(IProblem problem) {
+		
+		IndividualWrapper indivW = this.individualW;
+		this.individualW = null;
+		
+		return indivW;
+	}
+
+	@Override
+	public IndividualWrapper getIndividual(IProblem problem) {
+		
 		return this.individualW;
 	}
 

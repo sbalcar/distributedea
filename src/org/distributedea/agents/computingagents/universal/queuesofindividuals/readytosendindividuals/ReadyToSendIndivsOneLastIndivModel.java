@@ -6,9 +6,15 @@ import org.distributedea.agents.computingagents.universal.queuesofindividuals.IR
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 
-public class ReadyToSendIndivsOneIndivModel implements IReadyToSendIndividualsModel {
-
-	IndividualEvaluated individualEval;
+/**
+ * Structure serves as model for {@link IndividualEvaluated}s ready to send,
+ * structurally formed by one last {@link IndividualEvaluated}
+ * @author stepan
+ *
+ */
+public class ReadyToSendIndivsOneLastIndivModel implements IReadyToSendIndividualsModel {
+	
+	private IndividualEvaluated individualEval;
 	
 	@Override
 	public void addIndividual(List<IndividualEvaluated> individualsEval,
@@ -33,8 +39,16 @@ public class ReadyToSendIndivsOneIndivModel implements IReadyToSendIndividualsMo
 	}
 
 	@Override
+	public IndividualEvaluated removeIndividual(IProblem problem) {
+
+		IndividualEvaluated result = this.individualEval;
+		this.individualEval = null;
+		
+		return result;
+	}
+
+	@Override
 	public IndividualEvaluated getIndividual(IProblem problem) {
 		return this.individualEval;
 	}
-
 }

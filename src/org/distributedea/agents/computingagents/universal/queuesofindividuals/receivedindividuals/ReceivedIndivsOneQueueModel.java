@@ -5,10 +5,10 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.IProblemTool;
 
 /**
- * Model for a set of received {@link IndividualWrapper} from distribution
+ * Model for a set of received {@link IndividualWrapper} from distribution,
+ * structurally formed from one queue of {@link IndividualWrapper}
  * @author stepan
  *
  */
@@ -16,7 +16,10 @@ public class ReceivedIndivsOneQueueModel implements IReceivedIndividualsModel {
 	
 	private int MAX_NUMBER_OF_INDIVIDUAL = 10;
 	
-	private int indivCount = 0;
+	private int insertedIndivIndex = -1;
+	private int removedIndivIndex = 0;
+	
+	
 	private IndividualWrapper[] individuals =
 			new IndividualWrapper[MAX_NUMBER_OF_INDIVIDUAL];
 	
@@ -29,29 +32,36 @@ public class ReceivedIndivsOneQueueModel implements IReceivedIndividualsModel {
 	 * @param logger
 	 */
 	public void addIndividual(IndividualWrapper individualW,
-			IProblem problem, Dataset dataset,
-			IProblemTool problemTool, IAgentLogger logger) {
+			IProblem problem, Dataset dataset, IAgentLogger logger) {
 		
 		if (individualW == null) {
 			throw new IllegalStateException("Recieved Individual is not valid");
 		}
 		
-		if (indivCount == individuals.length) {
-			indivCount = 0;
+		if (insertedIndivIndex == individuals.length -1) {
+			insertedIndivIndex = -1;
 		}
-		individuals[indivCount++] = individualW;
+		
+		individuals[++insertedIndivIndex] = individualW;
 		
 	}
 	
 	@Override
 	public IndividualWrapper removeIndividual(IProblem problem) {
 		
-		if (indivCount == 0) {
-			return null;
+		IndividualWrapper result = individuals[removedIndivIndex++];
+		
+		if (removedIndivIndex == individuals.length) {
+			removedIndivIndex = 0;
 		}
 		
-		// list is sorted from the best to the worst
-		return individuals[0];
+		return result;
+	}
+
+	@Override
+	public IndividualWrapper getIndividual(IProblem problem) {
+		
+		return individuals[removedIndivIndex];	
 	}
 
 }
