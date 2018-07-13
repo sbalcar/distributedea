@@ -2,9 +2,9 @@ package org.distributedea.problems.matrixfactorization.latentfactor.tools;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 
@@ -18,16 +18,16 @@ public class ToolSGDist1RandomInEachRowMF {
 			ProblemMatrixFactorization problemMF,
 			DatasetMF datasetMF, IAgentLogger logger) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		IndividualLatentFactors idividualClone =
 				(IndividualLatentFactors) individual.deepClone();
 		
 		for (int userIdI : datasetModel.exportUserIDs()) {
 		
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					datasetModel.exportRaitingsOfUser(userIdI);
-			ObjectRaiting raitingI =
+			ObjectRating raitingI =
 					raitingsOfUserI.exportRandomObjectRaiting();
 			
 			int rowIndex = datasetModel.exportIndexOfUser(raitingI.getUserID());

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
 import org.distributedea.tests.matrixfactorization.structures.ClusterSet;
 import org.distributedea.tests.matrixfactorization.structures.MatrixOfIncidence;
@@ -31,7 +31,7 @@ public class ClusteringAlgorithm {
 	public static ClusterSet createSpecifiedNumberOfUserBasedClusters(DatasetMF datasetMF,
 			int numberOfClusters) throws Exception {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		// creating matrix of incidence
 		MatrixOfIncidence matrix =
@@ -80,7 +80,7 @@ public class ClusteringAlgorithm {
 	public static ClusterSet createTransitivelySimilarUserBasedClusters(DatasetMF datasetMF,
 			int sizeOfRatingIntersection) throws Exception {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 
 		MatrixOfIncidence matrix =
 				new MatrixOfIncidence(datasetModel.exportUserIDs());
@@ -119,7 +119,7 @@ public class ClusteringAlgorithm {
 	private static ClusterSet createClustersOfUsers2(DatasetMF datasetMF,
 			DatasetDescriptionMF datasetDescrMF, int sizeOfRatingIntersection) throws Exception {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		if (datasetDescrMF.getTrainingSetDef().equals("u.data") &&
 				sizeOfRatingIntersection == 8) {
@@ -173,18 +173,18 @@ public class ClusteringAlgorithm {
 			Set<Integer> cluster2, DatasetMF datasetMF,
 			int sizeOfRatingIntersection) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
-		ObjectRaitingList raitings = datasetModel.exportObjectRaitingList();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
+		ObjectRatingList raitings = datasetModel.exportObjectRaitingList();
 
 		for (int userIdI : cluster1) {
 			for (int userIdJ : cluster2) {
 				
-				ObjectRaitingList raitingsOfCluster1 =
+				ObjectRatingList raitingsOfCluster1 =
 						raitings.exportObjectRaitingOfUser(userIdI);
-				ObjectRaitingList raitingsOfCluster2 =
+				ObjectRatingList raitingsOfCluster2 =
 						raitings.exportObjectRaitingOfUser(userIdJ);
 
-				ObjectRaitingList intersectionI = raitingsOfCluster1
+				ObjectRatingList intersectionI = raitingsOfCluster1
 						.exportIntesectionOfObjectWithIdenticalRaiting(
 								raitingsOfCluster2);
 				if (intersectionI.size() >= sizeOfRatingIntersection) {

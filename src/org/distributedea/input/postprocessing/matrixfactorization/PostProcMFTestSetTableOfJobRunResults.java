@@ -36,7 +36,7 @@ public class PostProcMFTestSetTableOfJobRunResults extends PostProcTableOfJobRun
 		DatasetDescriptionMF datasetDescr =
 				(DatasetDescriptionMF) job.getDatasetDescription();
 		
-		DatasetMF datasetTestMF = ToolReadDatasetMF.readDataset(
+		DatasetMF datasetTestMF = ToolReadDatasetMF.readDatasetWithoutContent(
 				datasetDescr, problemMF, new TrashLogger());
 		
 		Map<JobID, Double> results = new HashMap<>();

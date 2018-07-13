@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.distributedea.javaextension.Pair;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 
  /**
  * Optimized data model for {@link Dataset}
@@ -15,12 +17,12 @@ import org.distributedea.ontology.dataset.Dataset;
  * @author stepan
  *
  */
-public class DatasetModel {
+public class RatingModel {
 
-	private ObjectRaitingList raitings;
+	private ObjectRatingList raitings;
 
-	private Map<Integer, ObjectRaitingList> userIDMapToRaiting;
-	private Map<Integer, ObjectRaitingList> itemIDMapToRaiting;
+	private Map<Integer, ObjectRatingList> userIDMapToRaiting;
+	private Map<Integer, ObjectRatingList> itemIDMapToRaiting;
 	
 	private int numberOfUsers;
 	private int numberOfItems;
@@ -41,9 +43,9 @@ public class DatasetModel {
 	 * Constructor
 	 * @param raitings
 	 */
-	public DatasetModel(List<ObjectRaiting> raitings) {
+	public RatingModel(List<ObjectRating> raitings) {
 		
-		this.raitings = new ObjectRaitingList(raitings);
+		this.raitings = new ObjectRatingList(raitings);
 		
 		this.userIDS = this.raitings.exportUserIDs();
 		this.itemIDS = this.raitings.exportItemIDs();
@@ -67,14 +69,14 @@ public class DatasetModel {
 		this.itemIDMapToRaiting = createItemIDMap(itemIDS);	
 	}
 	
-	private Map<Integer, ObjectRaitingList> createUserIDMap(Set<Integer> userIDS) {
+	private Map<Integer, ObjectRatingList> createUserIDMap(Set<Integer> userIDS) {
 		
-		Map<Integer, ObjectRaitingList> userIDMap = new HashMap<>();
+		Map<Integer, ObjectRatingList> userIDMap = new HashMap<>();
 		for (Integer userIDI : userIDS) {
-			userIDMap.put(userIDI, new ObjectRaitingList());
+			userIDMap.put(userIDI, new ObjectRatingList());
 		}
 		
-		for (ObjectRaiting raitingI : this.raitings.getRaitings()) {
+		for (ObjectRating raitingI : this.raitings.getRaitings()) {
 			int userID = raitingI.getUserID();
 			userIDMap.get(userID).add(raitingI);
 		}
@@ -82,14 +84,14 @@ public class DatasetModel {
 		return userIDMap;
 	}
 
-	private Map<Integer, ObjectRaitingList> createItemIDMap(Set<Integer> itemIDs) {
+	private Map<Integer, ObjectRatingList> createItemIDMap(Set<Integer> itemIDs) {
 		
-		Map<Integer, ObjectRaitingList> itemIDMap = new HashMap<>();
+		Map<Integer, ObjectRatingList> itemIDMap = new HashMap<>();
 		for (Integer itemIDI : itemIDs) {
-			itemIDMap.put(itemIDI, new ObjectRaitingList());
+			itemIDMap.put(itemIDI, new ObjectRatingList());
 		}
 		
-		for (ObjectRaiting raitingI : this.raitings.getRaitings()) {
+		for (ObjectRating raitingI : this.raitings.getRaitings()) {
 			
 			int itemID = raitingI.getItemID();
 			itemIDMap.get(itemID).add(raitingI);
@@ -98,11 +100,11 @@ public class DatasetModel {
 		return itemIDMap;
 	}
 
-	public List<ObjectRaiting> exportRatingsClone() {
+	public List<ObjectRating> exportRatingsClone() {
 		
-		List<ObjectRaiting> raitingCloneList = new ArrayList<>();
+		List<ObjectRating> raitingCloneList = new ArrayList<>();
 		
-		for (ObjectRaiting oRaitingI : this.raitings.getRaitings()) {
+		for (ObjectRating oRaitingI : this.raitings.getRaitings()) {
 			raitingCloneList.add(oRaitingI.deepClone());
 		}
 		
@@ -110,10 +112,10 @@ public class DatasetModel {
 	}
 
 	/**
-	 * Exports {@link ObjectRaiting} of all raitings
+	 * Exports {@link ObjectRating} of all raitings
 	 * @return
 	 */
-	public ObjectRaitingList exportObjectRaitingList() {
+	public ObjectRatingList exportObjectRaitingList() {
 		return this.raitings;
 	}
 	
@@ -207,29 +209,29 @@ public class DatasetModel {
 	}
 	
 	/**
-	 * Exports {@link List} of {@link ObjectRaiting} corresponds to given userID 
+	 * Exports {@link List} of {@link ObjectRating} corresponds to given userID 
 	 * @param userID
 	 * @return
 	 */	
-	public ObjectRaitingList exportRaitingsOfUser(int userID) {
+	public ObjectRatingList exportRaitingsOfUser(int userID) {
 		return this.userIDMapToRaiting.get(userID);
 	}
 
 	/**
-	 * Exports {@link List} of {@link ObjectRaiting} corresponds to given itemID
+	 * Exports {@link List} of {@link ObjectRating} corresponds to given itemID
 	 * @param itemID
 	 * @return
 	 */
-	public ObjectRaitingList exportRaitingsOfItem(int itemID) {
+	public ObjectRatingList exportRaitingsOfItem(int itemID) {
 		return this.itemIDMapToRaiting.get(itemID);
 	}
 	
 	/**
-	 * Exports {@link ObjectRaitingList} of {@link ObjectRaiting} wit given raiting
+	 * Exports {@link ObjectRatingList} of {@link ObjectRating} wit given raiting
 	 * @param raiting
 	 * @return
 	 */
-	public ObjectRaitingList exportObjectWithRaiting(int raiting) {
+	public ObjectRatingList exportObjectWithRaiting(int raiting) {
 		return this.raitings.exportObjectWithRaiting(raiting);
 	}
 	

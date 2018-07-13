@@ -2,9 +2,9 @@ package org.distributedea.problems.tsp.gps;
 
 import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
-import org.distributedea.problems.tsp.ProblemToolTSP;
+import org.distributedea.problems.tsp.AProblemToolTSP;
 
-public abstract class ProblemTSPGPSTool extends ProblemToolTSP {
+public abstract class ProblemTSPGPSTool extends AProblemToolTSP {
 
 	@Override
 	public Class<?> datasetReprezentation() {

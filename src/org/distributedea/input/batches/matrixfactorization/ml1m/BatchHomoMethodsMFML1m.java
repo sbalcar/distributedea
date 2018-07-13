@@ -26,7 +26,7 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.method.Methods;
-import org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization;
+import org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow;
 
 public class BatchHomoMethodsMFML1m implements IInputBatch {
 
@@ -40,7 +40,7 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		
 		Methods methods0 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10")))),
-				new ProblemTools(ProblemToolMatrixFactorization.class));
+				new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class));
 
 		Job job0 = jobI.deepClone();
 		job0.setJobID("homoHillclimbing");
@@ -50,7 +50,7 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		
 		Methods methods1 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments())),
-				new ProblemTools(ProblemToolMatrixFactorization.class));
+				new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class));
 		
 		Job job1 = jobI.deepClone();
 		job1.setJobID("homoRandomsearch");
@@ -60,7 +60,7 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		
 		Methods methods2 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) ))),
-				new ProblemTools(ProblemToolMatrixFactorization.class));
+				new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class));
 
 		Job job2 = jobI.deepClone();
 		job2.setJobID("homoEvolution");
@@ -70,7 +70,7 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		
 		Methods methods3 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments())),
-				new ProblemTools(ProblemToolMatrixFactorization.class));
+				new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class));
 
 		Job job3 = jobI.deepClone();
 		job3.setJobID("homoBruteforce");
@@ -80,7 +80,7 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		
 		Methods methods4 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10")))),
-				new ProblemTools(ProblemToolMatrixFactorization.class));
+				new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class));
 		
 		Job job4 = jobI.deepClone();
 		job4.setJobID("homoTabusearch");
@@ -90,7 +90,7 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		
 		Methods methods5 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002")) )),
-				new ProblemTools(ProblemToolMatrixFactorization.class));
+				new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class));
 		
 		Job job5 = jobI.deepClone();
 		job5.setJobID("homoSimulatedannealing");
@@ -100,7 +100,7 @@ public class BatchHomoMethodsMFML1m implements IInputBatch {
 		
 		Methods methods6 = new Methods(new InputAgentConfigurations(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) )),
-				new ProblemTools(ProblemToolMatrixFactorization.class));
+				new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class));
 
 		Job job6 = jobI.deepClone();
 		job6.setJobID("homoDifferentialevolution");

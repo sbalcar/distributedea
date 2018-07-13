@@ -1,9 +1,6 @@
 package org.distributedea.problems.matrixfactorization;
 
-import java.io.File;
-
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
@@ -15,40 +12,18 @@ import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.problems.ProblemTool;
 import org.distributedea.problems.matrixfactorization.latentfactor.operators.OperatorDifferential;
 import org.distributedea.problems.matrixfactorization.latentfactor.operators.OperatorUniformCross;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadSolutionMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolSGDist1ByIndexMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolSGDist1RandomInEachRowMF;
 import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolSGDist1RandomMF;
 
-
-public class ProblemToolMatrixFactorization extends ProblemTool {
-
-	@Override
-	public void initialization(IProblem problem, Dataset dataset,
-			AgentConfiguration agentConf, IAgentLogger logger) throws Exception {
-	}
-
-	@Override
-	public void exit() throws Exception {
-	}
-
-	@Override
-	public Class<?> datasetReprezentation() {
-		return DatasetMF.class;
-	}
-	
-	@Override
-	public Class<?> problemReprezentation() {
-		return ProblemMatrixFactorization.class;
-	}
-
-	@Override
-	public Class<?> reprezentationWhichUses() {
-		return IndividualLatentFactors.class;
-	}
+/**
+ * Represents {@link ProblemTool} for Matrix Factorization {@link Problem} for latent factors based
+ * {@link Individual} representation. Operator implements Stochastic gradient descent for randomly
+ * selected rating in each row of matrix
+ * @author stepan
+ *
+ */
+public class ProblemToolMFColaborative1RandomInEachRow extends AProblemToolMF {
 
 	@Override
 	public Dataset readDataset(IDatasetDescription datasetDescription,
@@ -59,64 +34,8 @@ public class ProblemToolMatrixFactorization extends ProblemTool {
 		ProblemMatrixFactorization problemMF =
 				(ProblemMatrixFactorization) problem;
 		
-		return ToolReadDatasetMF.readDataset(
+		return ToolReadDatasetMF.readDatasetWithoutContent(
 				datasetDescr, problemMF, logger);
-	}
-
-	@Override
-	public Individual readSolution(File fileOfSolution, Dataset dataset,
-			IAgentLogger logger) {
-		
-		return ToolReadSolutionMF.readSolution(fileOfSolution, logger);
-	}
-
-	@Override
-	public double fitness(Individual individual, IProblem problem,
-			Dataset dataset, IAgentLogger logger) {
-
-		IndividualLatentFactors individualLF =
-				(IndividualLatentFactors) individual;
-		
-		ProblemMatrixFactorization problemMF =
-				(ProblemMatrixFactorization) problem;
-		DatasetMF datasetMF = (DatasetMF) dataset;
-		
-		return ToolFitnessRMSEMF.evaluateTestingDataset(
-				individualLF, problemMF, datasetMF, logger);
-	}
-
-	@Override
-	protected Individual generateIndividual(IProblem problem, Dataset dataset,
-			IAgentLogger logger) {
-		
-		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
-		DatasetMF datasetMF = (DatasetMF) dataset;
-		
-		return ToolGenerateIndividualMF.generateIndividual(problemMF, datasetMF, logger);
-	}
-
-	@Override
-	protected Individual generateFirstIndividual(IProblem problem,
-			Dataset dataset, IAgentLogger logger) {
-		
-		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
-		DatasetMF datasetMF = (DatasetMF) dataset;
-		
-		return ToolGenerateIndividualMF.generateIndividual(problemMF, datasetMF, logger);
-	}
-
-	@Override
-	protected Individual generateNextIndividual(IProblem problem,
-			Dataset dataset, Individual individual, long neighborIndex,
-			IAgentLogger logger) {
-		
-		IndividualLatentFactors idividualLF = (IndividualLatentFactors) individual;
-		
-		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
-		DatasetMF datasetMF = (DatasetMF) dataset;
-
-		return ToolSGDist1ByIndexMF.improve(idividualLF, neighborIndex,
-				problemMF, datasetMF, logger);
 	}
 
 	@Override

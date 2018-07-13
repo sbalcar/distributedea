@@ -4,9 +4,9 @@ import java.util.Random;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactorVector;
@@ -23,10 +23,10 @@ public class ToolSGDist1RandomMF {
 			ProblemMatrixFactorization problemMF,
 			DatasetMF datasetMF, IAgentLogger logger) {
 
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
-		ObjectRaitingList raitings = datasetModel.exportObjectRaitingList();
-		ObjectRaiting raiting = raitings.exportRandomObjectRaiting();
+		ObjectRatingList raitings = datasetModel.exportObjectRaitingList();
+		ObjectRating raiting = raitings.exportRandomObjectRaiting();
 
 		int rowIndex = datasetModel.exportIndexOfUser(raiting.getUserID());
 		int colIndex = datasetModel.exportIndexOfItem(raiting.getItemID());

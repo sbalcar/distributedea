@@ -117,10 +117,10 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		
 		
 		Methods algorithms = new Methods();
-		algorithms.addMethodDescriptions(new InputMethodDescription(
+		algorithms.addInputMethodDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
 				ProblemToolMLRandomMove.class), 15);
-		algorithms.addMethodDescriptions(new InputMethodDescription(
+		algorithms.addInputMethodDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
 				ProblemToolMLRandomMove.class), 1);
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactorVector;
@@ -19,7 +19,7 @@ public class ToolGenerateIndividualMF {
 	public static IndividualLatentFactors generateIndividual(ProblemMatrixFactorization problemMF,
 			DatasetMF datasetMF, IAgentLogger logger) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		ILatFactDefinition userIdsDef = problemMF.getLatFactYDef();
 		ILatFactDefinition itemIdsDef = problemMF.getLatFactXDef();

@@ -18,7 +18,8 @@ import org.distributedea.ontology.dataset.DatasetTSPPoint;
 import org.distributedea.ontology.dataset.DatasetVertexCover;
 import org.distributedea.ontology.dataset.binpacking.ObjectBinPack;
 import org.distributedea.ontology.dataset.continuousoptimization.Interval;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
+import org.distributedea.ontology.dataset.matrixfactorization.content.IItemContent;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
 import org.distributedea.ontology.dataset.tsp.PositionGPS;
 import org.distributedea.ontology.dataset.tsp.PositionPoint;
 import org.distributedea.ontology.dataset.vertexcover.Graph;
@@ -98,7 +99,8 @@ public class ComputingOntology extends BeanOntology {
             add(Graph.class.getPackage().getName());
 
             add(DatasetMF.class);
-            add(ObjectRaiting.class.getPackage().getName());
+            add(ObjectRating.class.getPackage().getName());
+            add(IItemContent.class.getPackage().getName());
             
             add(IDatasetDescription.class.getPackage().getName());
             

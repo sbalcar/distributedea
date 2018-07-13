@@ -20,6 +20,8 @@
       <a1>5</a1>
       <d>5</d>
     </testingSetDef>
+    <usersContentFileName>inputs/ml-1m/users.dat</usersContentFileName>
+    <itemsContentFileName>inputs/ml-1m/movies.dat</itemsContentFileName>
   </datasetDescription>
   <methods class="methods">
     <inputMethodDescriptions>
@@ -31,7 +33,7 @@
             <arguments/>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
       </inputMethodDescription>
     </inputMethodDescriptions>
   </methods>

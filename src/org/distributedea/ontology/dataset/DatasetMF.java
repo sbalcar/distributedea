@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
+import org.distributedea.ontology.dataset.matrixfactorization.IItemContentModel;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.content.ContentMLMoviesModel;
+import org.distributedea.ontology.dataset.matrixfactorization.content.IItemContent;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
 
 /**
  * Ontology represents matrix factorization {@link Dataset}
@@ -16,10 +19,14 @@ public class DatasetMF extends Dataset {
 
 	private static final long serialVersionUID = 1L;
 
-	/** Dataset optimized Model - no ontology **/
-	private DatasetModel trainingDatasetModel;
+	/** RatingModel optimized Model - no ontology **/
+	private RatingModel trainingRatingsModel;
 	
-	private DatasetModel testingDatasetModel;
+	private RatingModel testingRatingsModel;
+	
+	/** ItemContentModel optimized Model - no ontology **/
+	private IItemContentModel itemContentModel;
+	
 	
 	@Deprecated
 	public DatasetMF() { // Only for Jade
@@ -29,10 +36,15 @@ public class DatasetMF extends Dataset {
 	 * Constructor
 	 * @param problemFile
 	 */
-	public DatasetMF(List<ObjectRaiting> trainingRatings, List<ObjectRaiting> testingRatings) {
+	public DatasetMF(List<ObjectRating> trainingRatings, List<ObjectRating> testingRatings,
+			List<IItemContent> itemsContent) {
+		
 		setTrainingRatings(trainingRatings);
 		setTestingRatings(testingRatings);
 
+		if (itemsContent != null) {
+			setItemContentsModel(itemsContent);
+		}
 	}
 
 	/**
@@ -45,72 +57,87 @@ public class DatasetMF extends Dataset {
 					DatasetMF.class.getSimpleName() + " is not valid");
 		}
 
-		this.trainingDatasetModel = dataset.trainingDatasetModel;
-		this.testingDatasetModel = dataset.testingDatasetModel;
+		this.trainingRatingsModel = dataset.trainingRatingsModel;
+		this.testingRatingsModel = dataset.testingRatingsModel;
+		
+		this.itemContentModel = dataset.itemContentModel;
 	}
 	
 
-	public List<ObjectRaiting> getTrainingRatings() {
-		return trainingDatasetModel.exportRatingsClone();
+	public List<ObjectRating> getTrainingRatings() {
+		return trainingRatingsModel.exportRatingsClone();
 	}
 
 	@Deprecated
-	public void setTrainingRatings(List<ObjectRaiting> ratings) {
+	public void setTrainingRatings(List<ObjectRating> ratings) {
 		if (ratings == null) {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");			
 		}
-		for (ObjectRaiting raitingI : ratings) {
+		for (ObjectRating raitingI : ratings) {
 			if (raitingI == null || (! raitingI.valid(new TrashLogger()))) {
 				throw new IllegalArgumentException("Argument " +
-						ObjectRaiting.class.getSimpleName() + " is not valid");
+						ObjectRating.class.getSimpleName() + " is not valid");
 			}
 		}
 		
-		this.trainingDatasetModel = new DatasetModel(ratings);
+		this.trainingRatingsModel = new RatingModel(ratings);
 	}
 	
 	
-	public List<ObjectRaiting> getTestingRatings() {
-		return testingDatasetModel.exportRatingsClone();
+	public List<ObjectRating> getTestingRatings() {
+		return testingRatingsModel.exportRatingsClone();
 	}
 	
 	@Deprecated
-	public void setTestingRatings(List<ObjectRaiting> ratings) {
+	public void setTestingRatings(List<ObjectRating> ratings) {
 		if (ratings == null) {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");			
 		}
-		for (ObjectRaiting ratingI : ratings) {
+		for (ObjectRating ratingI : ratings) {
 			if (ratingI == null || (! ratingI.valid(new TrashLogger()))) {
 				throw new IllegalArgumentException("Argument " +
-						ObjectRaiting.class.getSimpleName() + " is not valid");
+						ObjectRating.class.getSimpleName() + " is not valid");
 			}
 		}
 		
-		this.testingDatasetModel = new DatasetModel(ratings);
+		this.testingRatingsModel = new RatingModel(ratings);
 	}
+	
+
+	public List<IItemContent> getItemContentsModel() {
+		return itemContentModel.exportIItemContents();
+	}
+	@Deprecated
+	public void setItemContentsModel(List<IItemContent> itemsContent) {
 		
-	
-	
-
-	public DatasetModel exportTrainingDatasetModel() {
-		return this.trainingDatasetModel;
+		// if dataset == ML
+		this.itemContentModel = new ContentMLMoviesModel(itemsContent);
 	}
 
-	public DatasetModel exportTestingDatasetModel() {
-		return this.testingDatasetModel;
+	
+	public RatingModel exportTrainingRatingModel() {
+		return this.trainingRatingsModel;
+	}
+
+	public RatingModel exportTestingRatingModel() {
+		return this.testingRatingsModel;
+	}
+	
+	public IItemContentModel exportItemContentModel() {
+		return this.itemContentModel;
 	}
 	
 	
 	@Override
 	public boolean valid(IAgentLogger logger) {
 
-		if (this.trainingDatasetModel == null) {
+		if (this.trainingRatingsModel == null) {
 			return false;
 		}
 
-		if (this.testingDatasetModel == null) {
+		if (this.testingRatingsModel == null) {
 			return false;
 		}
 		

@@ -10,10 +10,15 @@ import java.util.StringTokenizer;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
+import org.distributedea.ontology.dataset.matrixfactorization.content.IItemContent;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
 import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.IRatingIDs;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.readingdataset.IReadDatasetML;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.readingdataset.ReadDatasetML100k;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.readingdataset.ReadDatasetML10M100K;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.readingdataset.ReadDatasetML1M;
 
 /**
  * Tool as reader of the {@link DatasetMF} dataset
@@ -22,7 +27,7 @@ import org.distributedea.ontology.problem.ProblemMatrixFactorization;
  */
 public class ToolReadDatasetMF {
 
-	public static DatasetMF readDataset(DatasetDescriptionMF datasetDescription,
+	public static DatasetMF readDatasetWithoutContent(DatasetDescriptionMF datasetDescription,
 			ProblemMatrixFactorization problem, IAgentLogger logger) {
 		
 		File trainingFile = datasetDescription.exportDatasetTrainingFile();
@@ -32,17 +37,80 @@ public class ToolReadDatasetMF {
 		IRatingIDs testingSetDef = datasetDescription.getTestingSetDef();
 		
 		
-		List<ObjectRaiting> trainingDataset = readSelectedIDsOfDataset(
+		List<ObjectRating> trainingDataset = readSelectedIDsOfDataset(
 				trainingFile, trainingSetDef, logger);
 		
-		List<ObjectRaiting> testingDataset = readSelectedIDsOfDataset(
+		List<ObjectRating> testingDataset = readSelectedIDsOfDataset(
 				testingFile, testingSetDef, logger);
+				
+		return new DatasetMF(trainingDataset, testingDataset, null);
+	}
+
+	public static DatasetMF readDatasetWithContent(DatasetDescriptionMF datasetDescription,
+			ProblemMatrixFactorization problem, IAgentLogger logger) {
 		
-		return new DatasetMF(trainingDataset, testingDataset);
+		DatasetMF datasetMF = readDatasetWithoutContent(datasetDescription, problem, logger);
+		
+		File itemsContentFile = datasetDescription.exportItemsContentFile();
+		//File usersContentFile = datasetDescription.exportUsersContentFile();
+		
+		List<IItemContent> itemsContent =
+				 readItemsContent(itemsContentFile, logger);
+		
+		return new DatasetMF(datasetMF.getTrainingRatings(),
+				datasetMF.getTestingRatings(), itemsContent);
+	}
+
+	
+	private static List<IItemContent> readItemsContent(File itemsContentFile,
+			IAgentLogger logger) {
+
+		IReadDatasetML readDatasetML = null;
+//		System.out.print(itemsContentFile.getParent());
+		
+		if (itemsContentFile.getParent().contains("ml-100k")) {
+			readDatasetML = new ReadDatasetML100k();
+			
+		} else if (itemsContentFile.getParent().contains("ml-1m")) {
+			readDatasetML = new ReadDatasetML1M();
+			
+		} else if (itemsContentFile.getParent().contains("ml-10M100K")) {
+			readDatasetML = new ReadDatasetML10M100K();
+		}
+
+		List<IItemContent> itemContents = null;
+		
+		try {
+			BufferedReader br = new BufferedReader(
+					new FileReader(itemsContentFile.getAbsolutePath()));
+
+			itemContents = readItemsContentFromBR(br, readDatasetML, logger);
+		} catch (IOException e) {
+			return null;
+		}
+		
+		return itemContents;
 	}
 	
+	private static List<IItemContent> readItemsContentFromBR(BufferedReader br,
+			IReadDatasetML readDatasetML, IAgentLogger logger) throws IOException {
 		
-	private static List<ObjectRaiting> readSelectedIDsOfDataset(File datasetFile,
+		List<IItemContent> itemContents = new ArrayList<>();
+		
+		String sCurrentLine;
+		while ((sCurrentLine = br.readLine()) != null) {
+
+			IItemContent itemContentI =
+					readDatasetML.parseFilmContentLine(sCurrentLine);
+			
+			itemContents.add(itemContentI);
+		}
+		
+		return itemContents;
+		
+	}
+		
+	private static List<ObjectRating> readSelectedIDsOfDataset(File datasetFile,
 			IRatingIDs selectedIDs, IAgentLogger logger) {
 		
 		String delimiter = "\t";;
@@ -56,7 +124,7 @@ public class ToolReadDatasetMF {
 		try {
 			br = new BufferedReader(new FileReader(datasetFile.getAbsolutePath()));
 			
-			List<ObjectRaiting> raitings = read(br, selectedIDs,
+			List<ObjectRating> raitings = read(br, selectedIDs,
 					ratingMult, delimiter, logger);
 			
 			return raitings;
@@ -77,11 +145,11 @@ public class ToolReadDatasetMF {
 		}
 	}
 	
-	private static List<ObjectRaiting> read(BufferedReader br,
+	private static List<ObjectRating> read(BufferedReader br,
 			IRatingIDs selectedIDs, int ratingMult, String delimiter,
 			IAgentLogger logger) throws NumberFormatException, IOException {
 		
-		List<ObjectRaiting> raitings = new ArrayList<>();
+		List<ObjectRating> raitings = new ArrayList<>();
 					
 		String sCurrentLine;
 		int lineNumber = 0;
@@ -101,7 +169,7 @@ public class ToolReadDatasetMF {
 			int raiting = (int) (ratingMult*Double.parseDouble(stI.nextToken()));
 			
 			raitings.add(
-					new ObjectRaiting(userID, itemID, raiting));
+					new ObjectRating(userID, itemID, raiting));
 		}
 		
 		return raitings;

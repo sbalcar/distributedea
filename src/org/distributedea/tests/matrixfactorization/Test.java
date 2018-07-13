@@ -38,10 +38,11 @@ public class Test {
 //		        new File("inputs" + File.separator + "ml-10M100K" + File.separator + "ratings.dat");
 		
 		DatasetDescriptionMF datasetDescr = new DatasetDescriptionMF(
-				file, new RatingIDsComplement(sequence), file, sequence);
+				file, new RatingIDsComplement(sequence), file, sequence,
+				null, null);
 
 		
-		DatasetMF datasetMF = ToolReadDatasetMF.readDataset(
+		DatasetMF datasetMF = ToolReadDatasetMF.readDatasetWithoutContent(
 				datasetDescr, problemMF, new TrashLogger());
 		
 				

@@ -13,7 +13,7 @@ import org.distributedea.problems.ProblemTool;
  * @author stepan
  *
  */
-public abstract class ProblemToolTSP extends ProblemTool {
+public abstract class AProblemToolTSP extends ProblemTool {
 	
 	@Override
 	public void initialization(IProblem problem, Dataset dataset,

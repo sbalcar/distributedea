@@ -20,6 +20,8 @@
       <a1>5</a1>
       <d>5</d>
     </testingSetDef>
+    <usersContentFileName>inputs/ml-100k/u.user</usersContentFileName>
+    <itemsContentFileName>inputs/ml-100k/u.item</itemsContentFileName>
   </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
@@ -122,7 +124,7 @@
     </algorithms>
     <problemTools>
       <problemTools>
-        <java-class>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</java-class>
+        <java-class>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</java-class>
       </problemTools>
     </problemTools>
   </methods>
@@ -144,276 +146,244 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
         <inputMethodDescription>
           <inputAgentConfiguration>
             <agentName>Agent_TabuSearch</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>tabuModelSize</name>
-                    <value>50</value>
-                  </argument>
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>tabuModelSize</name>
+                  <value>50</value>
+                </argument>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
-          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
         </inputMethodDescription>
       </inputMethodDescriptions>
     </methods>

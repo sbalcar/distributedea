@@ -12,9 +12,9 @@ import org.distributedea.javaextension.ListUtils;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsEmptySet;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsFullSet;
@@ -44,13 +44,14 @@ public class Visualization {
 				
 		DatasetDescriptionMF datasetDescr = new DatasetDescriptionMF(
 				file, new RatingIDsFullSet(),
-				file, new RatingIDsEmptySet());
+				file, new RatingIDsEmptySet(),
+				null, null);
 		
 		ProblemMatrixFactorization problemMF =
 				new ProblemMatrixFactorization(
 				new LatFactRange(), new LatFactRange(), 10);
 		
-		DatasetMF datasetMF = ToolReadDatasetMF.readDataset(
+		DatasetMF datasetMF = ToolReadDatasetMF.readDatasetWithoutContent(
 				datasetDescr, problemMF, new TrashLogger());
 
 		visualDataset(datasetMF);
@@ -110,7 +111,7 @@ public class Visualization {
 	
 	private static void visualBarSizeOfDataset(DatasetMF datasetMF) {
 
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		int numberOfUsers = datasetModel.exportNumberOfUsers();
 		System.out.println("NumberOfUsers: " + numberOfUsers);
@@ -180,14 +181,14 @@ public class Visualization {
 
 	private static void visualDistributionOfRatings(DatasetMF datasetMF) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Pair<Integer, Integer>> raitingAndCounts = new ArrayList<>();
 		for (int raitingValueI = (int) datasetModel.exportMinOfRaitings();
 				raitingValueI <= datasetModel.exportMaxOfRaitings();
 				raitingValueI++) {
 		
-			ObjectRaitingList objectsWithRaitingI =
+			ObjectRatingList objectsWithRaitingI =
 					datasetModel.exportObjectWithRaiting(raitingValueI);
 			raitingAndCounts.add(new Pair<Integer, Integer>(
 					raitingValueI, objectsWithRaitingI.size()));
@@ -219,11 +220,11 @@ public class Visualization {
 	
 	private static void visualHistoramOfUserRaitingCounts(DatasetMF datasetMF) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> availableRaitingOfItemCounts = new ArrayList<>();
 		for (int userIdI : datasetModel.exportUserIDs()) {
-			ObjectRaitingList raitingsI =
+			ObjectRatingList raitingsI =
 					datasetModel.exportRaitingsOfUser(userIdI);
 			availableRaitingOfItemCounts.add((double) raitingsI.size());
 		}
@@ -263,11 +264,11 @@ public class Visualization {
 
 	private static void visualHistoramOfItemRaitingCounts(DatasetMF datasetMF) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> availableRaitingOfItemCounts = new ArrayList<>();
 		for (int itemIdI : datasetModel.exportItemIDs()) {
-			ObjectRaitingList raitingsI =
+			ObjectRatingList raitingsI =
 					datasetModel.exportRaitingsOfItem(itemIdI);
 			availableRaitingOfItemCounts.add((double) raitingsI.size());
 		}
@@ -310,14 +311,14 @@ public class Visualization {
 		
 		int LINE = 100;
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> meanesWitMoreThan100Raitings = new ArrayList<>();
 		for (int userIdI : datasetModel.exportUserIDs()) {
-			ObjectRaitingList raitingsI =
+			ObjectRatingList raitingsI =
 					datasetModel.exportRaitingsOfUser(userIdI);
 			if (raitingsI.size() > LINE) {
-				ObjectRaitingList raitingsOfUserI =
+				ObjectRatingList raitingsOfUserI =
 						datasetModel.exportRaitingsOfUser(userIdI);
 				double eValueI = raitingsOfUserI.countMeanOfRaitings();
 				meanesWitMoreThan100Raitings.add(eValueI);
@@ -356,15 +357,15 @@ public class Visualization {
 		
 		int LINE = 100;
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> meanesWitMoreThan100Raitings = new ArrayList<>();
 		
 		for (int itemIdI : datasetModel.exportItemIDs()) {
-			ObjectRaitingList raitingsI =
+			ObjectRatingList raitingsI =
 					datasetModel.exportRaitingsOfItem(itemIdI);
 			if (raitingsI.size() > LINE) {
-				ObjectRaitingList raitingOfItemI =
+				ObjectRatingList raitingOfItemI =
 						datasetModel.exportRaitingsOfItem(itemIdI);
 				double eValueI = raitingOfItemI.countMeanOfRaitings();
 				meanesWitMoreThan100Raitings.add(eValueI);
@@ -402,14 +403,14 @@ public class Visualization {
 		
 		int LINE = 100;
 
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> meanesWitMoreThan100Raitings = new ArrayList<>();
 		for (int userIdI : datasetModel.exportUserIDs()) {
-			ObjectRaitingList raitingsI =
+			ObjectRatingList raitingsI =
 					datasetModel.exportRaitingsOfUser(userIdI);
 			if (raitingsI.size() > LINE) {
-				ObjectRaitingList raitingsOfUserI =
+				ObjectRatingList raitingsOfUserI =
 						datasetModel.exportRaitingsOfUser(userIdI);
 				double varianceValueI =
 						raitingsOfUserI.countVarianceRaitings();
@@ -448,15 +449,15 @@ public class Visualization {
 		
 		int LINE = 100;
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> meanesWitMoreThan100Raitings = new ArrayList<>();
 		
 		for (int itemIdI : datasetModel.exportItemIDs()) {
-			ObjectRaitingList raitingsI =
+			ObjectRatingList raitingsI =
 					datasetModel.exportRaitingsOfItem(itemIdI);
 			if (raitingsI.size() > LINE) {
-				ObjectRaitingList raitingOfItemI =
+				ObjectRatingList raitingOfItemI =
 						datasetModel.exportRaitingsOfItem(itemIdI);
 				double varianceValueI =
 						raitingOfItemI.countVarianceRaitings();
@@ -493,18 +494,18 @@ public class Visualization {
 
 	private static void visualHistoramOfUserRMSEBaselineRandomRating(DatasetMF datasetMF) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
-		ObjectRaitingList raitings =
+		ObjectRatingList raitings =
 				datasetModel.exportObjectRaitingList();
 
 		List<Double> rmses = new ArrayList<>();
 		for (int userIdI : datasetModel.exportUserIDs()) {
 			
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					datasetModel.exportRaitingsOfUser(userIdI);
 			
-			ObjectRaiting randomObject = raitings.exportRandomObjectRaiting();
+			ObjectRating randomObject = raitings.exportRandomObjectRaiting();
 			
 			double rmseI = raitingsOfUserI.countRMSEForFixedPredictedValue(
 					randomObject.getRaiting());
@@ -543,12 +544,12 @@ public class Visualization {
 	
 	private static void visualHistoramOfUserRMSEBaselineTheMostCommonItemRating(DatasetMF datasetMF) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> rmses = new ArrayList<>();
 		for (int userIdI : datasetModel.exportUserIDs()) {
 			
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					datasetModel.exportRaitingsOfUser(userIdI);
 			
 			double rmseI = raitingsOfUserI.countRMSEForFixedPredictedValue(4);
@@ -586,15 +587,15 @@ public class Visualization {
 	
 	private static void visualHistoramOfUserRMSEBaselineAvarageOfAllRatings(DatasetMF datasetMF) {
 
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
-		ObjectRaitingList raitings = datasetModel.exportObjectRaitingList();
+		ObjectRatingList raitings = datasetModel.exportObjectRaitingList();
 		double meanOfAll = raitings.countMeanOfRaitings();
 		
 		List<Double> rmses = new ArrayList<>();
 		for (int userIdI : datasetModel.exportUserIDs()) {
 			
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					datasetModel.exportRaitingsOfUser(userIdI);
 			
 			double rmseI = raitingsOfUserI.countRMSEForFixedPredictedValue(
@@ -633,15 +634,15 @@ public class Visualization {
 	
 	private static void visualHistoramOfUserRMSEBaselineAvarageOfRelevantItemRatings(DatasetMF datasetMF) {
 		
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		List<Double> rmses = new ArrayList<>();
 		for (int userIdI : datasetModel.exportUserIDs()) {
 			System.out.println("userIdI: " + userIdI);
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					datasetModel.exportRaitingsOfUser(userIdI);
 			
-			ObjectRaitingList foreignRaitings =
+			ObjectRatingList foreignRaitings =
 					datasetModel.exportObjectRaitingList().noDeepClone();
 			foreignRaitings.removeObjectRaitingOfUser(userIdI);
 			
@@ -685,9 +686,9 @@ public class Visualization {
 	private static void visualHistoramOfUserRMSEBaselineUserClustering8SameRaitings(
 			ClusterSet clustersOfUsers, DatasetMF datasetMF) throws Exception {
 
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
-		ObjectRaitingList raitings =
+		ObjectRatingList raitings =
 				datasetModel.exportObjectRaitingList();
 		
 		List<Double> rmses = new ArrayList<>();
@@ -696,10 +697,10 @@ public class Visualization {
 			Set<Integer> clusterI =
 					clustersOfUsers.exportClusterOfID(userIdI);
 
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					raitings.exportObjectRaitingOfUser(userIdI);
 			
-			ObjectRaitingList raitingOfClusterI =
+			ObjectRatingList raitingOfClusterI =
 					raitings.exportObjectRaitingOfUsers(clusterI);
 			
 			double rmseI = countRMSEForClusterOfUsers(
@@ -737,8 +738,8 @@ public class Visualization {
 	}
 	
 	private static double countRMSEForClusterOfUsers(
-			int userID, ObjectRaitingList raitingsOfUserI,
-			ObjectRaitingList raitingOfClusterI, double defaultRaiting
+			int userID, ObjectRatingList raitingsOfUserI,
+			ObjectRatingList raitingOfClusterI, double defaultRaiting
 			) throws Exception {
 		
 		raitingOfClusterI.removeObjectRaitingOfUser(userID);
@@ -869,11 +870,11 @@ public class Visualization {
 	private static void visualHistoramOfUserRMSEBaselineUserKmeanClusteringMeanOfCluster(
 			ClusterSet clustersOfUsers, DatasetMF datasetMF) throws Exception {
 
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		int numOfCls = clustersOfUsers.getCountOfClusters();
 		
-		ObjectRaitingList raitings =
+		ObjectRatingList raitings =
 				datasetModel.exportObjectRaitingList();
 		
 		double meanOfAll = raitings.countMeanOfRaitings();
@@ -885,10 +886,10 @@ public class Visualization {
 			Set<Integer> clusterI =
 					clustersOfUsers.exportClusterOfID(userIdI);
 
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					raitings.exportObjectRaitingOfUser(userIdI);
 			
-			ObjectRaitingList raitingOfClusterI =
+			ObjectRatingList raitingOfClusterI =
 					raitings.exportObjectRaitingOfUsers(clusterI);
 			
 			double rmseI = countRMSEForClusterOfUsers(
@@ -928,11 +929,11 @@ public class Visualization {
 	private static void visualHistoramOfUserRMSEBaselineUserKmeanClusteringMeanOfRelevantItemRatings(
 			ClusterSet clustersOfUsers, DatasetMF datasetMF) throws Exception {
 
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		int numOfCls = clustersOfUsers.getCountOfClusters();
 		
-		ObjectRaitingList raitings =
+		ObjectRatingList raitings =
 				datasetModel.exportObjectRaitingList();
 		
 		double meanOfAll = raitings.countMeanOfRaitings();
@@ -944,10 +945,10 @@ public class Visualization {
 			Set<Integer> clusterI =
 					clustersOfUsers.exportClusterOfID(userIdI);
 
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					raitings.exportObjectRaitingOfUser(userIdI);
 			
-			ObjectRaitingList raitingOfClusterI =
+			ObjectRatingList raitingOfClusterI =
 					raitings.exportObjectRaitingOfUsers(clusterI);
 			
 			double rmseI = countRMSEForClusterOfUsers_(
@@ -985,25 +986,25 @@ public class Visualization {
 	}
 
 	private static double countRMSEForClusterOfUsers_(
-			int userID, ObjectRaitingList raitingsOfUserI,
-			ObjectRaitingList raitingOfCluster, double defaultRaiting
+			int userID, ObjectRatingList raitingsOfUserI,
+			ObjectRatingList raitingOfCluster, double defaultRaiting
 			) throws Exception {
 		
-		ObjectRaitingList raitingsOfClusterI = raitingOfCluster.noDeepClone();
+		ObjectRatingList raitingsOfClusterI = raitingOfCluster.noDeepClone();
 		raitingsOfClusterI.removeObjectRaitingOfUser(userID);
 	
-		ObjectRaitingList predictedRaitings = new ObjectRaitingList();
+		ObjectRatingList predictedRaitings = new ObjectRatingList();
 		
-		for (ObjectRaiting oOfUserI : raitingsOfUserI.getRaitings()) {
+		for (ObjectRating oOfUserI : raitingsOfUserI.getRaitings()) {
 			
-			ObjectRaitingList oOfItemsOfUserI = raitingsOfClusterI
+			ObjectRatingList oOfItemsOfUserI = raitingsOfClusterI
 					.exportObjectRaitingOfItem(oOfUserI.getItemID());
 			double meanOfItemsOfUserI = oOfItemsOfUserI.countMeanOfRaitings();
 			if (Double.isNaN(meanOfItemsOfUserI)) {
 				meanOfItemsOfUserI = defaultRaiting;
 			}
 			
-			ObjectRaiting predictedRaiting = new ObjectRaiting(
+			ObjectRating predictedRaiting = new ObjectRating(
 					oOfUserI.getUserID(), oOfUserI.getItemID(),
 					meanOfItemsOfUserI);
 			predictedRaitings.add(predictedRaiting);

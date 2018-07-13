@@ -111,6 +111,16 @@ public class InputAgentConfigurations implements Concept {
 		agentConfigurations.add(agentConfiguration);
 	}
 
+	public InputAgentConfiguration exportFirst(Class<?> agentClass) {
+				
+		for (InputAgentConfiguration confI : this.agentConfigurations) {
+			if (confI.exportAgentClass() == agentClass) {
+				return confI;
+			}
+		}
+		return null;
+	}
+	
 	public int exportNumberOfAgentConfigurations() {
 		if (agentConfigurations == null) {
 			return 0;

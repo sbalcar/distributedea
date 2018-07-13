@@ -1,4 +1,4 @@
-package org.distributedea.ontology.dataset.matrixfactorization;
+package org.distributedea.ontology.dataset.matrixfactorization.objectrating;
 
 import jade.content.Concept;
 
@@ -19,72 +19,72 @@ import org.distributedea.logging.TrashLogger;
  * @author stepan
  *
  */
-public class ObjectRaitingList implements Concept {
+public class ObjectRatingList implements Concept {
 
 	private static final long serialVersionUID = 1L;
 	
-	private List<ObjectRaiting> raitings;
+	private List<ObjectRating> raitings;
 	
 	/**
 	 * Constructor
 	 */
-	public ObjectRaitingList() {
-		this.raitings = new ArrayList<ObjectRaiting>();
+	public ObjectRatingList() {
+		this.raitings = new ArrayList<ObjectRating>();
 	}
 
 	/**
 	 * Constructor
 	 * @param raitings
 	 */
-	public ObjectRaitingList(List<ObjectRaiting> raitings) {
+	public ObjectRatingList(List<ObjectRating> raitings) {
 		this.setRaitings(raitings);
 	}
 	
 	
-	public List<ObjectRaiting> getRaitings() {
+	public List<ObjectRating> getRaitings() {
 		return raitings;
 	}
 	@Deprecated
-	public void setRaitings(List<ObjectRaiting> raitings) {
+	public void setRaitings(List<ObjectRating> raitings) {
 		if (raitings == null) {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");			
 		}
-		for (ObjectRaiting raitingI : raitings) {
+		for (ObjectRating raitingI : raitings) {
 			if (raitingI == null || (! raitingI.valid(new TrashLogger()))) {
 				throw new IllegalArgumentException("Argument " +
-						ObjectRaiting.class.getSimpleName() + " is not valid");
+						ObjectRating.class.getSimpleName() + " is not valid");
 			}
 		}
 		this.raitings = raitings;
 	}
 	
 	/**
-	 * Add {@link ObjectRaiting}
+	 * Add {@link ObjectRating}
 	 * @param raiting
 	 */
-	public void add(ObjectRaiting raiting) {
+	public void add(ObjectRating raiting) {
 		if (raiting == null || ! (raiting.valid(new TrashLogger()))) {
 			throw new IllegalArgumentException("Argument " +
-					ObjectRaiting.class.getSimpleName() + " is not valid");			
+					ObjectRating.class.getSimpleName() + " is not valid");			
 		}
 		this.raitings.add(raiting);
 	}
 	
 	/**
-	 * Add {@link ObjectRaitingList}
+	 * Add {@link ObjectRatingList}
 	 * @param raitings
 	 */
-	public void addAll(ObjectRaitingList raitings) {
+	public void addAll(ObjectRatingList raitings) {
 		if (raitings == null || ! (raitings.valid(new TrashLogger()))) {
 			throw new IllegalArgumentException("Argument " +
-					ObjectRaitingList.class.getSimpleName() + " is not valid");			
+					ObjectRatingList.class.getSimpleName() + " is not valid");			
 		}
 		this.raitings.addAll(raitings.getRaitings());
 	}
 	
 	/**
-	 * Returns number of {@link ObjectRaiting} inside
+	 * Returns number of {@link ObjectRating} inside
 	 * @return
 	 */
 	public int size() {
@@ -102,7 +102,7 @@ public class ObjectRaitingList implements Concept {
 		}
 		
 		double squares = 0;
-		for (ObjectRaiting oRaitingI : getRaitings()) {
+		for (ObjectRating oRaitingI : getRaitings()) {
 			
 			squares += Math.pow(predictedRaiting -oRaitingI.getRaiting(), 2);
 		}
@@ -114,13 +114,13 @@ public class ObjectRaitingList implements Concept {
 	 * @param predictedRaitings
 	 * @return
 	 */
-	public double countRMSEForPredictedValues(ObjectRaitingList predictedRaitings) {
+	public double countRMSEForPredictedValues(ObjectRatingList predictedRaitings) {
 		if (size() == 0) {
 			return 0;
 		}
 
 		double squares = 0;
-		for (ObjectRaiting oRaitingI : getRaitings()) {
+		for (ObjectRating oRaitingI : getRaitings()) {
 			
 			double predictedRaitingI = predictedRaitings.exportRaiting(
 					oRaitingI.getUserID(), oRaitingI.getItemID());
@@ -136,15 +136,15 @@ public class ObjectRaitingList implements Concept {
 	 * @return
 	 */
 	public double countRMSEForUserBaselineAvarageOfItemRatings(
-			ObjectRaitingList foreignRaitings) {
+			ObjectRatingList foreignRaitings) {
 		if (size() == 0) {
 			return 0;
 		}
 		
 		double squares = 0;
-		for (ObjectRaiting oRaitingI : getRaitings()) {
+		for (ObjectRating oRaitingI : getRaitings()) {
 			
-			ObjectRaitingList raitingOfItemI = foreignRaitings
+			ObjectRatingList raitingOfItemI = foreignRaitings
 					.exportObjectRaitingOfItem(oRaitingI.getItemID());
 			
 			double avarageOverItems = raitingOfItemI.countMeanOfRaitings();
@@ -160,7 +160,7 @@ public class ObjectRaitingList implements Concept {
 	 */
 	public double countMeanOfRaitings() {
 		double sum = 0;
-		for (ObjectRaiting oRaitingI : this.raitings) {
+		for (ObjectRating oRaitingI : this.raitings) {
 			sum += oRaitingI.getRaiting();
 		}
 		return sum / (double)size();
@@ -174,7 +174,7 @@ public class ObjectRaitingList implements Concept {
 		double mean = countMeanOfRaitings();
 		
 		double squares = 0;
-		for (ObjectRaiting raitingObjI : this.raitings) {
+		for (ObjectRating raitingObjI : this.raitings) {
 			squares += Math.pow(raitingObjI.getRaiting() - mean, 2);
 		}
 		return squares / (double)this.raitings.size();
@@ -185,15 +185,15 @@ public class ObjectRaitingList implements Concept {
 	 * Removes one given object
 	 * @param raitingToDelete
 	 */
-	public void remove(ObjectRaiting raitingToDelete) {
+	public void remove(ObjectRating raitingToDelete) {
 		this.raitings.remove(raitingToDelete);
 	}
 	/**
 	 * Removes all given objects
 	 * @param raitingsToDelete
 	 */
-	public void removeAll(List<ObjectRaiting> raitingsToDelete) {
-		for (ObjectRaiting i : raitingsToDelete) {
+	public void removeAll(List<ObjectRating> raitingsToDelete) {
+		for (ObjectRating i : raitingsToDelete) {
 			remove(i);
 		}
 	}
@@ -201,7 +201,7 @@ public class ObjectRaitingList implements Concept {
 	 * Removes all given objects
 	 * @param raitingsToDelete
 	 */
-	public void removeAll(ObjectRaitingList raitingsToDelete) {
+	public void removeAll(ObjectRatingList raitingsToDelete) {
 		this.removeAll(raitingsToDelete.getRaitings());
 	}
 	
@@ -212,7 +212,7 @@ public class ObjectRaitingList implements Concept {
 	public Set<Integer> exportUserIDs() {
 		
 		Set<Integer> userIDsSet = new HashSet<>();
-		for (ObjectRaiting raitingI : this.raitings) {
+		for (ObjectRating raitingI : this.raitings) {
 			
 			int userID = raitingI.getUserID();
 			userIDsSet.add(userID);
@@ -240,7 +240,7 @@ public class ObjectRaitingList implements Concept {
 	public Set<Integer> exportItemIDs() {
 		
 		Set<Integer> itemIDsSet = new HashSet<>();
-		for (ObjectRaiting raitingI : this.raitings) {
+		for (ObjectRating raitingI : this.raitings) {
 			
 			int itemID = raitingI.getItemID();
 			itemIDsSet.add(itemID);
@@ -270,7 +270,7 @@ public class ObjectRaitingList implements Concept {
 		
 		double min = Integer.MAX_VALUE;
 		double max = Integer.MIN_VALUE;
-		for (ObjectRaiting raitingI : this.raitings) {
+		for (ObjectRating raitingI : this.raitings) {
 			if (max < raitingI.getRaiting()) {
 				max = raitingI.getRaiting();
 			}
@@ -289,7 +289,7 @@ public class ObjectRaitingList implements Concept {
 	 */
 	public double exportRaiting(int userID, int itemID) {
 		
-		for (ObjectRaiting raitingI : this.raitings) {
+		for (ObjectRating raitingI : this.raitings) {
 			if (raitingI.getUserID() == userID &&
 					raitingI.getItemID() == itemID) {
 				return raitingI.getRaiting();
@@ -299,33 +299,33 @@ public class ObjectRaitingList implements Concept {
 	}
 	
 	/**
-	 * Exports all {@link ObjectRaiting}s of given user 
+	 * Exports all {@link ObjectRating}s of given user 
 	 * @param userID
 	 * @return
 	 */
-	public ObjectRaitingList exportObjectRaitingOfUser(int userID) {
+	public ObjectRatingList exportObjectRaitingOfUser(int userID) {
 		
-		List<ObjectRaiting> selectedRaitings = new ArrayList<>();
+		List<ObjectRating> selectedRaitings = new ArrayList<>();
 		
-		for (ObjectRaiting oRaitingI : this.raitings) {
+		for (ObjectRating oRaitingI : this.raitings) {
 			if (oRaitingI.getUserID() == userID) {
 				selectedRaitings.add(oRaitingI);
 			}
 		}
-		return new ObjectRaitingList(selectedRaitings);
+		return new ObjectRatingList(selectedRaitings);
 	}
 
 	/**
-	 * Exports all {@link ObjectRaiting}s of given users
+	 * Exports all {@link ObjectRating}s of given users
 	 * @param userIDs
 	 * @return
 	 */
-	public ObjectRaitingList exportObjectRaitingOfUsers(Set<Integer> userIDs) {
+	public ObjectRatingList exportObjectRaitingOfUsers(Set<Integer> userIDs) {
 	
-		ObjectRaitingList result = new ObjectRaitingList();
+		ObjectRatingList result = new ObjectRatingList();
 		
 		for (int userIdI : userIDs) {
-			ObjectRaitingList raitingsOfUserI =
+			ObjectRatingList raitingsOfUserI =
 					exportObjectRaitingOfUser(userIdI);
 			result.addAll(raitingsOfUserI);
 		}
@@ -333,43 +333,43 @@ public class ObjectRaitingList implements Concept {
 	}
 	
 	/**
-	 * Exports all {@link ObjectRaiting}s of given item
+	 * Exports all {@link ObjectRating}s of given item
 	 * @param itemID
 	 * @return
 	 */
-	public ObjectRaitingList exportObjectRaitingOfItem(int itemID) {
+	public ObjectRatingList exportObjectRaitingOfItem(int itemID) {
 		
-		List<ObjectRaiting> selectedRaitings = new ArrayList<>();
+		List<ObjectRating> selectedRaitings = new ArrayList<>();
 		
-		for (ObjectRaiting oRaitingI : this.raitings) {
+		for (ObjectRating oRaitingI : this.raitings) {
 			if (oRaitingI.getItemID() == itemID) {
 				selectedRaitings.add(oRaitingI);
 			}
 		}
-		return new ObjectRaitingList(selectedRaitings);
+		return new ObjectRatingList(selectedRaitings);
 	}
 
 	/**
-	 * Exports {@link ObjectRaitingList} of {@link ObjectRaiting} wit given raiting
+	 * Exports {@link ObjectRatingList} of {@link ObjectRating} wit given raiting
 	 * @param raiting
 	 * @return
 	 */
-	public ObjectRaitingList exportObjectWithRaiting(int raiting) {
+	public ObjectRatingList exportObjectWithRaiting(int raiting) {
 		
-		List<ObjectRaiting> selectedRaitings = new ArrayList<>();
-		for (ObjectRaiting raitingObjI : raitings) {
+		List<ObjectRating> selectedRaitings = new ArrayList<>();
+		for (ObjectRating raitingObjI : raitings) {
 			if (raitingObjI.getRaiting() == raiting) {
 				selectedRaitings.add(raitingObjI);
 			}
 		}
-		return new ObjectRaitingList(selectedRaitings);
+		return new ObjectRatingList(selectedRaitings);
 	}
 	
 	/**
-	 * Exports random {@link ObjectRaiting}
+	 * Exports random {@link ObjectRating}
 	 * @return
 	 */
-	public ObjectRaiting exportRandomObjectRaiting() {
+	public ObjectRating exportRandomObjectRaiting() {
 		Random r = new Random();
 		int index = r.nextInt(size());
 		
@@ -378,15 +378,15 @@ public class ObjectRaitingList implements Concept {
 	
 	public void removeObjectRaitingOfUser(int userID) {
 		
-		ObjectRaitingList selectedRaitings = exportObjectRaitingOfUser(userID);
+		ObjectRatingList selectedRaitings = exportObjectRaitingOfUser(userID);
 		removeAll(selectedRaitings);
 	}
 	
-	public ObjectRaitingList exportIntesectionOfObjectWithIdenticalRaiting(
-			ObjectRaitingList raitings) {
+	public ObjectRatingList exportIntesectionOfObjectWithIdenticalRaiting(
+			ObjectRatingList raitings) {
 		
-		ObjectRaitingList intesection = new ObjectRaitingList();
-		for (ObjectRaiting oRaitingI : this.raitings) {
+		ObjectRatingList intesection = new ObjectRatingList();
+		for (ObjectRating oRaitingI : this.raitings) {
 			
 			boolean contains = raitings
 					.containsObjectWithIdenticalRaiting(oRaitingI);
@@ -397,12 +397,12 @@ public class ObjectRaitingList implements Concept {
 		return intesection;
 	}
 	
-	public boolean containsObjectWithIdenticalRaiting(ObjectRaiting oRaiting) {
+	public boolean containsObjectWithIdenticalRaiting(ObjectRating oRaiting) {
 		if (oRaiting == null || ! (oRaiting.valid(new TrashLogger()))) {
 			throw new IllegalArgumentException("Argument " +
-					ObjectRaiting.class.getSimpleName() + " is not valid");			
+					ObjectRating.class.getSimpleName() + " is not valid");			
 		}
-		for (ObjectRaiting oRaitingI : this.raitings) {
+		for (ObjectRating oRaitingI : this.raitings) {
 			boolean equalI = (oRaitingI.getItemID() == oRaiting.getItemID())
 					&& (oRaitingI.getRaiting() == oRaiting.getRaiting());
 			if (equalI) {
@@ -421,7 +421,7 @@ public class ObjectRaitingList implements Concept {
 		if (this.raitings == null) {
 			return false;
 		}
-		for(ObjectRaiting oRaitingI : this.raitings) {
+		for(ObjectRating oRaitingI : this.raitings) {
 			if (oRaitingI == null || (! oRaitingI.valid(logger))) {
 				return false;
 			}
@@ -430,15 +430,15 @@ public class ObjectRaitingList implements Concept {
 	}
 	
 	/**
-	 * Return clove of {@link ObjectRaitingList} with the same items
+	 * Return clove of {@link ObjectRatingList} with the same items
 	 * @return
 	 */
-	public ObjectRaitingList noDeepClone() {
+	public ObjectRatingList noDeepClone() {
 		
-		List<ObjectRaiting> raitingClones = new ArrayList<>();
-		for (ObjectRaiting oRaitingI : this.raitings) {
+		List<ObjectRating> raitingClones = new ArrayList<>();
+		for (ObjectRating oRaitingI : this.raitings) {
 			raitingClones.add(oRaitingI);
 		}
-		return new ObjectRaitingList(raitingClones);
+		return new ObjectRatingList(raitingClones);
 	}
 }

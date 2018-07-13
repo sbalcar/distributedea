@@ -1,4 +1,4 @@
-package org.distributedea.ontology.dataset.matrixfactorization;
+package org.distributedea.ontology.dataset.matrixfactorization.objectrating;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
@@ -10,7 +10,7 @@ import jade.content.Concept;
  * @author stepan
  *
  */
-public class ObjectRaiting implements Concept {
+public class ObjectRating implements Concept {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -19,14 +19,14 @@ public class ObjectRaiting implements Concept {
 	private double raiting;
 	
 	@Deprecated
-	public ObjectRaiting() {}
+	public ObjectRating() {}
 
 	/**
 	 * Constructor
 	 * @param numberOfObject
 	 * @param size
 	 */
-	public ObjectRaiting(int userID, int itemID, double raiting) {
+	public ObjectRating(int userID, int itemID, double raiting) {
 		setUserID(userID);
 		setItemID(itemID);
 		setRaiting(raiting);
@@ -36,10 +36,10 @@ public class ObjectRaiting implements Concept {
 	 * Copy constructor
 	 * @param objectBinPack
 	 */
-	public ObjectRaiting(ObjectRaiting objectRaiting) {
+	public ObjectRating(ObjectRating objectRaiting) {
 		if (objectRaiting == null || ! objectRaiting.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					ObjectRaiting.class.getSimpleName() + " is not valid");
+					ObjectRating.class.getSimpleName() + " is not valid");
 		}
 		setUserID(objectRaiting.getUserID());
 		setItemID(objectRaiting.getItemID());
@@ -81,11 +81,11 @@ public class ObjectRaiting implements Concept {
 	    	throw new IllegalArgumentException();
 	    }
 
-	    if (!(other instanceof ObjectRaiting)) {
+	    if (!(other instanceof ObjectRating)) {
 	        return false;
 	    }
 	    
-	    ObjectRaiting oRaiting = (ObjectRaiting)other;
+	    ObjectRating oRaiting = (ObjectRating)other;
 	    if (! oRaiting.valid(new TrashLogger())) {
 	    	return false;
 	    }
@@ -120,7 +120,7 @@ public class ObjectRaiting implements Concept {
 	 * Returns deep clone
 	 * @return
 	 */
-	public ObjectRaiting deepClone() {
-		return new ObjectRaiting(this);
+	public ObjectRating deepClone() {
+		return new ObjectRating(this);
 	}
 }

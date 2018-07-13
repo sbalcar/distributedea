@@ -36,7 +36,7 @@ public class PlannerInitialisationRunEachMethodTwice implements IPlanner {
 
 		Methods agentDescriptions =
 				jobRun.getMethods().exportInputMethodDescriptions();
-		agentDescriptions.addMethodDescriptions(
+		agentDescriptions.addInputMethodDescriptions(
 				jobRun.getMethods().exportInputMethodDescriptions().getInputMethodDescriptions());
 		
 		InputPlan inputPlan = new InputPlan(iteration);
@@ -65,7 +65,7 @@ public class PlannerInitialisationRunEachMethodTwice implements IPlanner {
 
 		Methods agentDescriptions =
 				jobRun.getMethods().exportInputMethodDescriptions();
-		agentDescriptions.addMethodDescriptions(
+		agentDescriptions.addInputMethodDescriptions(
 				jobRun.getMethods().exportInputMethodDescriptions().getInputMethodDescriptions());
 		
 		

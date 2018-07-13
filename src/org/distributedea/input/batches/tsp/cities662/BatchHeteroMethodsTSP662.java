@@ -130,10 +130,10 @@ public class BatchHeteroMethodsTSP662 implements IInputBatch {
 		job12_.importPedigreeOfIndividualClassName(PedigreeCounter.class);
 		
 		Methods algorithms = new Methods();
-		algorithms.addMethodDescriptions(new InputMethodDescription(
+		algorithms.addInputMethodDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
 				ProblemToolGPSEuc2D2opt.class), 15);
-		algorithms.addMethodDescriptions(new InputMethodDescription(
+		algorithms.addInputMethodDescriptions(new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
 				ProblemToolGPSEuc2D2opt.class), 1);
 

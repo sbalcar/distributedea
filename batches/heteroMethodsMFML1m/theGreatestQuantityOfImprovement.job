@@ -20,6 +20,8 @@
       <a1>5</a1>
       <d>5</d>
     </testingSetDef>
+    <usersContentFileName>inputs/ml-1m/users.dat</usersContentFileName>
+    <itemsContentFileName>inputs/ml-1m/movies.dat</itemsContentFileName>
   </datasetDescription>
   <methods class="org.distributedea.ontology.method.MethodsTwoSets">
     <algorithms>
@@ -122,7 +124,7 @@
     </algorithms>
     <problemTools>
       <problemTools>
-        <java-class>org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization</java-class>
+        <java-class>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</java-class>
       </problemTools>
     </problemTools>
   </methods>

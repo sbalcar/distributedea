@@ -32,6 +32,10 @@ public class DatasetDescriptionMF implements IDatasetDescription {
 	private IRatingIDs testingSetDef;
 	
 	
+	private String usersContentFileName;
+	private String itemsContentFileName;
+	
+	
 	@Deprecated
 	public DatasetDescriptionMF() {} // only for JADE
 	
@@ -39,13 +43,17 @@ public class DatasetDescriptionMF implements IDatasetDescription {
 	 * Constructor
 	 */
 	public DatasetDescriptionMF(File datasetTrainingFile, IRatingIDs trainingSetDef,
-			File datasetTestingFile, IRatingIDs testingSetDef) {
+			File datasetTestingFile, IRatingIDs testingSetDef,
+			File fileItems, File fileUsers) {
 		
 		importDatasetTrainingFile(datasetTrainingFile);
 		setTrainingSetDef(trainingSetDef);
 		
 		importDatasetTestingFile(datasetTestingFile);
 		setTestingSetDef(testingSetDef);
+		
+		importItemsContentFile(fileItems);
+		importUsersContentFile(fileUsers);
 	}
 	
 	/**
@@ -64,6 +72,9 @@ public class DatasetDescriptionMF implements IDatasetDescription {
 		
 		importDatasetTestingFile(datasetDescrMF.exportDatasetTestingFile());
 		setTestingSetDef(datasetDescrMF.getTestingSetDef().deepClone());
+		
+		setItemsContentFileName(datasetDescrMF.getItemsContentFileName());
+		setUsersContentFileName(datasetDescrMF.getUsersContentFileName());
 	}
 	
 	
@@ -111,6 +122,23 @@ public class DatasetDescriptionMF implements IDatasetDescription {
 	}
 
 	
+	public String getUsersContentFileName() {
+		return usersContentFileName;
+	}
+	@Deprecated
+	public void setUsersContentFileName(String usersContentFileName) {
+		this.usersContentFileName = usersContentFileName;
+	}
+
+	public String getItemsContentFileName() {
+		return itemsContentFileName;
+	}
+	@Deprecated
+	public void setItemsContentFileName(String itemsContentFileName) {
+		this.itemsContentFileName = itemsContentFileName;
+	}
+
+	
 	/**
 	 * Exports {@link File} with training {@link Dataset} assignment
 	 */
@@ -148,11 +176,58 @@ public class DatasetDescriptionMF implements IDatasetDescription {
 	 */
 	public void importDatasetTestingFile(File datasetFile) {
 //		if (datasetFile == null || ! datasetFile.isFile()) {
-//			System.out.println(datasetFile);
 //			throw new IllegalArgumentException("Argument " +
 //					File.class.getSimpleName() + " is not valid");
 //		}
 		this.datasetTestingFileName = datasetFile.getPath();
+	}
+	
+	
+	/**
+	 * Exports {@link File} with users content
+	 */
+	public File exportUsersContentFile() {
+		if (this.usersContentFileName == null) {
+			return null;
+		}
+		return new File(this.usersContentFileName);
+	}
+	
+	/**
+	 * Imports {@link File} with users content
+	 */
+	public void importUsersContentFile(File usersContentFile) {
+//		if (usersContentFile == null || ! usersContentFile.isFile()) {
+//			throw new IllegalArgumentException("Argument " +
+//					File.class.getSimpleName() + " is not valid");
+//		}
+		if (usersContentFile != null) {
+			this.usersContentFileName = usersContentFile.getPath();
+		}
+	}
+	
+	
+	/**
+	 * Exports {@link File} with items content
+	 */
+	public File exportItemsContentFile() {
+		if (this.itemsContentFileName == null) {
+			return null;
+		}
+		return new File(this.itemsContentFileName);
+	}
+	
+	/**
+	 * Imports {@link File} with items content
+	 */
+	public void importItemsContentFile(File itemsContentFile) {
+//		if (itemsContentFile == null || ! itemsContentFile.isFile()) {
+//			throw new IllegalArgumentException("Argument " +
+//					File.class.getSimpleName() + " is not valid");
+//		}
+		if (itemsContentFile != null) {
+			this.itemsContentFileName = itemsContentFile.getPath();
+		}
 	}
 	
 	

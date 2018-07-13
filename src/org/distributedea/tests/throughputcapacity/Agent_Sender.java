@@ -112,9 +112,9 @@ public class Agent_Sender extends Agent_DistributedEA {
 					new File("inputs" +  File.separator + "ml-10M100K" +  File.separator + "ratings.dat");
 
 			DatasetDescriptionMF datasetDescr = new DatasetDescriptionMF(
-					file, new RatingIDsFullSet(), file, new RatingIDsEmptySet());
+					file, new RatingIDsFullSet(), file, new RatingIDsEmptySet(), null, null);
 					
-			DatasetMF datasetMF = ToolReadDatasetMF.readDataset(
+			DatasetMF datasetMF = ToolReadDatasetMF.readDatasetWithoutContent(
 					datasetDescr, problemMF, new TrashLogger());
 			System.out.println("Dataset readed");
 			

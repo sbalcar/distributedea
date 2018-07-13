@@ -107,45 +107,45 @@ public class Methods implements IMethods, Concept {
 
 	/**
 	 * Adds {@link InputMethodDescription} multiple times
-	 * @param methodDescriptions
+	 * @param inputMethodDescription
 	 * @param numberOfInstances
 	 */
-	public void addMethodDescriptions(InputMethodDescription methodDescriptions, int numberOfInstances) {
+	public void addInputMethodDescriptions(InputMethodDescription inputMethodDescription, int numberOfInstances) {
 		if (numberOfInstances < 0) {
 			throw new IllegalArgumentException("Argument " +
 					Integer.class.getSimpleName() + " is not valid");			
 		}
 		
 		for (int i = 0; i < numberOfInstances; i++) {
-			addMethodDescriptions(methodDescriptions);
+			addInputMethodDescr(inputMethodDescription);
 		}
 	}
 	
 	/**
 	 * Adds {@link InputMethodDescription}
-	 * @param methodDescriptions
+	 * @param inputMethodDescriptions
 	 */
-	public void addMethodDescriptions( List<InputMethodDescription> methodDescriptions) {
-		if (methodDescriptions == null) {
+	public void addInputMethodDescriptions( List<InputMethodDescription> inputMethodDescriptions) {
+		if (inputMethodDescriptions == null) {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");			
 		}
 		
-		this.inputMethodDescriptions.addAll(methodDescriptions);
+		this.inputMethodDescriptions.addAll(inputMethodDescriptions);
 	}
 	
 	/**
 	 * Adds {@link InputMethodDescription}
-	 * @param agentDescription
+	 * @param inputMethodDescr
 	 */
-	public void addMethodDescriptions(InputMethodDescription agentDescription) {
-		if (agentDescription == null ||
-				! agentDescription.valid(new TrashLogger())) {
+	public void addInputMethodDescr(InputMethodDescription inputMethodDescr) {
+		if (inputMethodDescr == null ||
+				! inputMethodDescr.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					InputMethodDescription.class.getSimpleName() + " is not valid");			
 		}
 		
-		this.inputMethodDescriptions.add(agentDescription);
+		this.inputMethodDescriptions.add(inputMethodDescr);
 	}
 
 	private void importDescriptions(List<InputMethodDescription> agentDescriptions) {
@@ -228,7 +228,7 @@ public class Methods implements IMethods, Concept {
 		for (InputMethodDescription inputAgentDescriptionI : inputMethodDescriptions) {
 			if (methodAgentDescrs.containsMethodDescription(
 					inputAgentDescriptionI)) {
-				intersection.addMethodDescriptions(inputAgentDescriptionI);
+				intersection.addInputMethodDescr(inputAgentDescriptionI);
 			}
 		}
 		

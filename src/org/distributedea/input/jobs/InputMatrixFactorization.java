@@ -37,7 +37,7 @@ import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
-import org.distributedea.problems.matrixfactorization.ProblemToolMatrixFactorization;
+import org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow;
 
 /**
  * Defines a set of Matrix Factorization {@link Job}
@@ -72,14 +72,19 @@ public class InputMatrixFactorization {
 		islandModelConf.importReceivedIndividualsModelClass(
 				ReceivedIndivsOneQueueModel.class);
 		
-		File file = new File(FileNames.getInputProblemFile(
+		File fileRatings = new File(FileNames.getInputProblemFile(
 				"ml-100k" + File.separator + "u.data"));
+		File fileItems = new File(FileNames.getInputProblemFile(
+				"ml-100k" + File.separator + "u.item"));
+		File fileUsers = new File(FileNames.getInputProblemFile(
+				"ml-100k" + File.separator + "u.user"));
 		RatingIDsArithmeticSequence sequence =
 				new RatingIDsArithmeticSequence(5, 5);
 		
 		IDatasetDescription datasetDescr = new DatasetDescriptionMF(
-				file, new RatingIDsComplement(sequence),
-				file, sequence);
+				fileRatings, new RatingIDsComplement(sequence),
+				fileRatings, sequence,
+				fileItems, fileUsers);
 		
 		Job job = new Job();
 		job.setJobID("jobID");
@@ -90,7 +95,7 @@ public class InputMatrixFactorization {
 				new LatFactRange(), new LatFactRange(), 10));
 		job.setDatasetDescription(datasetDescr);
 		job.setMethods(new MethodsTwoSets(
-				algorithms,new ProblemTools(ProblemToolMatrixFactorization.class)));
+				algorithms,new ProblemTools(ProblemToolMFColaborative1RandomInEachRow.class)));
 		
 		job.setPlanner(new PlannerInitialisationOneMethodPerCore());
 		job.setPlannerEndCondition(new PlannerEndCondIterationCountRestriction(50));
@@ -100,14 +105,19 @@ public class InputMatrixFactorization {
 	
 	public static Job test02() throws IOException {
 		
-		File file = new File(FileNames.getInputProblemFile(
+		File fileRatings = new File(FileNames.getInputProblemFile(
 				"ml-1m" + File.separator + "ratings.dat"));
+		File fileItems = new File(FileNames.getInputProblemFile(
+				"ml-1m" + File.separator + "movies.dat"));
+		File fileUsers = new File(FileNames.getInputProblemFile(
+				"ml-1m" + File.separator + "users.dat"));
 		RatingIDsArithmeticSequence sequence =
 				new RatingIDsArithmeticSequence(5, 5);
 		
 		IDatasetDescription datasetDescr = new DatasetDescriptionMF(
-				file, new RatingIDsComplement(sequence),
-				file, sequence);
+				fileRatings, new RatingIDsComplement(sequence),
+				fileRatings, sequence,
+				fileItems, fileUsers);
 		
 		Job job = test01();
 		job.setProblem(new ProblemMatrixFactorization(
@@ -129,12 +139,17 @@ public class InputMatrixFactorization {
 
 		File file = new File(FileNames.getInputProblemFile(
 				"ml-10M100K" + File.separator + "ratings.dat"));
+		File fileItems = new File(FileNames.getInputProblemFile(
+				"ml-10M100K" + File.separator + "movies.dat"));
+		File fileUsers = new File(FileNames.getInputProblemFile(
+				"ml-10M100K" + File.separator + "tags.dat"));
 		RatingIDsArithmeticSequence sequence =
 				new RatingIDsArithmeticSequence(5, 5);
 		
 		IDatasetDescription datasetDescr = new DatasetDescriptionMF(
 				file, new RatingIDsComplement(sequence),
-				file, sequence);
+				file, sequence,
+				fileItems, fileUsers);
 
 		Job job = test01();
 		job.setProblem(new ProblemMatrixFactorization(

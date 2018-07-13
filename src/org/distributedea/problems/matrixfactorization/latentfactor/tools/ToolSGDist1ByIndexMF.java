@@ -2,9 +2,9 @@ package org.distributedea.problems.matrixfactorization.latentfactor.tools;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 
@@ -19,12 +19,12 @@ public class ToolSGDist1ByIndexMF {
 			ProblemMatrixFactorization problemMF, DatasetMF datasetMF,
 			IAgentLogger logger) {
 	
-		DatasetModel datasetModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel datasetModel = datasetMF.exportTrainingRatingModel();
 		
 		int index = (int) (neighborIndex % datasetModel.exportNumberOfRaitings());
 		
-		ObjectRaitingList raitings = datasetModel.exportObjectRaitingList();
-		ObjectRaiting raiting = raitings.getRaitings().get(index);
+		ObjectRatingList raitings = datasetModel.exportObjectRaitingList();
+		ObjectRating raiting = raitings.getRaitings().get(index);
 
 		int rowIndex = datasetModel.exportIndexOfUser(raiting.getUserID());
 		int colIndex = datasetModel.exportIndexOfItem(raiting.getItemID());

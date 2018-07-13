@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 
 /**
  * Structure represents matrix of incidence
@@ -72,7 +72,7 @@ public class MatrixOfIncidence {
 	 * Creates Incidence Matrix for {@link DatasetMF}
 	 * @param datasetMF
 	 */
-	public void createUserMatrix(DatasetModel datasetModel) {
+	public void createUserMatrix(RatingModel datasetModel) {
 		
 		Set<Integer> userIDsSet = datasetModel.exportUserIDs();
 		
@@ -97,12 +97,12 @@ public class MatrixOfIncidence {
 	}
 	
 	private int countIncidence(int userId1, int userId2,
-			DatasetModel datasetModel) {
+			RatingModel datasetModel) {
 		
-		ObjectRaitingList objects1 = datasetModel.exportRaitingsOfUser(userId1);
-		ObjectRaitingList objects2 = datasetModel.exportRaitingsOfUser(userId2);
+		ObjectRatingList objects1 = datasetModel.exportRaitingsOfUser(userId1);
+		ObjectRatingList objects2 = datasetModel.exportRaitingsOfUser(userId2);
 		
-		ObjectRaitingList intersectionI = objects1
+		ObjectRatingList intersectionI = objects1
 				.exportIntesectionOfObjectWithIdenticalRaiting(objects2);
 		
 		return intersectionI.size();

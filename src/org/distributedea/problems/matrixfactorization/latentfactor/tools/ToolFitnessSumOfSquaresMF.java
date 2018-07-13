@@ -2,9 +2,9 @@ package org.distributedea.problems.matrixfactorization.latentfactor.tools;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.DatasetMF;
-import org.distributedea.ontology.dataset.matrixfactorization.DatasetModel;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaiting;
-import org.distributedea.ontology.dataset.matrixfactorization.ObjectRaitingList;
+import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRating;
+import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 
@@ -22,14 +22,14 @@ public class ToolFitnessSumOfSquaresMF {
 			ProblemMatrixFactorization problemMF, DatasetMF datasetMF,
 			IAgentLogger logger) {
 		
-		DatasetModel testingModel = datasetMF.exportTrainingDatasetModel();
+		RatingModel testingModel = datasetMF.exportTrainingRatingModel();
 		
-		ObjectRaitingList testingObjects = testingModel.exportObjectRaitingList();
+		ObjectRatingList testingObjects = testingModel.exportObjectRaitingList();
 		
 		
 		double residualSumOfSquares = 0;
 		
-		for (ObjectRaiting objectRaitingI : testingObjects.getRaitings()) {
+		for (ObjectRating objectRaitingI : testingObjects.getRaitings()) {
 			
 			int userID = objectRaitingI.getUserID();
 			int itemID = objectRaitingI.getItemID();
@@ -60,14 +60,14 @@ public class ToolFitnessSumOfSquaresMF {
 			ProblemMatrixFactorization problemMF, DatasetMF datasetMF,
 			IAgentLogger logger) {
 		
-		DatasetModel testingModel = datasetMF.exportTestingDatasetModel();
+		RatingModel testingModel = datasetMF.exportTestingRatingModel();
 		
-		ObjectRaitingList trainingObjects = testingModel.exportObjectRaitingList();
+		ObjectRatingList trainingObjects = testingModel.exportObjectRaitingList();
 		
 		
 		double residualSumOfSquares = 0;
 		
-		for (ObjectRaiting objectRaitingI : trainingObjects.getRaitings()) {
+		for (ObjectRating objectRaitingI : trainingObjects.getRaitings()) {
 			
 			int userID = objectRaitingI.getUserID();
 			int itemID = objectRaitingI.getItemID();
