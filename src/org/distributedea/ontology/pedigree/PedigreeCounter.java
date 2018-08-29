@@ -29,6 +29,7 @@ public class PedigreeCounter extends Pedigree {
 	 */
 	@Deprecated
 	public PedigreeCounter() {
+		super(null, null);
 		this.counters = new MethodDescriptionNumbers();
 	}
 
@@ -37,6 +38,7 @@ public class PedigreeCounter extends Pedigree {
 	 * @param methodCounters
 	 */
 	public PedigreeCounter(MethodDescriptionNumbers methodCounters) {
+		super(null, null);
 		if (methodCounters == null || ! methodCounters.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					PedigreeCounter.class.getSimpleName() + " is not valid");			
@@ -45,11 +47,13 @@ public class PedigreeCounter extends Pedigree {
 	}
 	
 	PedigreeCounter(PedigreeParameters parameters) {
+		super(null, null);
 		this.counters = new MethodDescriptionNumbers();
 		this.counters.incrementCounterOf(parameters.methodDescription);
 	}
 
 	PedigreeCounter(List<Pedigree> pedigrees, PedigreeParameters pedParams) {
+		super(null, null);
 		if (pedigrees == null || pedigrees.isEmpty() || pedigrees.size() > 3) {
 			throw new IllegalArgumentException("Argument " +
 					PedigreeCounter.class.getSimpleName() + " is not valid");
@@ -78,6 +82,7 @@ public class PedigreeCounter extends Pedigree {
 	 * @param pedigreeToClone
 	 */
 	public PedigreeCounter(PedigreeCounter pedigreeToClone) {
+		super(null, null);
 		if (pedigreeToClone == null || ! pedigreeToClone.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					PedigreeCounter.class.getSimpleName() + " is not valid");

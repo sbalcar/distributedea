@@ -10,18 +10,25 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/bbob.co</datasetFileName>
   </datasetDescription>
-  <methods class="methods">
-    <inputMethodDescriptions>
-      <inputMethodDescription>
-        <inputAgentConfiguration>
-          <agentName>Agent_RandomSearch</agentName>
-          <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
-          <arguments>
-            <arguments/>
-          </arguments>
-        </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
-      </inputMethodDescription>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_RandomSearch</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
     </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
@@ -38,4 +45,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

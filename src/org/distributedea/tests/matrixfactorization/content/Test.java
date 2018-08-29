@@ -7,8 +7,8 @@ import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.matrixfactorization.ProblemToolMFContentBased;
+import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.matrixfactorization.ProblemToolMFContentBased;
 
 public class Test {
 

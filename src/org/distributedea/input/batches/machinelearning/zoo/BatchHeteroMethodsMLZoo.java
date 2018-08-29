@@ -31,12 +31,7 @@ import org.distributedea.input.postprocessing.general.matlab.PostProcCountsOfAll
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
-import org.distributedea.ontology.arguments.Argument;
-import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.problems.machinelearning.ProblemToolMLRandomMove;
 
 public class BatchHeteroMethodsMLZoo implements IInputBatch {
 
@@ -115,14 +110,12 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		job12.setDescription("The Combination of Greatest Quantity Good Material, Improvement and Fitness");
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
 		
-		
+	
 		Methods algorithms = new Methods();
-		algorithms.addInputMethodDescriptions(new InputMethodDescription(
-				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				ProblemToolMLRandomMove.class), 15);
-		algorithms.addInputMethodDescriptions(new InputMethodDescription(
-				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
-				ProblemToolMLRandomMove.class), 1);
+		algorithms.addInputMethodDescriptions(
+				jobI.getMethods().exportFirstInputMethodDescription(Agent_HillClimbing.class), 15);
+		algorithms.addInputMethodDescriptions(
+				jobI.getMethods().exportFirstInputMethodDescription(Agent_TabuSearch.class), 1);
 
 		Job job13 = jobI.deepClone();
 		job13.setJobID("onlyInitHillClimbingAndTabuSearch");

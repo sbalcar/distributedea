@@ -8,18 +8,25 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/bp1000.bpp</datasetFileName>
   </datasetDescription>
-  <methods class="methods">
-    <inputMethodDescriptions>
-      <inputMethodDescription>
-        <inputAgentConfiguration>
-          <agentName>Agent_BruteForce</agentName>
-          <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
-          <arguments>
-            <arguments/>
-          </arguments>
-        </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
-      </inputMethodDescription>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_BruteForce</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
     </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
@@ -36,4 +43,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

@@ -17,6 +17,7 @@ import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
+import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
@@ -32,9 +33,9 @@ import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.ProblemVertexCover;
-import org.distributedea.ontology.problemwrapper.ProblemStruct;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
+import org.distributedea.problemtools.IProblemTool;
 import org.jgap.Configuration;
 import org.jgap.Genotype;
 import org.jgap.IChromosome;
@@ -64,17 +65,16 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 	
 	
 	@Override
-	protected boolean isAbleToSolve(ProblemStruct problemStruct) {
+	protected boolean isAbleToSolve(ProblemWrapper problemWrp) {
 
-		IProblem problem = problemStruct.getProblem();
+		IProblem problem = problemWrp.getProblem();
 		
-		Class<?> problemToolClass =
-				problemStruct.exportProblemToolClass(getLogger());
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, getLogger());
+		ProblemToolDefinition problemToolDef =
+				problemWrp.getProblemToolDefinition();
+		IProblemTool problemTool = problemToolDef.exportProblemTool(getLogger());
 		
-		//Class<?> dataset = problemStruct.getDataset().getClass();
 		Class<?> representation = problemTool.reprezentationWhichUses();
+
 		
 		boolean isAble = false;
 		
@@ -132,30 +132,44 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 	}
 	
 	@Override
-	protected void startComputing(ProblemStruct problemStruct,
+	protected void startComputing(ProblemWrapper problemWrp,
 			IslandModelConfiguration configuration, AgentConfiguration agentConf) throws Exception {
 	
-		if (problemStruct == null || ! problemStruct.valid(getCALogger())) {
+  		if (problemWrp == null || ! problemWrp.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +
-					ProblemStruct.class.getSimpleName() + " is not valid");
+					ProblemWrapper.class.getSimpleName() + " is not valid");
+		}
+		if (configuration == null || ! configuration.valid(getCALogger())) {
+			throw new IllegalArgumentException("Argument " +
+					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
 		if (agentConf == null || ! agentConf.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +
 					AgentConfiguration.class.getSimpleName() + " is not valid");
 		}
 		
-		JobID jobID = problemStruct.getJobID();
-		IProblemTool problemTool = problemStruct.exportProblemTool(getLogger());
-		IProblem problem = problemStruct.getProblem();
-		Dataset dataset = problemStruct.getDataset();
+		this.state = CompAgentState.INITIALIZATION;
+		
+		JobID jobID = problemWrp.getJobID();
+		ProblemToolDefinition problemToolDef = problemWrp.getProblemToolDefinition();
+		IProblem problem = problemWrp.getProblem();
 		boolean individualDistribution = configuration.isIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemTool.getClass());
-		PedigreeParameters pedigreeParams = new PedigreeParameters(null, methodDescription);
+		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemToolDef);
+		PedigreeParameters pedigreeParams = new PedigreeParameters(
+				problemWrp.getPedigreeDefinition(), methodDescription);
+		
+		IProblemTool problemTool = problemToolDef.exportProblemTool(getLogger());
+		
+		IDatasetDescription datasetDescr = problemWrp.getDatasetDescription();
+		Dataset dataset = problemTool.readDataset(datasetDescr, problem, getLogger());
+				
 		
 		this.localSaver = new LocalSaver(this, jobID);
 		
+		
 		problemTool.initialization(problem, dataset, agentConf, getLogger());
 		this.state = CompAgentState.COMPUTING;
+		
 		
 		Configuration conf = new DefaultConfiguration();
 		Configuration.reset();

@@ -31,6 +31,7 @@ import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigati
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 
 public class BatchHeteroMethodsCOf14 implements IInputBatch {
 
@@ -118,8 +119,8 @@ public class BatchHeteroMethodsCOf14 implements IInputBatch {
 		job13.setJobID("thePedigree");
 		job13.setDescription("The Pedigree");
 		job13.setPlanner(new PlannerThePedigree());
-		job13.importPedigreeOfIndividualClassName(PedigreeCounter.class);
-				
+		job13.setPedigreeDefinition(new PedigreeDefinition(PedigreeCounter.class));
+
 		
 		batch.addJob(job0);
 		batch.addJob(job1);

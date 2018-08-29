@@ -9,7 +9,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.problemtools.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -88,8 +89,8 @@ public class IndividualWrapper implements Concept {
 	 * Exports {@link IProblemTool} class
 	 * @return
 	 */
-	public Class<?> exportProblemToolClass() {
-		return methodDescription.exportProblemToolClass();
+	public ProblemToolDefinition exportProblemToolDefinition() {
+		return methodDescription.getProblemToolDefinition();
 	}
 	
 	public IndividualEvaluated getIndividualEvaluated() {

@@ -141,8 +141,12 @@ public final class PlannerInfrastructure {
 			history.addStatictic(statistic, iterationI);
 			
 			// replan by planner
-			Pair<Plan,RePlan> rePlan =
-					planner.replan(iterationI, history);
+			Pair<Plan,RePlan> rePlan;
+			if (endCondition.isContinue(iterationNumI)) {		
+				rePlan = planner.replan(iterationI, history);
+			} else {
+				rePlan = new Pair<Plan,RePlan>(new Plan(iterationI), new RePlan(iterationI));
+			}
 						
 			// update history by new RePlan
 			history.addNewPlan(rePlan.first);

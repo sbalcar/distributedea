@@ -13,8 +13,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
+import org.distributedea.problemtools.ProblemTool;
+import org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove;
 
 public class Test {
 

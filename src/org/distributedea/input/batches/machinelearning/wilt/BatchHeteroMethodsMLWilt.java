@@ -33,13 +33,9 @@ import org.distributedea.input.postprocessing.general.matlab.PostProcCountsOfAll
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
-import org.distributedea.ontology.arguments.Argument;
-import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
-import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
-import org.distributedea.problems.machinelearning.ProblemToolMLRandomMove;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 
 public class BatchHeteroMethodsMLWilt implements IInputBatch {
 
@@ -127,15 +123,15 @@ public class BatchHeteroMethodsMLWilt implements IInputBatch {
 		job13.setJobID("thePedigree");
 		job13.setDescription("The Pedigree");
 		job13.setPlanner(new PlannerThePedigree());
-		job13.importPedigreeOfIndividualClassName(PedigreeCounter.class);
+		job13.setPedigreeDefinition(new PedigreeDefinition(PedigreeCounter.class));
+
+		
 		
 		Methods algorithms = new Methods();
-		algorithms.addInputMethodDescriptions(new InputMethodDescription(
-				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				ProblemToolMLRandomMove.class), 15);
-		algorithms.addInputMethodDescriptions(new InputMethodDescription(
-				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
-				ProblemToolMLRandomMove.class), 1);
+		algorithms.addInputMethodDescriptions(
+				jobI.getMethods().exportFirstInputMethodDescription(Agent_HillClimbing.class), 15);
+		algorithms.addInputMethodDescriptions(
+				jobI.getMethods().exportFirstInputMethodDescription(Agent_TabuSearch.class), 1);
 
 		Job job14 = jobI.deepClone();
 		job14.setJobID("onlyInitHillClimbingAndTabuSearch");

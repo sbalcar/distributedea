@@ -23,10 +23,12 @@ import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.saveresult.SaveResultOfIteration;
 import org.distributedea.ontology.saveresult.SaveTheBestIndividual;
 import org.distributedea.ontology.saveresult.resultofiteration.ResultOfIteration;
@@ -56,6 +58,7 @@ public class ResultOntology extends BeanOntology {
         	add(RePlan.class);
         	
         	add(MethodInstanceDescription.class);
+        	add(ProblemToolDefinition.class.getPackage().getName());
         	
         	add(ReportHelpmate.class.getPackage().getName());
         	
@@ -65,7 +68,8 @@ public class ResultOntology extends BeanOntology {
             add(IndividualHash.class.getPackage().getName());
             
             add(LatentFactor.class.getPackage().getName());
-            
+
+            add(PedigreeDefinition.class.getPackage().getName());
             add(Pedigree.class.getPackage().getName());
             add(PedVertexFull.class.getPackage().getName());
             add(PedVertex.class.getPackage().getName());

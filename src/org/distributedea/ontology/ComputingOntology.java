@@ -38,8 +38,10 @@ import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbe
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 public class ComputingOntology extends BeanOntology {
@@ -54,6 +56,8 @@ public class ComputingOntology extends BeanOntology {
             add(IslandModelConfiguration.class);
             add(ProblemWrapper.class);
             
+            add(ProblemToolDefinition.class);
+            
             add(IndividualWrapper.class);
             add(IndividualEvaluated.class);
             add(Individual.class.getPackage().getName());
@@ -61,6 +65,7 @@ public class ComputingOntology extends BeanOntology {
             
             add(LatentFactor.class.getPackage().getName());
             
+            add(PedigreeDefinition.class.getPackage().getName());
             add(Pedigree.class.getPackage().getName());
             add(PedVertexFull.class.getPackage().getName());
             add(PedVertex.class.getPackage().getName());

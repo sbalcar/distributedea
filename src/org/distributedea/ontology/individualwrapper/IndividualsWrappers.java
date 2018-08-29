@@ -9,8 +9,7 @@ import org.distributedea.agents.FitnessTool;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.ProblemTool;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 
 /**
  * Ontology represents model for list of {@link IndividualWrapper}
@@ -83,26 +82,17 @@ public class IndividualsWrappers implements Concept {
 	}
 
 	/**
-	 * Export {@link IProblemTool} class
+	 * Export {@link ProblemToolDefinition} of the first {@link IndividualWrapper}
 	 * @return
 	 */
-	public Class<?> exportProblemToolClass() {
+	public ProblemToolDefinition exportProblemToolDefinition() {
 		if (individualsWrappers == null || individualsWrappers.isEmpty()) {
 			return null;
 		}
 		IndividualWrapper individualWrp0 = individualsWrappers.get(0);
-		return individualWrp0.exportProblemToolClass();
+		return individualWrp0.exportProblemToolDefinition();
 	}
 	
-	public Class<?> exportProblemToSolveClass() {
-		if (individualsWrappers == null || individualsWrappers.isEmpty()) {
-			return null;
-		}
-		Class<?> problemToolClass = exportProblemToolClass();
-		IProblemTool problemTool = ProblemTool.createInstanceOfProblemTool(
-				problemToolClass, new TrashLogger());
-		return problemTool.datasetReprezentation();
-	}
 	
 	public boolean exportContainsMoreThanOneMethod() {
 		

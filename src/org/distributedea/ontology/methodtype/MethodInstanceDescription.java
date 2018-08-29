@@ -11,6 +11,7 @@ import java.util.Scanner;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -60,8 +61,8 @@ public class MethodInstanceDescription implements Concept {
 	public Class<?> exportAgentClass() {
 		return methodType.exportAgentClass();
 	}
-	public Class<?> exportProblemToolClass() {
-		return methodType.exportProblemToolClass();
+	public ProblemToolDefinition exportProblemToolDefinition() {
+		return methodType.getProblemToolDefinition();
 	}
 	
 	
@@ -75,25 +76,26 @@ public class MethodInstanceDescription implements Concept {
 
 	public String exportInstanceName() {
 		return "" + exportAgentClass().getSimpleName() + "-" +
-				exportProblemToolClass().getSimpleName() + "-" +
+				exportProblemToolDefinition().exportProblemToolClass(new TrashLogger()).getSimpleName() + "-" +
 				instanceNumber;
 	}
 	
 	public boolean exportAreTheSameType(MethodType methodType) {
+		if (methodType == null) {
+			throw new IllegalArgumentException("Argument " +
+					MethodType.class.getSimpleName() + " is not valid");
+		}
 		
-		return methodType.exportAgentClass() == exportAgentClass() &&
-				methodType.exportProblemToolClass() == exportProblemToolClass();
+		return getMethodType().equalsMetodType(methodType);
 	}
 	
 	public boolean exportAreTheSameType(MethodDescription agentDescription) {
 		if (agentDescription == null) {
 			return false;
 		}
-		Class<?> agentClass = agentDescription.getAgentConfiguration().exportAgentClass();
-		Class<?> problemToolClass = agentDescription.exportProblemToolClass();
 		
-		return exportAgentClass() == agentClass &&
-				exportProblemToolClass() == problemToolClass;
+		return getMethodType().equalsMetodType(
+				agentDescription.exportMethodType());		
 	}
 	
 	/**

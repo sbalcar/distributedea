@@ -6,7 +6,6 @@ import java.util.List;
 
 import jade.core.AID;
 
-import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
@@ -15,15 +14,18 @@ import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
-import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
+import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
-import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.ontology.problem.IProblem;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
@@ -31,10 +33,7 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 
 	
 	int NODE_INDEX = 0;
-	
-	/** index on the Problem Tool in the list of tolls */
-	int PROBLEM_TOOL_INDEX = 0;
-	
+		
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
 			Iteration iteration, JobRun job, IslandModelConfiguration configuration,
@@ -51,48 +50,49 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 			throw new IllegalStateException("Manager agent to create Computing Agent not available");
 		}
 		
-		// chooses ProblemTool by index
-		Class<?> problemToolI;
-		try {
-			problemToolI = job.getMethods().exportProblemTools().getProblemTools().get(PROBLEM_TOOL_INDEX);
-		} catch (IndexOutOfBoundsException e) {
-			throw new IllegalStateException("ProblemTool not available");
-		}
+		Methods methods = job.getMethods();
+		IProblem problem = job.getProblem();
 		
 		
-		List<MethodDescription> createdDescriptions = new ArrayList<>();
+		List<Pair<InputMethodDescription, ProblemWrapper>> metdodsToCreate = job.exportProblemWrappers();
 		
-		// create one agent for each configuration
-		InputAgentConfigurations configurations = job.getMethods().exportInputAgentConfigurations();
-		for (InputAgentConfiguration agentConfigurationI : configurations.getAgentConfigurations()) {
+		List<MethodDescription> methodsCreated = new ArrayList<>();
+		
+		
+		for (int i = 0; i < methods.size(); i++) {
+			
+			Pair<InputMethodDescription, ProblemWrapper> problemWrapI = job.exportProblemWrapper(i);
+			
+			InputMethodDescription inputMethodDescrI = problemWrapI.first;
+			
+			InputAgentConfiguration inputAgentConfI = inputMethodDescrI.getInputAgentConfiguration();
+			ProblemToolDefinition problemToolDef = inputMethodDescrI.getProblemToolDefinition();
 			
 			AgentConfiguration createdAgentI = ManagerAgentService.sendCreateAgent(
-					centralManager, managerAidI, agentConfigurationI, logger);
-			
-			MethodDescription descriptionI = new MethodDescription(
-					createdAgentI, job.getProblem(), problemToolI);
+					centralManager, managerAidI, inputAgentConfI, logger);
 						
-			createdDescriptions.add(descriptionI);
+			methodsCreated.add(new MethodDescription(
+					createdAgentI, problem, problemToolDef));
 		}
-				
-		
-		// search all Computing Agents
-		AID [] aidComputingAgents = centralManager.searchDF(
-				Agent_ComputingAgent.class.getName());
-		
-		// start computing in all created computing agents
-		for (AID aidComputingAgentI : aidComputingAgents) {
+
+		for (int i = 0; i < methodsCreated.size(); i++) {
 			
-			ProblemStruct problemStructI = job.exportProblemStruct(problemToolI);
-						
+			MethodDescription methodDesrI  = methodsCreated.get(i);
+			AgentConfiguration createdAgentConfI = methodDesrI.getAgentConfiguration();
+			Pair<InputMethodDescription, ProblemWrapper> pairI = metdodsToCreate.get(i);
+			
+			ProblemWrapper problemWrpI = pairI.second;
+			
+			AID aidComputingAgentI = createdAgentConfI.exportAgentAID();
+			
 			boolean startOK = ComputingAgentService.sendStartComputing( centralManager,
-					aidComputingAgentI, problemStructI, configuration, logger);
+					aidComputingAgentI, problemWrpI, configuration, logger);
 			if (! startOK) {
 				centralManager.exit();
 			}
 		}
 		
-		return new Plan(iteration, new MethodDescriptions(createdDescriptions));
+		return new Plan(iteration, new MethodDescriptions(methodsCreated));
 	}
 
 	

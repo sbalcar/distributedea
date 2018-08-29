@@ -12,6 +12,7 @@ import java.util.Set;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.structures.comparators.CmpObjectRating;
 
 
 /**
@@ -39,6 +40,21 @@ public class ObjectRatingList implements Concept {
 	public ObjectRatingList(List<ObjectRating> raitings) {
 		this.setRaitings(raitings);
 	}
+	
+	public ObjectRatingList(int userID, List<Integer> itemIDs, List<Double> pradictedRatings) {
+		
+		List<ObjectRating> raitingsNew = new ArrayList<>();
+		for (int i = 0; i < pradictedRatings.size(); i++) {
+			
+			double ratingI = pradictedRatings.get(i);
+			int temIDI = itemIDs.get(i);
+			
+			raitingsNew.add(
+					new ObjectRating(userID, temIDI, ratingI));
+		}
+		this.setRaitings(raitingsNew);
+	}
+	
 	
 	
 	public List<ObjectRating> getRaitings() {
@@ -332,6 +348,29 @@ public class ObjectRatingList implements Concept {
 		return result;
 	}
 	
+	public int exportFirstObjectRaitingIndexOfItem(int itemID) {
+		
+		for (int i = 0; i < this.raitings.size(); i++) {
+			ObjectRating oRaitingI = this.raitings.get(i);
+			if (oRaitingI.getItemID() == itemID) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public List<Integer> exportFirstObjectRaitingIndexesOfItems(List<Integer> itemIDs) {
+		
+		List<Integer> indexesOfItems = new ArrayList<>();
+		for (int itemIDI : itemIDs) {
+			
+			indexesOfItems.add(
+					exportFirstObjectRaitingIndexOfItem(itemIDI));
+		}
+		return indexesOfItems;
+	}
+
+	
 	/**
 	 * Exports all {@link ObjectRating}s of given item
 	 * @param itemID
@@ -410,6 +449,19 @@ public class ObjectRatingList implements Concept {
 			}
 		}
 		return false;
+	}
+	
+	public void sort() {
+		Collections.sort(raitings, new CmpObjectRating());
+	}
+	
+	public void print() {
+		String string = "";
+		for (ObjectRating raitingI : raitings) {
+			double ratingValI = raitingI.getRaiting();
+			string += " " + ratingValI;
+		}
+		System.out.println(string);
 	}
 	
 	/**

@@ -9,7 +9,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.AProblem;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.problemtools.IProblemTool;
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.GeneticOperator;

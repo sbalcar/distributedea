@@ -5,6 +5,7 @@ import java.util.Comparator;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.MethodHistory;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 
 public class ComparatorLexicographical implements Comparator<MethodHistory> {
 
@@ -27,11 +28,11 @@ public class ComparatorLexicographical implements Comparator<MethodHistory> {
 		}
 		
 		
-		Class<?> problemToolClass1 = methodType1.exportProblemToolClass();
-		Class<?> problemToolClass2 = methodType2.exportProblemToolClass();
+		ProblemToolDefinition problemToolClass1 = methodType1.getProblemToolDefinition();
+		ProblemToolDefinition problemToolClass2 = methodType2.getProblemToolDefinition();
 		
-		int toolCmp = problemToolClass1.getSimpleName().compareTo(
-				problemToolClass2.getSimpleName());
+		int toolCmp = problemToolClass1.toString().compareTo(
+				problemToolClass2.toString());
 		if (toolCmp != 0) {
 			return toolCmp;
 		}

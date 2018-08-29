@@ -15,8 +15,8 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
 
 
 public class PostProcMFTestSetTableOfJobRunResults extends PostProcTableOfJobRunResults {

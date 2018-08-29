@@ -22,7 +22,8 @@ import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
@@ -61,14 +62,14 @@ public class PlannerTool {
 			AID managerAgentOfEmptyCoreAIDI = pairI.first;
 			
 			InputMethodDescription agentDescriptionI = pairI.second;
-			Class<?> problemToolClass = agentDescriptionI.exportProblemToolClass();
+			ProblemToolDefinition problemToolDef = agentDescriptionI.getProblemToolDefinition();
 			InputAgentConfiguration agentConfigurationI = agentDescriptionI.getInputAgentConfiguration();
 			
 			AgentConfiguration createdAgentI = ManagerAgentService.sendCreateAgent(centralManager,
 					managerAgentOfEmptyCoreAIDI, agentConfigurationI, logger);
 			
 			MethodDescription createdAgentDescriptionI =
-					new MethodDescription(createdAgentI, problem, problemToolClass);
+					new MethodDescription(createdAgentI, problem, problemToolDef);
 						
 			createdAgents.add(createdAgentDescriptionI);
 		}
@@ -86,10 +87,11 @@ public class PlannerTool {
 			AgentConfiguration agentConfigurationI =
 					agentDescriptionI.getAgentConfiguration();
 
-			Class<?> problemToolI = agentDescriptionI.exportProblemToolClass();
+			ProblemToolDefinition problemToolI =
+					agentDescriptionI.getProblemToolDefinition();
 			
-			ProblemStruct problemStructI =
-					jobRun.exportProblemStruct(problemToolI);
+			ProblemWrapper problemStructI =
+					jobRun.exportProblemWrapper(problemToolI);
 					
 			boolean startOK = ComputingAgentService.sendStartComputing(centralManager,
 					agentConfigurationI.exportAgentAID(), problemStructI, configuration, logger);
@@ -129,17 +131,17 @@ public class PlannerTool {
 			InputAgentConfiguration newConfiguration =
 					agentToCreateI.getInputAgentConfiguration();
 			
-			Class<?> problemToolClass =
-					agentToCreateI.exportProblemToolClass();
-			ProblemStruct problemStruct =
-					jobRun.exportProblemStruct(problemToolClass);
+			ProblemToolDefinition problemToolDefI =
+					agentToCreateI.getProblemToolDefinition();
+			ProblemWrapper problemWrpI =
+					jobRun.exportProblemWrapper(problemToolDefI);
 			
 			
 			AgentConfiguration createdAC = killAndCreateAgent(centralManager,
-					agentTokillAID, newConfiguration, problemStruct, configuration, logger);
+					agentTokillAID, newConfiguration, problemWrpI, configuration, logger);
 			
 			MethodDescription createdAD = new MethodDescription(createdAC,
-					jobRun.getProblem(), problemToolClass);
+					jobRun.getProblem(), problemToolDefI);
 			
 			agentsCreated.add(createdAD);
 		}
@@ -160,7 +162,7 @@ public class PlannerTool {
 	 */
 	private static AgentConfiguration killAndCreateAgent(Agent_CentralManager centralManager,
 			AID agentTokillAID, InputAgentConfiguration newConfiguration,
-			ProblemStruct problemStruct, IslandModelConfiguration configuration,
+			ProblemWrapper problemStruct, IslandModelConfiguration configuration,
 			IAgentLogger logger) throws Exception {
 
 		

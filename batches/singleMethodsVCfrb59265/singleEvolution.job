@@ -6,37 +6,44 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/frb59-26-5.mis</datasetFileName>
   </datasetDescription>
-  <methods class="methods">
-    <inputMethodDescriptions>
-      <inputMethodDescription>
-        <inputAgentConfiguration>
-          <agentName>Agent_Evolution</agentName>
-          <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
-          <arguments>
-            <arguments class="java.util.Arrays$ArrayList">
-              <a class="argument-array">
-                <argument>
-                  <name>popSize</name>
-                  <value>10</value>
-                </argument>
-                <argument>
-                  <name>mutationRate</name>
-                  <value>0.9</value>
-                </argument>
-                <argument>
-                  <name>crossRate</name>
-                  <value>0.1</value>
-                </argument>
-                <argument>
-                  <name>selector</name>
-                  <value>org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector</value>
-                </argument>
-              </a>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_Evolution</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>popSize</name>
+                    <value>10</value>
+                  </argument>
+                  <argument>
+                    <name>mutationRate</name>
+                    <value>0.9</value>
+                  </argument>
+                  <argument>
+                    <name>crossRate</name>
+                    <value>0.1</value>
+                  </argument>
+                  <argument>
+                    <name>selector</name>
+                    <value>org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector</value>
+                  </argument>
+                </a>
+              </arguments>
             </arguments>
-          </arguments>
-        </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.vertexcover.ProblemToolVC</problemToolClass>
-      </inputMethodDescription>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
     </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
@@ -53,4 +60,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

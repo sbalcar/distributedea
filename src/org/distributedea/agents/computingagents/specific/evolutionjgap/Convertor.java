@@ -13,7 +13,7 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.problemtools.IProblemTool;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.Gene;

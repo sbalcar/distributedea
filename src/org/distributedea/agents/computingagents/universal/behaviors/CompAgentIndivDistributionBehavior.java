@@ -10,7 +10,7 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.services.ComputingAgentService;
 
 import jade.core.behaviours.TickerBehaviour;
@@ -21,13 +21,13 @@ public class CompAgentIndivDistributionBehavior extends TickerBehaviour {
 	private IReadyToSendIndividualsModel readyToSendIndividuals;
 	
 	private MethodDescription methDescription;
-	private ProblemStruct problemStruct;
+	private ProblemWrapper problemWrp;
 	private IslandModelConfiguration islandModelConf;
 	private IAgentLogger logger;
 	
 	public CompAgentIndivDistributionBehavior(Agent_ComputingAgent agent,
 			IReadyToSendIndividualsModel readyToSendIndividuals,
-			MethodDescription methDescription, ProblemStruct problemStruct,
+			MethodDescription methDescription, ProblemWrapper problemWrp,
 			IslandModelConfiguration islandModelConf, IAgentLogger logger) {
 		super(agent, islandModelConf.getIndividualBroadcastPeriodMS());
 		
@@ -35,7 +35,7 @@ public class CompAgentIndivDistributionBehavior extends TickerBehaviour {
 		this.readyToSendIndividuals = readyToSendIndividuals;
 		
 		this.methDescription = methDescription;
-		this.problemStruct = problemStruct;
+		this.problemWrp = problemWrp;
 		this.islandModelConf = islandModelConf;
 		this.logger = logger;
 	}
@@ -46,7 +46,7 @@ public class CompAgentIndivDistributionBehavior extends TickerBehaviour {
 	protected void onTick() {
 		 logger.log(Level.INFO, "Tick to send individual");
 		 
-		 IProblem problem = problemStruct.getProblem();
+		 IProblem problem = problemWrp.getProblem();
 		 
 		 IndividualEvaluated individualEval =
 				 readyToSendIndividuals.removeIndividual(problem);
@@ -57,7 +57,7 @@ public class CompAgentIndivDistributionBehavior extends TickerBehaviour {
 		 }
 		 
 		 IndividualWrapper individualWrapper = new IndividualWrapper(
-				 problemStruct.getJobID(), methDescription, individualEval);
+				 problemWrp.getJobID(), methDescription, individualEval);
 		
 		 if (islandModelConf.isIndividualDistribution()) {
 			 ComputingAgentService.sendIndividualToNeighbours(

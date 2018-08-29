@@ -6,7 +6,7 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 
 import jade.content.Concept;
 
@@ -33,7 +33,7 @@ public class MethodType implements Concept {
 	/**
 	 * Problem Tool to use for solving Problem 
 	 */
-	private String problemToolClassName;
+	private ProblemToolDefinition problemToolDefinition;
 
 	
 	@Deprecated
@@ -45,7 +45,7 @@ public class MethodType implements Concept {
 	 * @param agentClass
 	 * @param problemToolClass
 	 */
-	public MethodType(Class<?> agentClass, Class<?>  problemToolClass, Arguments arguments) {
+	public MethodType(Class<?> agentClass, ProblemToolDefinition problemToolDefinition, Arguments arguments) {
 		
 		if (arguments == null || ! arguments.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -53,7 +53,7 @@ public class MethodType implements Concept {
 		}
 		
 		importAgentClass(agentClass);
-		importProblemToolClass(problemToolClass);
+		setProblemToolDefinition(problemToolDefinition);
 		this.arguments = arguments;
 	}
 	
@@ -67,8 +67,8 @@ public class MethodType implements Concept {
 					MethodType.class.getSimpleName() + " is not valid");
 		}
 		importAgentClass(methodType.exportAgentClass());
-		importProblemToolClass(methodType.exportProblemToolClass());
-		this.arguments = methodType.getArguments().deepClone();
+		setProblemToolDefinition(methodType.getProblemToolDefinition().deepClone());
+		setArguments(methodType.getArguments().deepClone());
 	}
 	
 	@Deprecated
@@ -92,15 +92,22 @@ public class MethodType implements Concept {
 		this.arguments = arguments;
 	}
 
-	@Deprecated
-	public String getProblemToolClassName() {
-		return problemToolClassName;
-	}
-	@Deprecated
-	public void setProblemToolClassName(String problemToolClass) {
-		this.problemToolClassName = problemToolClass;
-	}
+
 	
+	public ProblemToolDefinition getProblemToolDefinition() {
+		return problemToolDefinition;
+	}
+	@Deprecated
+	public void setProblemToolDefinition(ProblemToolDefinition problemToolDefinition) {
+		
+		if (problemToolDefinition == null || ! problemToolDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemToolDefinition.class.getSimpleName() + " is not valid");
+		}
+		this.problemToolDefinition = problemToolDefinition;
+	}
+
+
 	/**
 	 * Export Agent class
 	 * @return
@@ -124,29 +131,8 @@ public class MethodType implements Concept {
 		this.agentClassName = agentClass.getName();
 	}
 	
-	/**
-	 * Exports {@link IProblemTool} class
-	 * @return
-	 */
-	public Class<?> exportProblemToolClass() {
-		try {
-			return Class.forName(problemToolClassName);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
-	}
-	/**
-	 * Imports {@link IProblemTool} class
-	 * @param problemToolClass
-	 */
-	private void importProblemToolClass(Class<?> problemToolClass) {
-		if (problemToolClass == null) {
-			throw new IllegalArgumentException("Argument " +
-					Class.class.getSimpleName() + " is not valid");
-		}
-		this.problemToolClassName = problemToolClass.getName();
-	}
 	
+
 	/**
 	 * Exports {@link InputMethodDescription} of this {@link MethodType}
 	 * @return
@@ -154,9 +140,11 @@ public class MethodType implements Concept {
 	public InputMethodDescription exportInputMethodDescription() {
 	
 		InputAgentConfiguration configuration = new InputAgentConfiguration(
-				exportAgentClass().getSimpleName(), exportAgentClass(), getArguments());
+				exportAgentClass().getSimpleName(), exportAgentClass(),
+				getArguments());
 		
-		return new InputMethodDescription(configuration, exportProblemToolClass());
+		return new InputMethodDescription(configuration,
+				getProblemToolDefinition().deepClone());
 	}
 	
 	/**
@@ -167,13 +155,29 @@ public class MethodType implements Concept {
 		if (exportAgentClass() == null) {
 			return false;
 		}
-		if (exportProblemToolClass() == null) {
+		if (getProblemToolDefinition() == null ||
+				! getProblemToolDefinition().valid(logger)) {
 			return false;
 		}
 		if (getArguments() == null || ! getArguments().valid(logger)) {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Test same Method type
+	 * @param other
+	 * @return
+	 */
+	public boolean equalsMetodType(MethodType methodType) {
+		
+	    Class<?> agentClass = methodType.exportAgentClass();
+	    Class<?> problemToolClass = 
+	    		methodType.getProblemToolDefinition().exportProblemToolClass(new TrashLogger());
+	    
+		return exportAgentClass() == agentClass &&
+				getProblemToolDefinition().exportProblemToolClass(new TrashLogger()) == problemToolClass;
 	}
 	
 	public boolean equals(Object other) {
@@ -187,7 +191,7 @@ public class MethodType implements Concept {
 	    boolean areAgentClassEqual =
 	    		exportAgentClass() == methodType.exportAgentClass();
 	    boolean areProblemToolEqual =
-	    		exportProblemToolClass() == methodType.exportProblemToolClass();
+	    		getProblemToolDefinition().equals(methodType.getProblemToolDefinition());
 	    boolean areArgumentsEqual =
 	    		getArguments().equals(methodType.getArguments());
 	    
@@ -202,8 +206,8 @@ public class MethodType implements Concept {
 	@Override
 	public String toString() {
 		
-		return agentClassName + problemToolClassName +
-			arguments.toString();
+		return agentClassName + arguments.toString() +
+				problemToolDefinition.toString();
 	}
 
 	/**
@@ -216,15 +220,15 @@ public class MethodType implements Concept {
 			boolean legendContainsArguments) {
 		
 		String eString = exportAgentClass().getSimpleName();
-		
-		if (legendContainsProblemTools) {
-			eString += "-" + exportProblemToolClass().getSimpleName();
-		}
-		
+				
 		if (legendContainsArguments) {
 			eString += "-" + arguments.toString();
 		}
 
+		if (legendContainsProblemTools) {
+			eString += "-" + getProblemToolDefinition().toString();
+		}
+		
 		return eString;
 	}
 	

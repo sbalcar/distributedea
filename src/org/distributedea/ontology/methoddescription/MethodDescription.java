@@ -16,7 +16,8 @@ import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.problemtools.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -44,7 +45,7 @@ public class MethodDescription implements Concept {
 	/**
 	 * Problem Tool to use for solving Problem 
 	 */
-	private String problemToolClass;
+	private ProblemToolDefinition problemToolDefinition;
 
 	
 	
@@ -57,7 +58,7 @@ public class MethodDescription implements Concept {
 	 * @param problemToolClass
 	 */
 	public MethodDescription(AgentConfiguration agentConfiguration,
-			IProblem problem, Class<?> problemToolClass) {
+			IProblem problem, ProblemToolDefinition problemToolDefinition) {
 		if (agentConfiguration == null ||
 				! agentConfiguration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
@@ -66,7 +67,7 @@ public class MethodDescription implements Concept {
 	
 		setAgentConfiguration(agentConfiguration);
 		setProblem(problem);
-		importProblemToolClass(problemToolClass);
+		setProblemToolDefinition(problemToolDefinition);
 	}
 
 	/**
@@ -84,13 +85,12 @@ public class MethodDescription implements Concept {
 				methodDescription.getAgentConfiguration().deepClone();
 		IProblem problemClone =
 				methodDescription.getProblem().deepClone();
-		Class<?> problemToolClassClone =
-				methodDescription.exportProblemToolClass();
+		ProblemToolDefinition problemToolClone =
+				methodDescription.getProblemToolDefinition().deepClone();
 		
 		setAgentConfiguration(agentConfigurationClone);
 		setProblem(problemClone);
-		importProblemToolClass(problemToolClassClone);
-
+		setProblemToolDefinition(problemToolClone);
 	}
 	
 	public AgentConfiguration getAgentConfiguration() {
@@ -116,15 +116,18 @@ public class MethodDescription implements Concept {
 		this.problem = problem;
 	}
 	
-	public String getProblemToolClass() {
-		return problemToolClass;
+
+	public ProblemToolDefinition getProblemToolDefinition() {
+		return problemToolDefinition;
 	}
 	@Deprecated
-	public void setProblemToolClass(String problemToolClass) {
-		if (problemToolClass == null) {
-			throw new IllegalArgumentException();
+	public void setProblemToolDefinition(ProblemToolDefinition problemToolDefinition) {
+		if (problemToolDefinition == null ||
+				! problemToolDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemToolDefinition.class.getSimpleName() + " is not vlid");
 		}
-		this.problemToolClass = problemToolClass;
+		this.problemToolDefinition = problemToolDefinition;
 	}
 
 	/**
@@ -133,25 +136,6 @@ public class MethodDescription implements Concept {
 	 */
 	public Class<?> exportAgentClass() {
 		return agentConfiguration.exportAgentClass();
-	}
-	
-	/**
-	 * Export {@link IProblemTool} class
-	 * @return
-	 */
-	public Class<?> exportProblemToolClass() {
-		try {
-			return Class.forName(problemToolClass);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
-	}
-	/**
-	 * Import {@link IProblemTool} class
-	 * @param problemToolClass
-	 */
-	public void importProblemToolClass(Class<?> problemToolClass) {
-		this.problemToolClass = problemToolClass.getName();
 	}
 	
 	/**
@@ -168,10 +152,8 @@ public class MethodDescription implements Concept {
 	 * @return
 	 */
 	public String exportMethodName() {
-		
-		 String problemToolClassName = exportProblemToolClass().getSimpleName();
-		 
-		 return agentConfiguration.exportAgentname() + "-" + problemToolClassName;
+				 
+		 return agentConfiguration.exportAgentname() + "-" + getProblemToolDefinition().toString();
 	}
 
 	/**
@@ -181,11 +163,9 @@ public class MethodDescription implements Concept {
 	public MethodType exportMethodType() {
 		
 		Class<?> agentClass = getAgentConfiguration().exportAgentClass();
-		Class<?> problemToolClass = exportProblemToolClass();
+		Arguments arguments = getAgentConfiguration().getArguments();
 		
-		Arguments arguments = agentConfiguration.getArguments();
-		
-		return new MethodType(agentClass, problemToolClass, arguments);
+		return new MethodType(agentClass, getProblemToolDefinition(), arguments);
 	}
 	
 	/**
@@ -201,7 +181,7 @@ public class MethodDescription implements Concept {
 				getAgentConfiguration().exportInputAgentConfiguration();
 		
 		return new InputMethodDescription(inputAgentConfClone,
-				exportProblemToolClass());
+				getProblemToolDefinition());
 	}
 	
 	/**
@@ -212,10 +192,32 @@ public class MethodDescription implements Concept {
 		if (agentConfiguration == null || ! agentConfiguration.valid(logger)) {
 			return false;
 		}
-		if (exportProblemToolClass() == null) {
+		if (getProblemToolDefinition() == null || ! getProblemToolDefinition().valid(logger)) {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Test same method type
+	 * @param other
+	 * @return
+	 */
+	public boolean equalsMetodTyppe(Object other) {
+		
+	    if (!(other instanceof MethodDescription)) {
+	        return false;
+	    }
+	    
+	    MethodDescription adOuther = (MethodDescription)other;
+	    
+	    Class<?> agentClass =
+	    		adOuther.getAgentConfiguration().exportAgentClass();
+	    Class<?> problemToolClass =
+	    		adOuther.getProblemToolDefinition().exportProblemToolClass(new TrashLogger());
+	    
+	    return getAgentConfiguration().exportAgentClass() == agentClass &&
+	    		getProblemToolDefinition().exportProblemToolClass(new TrashLogger()) == problemToolClass;
 	}
 	
 	@Override
@@ -230,7 +232,7 @@ public class MethodDescription implements Concept {
 	    boolean areAgentagentConfigurationsEqual =
 	    		this.getAgentConfiguration().equals(adOuther.getAgentConfiguration());
 	    boolean areProblemToolClassesEqual =
-	    		this.getProblemToolClass().equals(adOuther.getProblemToolClass());
+	    		this.getProblemToolDefinition().equals(adOuther.getProblemToolDefinition());
 	    
 	    return areAgentagentConfigurationsEqual && 
 	    		areProblemToolClassesEqual;
@@ -244,11 +246,17 @@ public class MethodDescription implements Concept {
 	@Override
 	public String toString() {
 		
-		if (agentConfiguration == null) {
-			return "null" + problemToolClass;
-		} else {
-			return agentConfiguration.toString() + problemToolClass;
+		String agentConfigurationStr = "null";
+		if (getAgentConfiguration() != null) {
+			agentConfigurationStr = getAgentConfiguration().toString();
 		}
+
+		String problemToolDefStr = "null";
+		if (getProblemToolDefinition() != null) {
+			problemToolDefStr = getProblemToolDefinition().toString();
+		}
+		
+		return agentConfigurationStr + "-" + problemToolDefStr;
 	}
 	
 	/**

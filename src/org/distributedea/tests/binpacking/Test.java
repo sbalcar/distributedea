@@ -13,8 +13,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
-import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
+import org.distributedea.problemtools.ProblemTool;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
 
 public class Test {
 

@@ -1,18 +1,23 @@
 package org.distributedea.ontology.job;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import jade.content.Concept;
 
+import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
-import org.distributedea.ontology.method.IMethods;
+import org.distributedea.ontology.method.Methods;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.ontology.problemwrapper.ProblemStruct;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 /**
  * Ontology represents one run of {@link Job}
@@ -31,7 +36,7 @@ public class JobRun implements Concept {
 	/**
 	 * Methods
 	 */
-	private IMethods methods;
+	private Methods methods;
 	
 	/**
 	 * Inform about type of Problem to solve
@@ -44,14 +49,9 @@ public class JobRun implements Concept {
 	private IDatasetDescription datasetDescription;
 
 	/**
-	 * Dataset
-	 */
-	private Dataset dataset;
-
-	/**
 	 * Specify about type of {@link Pedigree}
 	 */
-	private String pedigreeOfIndividualClassName;
+	private PedigreeDefinition pedigreeDefinition;
 
 	
 
@@ -72,19 +72,17 @@ public class JobRun implements Concept {
 		}
 		
 		JobID jobIDClone = jobRun.getJobID().deepClone();
-		IMethods methodsClone =
+		Methods methodsClone =
 				jobRun.getMethods().deepClone();
 		IProblem problemClone =
 				jobRun.getProblem().deepClone();
-		Dataset datasetClone =
-				jobRun.getDataset().deepClone();
+		PedigreeDefinition pedigreeDefinitionClone =
+				jobRun.getPedigreeDefinition();
 		
 		setJobID(jobIDClone);
 		setMethods(methodsClone);
 		setProblem(problemClone);
-		setDataset(datasetClone);
-		setPedigreeOfIndividualClassName(
-				jobRun.getPedigreeOfIndividualClassName());
+		setPedigreeDefinition(pedigreeDefinitionClone);
 		
 	}
 	
@@ -104,13 +102,13 @@ public class JobRun implements Concept {
 	}
 	
 	
-	public IMethods getMethods() {
+	public Methods getMethods() {
 		return methods;
 	}
-	public void setMethods(IMethods methods) {
+	public void setMethods(Methods methods) {
 		if (methods == null || ! methods.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					IMethods.class.getSimpleName() + " is not valid");
+					Methods.class.getSimpleName() + " is not valid");
 		}
 		this.methods = methods;
 	}
@@ -145,82 +143,62 @@ public class JobRun implements Concept {
 		}
 		this.datasetDescription = datasetDescription;
 	}
+	
 
-	/**
-	 * Returns {@link Problem} to solve
-	 * @return
-	 */
-	public Dataset getDataset() {
-		return dataset;
+	
+	public PedigreeDefinition getPedigreeDefinition() {
+		return pedigreeDefinition;
 	}
-	public void setDataset(Dataset dataset) {
-		if (dataset == null || ! dataset.valid(new TrashLogger())) {
+
+	public void setPedigreeDefinition(PedigreeDefinition pedigreeDefinition) {
+		if (pedigreeDefinition == null || ! pedigreeDefinition.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Dataset.class.getSimpleName() + " is not valid");
+					PedigreeDefinition.class.getSimpleName() + " is not valid");
 		}
-		this.dataset = dataset;
-	}
-	
-	@Deprecated	
-	public String getPedigreeOfIndividualClassName() {
-		return pedigreeOfIndividualClassName;
-	}
-	@Deprecated
-	public void setPedigreeOfIndividualClassName(String hisotyOfIndividualClassName) {
-		this.pedigreeOfIndividualClassName = hisotyOfIndividualClassName;
+		this.pedigreeDefinition = pedigreeDefinition;
 	}
 
-	/**
-	 * Exports {@link IProblemTool} class
-	 * @param logger
-	 * @return
-	 */
-	public Class<?> exportPedigreeOfIndividual(IAgentLogger logger) {
+
+	public ProblemWrapper exportProblemWrapper(ProblemToolDefinition problemToolDef) {
+				
+		ProblemWrapper problemWrp = new ProblemWrapper();
+		problemWrp.setJobID(getJobID().deepClone());
+		problemWrp.setProblem(getProblem().deepClone());
+		problemWrp.setProblemToolDefinition(problemToolDef);
+		problemWrp.setDatasetDescription(getDatasetDescription().deepClone());
+		problemWrp.setPedigreeDefinition(getPedigreeDefinition().deepClone());
 		
-		try {
-			return Class.forName(pedigreeOfIndividualClassName);
-		} catch (Exception e) {
-		}
-		return null;
+		return problemWrp;
 	}
-	/**
-	 * Import {@link IProblemTool} class
-	 * @param problemToSolve
-	 */
-	public void importPedigreeOfIndividualClassName(Class<?> pedigreeOfIndividual) {
+
+	public Pair<InputMethodDescription,ProblemWrapper> exportProblemWrapper(int problemIndex) {
 		
-		if (pedigreeOfIndividual == null) {
-			this.pedigreeOfIndividualClassName = null;
-			return;
-		}
-		this.pedigreeOfIndividualClassName = pedigreeOfIndividual.getName();
+		InputMethodDescription methodI = getMethods().get(problemIndex);
+		
+		ProblemWrapper problemWrp = new ProblemWrapper();
+		problemWrp.setJobID(getJobID().deepClone());
+		problemWrp.setProblem(getProblem().deepClone());
+		problemWrp.setProblemToolDefinition(
+				methodI.getProblemToolDefinition().deepClone());
+		problemWrp.setDatasetDescription(getDatasetDescription().deepClone());
+		problemWrp.setPedigreeDefinition(getPedigreeDefinition().deepClone());
+		
+		return new Pair<InputMethodDescription,ProblemWrapper>(methodI, problemWrp);
 	}
 	
-	/**
-	 * Exports the {@link JobRun} as {@link ProblemStruct} which
-	 * contains ProblemTool in argument
-	 * @param problemToolClass
-	 * @return
-	 */
-	public ProblemStruct exportProblemStruct(Class<?> problemToolClass) {
+	public List<Pair<InputMethodDescription,ProblemWrapper>> exportProblemWrappers() {
 		
-		JobID jobIDClone = getJobID().deepClone();
+		List<Pair<InputMethodDescription,ProblemWrapper>> prbWrpsList =
+				new ArrayList<Pair<InputMethodDescription,ProblemWrapper>>();
 		
-		IProblem problemClone = getProblem().deepClone();
-		Dataset datasetClone = getDataset().deepClone();
-		IDatasetDescription datasetDescrClone =
-				getDatasetDescription().deepClone();
+		for (int metodIndex = 0; metodIndex < getMethods().size(); metodIndex++) {
+			
+			prbWrpsList.add(exportProblemWrapper(metodIndex));
+		}
 		
-		ProblemStruct problemStruct = new ProblemStruct();
-		problemStruct.setJobID(jobIDClone);
-		problemStruct.setProblem(problemClone);
-		problemStruct.setDatasetDescription(datasetDescrClone);
-		problemStruct.setDataset(datasetClone);
-		problemStruct.importProblemToolClass(problemToolClass);
-		problemStruct.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(new TrashLogger()));
-		
-		return problemStruct;
+		return prbWrpsList;
 	}
+	
 	
 	/**
 	 * Tests validation of {@link JobRun}
@@ -235,15 +213,15 @@ public class JobRun implements Concept {
 		}
 		
 		if (methods == null || ! methods.valid(logger)) {
-			logger.log(Level.WARNING, IMethods.class.getSimpleName() + " are not valid");
+			logger.log(Level.WARNING, Methods.class.getSimpleName() + " are not valid");
 			return false;
 		}
 		
-		if (dataset == null || ! dataset.valid(logger)) {
-			logger.log(Level.WARNING, Dataset.class.getSimpleName() + " is not valid");
+		if (pedigreeDefinition == null || ! pedigreeDefinition.valid(logger)) {
+			logger.log(Level.WARNING, PedigreeDefinition.class.getSimpleName() + " is not valid");
 			return false;
 		}
-				
+		
 		return true;
 	}
 	

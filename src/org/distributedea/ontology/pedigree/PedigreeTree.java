@@ -29,7 +29,9 @@ public class PedigreeTree extends Pedigree {
 
 	
 	@Deprecated
-	public PedigreeTree() {} // Only for Jade
+	public PedigreeTree() { // Only for Jade
+		super(null, null);
+	}
 	
 	/**
 	 * Constructor
@@ -37,6 +39,7 @@ public class PedigreeTree extends Pedigree {
 	 * @param tree
 	 */
 	public PedigreeTree(MethodDescriptionNumbers numbers, PedVertex tree) {
+		super(null, null);
 		if (numbers == null) {
 			throw new IllegalArgumentException("Argument " +
 					MethodDescriptionNumbers.class.getSimpleName() + "is not valid");
@@ -50,6 +53,7 @@ public class PedigreeTree extends Pedigree {
 	}	
 	
 	PedigreeTree(PedigreeParameters pedParams) {
+		super(null, null);
 		this.numbers = new MethodDescriptionNumbers();
 		int methodID = this.numbers.addMethodDescriptionWithUniqueNumber(
 				pedParams.methodDescription);
@@ -57,6 +61,7 @@ public class PedigreeTree extends Pedigree {
 	}
 	
 	PedigreeTree(List<Pedigree> pedigrees, PedigreeParameters pedParams) {
+		super(null, null);
 		if (pedigrees == null || pedigrees.isEmpty() || pedigrees.size() > 3) {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");
@@ -86,6 +91,7 @@ public class PedigreeTree extends Pedigree {
 	 * @param pedigreeTree
 	 */
 	public PedigreeTree(PedigreeTree pedigreeTree) {
+		super(null, null);
 		if (pedigreeTree == null || ! pedigreeTree.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					PedigreeTree.class.getSimpleName() + "is not valid");			

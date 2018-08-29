@@ -18,7 +18,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.problem.AProblem;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.problemtools.IProblemTool;
 
 /**
  * Internal data structure for {@link Agent_Monitor}.

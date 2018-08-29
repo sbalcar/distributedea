@@ -7,19 +7,19 @@ import org.distributedea.agents.systemagents.Agent_CentralManager;
 import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
-import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
-import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
-import org.distributedea.ontology.problemwrapper.ProblemStruct;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
@@ -32,12 +32,9 @@ public class PlannerDummy implements IPlanner {
 	
 	int NODE_INDEX = 0;
 	
-	/** index on the method in the list of methods (configuration/methods.xml) */
-	int COMPUTING_AGENT_INDEX = 1;
-	
-	/** index on the Problem Tool in the list of tolls */
-	int PROBLEM_TOOL_INDEX = 0;
-	
+	/** index on the method in the list of methods */
+	int COMPUTING_METHOD_INDEX = 0;
+		
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
 			Iteration iteration, JobRun jobRun, IslandModelConfiguration configuration,
@@ -54,43 +51,32 @@ public class PlannerDummy implements IPlanner {
 			throw new IllegalStateException("Manager agent to create Computing Agent not available");
 		}
 		
+		InputMethodDescription methodI = jobRun.getMethods().get(COMPUTING_METHOD_INDEX);
+		InputAgentConfiguration inputAgentConfI = methodI.getInputAgentConfiguration();
+	
+		ProblemToolDefinition problemToolI = methodI.getProblemToolDefinition();
+		ProblemWrapper problemStructI = jobRun.exportProblemWrapper(problemToolI);
 
-		InputAgentConfigurations configurations = jobRun.getMethods().exportInputAgentConfigurations();
-		
-		// chooses agent configuration
-		InputAgentConfiguration agentConfiguration;
-		try {
-			agentConfiguration = configurations.getAgentConfigurations().get(COMPUTING_AGENT_INDEX);
-		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new IllegalStateException("Computing agent Configuration not available");
-		}
 		
 		AgentConfiguration createdAgent = ManagerAgentService.sendCreateAgent(
-				centralManager, managerAidI, agentConfiguration, logger);
+				centralManager, managerAidI, inputAgentConfI, logger);
 		
-		
-		
-		// chooses ProblemTool
-		ProblemTools problemTools = jobRun.getMethods().exportProblemTools();
-		Class<?> problemToolI = problemTools.getProblemTools().get(PROBLEM_TOOL_INDEX);
-		
+			
 		// assumes the existence of only one Computing Agent
 		AID [] aidComputingAgents = centralManager.searchDF(
 				Agent_ComputingAgent.class.getName());
-		
+
 		AID computingAgent = aidComputingAgents[0];
 		
-		ProblemStruct problemStruct = jobRun.exportProblemStruct(problemToolI);
-		
 		boolean startOK = ComputingAgentService.sendStartComputing(centralManager,
-				computingAgent, problemStruct, configuration, logger);
+				computingAgent, problemStructI, configuration, logger);
 		if (! startOK) {
 			centralManager.exit();
 		}
 
+		
 		MethodDescription createdDescription = new MethodDescription(
 				createdAgent, jobRun.getProblem(), problemToolI);
-		
 		return new Plan(iteration, createdDescription);
 	}
 

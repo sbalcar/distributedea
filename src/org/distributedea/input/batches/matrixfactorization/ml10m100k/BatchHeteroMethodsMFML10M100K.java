@@ -6,7 +6,6 @@ import org.distributedea.agents.computingagents.Agent_BruteForce;
 import org.distributedea.agents.computingagents.Agent_DifferentialEvolution;
 import org.distributedea.agents.computingagents.Agent_Evolution;
 import org.distributedea.agents.computingagents.Agent_HillClimbing;
-import org.distributedea.agents.computingagents.Agent_RandomSearch;
 import org.distributedea.agents.computingagents.Agent_SimulatedAnnealing;
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerAgentInfo;
@@ -44,9 +43,9 @@ import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
-import org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow;
-import org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInMatrix;
-import org.distributedea.problems.matrixfactorization.ProblemToolMFContentBased;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.problemtools.matrixfactorization.ProblemToolMFContentBased;
 
 public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 
@@ -63,13 +62,6 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		InputAgentConfigurations inputAgentConfsOrig = methodsOrig.exportInputAgentConfigurations();
 
 		InputAgentConfiguration iaConfHillClimbing = inputAgentConfsOrig.exportFirst(Agent_HillClimbing.class);
-		@SuppressWarnings("unused")
-		InputAgentConfiguration iaConfRandomSearch = inputAgentConfsOrig.exportFirst(Agent_RandomSearch.class);
-		InputAgentConfiguration iaConfEvolution = inputAgentConfsOrig.exportFirst(Agent_Evolution.class);
-		InputAgentConfiguration iaConfBruteForce = inputAgentConfsOrig.exportFirst(Agent_BruteForce.class);
-		InputAgentConfiguration iaConfTabuSearch = inputAgentConfsOrig.exportFirst(Agent_TabuSearch.class);
-		InputAgentConfiguration iaConfSimAnnealing = inputAgentConfsOrig.exportFirst(Agent_SimulatedAnnealing.class);
-		InputAgentConfiguration iaConfDiffEvolution = inputAgentConfsOrig.exportFirst(Agent_DifferentialEvolution.class);
 		
 		Job job0 = jobI.deepClone();
 		job0.setJobID("withoutReplanning1xAll");
@@ -82,15 +74,15 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		job0b.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
 		Methods methods0b = new Methods();
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
-		//methods0b.addInputMethodDescr(new InputMethodDescription(iaConfRandomSearch.deepClone(), ProblemToolMFColaborative.class));
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfEvolution.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfBruteForce.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));		
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfTabuSearch.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfSimAnnealing.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfDiffEvolution.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
+		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_HillClimbing.class));
+		//methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_RandomSearch.class));
+		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_Evolution.class));
+		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_BruteForce.class));
+		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_TabuSearch.class));
+		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_SimulatedAnnealing.class));
+		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_DifferentialEvolution.class));
 		
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), ProblemToolMFContentBased.class));
+		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), new ProblemToolDefinition(new ProblemToolMFContentBased())));
 		job0b.setMethods(methods0b);
 		
 		
@@ -100,15 +92,15 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		job0c.setPlanner(new PlannerInitialisationRunEachMethodOnce());
 		
 		Methods methods0c = new Methods();
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), ProblemToolMFColaborative1RandomInMatrix.class));
-		//methods0b.addInputMethodDescr(new InputMethodDescription(iaConfRandomSearch.deepClone(), ProblemToolMFColaborative.class));
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfEvolution.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfBruteForce.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));		
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfTabuSearch.deepClone(), ProblemToolMFColaborative1RandomInMatrix.class));
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfSimAnnealing.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfDiffEvolution.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class));
+		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_HillClimbing.class));
+		//methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_RandomSearch.class));
+		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_Evolution.class));
+		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_BruteForce.class));
+		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_TabuSearch.class));
+		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_SimulatedAnnealing.class));
+		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_DifferentialEvolution.class));
 		
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), ProblemToolMFContentBased.class));
+		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), new ProblemToolDefinition(new ProblemToolMFContentBased())));
 		job0c.setMethods(methods0c);
 		
 		
@@ -181,7 +173,7 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		job12_.setJobID("thePedigree");
 		job12_.setDescription("The Pedigree");
 		job12_.setPlanner(new PlannerThePedigree());
-		job12_.importPedigreeOfIndividualClassName(PedigreeCounter.class);
+		job12_.setPedigreeDefinition(new PedigreeDefinition(PedigreeCounter.class));
 		
 		
 		Job job13 = jobI.deepClone();
@@ -189,9 +181,9 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		job13.setDescription("Only initialization 15x Hillclimbing and 1x Tabu search");
 		
 		Methods methods13 = new Methods();
-		methods13.addInputMethodDescriptions(new InputMethodDescription(iaConfHillClimbing.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class), 15);
-		methods13.addInputMethodDescriptions(new InputMethodDescription(iaConfTabuSearch.deepClone(), ProblemToolMFColaborative1RandomInEachRow.class), 1);
-
+		methods13.addInputMethodDescriptions(methodsOrig.exportFirstInputMethodDescription(Agent_HillClimbing.class), 15);
+		methods13.addInputMethodDescriptions(methodsOrig.exportFirstInputMethodDescription(Agent_TabuSearch.class), 1);
+		
 		job13.setPlanner(new PlannerInitialisationConcretePlan(methods13));
 
 

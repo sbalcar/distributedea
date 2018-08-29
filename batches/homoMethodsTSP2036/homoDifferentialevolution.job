@@ -6,25 +6,32 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/djb2036.tsp</datasetFileName>
   </datasetDescription>
-  <methods class="methods">
-    <inputMethodDescriptions>
-      <inputMethodDescription>
-        <inputAgentConfiguration>
-          <agentName>Agent_DifferentialEvolution</agentName>
-          <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
-          <arguments>
-            <arguments class="java.util.Arrays$ArrayList">
-              <a class="argument-array">
-                <argument>
-                  <name>popSize</name>
-                  <value>50</value>
-                </argument>
-              </a>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_DifferentialEvolution</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>popSize</name>
+                    <value>50</value>
+                  </argument>
+                </a>
+              </arguments>
             </arguments>
-          </arguments>
-        </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
-      </inputMethodDescription>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
     </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
@@ -41,4 +48,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

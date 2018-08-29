@@ -44,7 +44,6 @@ import org.distributedea.ontology.islandmodel.AIDs;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.management.ReadyToBeKilled;
 import org.distributedea.ontology.management.PrepareYourselfToKill;
-import org.distributedea.ontology.problemwrapper.ProblemStruct;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 
 
@@ -221,7 +220,7 @@ public class ComputingAgentService {
 	 * @return
 	 */
 	public static boolean sendStartComputing(Agent_DistributedEA agent,
-			AID computingAgentAID, ProblemStruct problemStruct,
+			AID computingAgentAID, ProblemWrapper problemWrp,
 			IslandModelConfiguration islandModelConf, IAgentLogger logger) {
 		
 		if (agent == null) {
@@ -232,9 +231,9 @@ public class ComputingAgentService {
 			throw new IllegalArgumentException("Argument " +
 					AID.class.getName() + "can't be null");
 		}
-		if (problemStruct == null || ! problemStruct.valid(logger)) {
+		if (problemWrp == null || ! problemWrp.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
-					ProblemStruct.class.getSimpleName() + " is not valid");
+					ProblemWrapper.class.getSimpleName() + " is not valid");
 		}
 		if (islandModelConf == null || ! islandModelConf.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
@@ -253,10 +252,6 @@ public class ComputingAgentService {
 		msgStartComputing.setLanguage(agent.getCodec().getName());
 		msgStartComputing.setOntology(ontology.getName());
 		
-		ProblemWrapper problemWrp = problemStruct.exportProblemWrapper();
-		if (problemWrp == null) {
-			return false;
-		}
 		
 		StartComputing startComputing = new StartComputing(
 				problemWrp, islandModelConf);

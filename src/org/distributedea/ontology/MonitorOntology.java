@@ -25,8 +25,10 @@ import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.ILatFactDefinition;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 
 
 public class MonitorOntology extends BeanOntology {
@@ -39,6 +41,9 @@ public class MonitorOntology extends BeanOntology {
         try {
         	add(StartMonitoring.class);
             add(JobID.class);
+            
+            add(ProblemToolDefinition.class);
+            
             add(IProblem.class.getPackage().getName());
             add(ILatFactDefinition.class.getPackage().getName());
             add(IDatasetDescription.class.getPackage().getName());
@@ -52,6 +57,7 @@ public class MonitorOntology extends BeanOntology {
             
             add(LatentFactor.class.getPackage().getName());
             
+            add(PedigreeDefinition.class.getPackage().getName());
             add(Pedigree.class.getPackage().getName());
             add(PedVertexFull.class.getPackage().getName());
             add(PedVertex.class.getPackage().getName());

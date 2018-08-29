@@ -1,5 +1,8 @@
 package org.distributedea.ontology.individuals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
@@ -90,6 +93,17 @@ public class IndividualLatentFactors extends Individual {
 				getLatentFactorX().exportLatentFactorVector(itemIDIndex);
 		
 		return latFactVectorY.exportScalarProduct(latFactVectorX);
+	}
+	
+	
+	public List<Double> exportValues(int userIDIndex, List<Integer> itemIDIndexes) {
+		
+		List<Double> values = new ArrayList<>(); 
+		for (int itemIDIndex : itemIDIndexes) {
+			values.add(exportValue(userIDIndex, itemIDIndex));
+		}
+		
+		return values;
 	}
 	
 	@Override

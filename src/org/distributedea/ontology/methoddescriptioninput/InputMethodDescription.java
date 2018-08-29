@@ -7,7 +7,7 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.methodtype.MethodType;
-import org.distributedea.problems.IProblemTool;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 
 
 /**
@@ -27,7 +27,7 @@ public class InputMethodDescription implements Concept {
 	/**
 	 * Problem Tool to use for solving Problem 
 	 */
-	private String problemToolClass;
+	private ProblemToolDefinition problemToolDefinition;
 
 	
 	
@@ -40,15 +40,43 @@ public class InputMethodDescription implements Concept {
 	 * @param problemToolClass
 	 */
 	public InputMethodDescription(InputAgentConfiguration agentConfiguration,
-			Class<?> problemToolClass) {
+			ProblemToolDefinition problemToolDef) {
 		if (agentConfiguration == null ||
 				! agentConfiguration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					InputAgentConfiguration.class.getSimpleName() + " can not be null");
+		}
+		if (problemToolDef == null ||
+				! problemToolDef.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemToolDefinition.class.getSimpleName() + " can not be null");
 		}
 	
-		this.inputAgentConfiguration = agentConfiguration;
-		this.importProblemToolClass(problemToolClass);
+		setInputAgentConfiguration(agentConfiguration);
+		setProblemToolDefinition(problemToolDef);
 	}
+	
+	/**
+	 * Copy constructor
+	 * @param inputMethodDesc
+	 */
+	public InputMethodDescription(InputMethodDescription inputMethodDesc) {
+		if (inputMethodDesc == null ||
+				! inputMethodDesc.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputMethodDescription.class.getSimpleName() + " can not be null");
+		}
+		
+		InputAgentConfiguration inputAgentConfClone =
+				inputMethodDesc.getInputAgentConfiguration().deepClone();
+		
+		ProblemToolDefinition problemToolDefClone =
+				inputMethodDesc.getProblemToolDefinition().deepClone();
+		
+		this.setInputAgentConfiguration(inputAgentConfClone);
+		this.setProblemToolDefinition(problemToolDefClone);
+	}
+	
 
 	public InputAgentConfiguration getInputAgentConfiguration() {
 		return inputAgentConfiguration;
@@ -61,18 +89,17 @@ public class InputMethodDescription implements Concept {
 		}
 		this.inputAgentConfiguration = agentConfiguration;
 	}
-	
-	public String getProblemToolClass() {
-		return problemToolClass;
+
+
+	public ProblemToolDefinition getProblemToolDefinition() {
+		return problemToolDefinition;
 	}
 	@Deprecated
-	public void setProblemToolClass(String problemToolClass) {
-		if (problemToolClass == null) {
-			throw new IllegalArgumentException();
-		}
-		this.problemToolClass = problemToolClass;
+	public void setProblemToolDefinition(ProblemToolDefinition problemToolDefinition) {
+		this.problemToolDefinition = problemToolDefinition;
 	}
 
+	
 	/**
 	 * Export Agent class
 	 * @return
@@ -81,24 +108,6 @@ public class InputMethodDescription implements Concept {
 		return inputAgentConfiguration.exportAgentClass();
 	}
 	
-	/**
-	 * Export {@link IProblemTool} class
-	 * @return
-	 */
-	public Class<?> exportProblemToolClass() {
-		try {
-			return Class.forName(problemToolClass);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
-	}
-	/**
-	 * Import {@link IProblemTool} class
-	 * @param problemToolClass
-	 */
-	public void importProblemToolClass(Class<?> problemToolClass) {
-		this.problemToolClass = problemToolClass.getName();
-	}
 	
 	/**
 	 * Export {@link MethodType}
@@ -107,11 +116,9 @@ public class InputMethodDescription implements Concept {
 	public MethodType exportMethodType() {
 		
 		Class<?> agentClass = getInputAgentConfiguration().exportAgentClass();
-		Class<?> problemToolClass = exportProblemToolClass();
-		
 		Arguments arguments = inputAgentConfiguration.getArguments();
 		
-		return new MethodType(agentClass, problemToolClass, arguments);
+		return new MethodType(agentClass, getProblemToolDefinition(), arguments);
 	}
 	
 	/**
@@ -119,10 +126,12 @@ public class InputMethodDescription implements Concept {
 	 * @return
 	 */
 	public boolean valid(IAgentLogger logger) {
-		if (inputAgentConfiguration == null || ! inputAgentConfiguration.valid(logger)) {
+		if (inputAgentConfiguration == null ||
+				! inputAgentConfiguration.valid(logger)) {
 			return false;
 		}
-		if (exportProblemToolClass() == null) {
+		if (getProblemToolDefinition() == null ||
+				! getProblemToolDefinition().valid(logger)) {
 			return false;
 		}
 		return true;
@@ -140,7 +149,7 @@ public class InputMethodDescription implements Concept {
 	    boolean areInputAgentConfigurationEqual =
 	    		this.getInputAgentConfiguration().equals(iadOuther.getInputAgentConfiguration());
 	    boolean areProblemToolClassesEqual =
-	    		this.getProblemToolClass().equals(iadOuther.getProblemToolClass());
+	    		this.getProblemToolDefinition().equals(iadOuther.getProblemToolDefinition());
 	    
 	    if (areInputAgentConfigurationEqual && 
 	    		areProblemToolClassesEqual) {
@@ -158,11 +167,16 @@ public class InputMethodDescription implements Concept {
 	@Override
 	public String toString() {
 		
-		if (inputAgentConfiguration == null) {
-			return "null" + problemToolClass;
-		} else {
-			return inputAgentConfiguration.toString() + problemToolClass;
+		String inputAgentConfStr = "null";
+		if (inputAgentConfiguration != null) {
+			inputAgentConfStr = inputAgentConfiguration.toString();
 		}
+		
+		String problemToolDefStr = "null";
+		if (problemToolDefinition != null) {
+			problemToolDefStr = problemToolDefStr.toString();
+		}
+		return inputAgentConfStr + "-" + problemToolDefStr;
 	}
 	
 	/**
@@ -171,13 +185,6 @@ public class InputMethodDescription implements Concept {
 	 */
 	public InputMethodDescription deepClone() {
 		
-		if (! valid(new TrashLogger())) {
-			return null;
-		}
-		
-		InputAgentConfiguration confClone = inputAgentConfiguration.deepClone();
-		Class<?> problemToolClassClone = this.exportProblemToolClass();
-		
-		return new InputMethodDescription(confClone, problemToolClassClone);
+		return new InputMethodDescription(this);
 	}
 }

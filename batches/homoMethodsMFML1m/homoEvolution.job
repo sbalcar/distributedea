@@ -23,37 +23,44 @@
     <usersContentFileName>inputs/ml-1m/users.dat</usersContentFileName>
     <itemsContentFileName>inputs/ml-1m/movies.dat</itemsContentFileName>
   </datasetDescription>
-  <methods class="methods">
-    <inputMethodDescriptions>
-      <inputMethodDescription>
-        <inputAgentConfiguration>
-          <agentName>Agent_Evolution</agentName>
-          <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
-          <arguments>
-            <arguments class="java.util.Arrays$ArrayList">
-              <a class="argument-array">
-                <argument>
-                  <name>popSize</name>
-                  <value>10</value>
-                </argument>
-                <argument>
-                  <name>mutationRate</name>
-                  <value>0.9</value>
-                </argument>
-                <argument>
-                  <name>crossRate</name>
-                  <value>0.1</value>
-                </argument>
-                <argument>
-                  <name>selector</name>
-                  <value>org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector</value>
-                </argument>
-              </a>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_Evolution</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>popSize</name>
+                    <value>10</value>
+                  </argument>
+                  <argument>
+                    <name>mutationRate</name>
+                    <value>0.9</value>
+                  </argument>
+                  <argument>
+                    <name>crossRate</name>
+                    <value>0.1</value>
+                  </argument>
+                  <argument>
+                    <name>selector</name>
+                    <value>org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector</value>
+                  </argument>
+                </a>
+              </arguments>
             </arguments>
-          </arguments>
-        </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
-      </inputMethodDescription>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
     </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
@@ -70,4 +77,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

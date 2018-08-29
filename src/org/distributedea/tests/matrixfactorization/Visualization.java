@@ -20,7 +20,7 @@ import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingI
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsFullSet;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
 import org.distributedea.tests.matrixfactorization.structures.ClusterSet;
 import org.distributedea.tests.matrixfactorization.structures.ClusterSetList;
 import org.jfree.chart.ChartFactory;

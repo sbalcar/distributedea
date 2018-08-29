@@ -6,9 +6,9 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/xit1083.tsp</datasetFileName>
   </datasetDescription>
-  <methods class="org.distributedea.ontology.method.MethodsTwoSets">
-    <algorithms>
-      <agentConfigurations>
+  <methods>
+    <inputMethodDescriptions>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_HillClimbing</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
@@ -21,6 +21,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_RandomSearch</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
@@ -28,6 +36,14 @@
             <arguments/>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_Evolution</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
@@ -52,6 +68,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_BruteForce</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
@@ -59,6 +83,14 @@
             <arguments/>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_TabuSearch</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
@@ -75,6 +107,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_SimulatedAnnealing</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
@@ -91,6 +131,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_DifferentialEvolution</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
@@ -103,13 +151,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-      </agentConfigurations>
-    </algorithms>
-    <problemTools>
-      <problemTools>
-        <java-class>org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</java-class>
-      </problemTools>
-    </problemTools>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
     <individualDistribution>true</individualDistribution>
@@ -127,5 +176,7 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
-  <pedigreeOfIndividualClassName>org.distributedea.ontology.pedigree.PedigreeCounter</pedigreeOfIndividualClassName>
+  <pedigreeDefinition>
+    <pedigreeOfIndividualClassName>org.distributedea.ontology.pedigree.PedigreeCounter</pedigreeOfIndividualClassName>
+  </pedigreeDefinition>
 </job>

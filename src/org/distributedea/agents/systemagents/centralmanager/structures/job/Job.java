@@ -32,7 +32,6 @@ import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheP
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRandom;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
-import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.arguments.Argument;
@@ -55,10 +54,10 @@ import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingI
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.method.IMethods;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
@@ -70,7 +69,6 @@ import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRangeSpec;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactSet;
-import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -114,7 +112,7 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Defines the methods
 	 */
-	private IMethods methods;
+	private Methods methods;
 	
 	
 	/**
@@ -135,7 +133,7 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Specify about type of {@link Pedigree}
 	 */
-	private String pedigreeOfIndividualClassName;
+	private PedigreeDefinition pedigreeDefinition;
 	
 	
 	
@@ -161,7 +159,7 @@ public class Job implements Concept, Serializable {
 		this.islandModelConfiguration = job.getIslandModelConfiguration().deepClone();
 		this.planner = job.planner;
 		this.plannerEndCondition = job.plannerEndCondition;
-		this.pedigreeOfIndividualClassName = job.getPedigreeOfIndividualClassName();
+		this.setPedigreeDefinition(job.getPedigreeDefinition().deepClone());
 	}
 	
 	public String getJobID() {
@@ -218,13 +216,13 @@ public class Job implements Concept, Serializable {
 	}
 
 
-	public IMethods getMethods() {
+	public Methods getMethods() {
 		return this.methods;
 	}
-	public void setMethods(IMethods methods) {
+	public void setMethods(Methods methods) {
 		if (methods == null || ! methods.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					IMethods.class.getSimpleName() + " is not valid");
+					Methods.class.getSimpleName() + " is not valid");
 		}
 		this.methods = methods;
 	}
@@ -257,7 +255,6 @@ public class Job implements Concept, Serializable {
 	public IPlannerEndCondition getPlannerEndCondition() {
 		return this.plannerEndCondition;
 	}
-	
 	public void setPlannerEndCondition(IPlannerEndCondition plannerEndCondition) {
 		if (plannerEndCondition == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -266,41 +263,18 @@ public class Job implements Concept, Serializable {
 		this.plannerEndCondition = plannerEndCondition;
 	}
 	
-	@Deprecated	
-	public String getPedigreeOfIndividualClassName() {
-		return pedigreeOfIndividualClassName;
+	public PedigreeDefinition getPedigreeDefinition() {
+		return pedigreeDefinition;
 	}
-	@Deprecated
-	public void setPedigreeOfIndividualClassName(String hisotyOfIndividualClassName) {
-		this.pedigreeOfIndividualClassName = hisotyOfIndividualClassName;
+	public void setPedigreeDefinition(PedigreeDefinition pedigreeDefinition) {
+		if (pedigreeDefinition == null ||
+				! pedigreeDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					PedigreeDefinition.class.getSimpleName() + " can not be null");
+		}
+		this.pedigreeDefinition = pedigreeDefinition;
 	}
 
-	/**
-	 * Exports {@link IProblemTool} class
-	 * @param logger
-	 * @return
-	 */
-	public Class<?> exportPedigreeOfIndividual(IAgentLogger logger) {
-		
-		try {
-			return Class.forName(pedigreeOfIndividualClassName);
-		} catch (Exception e) {
-		}
-		return null;
-	}
-	/**
-	 * Import {@link IProblemTool} class
-	 * @param problemToSolve
-	 */
-	public void importPedigreeOfIndividualClassName(Class<?> pedigreeOfIndividual) {
-		
-		if (pedigreeOfIndividual == null) {
-			this.pedigreeOfIndividualClassName = null;
-			return;
-		}
-		this.pedigreeOfIndividualClassName = pedigreeOfIndividual.getName();
-	}
-	
 	/**
 	 * Tests validity
 	 * @return
@@ -351,23 +325,15 @@ public class Job implements Concept, Serializable {
 		if (! valid(logger)) {
 			logger.log(Level.WARNING, "Can not export " + JobRun.class.getSimpleName());
 			return null;
-		}
-		
-		ProblemTools problemTools = methods.exportProblemTools();
-		IProblemTool problemTool = problemTools.exportRandomSelectedProblemTool(logger);
-		
-		IDatasetDescription fileOfProblem = getDatasetDescription();
-		Dataset dataset = problemTool.readDataset(fileOfProblem, getProblem(), logger);
-		
+		}		
 		
 		JobRun jobRun = new JobRun();
 		jobRun.setMethods(methods.deepClone());
 		jobRun.setProblem(problem.deepClone());
 		jobRun.setDatasetDescription(getDatasetDescription().deepClone());
-		jobRun.setDataset(dataset);
 		
 		jobRun.setJobID(new JobID(batchID, jobID, runNumber));
-		jobRun.importPedigreeOfIndividualClassName(exportPedigreeOfIndividual(logger));
+		jobRun.setPedigreeDefinition(getPedigreeDefinition().deepClone());
 
 		// test validity of JobRun
 		if (jobRun.valid(logger)) {

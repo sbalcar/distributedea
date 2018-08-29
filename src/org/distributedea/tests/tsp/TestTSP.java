@@ -10,10 +10,11 @@ import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
-import org.distributedea.problems.tsp.point.permutation.ProblemToolPointSimpleSwap;
+import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
+import org.distributedea.problemtools.tsp.point.permutation.ProblemToolPointSimpleSwap;
 
 public class TestTSP {
 
@@ -115,8 +116,10 @@ public class TestTSP {
 				new DatasetDescription(new File(problemFileName));
 		
 		Dataset dataset = problemTool.readDataset(datasetDescr, null, logger);
+		
 		ProblemWrapper problemWrapper = new ProblemWrapper();
-		problemWrapper.importProblemToolClass(problemTool.getClass());
+		problemWrapper.setProblemToolDefinition(
+				new ProblemToolDefinition(problemTool));
 
 		ProblemTSPGPS problem = new ProblemTSPGPS();
 		

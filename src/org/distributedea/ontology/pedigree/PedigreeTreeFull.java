@@ -28,6 +28,7 @@ public class PedigreeTreeFull extends Pedigree {
 
 	@Deprecated
 	public PedigreeTreeFull() { // only for Jade
+		super(null, null);
 	}
 	
 	/**
@@ -35,6 +36,7 @@ public class PedigreeTreeFull extends Pedigree {
 	 * @param rootOfTree
 	 */
 	public PedigreeTreeFull(PedVertexFull rootOfTree) {
+		super(null, null);
 		if (rootOfTree == null || ! rootOfTree.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					PedigreeTreeFull.class.getSimpleName() + "is not valid");
@@ -43,12 +45,13 @@ public class PedigreeTreeFull extends Pedigree {
 	}
 
 	PedigreeTreeFull(PedigreeParameters parameters) {
-		
+		super(null, null);
 		this.rootOfTree = new PedVertexFull(
 				parameters.methodDescription, new ArrayList<PedVertexFull>());
 	}
 	
 	PedigreeTreeFull(List<Pedigree> pedigrees, PedigreeParameters pedParams) {
+		super(null, null);
 		if (pedigrees == null || pedigrees.isEmpty() || pedigrees.size() > 3) {
 			throw new IllegalArgumentException("Argument " +
 					List.class.getSimpleName() + " is not valid");
@@ -72,6 +75,7 @@ public class PedigreeTreeFull extends Pedigree {
 	 * @param pedigreeTreeFull
 	 */
 	public PedigreeTreeFull(PedigreeTreeFull pedigreeTreeFull) {
+		super(null, null);
 		if (pedigreeTreeFull == null || ! pedigreeTreeFull.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					PedigreeTreeFull.class.getSimpleName() + "is not valid");

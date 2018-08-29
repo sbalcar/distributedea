@@ -3,10 +3,10 @@ package org.distributedea.ontology.method;
 import jade.content.Concept;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.distributedea.agents.systemagents.centralmanager.structures.problemtools.ProblemTools;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
@@ -15,13 +15,15 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.methodtype.MethodType;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolsDefinition;
 
 /**
  * Ontology represents {@link List} of {@link InputMethodDescription} elements.
  * @author stepan
  *
  */
-public class Methods implements IMethods, Concept {
+public class Methods implements Concept {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -43,13 +45,22 @@ public class Methods implements IMethods, Concept {
 	}
 
 	/**
+	 * Constructor
+	 * @param agentDescriptions
+	 */
+	public Methods(InputMethodDescription agentDescription) {
+		importDescriptions(Arrays.asList(agentDescription));
+	}
+
+	
+	/**
 	 * Constructor - Cartesian product of {@link InputAgentConfigurations}
-	 * and {@link ProblemTools}
+	 * and {@link ProblemToolsDefinition}
 	 * @param configurations
 	 * @param problemTools
 	 */
 	public Methods(InputAgentConfigurations configurations,
-			ProblemTools problemTools) {
+			ProblemToolsDefinition problemTools) {
 		
 		if (configurations == null ||
 				! configurations.valid(new TrashLogger())) {
@@ -59,14 +70,14 @@ public class Methods implements IMethods, Concept {
 		if (problemTools == null ||
 				! problemTools.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					ProblemTools.class.getSimpleName() + "is not valid");
+					ProblemToolsDefinition.class.getSimpleName() + "is not valid");
 		}
 		
 		List<InputMethodDescription> descriptions = new ArrayList<>();
 		
 		for (InputAgentConfiguration configurationI : configurations.getAgentConfigurations()) {
 			
-			for (Class<?> problemToolsI : problemTools.getProblemTools()) {
+			for (ProblemToolDefinition problemToolsI : problemTools.getProblemToolsDefinition()) {
 				
 				InputMethodDescription descriptionI =
 						new InputMethodDescription(configurationI, problemToolsI);
@@ -148,6 +159,33 @@ public class Methods implements IMethods, Concept {
 		this.inputMethodDescriptions.add(inputMethodDescr);
 	}
 
+	public void addInputMethodDescrCartesianProduct(InputAgentConfigurations inputAgentConf,
+			ProblemToolsDefinition problemTools) {
+		if (inputAgentConf == null ||
+				! inputAgentConf.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputAgentConfigurations.class.getSimpleName() + " is not valid");			
+		}
+		if (problemTools == null ||
+				! problemTools.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemToolsDefinition.class.getSimpleName() + " is not valid");			
+		}
+		
+		for (InputAgentConfiguration inputAgentConfI :
+			inputAgentConf.getAgentConfigurations()) {
+			
+			for (ProblemToolDefinition problemToolI : problemTools.getProblemToolsDefinition()) {
+				
+				InputMethodDescription descriptionI =
+						new InputMethodDescription(inputAgentConfI, problemToolI);
+				
+				addInputMethodDescr(descriptionI);
+			}			
+		}
+	}
+	
+	
 	private void importDescriptions(List<InputMethodDescription> agentDescriptions) {
 		if (agentDescriptions == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -249,6 +287,18 @@ public class Methods implements IMethods, Concept {
 		return thisClone;
 	}
 	
+	public InputMethodDescription exportFirstInputMethodDescription(Class<?> agentClass) {
+		
+		for (InputMethodDescription inputMethDescrI : this.inputMethodDescriptions) {
+			
+			InputAgentConfiguration inputAgentConfI = inputMethDescrI.getInputAgentConfiguration();
+			if (inputAgentConfI.exportAgentClass() == agentClass) {
+				return inputMethDescrI.deepClone();
+			}
+		}
+		return null;
+	}
+	
 	public List<MethodType> exportMethodTypes() {
 		
 		List<MethodType> methodTypes = new ArrayList<>();
@@ -263,12 +313,10 @@ public class Methods implements IMethods, Concept {
 	}
 
 	
-	@Override
 	public Methods exportInputMethodDescriptions() {
 		return this;
 	}
 
-	@Override
 	public InputAgentConfigurations exportInputAgentConfigurations() {
 		
 		List<InputAgentConfiguration> configurations = new ArrayList<>();
@@ -281,21 +329,20 @@ public class Methods implements IMethods, Concept {
 		
 		return new InputAgentConfigurations(configurations);
 	}
-	@Override
-	public ProblemTools exportProblemTools() {
+	
+	public ProblemToolsDefinition exportProblemTools() {
 		
-		List<Class<?>> probTools = new ArrayList<>();
+		List<ProblemToolDefinition> probTools = new ArrayList<>();
 		
 		for (InputMethodDescription methodI : getInputMethodDescriptions()) {
 			
-			Class<?> probToolI = methodI.exportProblemToolClass();
+			ProblemToolDefinition probToolI = methodI.getProblemToolDefinition();
 			probTools.add(probToolI);
 		}
 		
-		return new ProblemTools(probTools);
+		return new ProblemToolsDefinition(probTools);
 	}
 
-	@Override
 	public InputMethodDescription exportRandomMethodDescription() {
 		if (inputMethodDescriptions.isEmpty()) {
 			return null;

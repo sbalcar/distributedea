@@ -10,9 +10,9 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/bbob.co</datasetFileName>
   </datasetDescription>
-  <methods class="org.distributedea.ontology.method.MethodsTwoSets">
-    <algorithms>
-      <agentConfigurations>
+  <methods>
+    <inputMethodDescriptions>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_HillClimbing</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
@@ -25,6 +25,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_RandomSearch</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_RandomSearch</agentClassName>
@@ -32,6 +40,14 @@
             <arguments/>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_Evolution</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
@@ -56,6 +72,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_BruteForce</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_BruteForce</agentClassName>
@@ -63,6 +87,14 @@
             <arguments/>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_TabuSearch</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
@@ -79,6 +111,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_SimulatedAnnealing</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
@@ -95,6 +135,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+      <inputMethodDescription>
         <inputAgentConfiguration>
           <agentName>Agent_DifferentialEvolution</agentName>
           <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
@@ -107,13 +155,14 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-      </agentConfigurations>
-    </algorithms>
-    <problemTools>
-      <problemTools>
-        <java-class>org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove</java-class>
-      </problemTools>
-    </problemTools>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
+      </inputMethodDescription>
+    </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
     <individualDistribution>true</individualDistribution>
@@ -131,4 +180,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

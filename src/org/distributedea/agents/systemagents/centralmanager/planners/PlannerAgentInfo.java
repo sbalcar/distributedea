@@ -21,12 +21,12 @@ import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.method.Methods;
-import org.distributedea.ontology.method.MethodsTwoSets;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolsDefinition;
 import org.distributedea.services.ComputingAgentService;
 import org.distributedea.services.ManagerAgentService;
 
@@ -68,6 +68,8 @@ public class PlannerAgentInfo implements IPlanner {
 		planner.exit(centralManager, logger);
 		
 		
+		ProblemToolsDefinition problemTools = jobRun.getMethods().exportProblemTools();
+		
 		// initialize one agent per core
 		AgentInfosWrapper exploitationMethodDescriptionsWrapper =
 				knownMethods.exportExploitationAgentInfos();
@@ -76,9 +78,10 @@ public class PlannerAgentInfo implements IPlanner {
 		InputAgentConfigurations agentConfigurations =
 				exploitationAgentConfigurations.exportInputAgentConfigurations();
 		
-		JobRun exploitationJobRun = jobRun.deepClone();
-		exploitationJobRun.setMethods(new MethodsTwoSets(
-				agentConfigurations, jobRun.getMethods().exportProblemTools()).deepClone());
+		Methods methods = new Methods();
+		methods.addInputMethodDescrCartesianProduct(agentConfigurations, problemTools);
+		JobRun exploitationJobRun = jobRun.deepClone();		
+		exploitationJobRun.setMethods(methods);
 		
 		plannerInit = new PlannerInitialisationOneMethodPerCore();
 		return plannerInit.agentInitialisation(centralManager, iteration,
@@ -121,6 +124,8 @@ public class PlannerAgentInfo implements IPlanner {
 				.exportMethodsResults(iteration, history.getJobID());
 		
 		
+		ProblemToolsDefinition problemTools = jobRun.getMethods().exportProblemTools();
+
 		
 		AgentInfosWrapper exploitationMethodInfosWrp =
 				knownMethods.exportExploitationAgentInfos();
@@ -128,11 +133,13 @@ public class PlannerAgentInfo implements IPlanner {
 				exploitationMethodInfosWrp.exportAgentConfigurations();
 		InputAgentConfigurations exploitationInAgentConfs =
 				exploitationAgentConfigurations.exportInputAgentConfigurations();
-		
+
+	
+		Methods methods = new Methods();
+		methods.addInputMethodDescrCartesianProduct(exploitationInAgentConfs, problemTools);
 		JobRun exploitationJobRun = jobRun.deepClone();
-		exploitationJobRun.setMethods(new MethodsTwoSets(
-				exploitationInAgentConfs, jobRun.getMethods().exportProblemTools().deepClone()));
-		
+		exploitationJobRun.setMethods(methods);
+				
 		
 		Methods exploitationMethodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(exploitationJobRun);

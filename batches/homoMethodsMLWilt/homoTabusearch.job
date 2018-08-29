@@ -49,29 +49,36 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/wilt.arff</datasetFileName>
   </datasetDescription>
-  <methods class="methods">
-    <inputMethodDescriptions>
-      <inputMethodDescription>
-        <inputAgentConfiguration>
-          <agentName>Agent_TabuSearch</agentName>
-          <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
-          <arguments>
-            <arguments class="java.util.Arrays$ArrayList">
-              <a class="argument-array">
-                <argument>
-                  <name>tabuModelSize</name>
-                  <value>50</value>
-                </argument>
-                <argument>
-                  <name>numberOfNeighbors</name>
-                  <value>10</value>
-                </argument>
-              </a>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_TabuSearch</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>tabuModelSize</name>
+                    <value>50</value>
+                  </argument>
+                  <argument>
+                    <name>numberOfNeighbors</name>
+                    <value>10</value>
+                  </argument>
+                </a>
+              </arguments>
             </arguments>
-          </arguments>
-        </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.machinelearning.ProblemToolMLRandomMove</problemToolClass>
-      </inputMethodDescription>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
     </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
@@ -88,4 +95,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

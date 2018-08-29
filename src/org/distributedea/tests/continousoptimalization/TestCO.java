@@ -21,12 +21,13 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.problems.IProblemTool;
-import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
-import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException;
-import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
-import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
-import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove;
+import org.distributedea.problemtools.continuousoptimization.bbobv1502.BbobException;
+import org.distributedea.problemtools.continuousoptimization.bbobv1502.BbobTools;
+import org.distributedea.problemtools.continuousoptimization.bbobv1502.IJNIfgeneric;
+import org.distributedea.problemtools.continuousoptimization.bbobv1502.JNIfgeneric;
 
 
 public class TestCO {
@@ -195,13 +196,17 @@ public class TestCO {
 		
 		AgentConfiguration ac1 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
+		ProblemToolDefinition probToolDef1 =
+				new ProblemToolDefinition(new ProblemToolCORandomMove());
 		MethodDescription a1 =
-				new MethodDescription(ac1, problem, ProblemToolCORandomMove.class);
+				new MethodDescription(ac1, problem, probToolDef1);
 		
 		AgentConfiguration ac2 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
+		ProblemToolDefinition probToolDef2 =
+				new ProblemToolDefinition(new ProblemToolCORandomMove());
 		MethodDescription a2 =
-				new MethodDescription(ac2, problem, ProblemToolCORandomMove.class);
+				new MethodDescription(ac2, problem, probToolDef2);
 		
 		map.put(a1, 1);
 		map.put(a2, 2);

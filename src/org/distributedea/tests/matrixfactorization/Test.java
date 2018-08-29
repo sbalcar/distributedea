@@ -11,10 +11,10 @@ import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingI
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolSGDist1RandomMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolSGDist1RandomMF;
 
 public class Test {
 

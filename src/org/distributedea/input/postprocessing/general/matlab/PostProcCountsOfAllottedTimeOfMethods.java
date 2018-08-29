@@ -12,13 +12,13 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.MatlabTool;
 import org.distributedea.input.batches.IInputBatch;
-import org.distributedea.input.batches.tsp.BatchTestTSP;
 import org.distributedea.input.postprocessing.PostProcessing;
 import org.distributedea.input.postprocessing.PostProcessingMatlab;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
+import org.distributedea.tests.batches.BatchTestTSP;
 
 /**
  * PostProcessing compares numbers of {@link Iteration}s which

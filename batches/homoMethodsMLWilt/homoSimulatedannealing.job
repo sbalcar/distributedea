@@ -49,29 +49,36 @@
   <datasetDescription class="datasetDescription">
     <datasetFileName>inputs/wilt.arff</datasetFileName>
   </datasetDescription>
-  <methods class="methods">
-    <inputMethodDescriptions>
-      <inputMethodDescription>
-        <inputAgentConfiguration>
-          <agentName>Agent_SimulatedAnnealing</agentName>
-          <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
-          <arguments>
-            <arguments class="java.util.Arrays$ArrayList">
-              <a class="argument-array">
-                <argument>
-                  <name>temperature</name>
-                  <value>10000</value>
-                </argument>
-                <argument>
-                  <name>coolingRate</name>
-                  <value>0.002</value>
-                </argument>
-              </a>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_SimulatedAnnealing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
+            <arguments>
+              <arguments class="java.util.Arrays$ArrayList">
+                <a class="argument-array">
+                  <argument>
+                    <name>temperature</name>
+                    <value>10000</value>
+                  </argument>
+                  <argument>
+                    <name>coolingRate</name>
+                    <value>0.002</value>
+                  </argument>
+                </a>
+              </arguments>
             </arguments>
-          </arguments>
-        </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.machinelearning.ProblemToolMLRandomMove</problemToolClass>
-      </inputMethodDescription>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
     </inputMethodDescriptions>
   </methods>
   <islandModelConfiguration>
@@ -88,4 +95,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

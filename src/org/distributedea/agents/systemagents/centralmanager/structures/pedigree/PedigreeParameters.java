@@ -1,6 +1,7 @@
 package org.distributedea.agents.systemagents.centralmanager.structures.pedigree;
 
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 
 /**
  * Structure represents Parameters for creating/updating Pedigree
@@ -9,7 +10,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
  */
 public class PedigreeParameters {
 	
-	public Class<?> pedigreeClass;
+	public PedigreeDefinition pedigreeDefinition;
 	public MethodDescription methodDescription;
 
 	/**
@@ -17,9 +18,9 @@ public class PedigreeParameters {
 	 * @param pedigreeClass
 	 * @param methodDescription
 	 */
-	public PedigreeParameters(Class<?> pedigreeClass, MethodDescription methodDescription) {
+	public PedigreeParameters(PedigreeDefinition pedigreeDefinition, MethodDescription methodDescription) {
 		
-		this.pedigreeClass = pedigreeClass;
+		this.pedigreeDefinition = pedigreeDefinition;
 		this.methodDescription = methodDescription;
 	}
 }

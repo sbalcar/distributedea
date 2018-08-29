@@ -1,7 +1,6 @@
 package org.distributedea.ontology.pedigree;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
@@ -20,7 +19,6 @@ public abstract class Pedigree implements Concept {
 
 	private static final long serialVersionUID = 1L;
 	
-
 	/**
 	 * Exports number of credit of each {@link MethodDescription}
 	 * @return
@@ -41,6 +39,10 @@ public abstract class Pedigree implements Concept {
 	public abstract Pedigree deepClone();	
 	
 	
+	Pedigree(List<Pedigree> pedigrees, PedigreeParameters pedParams) {
+	}
+	
+/*	
 	public static final Pedigree create(PedigreeParameters pedParams) {
 		
 		if (pedParams == null || pedParams.pedigreeClass == null) {
@@ -156,5 +158,5 @@ public abstract class Pedigree implements Concept {
 
 		throw new IllegalStateException();
 	}
-	
+*/	
 }

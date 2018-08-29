@@ -23,7 +23,7 @@
     <usersContentFileName>inputs/ml-1m/users.dat</usersContentFileName>
     <itemsContentFileName>inputs/ml-1m/movies.dat</itemsContentFileName>
   </datasetDescription>
-  <methods class="methods">
+  <methods>
     <inputMethodDescriptions>
       <inputMethodDescription>
         <inputAgentConfiguration>
@@ -38,7 +38,12 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInMatrix</problemToolClass>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
       </inputMethodDescription>
       <inputMethodDescription>
         <inputAgentConfiguration>
@@ -65,7 +70,12 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
       </inputMethodDescription>
       <inputMethodDescription>
         <inputAgentConfiguration>
@@ -75,7 +85,12 @@
             <arguments/>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
       </inputMethodDescription>
       <inputMethodDescription>
         <inputAgentConfiguration>
@@ -94,7 +109,12 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInMatrix</problemToolClass>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
       </inputMethodDescription>
       <inputMethodDescription>
         <inputAgentConfiguration>
@@ -113,7 +133,12 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
       </inputMethodDescription>
       <inputMethodDescription>
         <inputAgentConfiguration>
@@ -128,7 +153,12 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
       </inputMethodDescription>
       <inputMethodDescription>
         <inputAgentConfiguration>
@@ -143,7 +173,12 @@
             </arguments>
           </arguments>
         </inputAgentConfiguration>
-        <problemToolClass>org.distributedea.problems.matrixfactorization.ProblemToolMFContentBased</problemToolClass>
+        <problemToolDefinition>
+          <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFContentBased</problemToolClass>
+          <arguments>
+            <arguments/>
+          </arguments>
+        </problemToolDefinition>
       </inputMethodDescription>
     </inputMethodDescriptions>
   </methods>
@@ -161,4 +196,5 @@
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>
+  <pedigreeDefinition/>
 </job>

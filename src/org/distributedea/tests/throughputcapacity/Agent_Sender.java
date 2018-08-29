@@ -31,9 +31,11 @@ import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
-import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
+import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
+import org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInMatrix;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
 
 /**
  * Agent sender to test the throughput capacity of Jade 
@@ -181,8 +183,10 @@ public class Agent_Sender extends Agent_DistributedEA {
 		AgentConfiguration agentConfiguration = new AgentConfiguration(
 				"Sender", Agent_Sender.class, new Arguments());
 		
+		ProblemToolDefinition probToolDef =
+				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInMatrix());
 		MethodDescription methodDescription = new MethodDescription(
-				agentConfiguration, problemMF, ToolGenerateIndividualMF.class);
+				agentConfiguration, problemMF, probToolDef);
 		
 		return new IndividualWrapper(jobID, methodDescription, indivE);
 	}

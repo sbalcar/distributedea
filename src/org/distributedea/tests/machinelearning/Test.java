@@ -11,8 +11,8 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.ProblemTool;
-import org.distributedea.problems.continuousoptimization.ProblemToolCORandomMove;
+import org.distributedea.problemtools.ProblemTool;
+import org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove;
 
 public class Test {
 
