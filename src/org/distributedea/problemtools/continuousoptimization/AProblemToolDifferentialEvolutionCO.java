@@ -1,0 +1,7 @@
+package org.distributedea.problemtools.continuousoptimization;
+
+import org.distributedea.problemtools.IProblemToolDifferentialEvolution;
+
+public abstract class AProblemToolDifferentialEvolutionCO extends AAProblemToolCO implements IProblemToolDifferentialEvolution {
+
+}

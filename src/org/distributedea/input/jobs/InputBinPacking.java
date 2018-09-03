@@ -29,7 +29,13 @@ import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolBruteForceBP;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolDifferentialEvolutionBP;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolEvolutionBPTwoPointCrossSimpleShiftMutation;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolRandomSearchBP;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolSimulatedAnnealingBPDisplacementOfPart;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart;
 
 /**
  * Defines a set of Bin Packing {@link Job}
@@ -42,37 +48,37 @@ public class InputBinPacking {
 		
 		InputMethodDescription methodHillClimbing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())
+				new ProblemToolDefinition(new ProblemToolHillClimbingBPDisplacementOfPart())
 				);
 
 		InputMethodDescription methodRandomSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())
+				new ProblemToolDefinition(new ProblemToolRandomSearchBP())
 				);
 
 		InputMethodDescription methodEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) )),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())
+				new ProblemToolDefinition(new ProblemToolEvolutionBPTwoPointCrossSimpleShiftMutation())
 				);
 
 		InputMethodDescription methodBruteForce = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())
+				new ProblemToolDefinition(new ProblemToolBruteForceBP())
 				);
 
 		InputMethodDescription methodTabuSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())
+				new ProblemToolDefinition(new ProblemToolTabuSearchBPDisplacementOfPart())
 				);
 
 		InputMethodDescription methodSimulatedAnnealing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002") )),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())
+				new ProblemToolDefinition(new ProblemToolSimulatedAnnealingBPDisplacementOfPart())
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) ),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())
+				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionBP())
 				);
 
 		Methods methods = new Methods();

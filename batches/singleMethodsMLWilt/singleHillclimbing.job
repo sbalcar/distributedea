@@ -57,18 +57,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolHillClimbingMLMoveABit</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

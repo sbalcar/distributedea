@@ -22,7 +22,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolRandomSearchCO</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

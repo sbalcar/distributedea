@@ -37,7 +37,13 @@ import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolDifferentialEvolutionMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolRandomSearchMF;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow;
 
 /**
  * Defines a set of Matrix Factorization {@link Job}
@@ -50,37 +56,37 @@ public class InputMatrixFactorization {
 		
 		InputMethodDescription methodHillClimbing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolHillClimbingMFSGDist1RandomInEachRow())
 				);
 
 		InputMethodDescription methodRandomSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolRandomSearchMF())
 				);
 
 		InputMethodDescription methodEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()))),
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation())
 				);
 
 		InputMethodDescription methodBruteForce = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolBruteForceMFSGDist1ByIndex())
 				);
 
 		InputMethodDescription methodTabuSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolTabuSearchMFSGDist1RandomInEachRow())
 				);
 
 		InputMethodDescription methodSimulatedAnnealing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002"))),
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow())
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"))),
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionMF())
 				);
 
 		Methods methods = new Methods();

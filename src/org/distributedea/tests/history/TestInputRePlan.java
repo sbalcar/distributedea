@@ -9,7 +9,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO;
 
 public class TestInputRePlan {
 
@@ -23,7 +23,7 @@ public class TestInputRePlan {
 		ProblemTSPGPS problem = new ProblemTSPGPS();
 		
 		ProblemToolDefinition probToolDef =
-				new ProblemToolDefinition(new ProblemToolGPSEuc2D2opt());
+				new ProblemToolDefinition(new ProblemToolBruteForceCO());
 		MethodDescription agentToKill =
 				new MethodDescription(agentConfiguration, problem, probToolDef);
 		

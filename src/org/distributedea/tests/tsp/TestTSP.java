@@ -13,15 +13,14 @@ import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problemtools.IProblemTool;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2DSimpleSwap;
-import org.distributedea.problemtools.tsp.point.permutation.ProblemToolPointSimpleSwap;
+import org.distributedea.problemtools.tsp.point.permutation.ProblemToolBruteForceTSPPoint;
 
 public class TestTSP {
 
 	public static void main(String [] args) {
 			
 		// Euclidean 2D distance
-		IProblemTool problemToolGPS = new ProblemToolGPSEuc2DSimpleSwap();
+		IProblemTool problemToolGPS = new ProblemToolBruteForceTSPPoint();
 		
 		boolean fitnessGPSNaNResult = false;
 		double fitnessGPSNaN = problemToolGPS.fitness(null, null, null, null);
@@ -42,7 +41,7 @@ public class TestTSP {
 		boolean resultGPS_E = fitnessGPSNaNResult && italyResult && pbnResult;
 		
 		
-		IProblemTool problemToolPoint = new ProblemToolPointSimpleSwap();
+		IProblemTool problemToolPoint = new ProblemToolBruteForceTSPPoint();
 		
 		boolean fitnessPointNaNResult = false;
 		double fitnessPointNaN = problemToolGPS.fitness(null, null, null, null);

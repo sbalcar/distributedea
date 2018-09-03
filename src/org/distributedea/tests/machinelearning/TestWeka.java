@@ -12,7 +12,7 @@ import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.dataset.DatasetML;
 import org.distributedea.ontology.individuals.IndividualArguments;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
-import org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolBruteForceML;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 
@@ -37,7 +37,7 @@ public class TestWeka {
 	    IndividualArguments individual = new IndividualArguments(argss);
 	    
 	    
-	    ProblemToolMLRandomMove tool = new ProblemToolMLRandomMove();
+	    ProblemToolBruteForceML tool = new ProblemToolBruteForceML();
 	    tool.fitness(individual, problem, datasetML, new TrashLogger());
 
 	}
@@ -85,7 +85,7 @@ public class TestWeka {
 	    IndividualArguments individual = new IndividualArguments(argumentsDef.exportRandomGeneratedArguments());
 	    
 	    
-	    ProblemToolMLRandomMove tool = new ProblemToolMLRandomMove();
+	    ProblemToolBruteForceML tool = new ProblemToolBruteForceML();
 	    double fitness = tool.fitness(individual, problem, datasetML, new TrashLogger());
 	    System.out.println("Fitness: " + fitness);
 	}
@@ -167,7 +167,7 @@ public class TestWeka {
 	    IndividualArguments individual = new IndividualArguments(argss0);
 	    
 	    
-	    ProblemToolMLRandomMove tool = new ProblemToolMLRandomMove();
+	    ProblemToolBruteForceML tool = new ProblemToolBruteForceML();
 	    double fitness = tool.fitness(individual, problem, datasetML, new TrashLogger());
 	    System.out.println("Fitness: " + fitness);
 	    System.out.println(individual.toLogString());

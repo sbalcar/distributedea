@@ -9,7 +9,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.AProblem;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.IProblemToolEvolution;
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.GeneticOperator;
@@ -29,12 +29,12 @@ public class EAMutationWrapper implements GeneticOperator {
 	private double mutationRate;
 	private AProblem problem;
 	private Dataset dataset;
-	private IProblemTool problemTool;
+	private IProblemToolEvolution problemTool;
 	private Configuration conf;
 	private IAgentLogger logger;
 	
 	public EAMutationWrapper(double mutationRate, Dataset dataset,
-			IProblemTool problemTool, Configuration conf, IAgentLogger logger) {
+			IProblemToolEvolution problemTool, Configuration conf, IAgentLogger logger) {
 		
 		this.mutationRate = mutationRate;
 		this.dataset = dataset;

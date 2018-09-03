@@ -45,7 +45,7 @@ import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.matrixfactorization.ProblemToolMFContentBased;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFContentBased;
 
 public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 
@@ -82,7 +82,7 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_SimulatedAnnealing.class));
 		methods0b.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_DifferentialEvolution.class));
 		
-		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), new ProblemToolDefinition(new ProblemToolMFContentBased())));
+		methods0b.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), new ProblemToolDefinition(new ProblemToolHillClimbingMFContentBased())));
 		job0b.setMethods(methods0b);
 		
 		
@@ -100,7 +100,7 @@ public class BatchHeteroMethodsMFML10M100K implements IInputBatch {
 		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_SimulatedAnnealing.class));
 		methods0c.addInputMethodDescr(methodsOrig.exportFirstInputMethodDescription(Agent_DifferentialEvolution.class));
 		
-		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), new ProblemToolDefinition(new ProblemToolMFContentBased())));
+		methods0c.addInputMethodDescr(new InputMethodDescription(iaConfHillClimbing.deepClone(), new ProblemToolDefinition(new ProblemToolHillClimbingMFContentBased())));
 		job0c.setMethods(methods0c);
 		
 		

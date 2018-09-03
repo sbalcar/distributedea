@@ -29,7 +29,13 @@ import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolVC;
+import org.distributedea.problemtools.vertexcover.set.ProblemToolBruteForceVC;
+import org.distributedea.problemtools.vertexcover.set.ProblemToolDifferentialEvolutionVC;
+import org.distributedea.problemtools.vertexcover.set.ProblemToolEvolutionVCCompleteByTheSeconCrossRemove3Mutation;
+import org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph;
+import org.distributedea.problemtools.vertexcover.set.ProblemToolRandomSearchVC;
+import org.distributedea.problemtools.vertexcover.set.ProblemToolSimulatedAnnealingVCRemoveRandomSubgraph;
+import org.distributedea.problemtools.vertexcover.set.ProblemToolTabuSearchVCRemoveRandomSubgraph;
 
 /**
  * Defines a set of Vertex Cover {@link Job}
@@ -43,37 +49,37 @@ public class InputVC {
 
 		InputMethodDescription methodHillClimbing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolVC())
+				new ProblemToolDefinition(new ProblemToolHillClimbingVCRemoveRandomSubgraph())
 				);
 
 		InputMethodDescription methodRandomSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolVC())
+				new ProblemToolDefinition(new ProblemToolRandomSearchVC())
 				);
 
 		InputMethodDescription methodEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()))),
-				new ProblemToolDefinition(new ProblemToolVC())
+				new ProblemToolDefinition(new ProblemToolEvolutionVCCompleteByTheSeconCrossRemove3Mutation())
 				);
 
 		InputMethodDescription methodBruteForce = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolVC())
+				new ProblemToolDefinition(new ProblemToolBruteForceVC())
 				);
 
 		InputMethodDescription methodTabuSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolVC())
+				new ProblemToolDefinition(new ProblemToolTabuSearchVCRemoveRandomSubgraph())
 				);
 
 		InputMethodDescription methodSimulatedAnnealing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002"))),
-				new ProblemToolDefinition(new ProblemToolVC())
+				new ProblemToolDefinition(new ProblemToolSimulatedAnnealingVCRemoveRandomSubgraph())
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"))),
-				new ProblemToolDefinition(new ProblemToolVC())
+				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionVC())
 				);
 
 		Methods methods = new Methods();

@@ -11,8 +11,8 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.ProblemTool;
-import org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove;
+import org.distributedea.problemtools.AProblemTool;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO;
 
 public class Test {
 
@@ -25,7 +25,7 @@ public class Test {
 		
 		IProblem problem = job.getProblem();
 				
-		ProblemTool tool = new ProblemToolCORandomMove();
+		AProblemTool tool = new ProblemToolBruteForceCO();
 		
 		
 		Dataset dataset = tool.readDataset(job.getDatasetDescription(), problem, 

@@ -33,7 +33,13 @@ import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolBruteForceML;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolDifferentialEvolutionML;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolEvolutionML;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolHillClimbingMLMoveABit;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolRandomSearchML;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolSimulatedAnnealingMLMoveABit;
+import org.distributedea.problemtools.machinelearning.arguments.ProblemToolTabuSearchMLMoveABit;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 
@@ -48,37 +54,37 @@ public class InputMachineLearning {
 		
 		InputMethodDescription methodHillClimbing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolMLRandomMove())
+				new ProblemToolDefinition(new ProblemToolHillClimbingMLMoveABit())
 				);
 
 		InputMethodDescription methodRandomSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolMLRandomMove())
+				new ProblemToolDefinition(new ProblemToolRandomSearchML())
 				);
 
 		InputMethodDescription methodEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()))),
-				new ProblemToolDefinition(new ProblemToolMLRandomMove())
+				new ProblemToolDefinition(new ProblemToolEvolutionML())
 				);
 
 		InputMethodDescription methodBruteForce = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolMLRandomMove())
+				new ProblemToolDefinition(new ProblemToolBruteForceML())
 				);
 
 		InputMethodDescription methodTabuSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolMLRandomMove())
+				new ProblemToolDefinition(new ProblemToolTabuSearchMLMoveABit())
 				);
 
 		InputMethodDescription methodSimulatedAnnealing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002"))),
-				new ProblemToolDefinition(new ProblemToolMLRandomMove())
+				new ProblemToolDefinition(new ProblemToolSimulatedAnnealingMLMoveABit())
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"))),
-				new ProblemToolDefinition(new ProblemToolMLRandomMove())
+				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionML())
 				);
 
 		Methods methods = new Methods();

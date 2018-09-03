@@ -32,6 +32,7 @@ import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.IProblemToolSimulatedAnnealing;
 
 /**
  * Agent represents Simulated Annealing Algorithm Method
@@ -148,7 +149,7 @@ public class Agent_SimulatedAnnealing extends Agent_ComputingAgent {
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemWrp.getPedigreeDefinition(), methodDescription);
 		
-		IProblemTool problemTool = problemToolDef.exportProblemTool(getLogger());
+		IProblemToolSimulatedAnnealing problemTool = (IProblemToolSimulatedAnnealing) problemToolDef.exportProblemTool(getLogger());
 		
 		IDatasetDescription datasetDescr = problemWrp.getDatasetDescription();
 		Dataset dataset = problemTool.readDataset(datasetDescr, problem, getLogger());

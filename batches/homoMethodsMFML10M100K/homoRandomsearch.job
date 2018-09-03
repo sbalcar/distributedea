@@ -35,7 +35,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolRandomSearchMF</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

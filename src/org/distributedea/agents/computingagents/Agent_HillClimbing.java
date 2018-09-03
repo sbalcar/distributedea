@@ -35,6 +35,7 @@ import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.IProblemToolHillClimbing;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
@@ -143,7 +144,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemWrp.getPedigreeDefinition(), methodDescription);
 		
-		IProblemTool problemTool = problemToolDef.exportProblemTool(getLogger());
+		IProblemToolHillClimbing problemTool = (IProblemToolHillClimbing) problemToolDef.exportProblemTool(getLogger());
 		
 		IDatasetDescription datasetDescr = problemWrp.getDatasetDescription();
 		Dataset dataset = problemTool.readDataset(datasetDescr, problem, getLogger());
@@ -222,7 +223,7 @@ public class Agent_HillClimbing extends Agent_ComputingAgent {
 	}
 
 	protected IndividualEvaluated[] getNeighbours(IndividualEvaluated individualEval,
-			IProblem problem, Dataset dataset, IProblemTool problemTool,
+			IProblem problem, Dataset dataset, IProblemToolHillClimbing problemTool,
 			int numberOfNeighbors, PedigreeParameters pedigreeParams) throws Exception {
 		
 		IndividualEvaluated[] neighbours = new IndividualEvaluated[numberOfNeighbors];

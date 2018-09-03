@@ -33,15 +33,10 @@ import org.distributedea.input.postprocessing.general.matlab.PostProcCountsOfAll
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
-import org.distributedea.ontology.arguments.Argument;
-import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
-import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
 
 public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 
@@ -131,16 +126,15 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		job12_.setPlanner(new PlannerThePedigree());
 		job12_.setPedigreeDefinition(new PedigreeDefinition(PedigreeCounter.class));
 		
+		InputMethodDescription methodHillClimbing = jobI.deepClone().getMethods()
+				.exportFirstInputMethodDescription(Agent_HillClimbing.class);
+
+		InputMethodDescription methodTabuSearch = jobI.deepClone().getMethods()
+				.exportFirstInputMethodDescription(Agent_TabuSearch.class);
+
 		Methods methodss = new Methods();
-		methodss.addInputMethodDescriptions(new InputMethodDescription(
-				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())),
-				15);
-		
-		methodss.addInputMethodDescriptions(new InputMethodDescription(
-				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
-				new ProblemToolDefinition(new ProblemToolBinPackingDisplacementOfPart())),
-				1);
+		methodss.addInputMethodDescriptions(methodHillClimbing, 15);
+		methodss.addInputMethodDescriptions(methodTabuSearch, 1);
 
 		Job job13 = jobI.deepClone();
 		job13.setJobID("onlyInitHillClimbingAndTabuSearch");

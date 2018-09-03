@@ -60,7 +60,7 @@ import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbe
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problemtools.ProblemTool;
+import org.distributedea.problemtools.AProblemTool;
 import org.distributedea.services.ManagerAgentService;
 
 /**
@@ -115,7 +115,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected abstract boolean isAbleToSolve(ProblemWrapper problemWrp);
 	
 	/**
-	 * Starts computing a given {@link Problem} by using given {@link ProblemTool}
+	 * Starts computing a given {@link Problem} by using given {@link AProblemTool}
 	 * @param problemWrp
 	 * @param configuration
 	 * @param requiredAgentConfiguration
@@ -415,6 +415,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		StartComputing startComputing = (StartComputing) action.getAction();
 		if (! startComputing.valid(getLogger())) {
+			
+			startComputing.valid(getLogger());
 			
 			ACLMessage reply = request.createReply();
 			reply.setPerformative(ACLMessage.REFUSE);

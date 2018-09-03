@@ -1,6 +1,7 @@
 package org.distributedea.problemtools;
 
 import java.io.File;
+import java.util.List;
 
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
 import org.distributedea.logging.IAgentLogger;
@@ -13,7 +14,7 @@ import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 
 /**
- * Interface for {@link ProblemTool} implemntation
+ * Interface for {@link AProblemTool} implemntation
  * @author stepan
  *
  */
@@ -31,14 +32,21 @@ public interface IProblemTool {
 	 */
 	public void importArguments(Arguments arguments);
 	
+	
 	/**
-	 * Returns Class of {@link Problem} which this {@link ProblemTool} serves
+	 * Returns {@link List} of agents that can use the tool
+	 * @return
+	 */
+	public List<Class<?>> belongsToAgent();
+	
+	/**
+	 * Returns Class of {@link Problem} which this {@link AProblemTool} serves
 	 * @return
 	 */
 	public Class<?> problemReprezentation();
 	
 	/**
-	 * Returns Class of {@link Dataset} which this {@link ProblemTool} serves
+	 * Returns Class of {@link Dataset} which this {@link AProblemTool} serves
 	 * @return
 	 */
 	public Class<?> datasetReprezentation();
@@ -50,7 +58,7 @@ public interface IProblemTool {
 	public Class<?> reprezentationWhichUses();
 	
 	/**
-	 * Initialization of {@link ProblemTool}
+	 * Initialization of {@link AProblemTool}
 	 * @param dataset
 	 * @param agentConf
 	 * @param logger
@@ -60,7 +68,7 @@ public interface IProblemTool {
 			IAgentLogger logger) throws Exception;
 	
 	/**
-	 * Exit of {@link ProblemTool}
+	 * Exit of {@link AProblemTool}
 	 * @throws ProblemToolException
 	 */
 	public void exit() throws Exception;
@@ -104,38 +112,4 @@ public interface IProblemTool {
 	public IndividualEvaluated generateIndividualEval(IProblem problem,
 			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger);
 	
-	public IndividualEvaluated generateFirstIndividualEval(IProblem problem,
-			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger);
-	
-	public IndividualEvaluated generateNextIndividualEval(IProblem problem,
-			Dataset dataset, IndividualEvaluated individual, long neighborIndex,
-			PedigreeParameters pedigreeParams, IAgentLogger logger);
-	
-	
-	/**
-	 * Tries to improve given {@link Individual}. Improving fitness is not guaranteed.
-	 * @param individual
-	 * @param problem
-	 * @param logger
-	 * @return
-	 * @throws ProblemToolException
-	 */  
-	public IndividualEvaluated improveIndividualEval(IndividualEvaluated individual,
-			IProblem problem, Dataset dataset,
-			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
-	
-	public IndividualEvaluated getNeighborEval(IndividualEvaluated individual,
-			IProblem problem, Dataset dataset, long neighborIndex,
-			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;
-	
-	public IndividualEvaluated[] createNewIndividual(IndividualEvaluated individualEval1,
-			IndividualEvaluated individualEval2, IProblem problem,
-			Dataset dataset, PedigreeParameters pedigreeParams, IAgentLogger logger)
-			throws Exception;
-	
-
-	public IndividualEvaluated createNewIndividualEval(IndividualEvaluated individual1, 
-			IndividualEvaluated individual2, IndividualEvaluated individual3,
-			IProblem problem, Dataset dataset,
-			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception;	
 }

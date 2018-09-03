@@ -13,8 +13,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
-import org.distributedea.problemtools.ProblemTool;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart;
+import org.distributedea.problemtools.AProblemTool;
+import org.distributedea.problemtools.binpacking.permutation.ProblemToolBruteForceBP;
 
 public class Test {
 
@@ -23,7 +23,7 @@ public class Test {
 		IInputBatch iInputBatch = new BatchSingleMethodsBPP1000();
 		Batch batch = iInputBatch.batch();
 		
-		ProblemTool tool = new ProblemToolBinPackingDisplacementOfPart();
+		AProblemTool tool = new ProblemToolBruteForceBP();
 		
 		IDatasetDescription datasetDescr = batch.getJobs().get(0).getDatasetDescription();
 		Dataset dataset = tool.readDataset(datasetDescr, null, new TrashLogger());

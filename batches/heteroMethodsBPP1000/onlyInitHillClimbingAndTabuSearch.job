@@ -24,7 +24,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -39,7 +39,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolRandomSearchBP</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -71,7 +71,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolEvolutionBPTwoPointCrossSimpleShiftMutation</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -86,7 +86,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBruteForceBP</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -110,7 +110,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -134,7 +134,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolSimulatedAnnealingBPDisplacementOfPart</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -154,7 +154,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolDifferentialEvolutionBP</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -180,18 +180,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -202,18 +200,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -224,18 +220,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -246,18 +240,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -268,18 +260,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -290,18 +280,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -312,18 +300,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -334,18 +320,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -356,18 +340,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -378,18 +360,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -400,18 +380,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -422,18 +400,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -444,18 +420,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -466,18 +440,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -488,18 +460,16 @@
             <agentName>Agent_HillClimbing</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -510,22 +480,20 @@
             <agentName>Agent_TabuSearch</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>tabuModelSize</name>
-                    <value>50</value>
-                  </argument>
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>tabuModelSize</name>
+                  <value>50</value>
+                </argument>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

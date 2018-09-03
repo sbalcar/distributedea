@@ -11,7 +11,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.IProblemToolEvolution;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
@@ -101,7 +101,7 @@ public class EvolutionPopulationModel {
 	 * @throws ProblemToolException
 	 */
 	public EvolutionPopulationModel processMutation(double probOfMutation,
-			IProblemTool tool, IProblem problem, Dataset dataset,
+			IProblemToolEvolution tool, IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
 		IndividualEvaluated[] improvedIndividuals =
@@ -133,7 +133,7 @@ public class EvolutionPopulationModel {
 	 * @throws ProblemToolException
 	 */
 	public EvolutionPopulationModel processCross(double probOfCross, ISelector selector,
-			IProblemTool tool, IProblem problem, Dataset dataset,
+			IProblemToolEvolution tool, IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
 		IndividualEvaluated[] individualsCopy =

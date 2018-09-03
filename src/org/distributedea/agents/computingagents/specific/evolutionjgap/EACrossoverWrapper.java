@@ -8,7 +8,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.IProblemToolEvolution;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.GeneticOperator;
@@ -29,12 +29,12 @@ public class EACrossoverWrapper implements GeneticOperator {
 	private double crossRate;
 	private IProblem problem;
 	private Dataset dataset;
-	private IProblemTool problemTool;
+	private IProblemToolEvolution problemTool;
 	private Configuration conf;
 	private IAgentLogger logger;
 	
 	public EACrossoverWrapper(double crossRate, IProblem problem,
-			Dataset dataset, IProblemTool problemTool, Configuration conf,
+			Dataset dataset, IProblemToolEvolution problemTool, Configuration conf,
 			IAgentLogger logger) {
 		
 		this.crossRate = crossRate;

@@ -23,11 +23,11 @@ import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.problemtools.IProblemTool;
-import org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove;
 import org.distributedea.problemtools.continuousoptimization.bbobv1502.BbobException;
 import org.distributedea.problemtools.continuousoptimization.bbobv1502.BbobTools;
 import org.distributedea.problemtools.continuousoptimization.bbobv1502.IJNIfgeneric;
 import org.distributedea.problemtools.continuousoptimization.bbobv1502.JNIfgeneric;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO;
 
 
 public class TestCO {
@@ -40,7 +40,7 @@ public class TestCO {
 				new DatasetDescription(new File(inputFileName));
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
-		IProblemTool tool = new ProblemToolCORandomMove();
+		IProblemTool tool = new ProblemToolBruteForceCO();
 		
 		Dataset dataset = tool.readDataset(datasetDescr, problem, null);
 		tool.initialization(problem, dataset, null, null);
@@ -60,7 +60,7 @@ public class TestCO {
 		IDatasetDescription datasetDescr =
 				new DatasetDescription(new File(inputFileName));
 		
-		IProblemTool tool1 = new ProblemToolCORandomMove();
+		IProblemTool tool1 = new ProblemToolBruteForceCO();
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		Dataset dataset1 = tool1.readDataset(datasetDescr, problem, null);
@@ -71,7 +71,7 @@ public class TestCO {
 		} catch (InterruptedException e) {
 		}
 		
-		IProblemTool tool2 = new ProblemToolCORandomMove();
+		IProblemTool tool2 = new ProblemToolBruteForceCO();
 		
 		Dataset dataset2 = tool2.readDataset(datasetDescr, problem, null);
 		tool2.initialization(problem, dataset2, null, null);
@@ -107,7 +107,7 @@ public class TestCO {
 	    
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		
-	    IProblemTool tool = new ProblemToolCORandomMove();
+	    IProblemTool tool = new ProblemToolBruteForceCO();
 	    Dataset dataset = tool.readDataset(datasetDescr, problem, null);
 		tool.initialization(problem, dataset, null, null);
 		
@@ -174,7 +174,7 @@ public class TestCO {
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 
-		IProblemTool problemTool = new ProblemToolCORandomMove();
+		IProblemTool problemTool = new ProblemToolBruteForceCO();
 		Dataset dataset = problemTool.readDataset(datasetDescr, problem, null);
 		
 		
@@ -182,7 +182,7 @@ public class TestCO {
 				File.separator + "Agent_Evolution_14.rslt";
 		File fileOfSolution = new File(solutionFileName);
 		
-		ProblemToolCORandomMove tool = new ProblemToolCORandomMove();
+		IProblemTool tool = new ProblemToolBruteForceCO();
 		
 		Individual individual = tool.readSolution(fileOfSolution, dataset, null);
 	}
@@ -197,14 +197,14 @@ public class TestCO {
 		AgentConfiguration ac1 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		ProblemToolDefinition probToolDef1 =
-				new ProblemToolDefinition(new ProblemToolCORandomMove());
+				new ProblemToolDefinition(new ProblemToolBruteForceCO());
 		MethodDescription a1 =
 				new MethodDescription(ac1, problem, probToolDef1);
 		
 		AgentConfiguration ac2 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		ProblemToolDefinition probToolDef2 =
-				new ProblemToolDefinition(new ProblemToolCORandomMove());
+				new ProblemToolDefinition(new ProblemToolBruteForceCO());
 		MethodDescription a2 =
 				new MethodDescription(ac2, problem, probToolDef2);
 		

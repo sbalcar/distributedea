@@ -31,7 +31,12 @@ import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.continuousoptimization.ProblemToolCORandomMove;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolDifferentialEvolutionCO;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolEvolutionCO;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolHillClimbingCORandomMove;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolRandomSearchCO;
+import org.distributedea.problemtools.continuousoptimization.point.ProblemToolTabuSearchCORandomMove;
 
 /**
  * Defines a set of Continuous Optimization {@link Job}
@@ -44,37 +49,37 @@ public class InputContOpt {
 		
 		InputMethodDescription methodHillClimbing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolCORandomMove())
+				new ProblemToolDefinition(new ProblemToolHillClimbingCORandomMove())
 				);
 
 		InputMethodDescription methodRandomSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_RandomSearch.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolCORandomMove())
+				new ProblemToolDefinition(new ProblemToolRandomSearchCO())
 				);
 
 		InputMethodDescription methodEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()) )),
-				new ProblemToolDefinition(new ProblemToolCORandomMove())
+				new ProblemToolDefinition(new ProblemToolEvolutionCO())
 				);
 
 		InputMethodDescription methodBruteForce = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolCORandomMove())
+				new ProblemToolDefinition(new ProblemToolBruteForceCO())
 				);
 
 		InputMethodDescription methodTabuSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10") )),
-				new ProblemToolDefinition(new ProblemToolCORandomMove())
+				new ProblemToolDefinition(new ProblemToolTabuSearchCORandomMove())
 				);
 
 		InputMethodDescription methodSimulatedAnnealing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002") )),
-				new ProblemToolDefinition(new ProblemToolCORandomMove())
+				new ProblemToolDefinition(new ProblemToolRandomSearchCO())
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) ),
-				new ProblemToolDefinition(new ProblemToolCORandomMove())
+				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionCO())
 				);
 
 		Methods methods = new Methods();

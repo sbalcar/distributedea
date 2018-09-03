@@ -22,7 +22,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -37,7 +37,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolRandomSearchVC</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -69,7 +69,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolEvolutionVCCompleteByTheSeconCrossRemove3Mutation</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -84,7 +84,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolBruteForceVC</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -108,7 +108,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolTabuSearchVCRemoveRandomSubgraph</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -132,7 +132,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolSimulatedAnnealingVCRemoveRandomSubgraph</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -152,7 +152,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolDifferentialEvolutionVC</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -187,7 +187,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -207,7 +207,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -227,7 +227,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -247,7 +247,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -267,7 +267,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -287,7 +287,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -307,7 +307,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -327,7 +327,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -347,7 +347,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -367,7 +367,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -387,7 +387,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -407,7 +407,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -427,7 +427,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -447,7 +447,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -467,7 +467,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -491,7 +491,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolTabuSearchVCRemoveRandomSubgraph</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

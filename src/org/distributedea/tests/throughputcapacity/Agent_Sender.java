@@ -32,7 +32,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInMatrix;
+import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex;
 import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
 import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
 import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
@@ -184,7 +184,7 @@ public class Agent_Sender extends Agent_DistributedEA {
 				"Sender", Agent_Sender.class, new Arguments());
 		
 		ProblemToolDefinition probToolDef =
-				new ProblemToolDefinition(new ProblemToolMFColaborative1RandomInMatrix());
+				new ProblemToolDefinition(new ProblemToolBruteForceMFSGDist1ByIndex());
 		MethodDescription methodDescription = new MethodDescription(
 				agentConfiguration, problemMF, probToolDef);
 		

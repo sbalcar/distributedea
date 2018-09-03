@@ -36,6 +36,7 @@ import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
 import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.IProblemToolEvolution;
 import org.jgap.Configuration;
 import org.jgap.Genotype;
 import org.jgap.IChromosome;
@@ -158,7 +159,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemWrp.getPedigreeDefinition(), methodDescription);
 		
-		IProblemTool problemTool = problemToolDef.exportProblemTool(getLogger());
+		IProblemToolEvolution problemTool = (IProblemToolEvolution) problemToolDef.exportProblemTool(getLogger());
 		
 		IDatasetDescription datasetDescr = problemWrp.getDatasetDescription();
 		Dataset dataset = problemTool.readDataset(datasetDescr, problem, getLogger());

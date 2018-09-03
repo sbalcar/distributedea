@@ -65,7 +65,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolHillClimbingMLMoveABit</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -80,7 +80,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolRandomSearchML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -112,7 +112,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolEvolutionML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -127,7 +127,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolBruteForceML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -151,7 +151,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolTabuSearchMLMoveABit</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -175,7 +175,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolSimulatedAnnealingMLMoveABit</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -195,7 +195,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolDifferentialEvolutionML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>

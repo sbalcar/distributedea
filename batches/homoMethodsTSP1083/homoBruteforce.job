@@ -18,7 +18,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolGPSEuc2D2opt</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolBruteForceTSPGPS</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

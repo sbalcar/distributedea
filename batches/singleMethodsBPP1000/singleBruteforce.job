@@ -20,7 +20,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBinPackingDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBruteForceBP</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

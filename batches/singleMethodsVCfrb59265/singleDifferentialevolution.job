@@ -14,18 +14,16 @@
             <agentName>Agent_DifferentialEvolution</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_DifferentialEvolution</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>popSize</name>
-                    <value>50</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>popSize</name>
+                  <value>50</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolDifferentialEvolutionVC</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

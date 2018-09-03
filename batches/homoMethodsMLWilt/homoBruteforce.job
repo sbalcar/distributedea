@@ -61,7 +61,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolBruteForceML</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

@@ -24,7 +24,7 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problemtools.IProblemToolTabuSearch;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
@@ -102,7 +102,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemWrp.getPedigreeDefinition(), methodDescription);
 		
-		IProblemTool problemTool = problemToolDef.exportProblemTool(getLogger());
+		IProblemToolTabuSearch problemTool = (IProblemToolTabuSearch) problemToolDef.exportProblemTool(getLogger());
 		
 		IDatasetDescription datasetDescr = problemWrp.getDatasetDescription();
 		Dataset dataset = problemTool.readDataset(datasetDescr, problem, getLogger());
@@ -196,7 +196,7 @@ public class Agent_TabuSearch extends Agent_ComputingAgent {
 	
 	
 	protected IndividualEvaluated[] getNeighbours(IndividualEvaluated individualEval,
-			IProblem problem, Dataset dataset, IProblemTool problemTool,
+			IProblem problem, Dataset dataset, IProblemToolTabuSearch problemTool,
 			int numberOfNeighbors, PedigreeParameters pedigreeParams) throws Exception {
 		
 		IndividualEvaluated[] neighbours = new IndividualEvaluated[numberOfNeighbors];

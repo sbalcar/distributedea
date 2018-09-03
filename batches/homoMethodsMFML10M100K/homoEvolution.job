@@ -31,30 +31,28 @@
             <agentName>Agent_Evolution</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_Evolution</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>popSize</name>
-                    <value>10</value>
-                  </argument>
-                  <argument>
-                    <name>mutationRate</name>
-                    <value>0.9</value>
-                  </argument>
-                  <argument>
-                    <name>crossRate</name>
-                    <value>0.1</value>
-                  </argument>
-                  <argument>
-                    <name>selector</name>
-                    <value>org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>popSize</name>
+                  <value>10</value>
+                </argument>
+                <argument>
+                  <name>mutationRate</name>
+                  <value>0.9</value>
+                </argument>
+                <argument>
+                  <name>crossRate</name>
+                  <value>0.1</value>
+                </argument>
+                <argument>
+                  <name>selector</name>
+                  <value>org.distributedea.agents.computingagents.specific.evolution.selectors.CompareTwoSelector</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.ProblemToolMFColaborative1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

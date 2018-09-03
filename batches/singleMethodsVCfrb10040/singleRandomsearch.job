@@ -18,7 +18,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolVC</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolRandomSearchVC</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

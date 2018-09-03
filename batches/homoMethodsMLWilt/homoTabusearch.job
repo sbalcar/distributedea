@@ -57,22 +57,20 @@
             <agentName>Agent_TabuSearch</agentName>
             <agentClassName>org.distributedea.agents.computingagents.Agent_TabuSearch</agentClassName>
             <arguments>
-              <arguments class="java.util.Arrays$ArrayList">
-                <a class="argument-array">
-                  <argument>
-                    <name>tabuModelSize</name>
-                    <value>50</value>
-                  </argument>
-                  <argument>
-                    <name>numberOfNeighbors</name>
-                    <value>10</value>
-                  </argument>
-                </a>
+              <arguments>
+                <argument>
+                  <name>tabuModelSize</name>
+                  <value>50</value>
+                </argument>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.machinelearning.ProblemToolMLRandomMove</problemToolClass>
+            <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolTabuSearchMLMoveABit</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
