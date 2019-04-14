@@ -39,7 +39,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -54,7 +54,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolRandomSearchMF</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolRandomSearchMF</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -86,7 +86,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -101,7 +101,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -125,7 +125,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -149,7 +149,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -165,11 +165,15 @@
                 <name>popSize</name>
                 <value>50</value>
               </argument>
+              <argument>
+                <name>crossRate</name>
+                <value>0.0</value>
+              </argument>
             </arguments>
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolDifferentialEvolutionMF</problemToolClass>
+          <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolDifferentialEvolutionMF</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -204,7 +208,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -224,7 +228,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -244,7 +248,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -264,7 +268,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -284,7 +288,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -304,7 +308,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -324,7 +328,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -344,7 +348,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -364,7 +368,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -384,7 +388,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -404,7 +408,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -424,7 +428,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -444,7 +448,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -464,7 +468,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -484,7 +488,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -508,7 +512,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>

@@ -31,19 +31,20 @@ import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsArithmeticSequence;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsComplement;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolDifferentialEvolutionMF;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolRandomSearchMF;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolDifferentialEvolutionMF;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFMahout;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolRandomSearchMF;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow;
 
 /**
  * Defines a set of Matrix Factorization {@link Job}
@@ -85,11 +86,11 @@ public class InputMatrixFactorization {
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
-				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"))),
+				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"), new Argument("crossRate", "0.0"))),
 				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionMF())
 				);
 
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescr(methodHillClimbing);
 		methods.addInputMethodDescr(methodRandomSearch);
 		methods.addInputMethodDescr(methodEvolution);
@@ -203,6 +204,22 @@ public class InputMatrixFactorization {
 				ReadyToSendIndivsOneLastIndivModel.class);
 		islandModelConf.importReceivedIndividualsModelClass(
 				ReceivedIndivsOneLastIndivModel.class);
+		
+		return job;
+	}
+	
+	public static Job test04() throws IOException {
+		
+		Job job = test01();
+		
+		InputMethodDescription methodHillClimbingOld = job.deepClone().getMethods()
+				.exportFirstInputMethodDescription(Agent_HillClimbing.class);
+				
+		InputMethodDescription methodHillClimbing = new InputMethodDescription(
+				methodHillClimbingOld.getInputAgentConfiguration(),
+				new ProblemToolDefinition(new ProblemToolHillClimbingMFMahout()));
+		
+		job.setMethods(new InputMethodDescriptions(methodHillClimbing));
 		
 		return job;
 	}

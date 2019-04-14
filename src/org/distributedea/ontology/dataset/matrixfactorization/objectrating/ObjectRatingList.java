@@ -243,6 +243,10 @@ public class ObjectRatingList implements Concept {
 	public Pair<Integer, Integer> exportMinAndMaxUserID() {
 		
 		Set<Integer> userIDs = exportUserIDs();
+		if (userIDs.isEmpty()) {
+			return new Pair<Integer, Integer>(Integer.MAX_VALUE, Integer.MIN_VALUE);
+		}
+		
 		int minUserID = Collections.min(userIDs);
 		int maxUserID = Collections.max(userIDs);
 		
@@ -271,6 +275,10 @@ public class ObjectRatingList implements Concept {
 	public Pair<Integer, Integer> exportMinAndMaxItemID() {
 		
 		Set<Integer> itemIDs = exportItemIDs();
+		if (itemIDs.isEmpty()) {
+			return new Pair<Integer, Integer>(Integer.MAX_VALUE, Integer.MIN_VALUE);
+		}
+		
 		int minItemID = Collections.min(itemIDs);
 		int maxItemID = Collections.max(itemIDs);
 		

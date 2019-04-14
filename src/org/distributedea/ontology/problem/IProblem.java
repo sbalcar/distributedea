@@ -30,6 +30,11 @@ public interface IProblem extends Concept {
 	 */
 	public AProblem deepClone();
 	
+	/**
+	 * Log String
+	 * @return
+	 */
+	public String toLogString();
 	
 	public boolean equals(Object other);
 }

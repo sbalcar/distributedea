@@ -31,12 +31,6 @@ public class ProblemTSPPoint extends AProblem {
 	}
 
 	@Override
-	public AProblem deepClone() {
-		
-		return new ProblemTSPPoint();
-	}
-
-	@Override
 	public boolean equals(Object other) {
 		
 	    if (!(other instanceof ProblemTSPPoint)) {
@@ -44,5 +38,16 @@ public class ProblemTSPPoint extends AProblem {
 	    }
 	    
 	    return true;
+	}
+	
+	@Override
+	public String toLogString() {
+		return this.getClass().getSimpleName();
+	}
+	
+	@Override
+	public AProblem deepClone() {
+		
+		return new ProblemTSPPoint();
 	}
 }

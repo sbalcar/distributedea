@@ -9,9 +9,9 @@ import org.distributedea.agents.systemagents.centralmanager.structures.methodsst
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.iteration.Iteration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 
 
@@ -46,7 +46,7 @@ public class PlannerTheBestResult extends PlannerTheGreatestQuantityOfImprovemen
 				theBestOfBestMethodStatistic.exportInputMethodDescriptionClone();
 		
 		
-		Methods methodsWhichHaveNeverRun =
+		InputMethodDescriptions methodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(jobRun);
 		if (! methodsWhichHaveNeverRun.isEmpty()) {
 

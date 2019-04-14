@@ -26,17 +26,17 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolDifferentialEvolutionCO;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolEvolutionCO;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolHillClimbingCORandomMove;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolRandomSearchCO;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolTabuSearchCORandomMove;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolBruteForceCO;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolDifferentialEvolutionCO;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolEvolutionCO;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolHillClimbingCORandomMove;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolRandomSearchCO;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolTabuSearchCORandomMove;
 
 /**
  * Defines a set of Continuous Optimization {@link Job}
@@ -64,7 +64,7 @@ public class InputContOpt {
 
 		InputMethodDescription methodBruteForce = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolBruteForceCO())
+				new ProblemToolDefinition(new ProblemToolBruteForceCO(0.005))
 				);
 
 		InputMethodDescription methodTabuSearch = new InputMethodDescription(
@@ -78,11 +78,11 @@ public class InputContOpt {
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
-				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) ),
+				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"), new Argument("crossRate", "0.0")) ),
 				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionCO())
 				);
 
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescr(methodHillClimbing);
 		methods.addInputMethodDescr(methodRandomSearch);
 		methods.addInputMethodDescr(methodEvolution);
@@ -122,7 +122,7 @@ public class InputContOpt {
 	
 	public static Job test02_() throws IOException {
 		
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 
 		IslandModelConfiguration islandModelConf =
 				test01().getIslandModelConfiguration().deepClone();
@@ -145,7 +145,7 @@ public class InputContOpt {
 	
 	public static Job test03() throws IOException {
 
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 
 
 		IslandModelConfiguration islandModelConf =
@@ -170,7 +170,7 @@ public class InputContOpt {
 	
 	public static Job test04_() throws IOException {
 
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 
 
 		IslandModelConfiguration islandModelConf =
@@ -195,7 +195,7 @@ public class InputContOpt {
 
 	public static Job test02() throws IOException {
 
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 
 
 		IslandModelConfiguration islandModelConf =

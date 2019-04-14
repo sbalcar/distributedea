@@ -18,8 +18,8 @@ import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJob;
 import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJobRunResults;
 import org.distributedea.input.postprocessing.general.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 
 public class BatchHomoMethodsCOf02 implements IInputBatch {
 
@@ -38,7 +38,7 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 		Job job0 = jobI.deepClone();
 		job0.setJobID("homoHillclimbing");
 		job0.setDescription("Homo-HillClimbing");
-		job0.setMethods(new Methods(methodHillClimbing));
+		job0.setMethods(new InputMethodDescriptions(methodHillClimbing));
 
 		
 		InputMethodDescription methodRandomSearch = jobI.deepClone().getMethods()
@@ -47,7 +47,7 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 		Job job1 = jobI.deepClone();
 		job1.setJobID("homoRandomsearch");
 		job1.setDescription("Homo-RandomSearch");
-		job1.setMethods(new Methods(methodRandomSearch));
+		job1.setMethods(new InputMethodDescriptions(methodRandomSearch));
 
 		
 		InputMethodDescription methodEvolution = jobI.deepClone().getMethods()
@@ -56,7 +56,7 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 		Job job2 = jobI.deepClone();
 		job2.setJobID("homoEvolution");
 		job2.setDescription("Homo-Evolution");
-		job2.setMethods(new Methods(methodEvolution));
+		job2.setMethods(new InputMethodDescriptions(methodEvolution));
 
 		
 		InputMethodDescription methodBruteForce = jobI.deepClone().getMethods()
@@ -65,7 +65,7 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 		Job job3 = jobI.deepClone();
 		job3.setJobID("homoBruteforce");
 		job3.setDescription("Homo-BruteForce");
-		job3.setMethods(new Methods(methodBruteForce));
+		job3.setMethods(new InputMethodDescriptions(methodBruteForce));
 		
 		
 		InputMethodDescription methodTabuSearch = jobI.deepClone().getMethods()
@@ -74,7 +74,7 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 		Job job4 = jobI.deepClone();
 		job4.setJobID("homoTabusearch");
 		job4.setDescription("Homo-TabuSearch");
-		job4.setMethods(new Methods(methodTabuSearch));
+		job4.setMethods(new InputMethodDescriptions(methodTabuSearch));
 		
 		
 		InputMethodDescription methodSimulatedAnnealing = jobI.deepClone().getMethods()
@@ -83,7 +83,7 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 		Job job5 = jobI.deepClone();
 		job5.setJobID("homoSimulatedannealing");
 		job5.setDescription("Homo-SimulatedAnnealing");
-		job5.setMethods(new Methods(methodSimulatedAnnealing));
+		job5.setMethods(new InputMethodDescriptions(methodSimulatedAnnealing));
 
 		
 		InputMethodDescription methodDifferentialEvolution = jobI.deepClone().getMethods()
@@ -92,7 +92,7 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 		Job job6 = jobI.deepClone();
 		job6.setJobID("homoDifferentialevolution");
 		job6.setDescription("Homo-DifferentialEvolution");
-		job6.setMethods(new Methods(methodDifferentialEvolution));
+		job6.setMethods(new InputMethodDescriptions(methodDifferentialEvolution));
 		
 		batch.addJob(job0);
 		batch.addJob(job1);
@@ -121,6 +121,5 @@ public class BatchHomoMethodsCOf02 implements IInputBatch {
 				
 		return batch;
 	}
-
 
 }

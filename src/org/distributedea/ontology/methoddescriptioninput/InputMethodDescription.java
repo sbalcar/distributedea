@@ -6,12 +6,14 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
+import org.distributedea.ontology.methoddesriptionsplanned.PlannedMethodDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 
 
 /**
- * Ontology represents requested description of method.
+ * Ontology represents input method description.
  * @author stepan
  *
  */
@@ -34,10 +36,11 @@ public class InputMethodDescription implements Concept {
 	@Deprecated
 	public InputMethodDescription() {} // only for Jade
 	
+	
 	/**
 	 * Constructor
 	 * @param agentConfiguration
-	 * @param problemToolClass
+	 * @param problemToolDef
 	 */
 	public InputMethodDescription(InputAgentConfiguration agentConfiguration,
 			ProblemToolDefinition problemToolDef) {
@@ -90,15 +93,26 @@ public class InputMethodDescription implements Concept {
 		this.inputAgentConfiguration = agentConfiguration;
 	}
 
-
+	
 	public ProblemToolDefinition getProblemToolDefinition() {
 		return problemToolDefinition;
 	}
 	@Deprecated
 	public void setProblemToolDefinition(ProblemToolDefinition problemToolDefinition) {
+		if (problemToolDefinition == null ||
+				! problemToolDefinition.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					ProblemToolDefinition.class.getSimpleName() + " is not valid");
+		}
 		this.problemToolDefinition = problemToolDefinition;
 	}
 
+	public PlannedMethodDescription exportPlannedMethodDescription(MethodIDs methodIDs) {
+		return new PlannedMethodDescription(
+				getInputAgentConfiguration(),
+				methodIDs,
+				getProblemToolDefinition());
+	}
 	
 	/**
 	 * Export Agent class
@@ -130,6 +144,7 @@ public class InputMethodDescription implements Concept {
 				! inputAgentConfiguration.valid(logger)) {
 			return false;
 		}
+		
 		if (getProblemToolDefinition() == null ||
 				! getProblemToolDefinition().valid(logger)) {
 			return false;
@@ -148,15 +163,11 @@ public class InputMethodDescription implements Concept {
 	    
 	    boolean areInputAgentConfigurationEqual =
 	    		this.getInputAgentConfiguration().equals(iadOuther.getInputAgentConfiguration());
+	    
 	    boolean areProblemToolClassesEqual =
 	    		this.getProblemToolDefinition().equals(iadOuther.getProblemToolDefinition());
-	    
-	    if (areInputAgentConfigurationEqual && 
-	    		areProblemToolClassesEqual) {
-	    	return true;
-	    }
-	    
-	    return false;
+	    	    
+	    return areInputAgentConfigurationEqual && areProblemToolClassesEqual;
 	}
 	
     @Override
@@ -171,7 +182,7 @@ public class InputMethodDescription implements Concept {
 		if (inputAgentConfiguration != null) {
 			inputAgentConfStr = inputAgentConfiguration.toString();
 		}
-		
+
 		String problemToolDefStr = "null";
 		if (problemToolDefinition != null) {
 			problemToolDefStr = problemToolDefStr.toString();

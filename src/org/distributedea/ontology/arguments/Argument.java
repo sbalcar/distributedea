@@ -17,7 +17,6 @@ public class Argument implements Concept {
 	
 	private String name;
 	private String value;
-//	private Boolean sendOnlyValue;
 	
 	@Deprecated
 	public Argument() { // only for Jade
@@ -134,6 +133,11 @@ public class Argument implements Concept {
 	public String toString() {
 		return name + "-" + value + "-";// + sendOnlyValue;
 	}
+
+	public String toLogString() {
+		return name + "=" + value;
+	}
+
 	
 	/**
 	 * Exports to the XML String

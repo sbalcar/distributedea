@@ -1,9 +1,9 @@
 package org.distributedea.agents.systemagents.initiator;
 
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.agentconfiguration.AgentConfigurations;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configuration.AgentConfigurations;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.w3c.dom.Document;

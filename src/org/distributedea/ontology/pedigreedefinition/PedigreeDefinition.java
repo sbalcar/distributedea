@@ -8,7 +8,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.pedigree.Pedigree;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 
 /**
  * Ontology represents pedigree definition

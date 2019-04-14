@@ -20,6 +20,7 @@ public class FileNames {
 	public static String mainControllerIP;
 	
 	public final static String JOB_SUFIX = "job";
+	public final static String PREPROCESSING_SUFIX = "pr";
 	public final static String POSTPROCESSING_SUFIX = "ps";
 	
 	

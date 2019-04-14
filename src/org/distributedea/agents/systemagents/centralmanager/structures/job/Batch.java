@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.input.postprocessing.PostProcessing;
+import org.distributedea.input.preprocessing.PreProcessing;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
@@ -32,6 +33,7 @@ public class Batch implements Concept {
 	
 	private List<Job> jobs;
 
+	private List<PreProcessing> preProcessings;
 	private List<PostProcessing> postProcessings;
 	
 	
@@ -40,6 +42,7 @@ public class Batch implements Concept {
 	 */
 	public Batch() {
 		this.jobs = new ArrayList<>();
+		this.preProcessings = new ArrayList<>();
 		this.postProcessings = new ArrayList<>();
 	}
 	
@@ -70,6 +73,26 @@ public class Batch implements Concept {
 		}
 		
 		this.jobs.add(job);
+	}
+
+	public List<PreProcessing> getPreProcessings() {
+		return preProcessings;
+	}
+	public void setPreProcessings(List<PreProcessing> preProcessings) {
+		this.preProcessings = preProcessings;
+	}
+	public void addPreProcessings(PreProcessing preProcessing) {
+		if (preProcessing == null ||
+				! preProcessing.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					PreProcessing.class.getSimpleName() + " is not valid");
+		}
+		
+		if (this.preProcessings == null) {
+			this.preProcessings = new ArrayList<>();
+		}
+		
+		this.preProcessings.add(preProcessing);
 	}
 	
 	public List<PostProcessing> getPostProcessings() {
@@ -128,28 +151,29 @@ public class Batch implements Concept {
 				"description.txt";
 		String descriptionI = getInputBatchDescription(new File(batchDescription));
 
+		List<PreProcessing> preProcessings = new ArrayList<>();
 		List<Job> jobs = new ArrayList<>();
+		List<PostProcessing> postProcessings = new ArrayList<>();
+		
 		for (File fileI : batchDir.listFiles()) {
-			if (fileI.isFile() && fileI.getName().endsWith(FileNames.JOB_SUFIX)) {
+			if (!fileI.isFile()) {
+				continue;
+			}
+			if (fileI.getName().endsWith(FileNames.PREPROCESSING_SUFIX)) {				
+				preProcessings.add(PreProcessing.importXML(fileI));
 				
-				Job jobI = Job.importXML(fileI);
-				jobs.add(jobI);
+			} else if(fileI.getName().endsWith(FileNames.JOB_SUFIX)){
+				jobs.add(Job.importXML(fileI));
+				
+			} else if(fileI.getName().endsWith(FileNames.POSTPROCESSING_SUFIX)) {
+				postProcessings.add(PostProcessing.importXML(fileI));
 			}
 		}
-
-		List<PostProcessing> postProcessings = new ArrayList<>();	
-		for (File fileI : batchDir.listFiles()) {
-			if (fileI.isFile() && fileI.getName().endsWith(FileNames.POSTPROCESSING_SUFIX)) {
-				
-				PostProcessing jobI = PostProcessing.importXML(fileI);
-				postProcessings.add(jobI);
-			}
-		}
-
 		
 		Batch batch = new Batch();
 		batch.setBatchID(batchDir.getName());
 		batch.setDescription(descriptionI);
+		batch.setPreProcessings(preProcessings);
 		batch.setJobs(jobs);
 		batch.setPostProcessings(postProcessings);
 		
@@ -200,6 +224,14 @@ public class Batch implements Concept {
 			jobWrpI.exportXML(new File(jobDirectoryI));
 		}
 
+		// exporting pre-processings
+		for (PreProcessing preProcI : preProcessings) {
+			String preProcDirectoryI = batchDir.getAbsolutePath() +
+					File.separator + preProcI.getClass().getSimpleName() + "." +
+					FileNames.PREPROCESSING_SUFIX;			
+			preProcI.exportXML(new File(preProcDirectoryI));
+		}
+
 		// exporting post-processings
 		for (PostProcessing postProcI : postProcessings) {
 			String postProcDirectoryI = batchDir.getAbsolutePath() +
@@ -207,7 +239,7 @@ public class Batch implements Concept {
 					FileNames.POSTPROCESSING_SUFIX;			
 			postProcI.exportXML(new File(postProcDirectoryI));
 		}
-		
+
 	}
 	
 	public void sortJobsByID() {
@@ -234,6 +266,16 @@ public class Batch implements Concept {
 				return false;
 			}
 		}
+		
+		if (preProcessings == null) {
+			return false;
+		}
+		for (PreProcessing preI : preProcessings) {
+			if (preI == null || ! preI.valid(logger)) {
+				return false;
+			}
+		}
+		
 		if (postProcessings == null) {
 			return false;
 		}

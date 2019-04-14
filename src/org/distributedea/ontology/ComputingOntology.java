@@ -4,14 +4,15 @@ import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.StartComputing;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetBinPacking;
 import org.distributedea.ontology.dataset.DatasetContinuousOpt;
+import org.distributedea.ontology.dataset.DatasetEVCharging;
 import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.dataset.DatasetTSPGPS;
 import org.distributedea.ontology.dataset.DatasetTSPPoint;
@@ -35,6 +36,8 @@ import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
+import org.distributedea.ontology.methoddesriptionsplanned.PlannedMethodDescription;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigree.tree.PedVertex;
 import org.distributedea.ontology.pedigree.treefull.PedVertexFull;
@@ -71,7 +74,9 @@ public class ComputingOntology extends BeanOntology {
             add(PedVertex.class.getPackage().getName());
             add(MethodDescriptionNumbers.class);
             add(MethodDescriptionNumber.class);
-            add(MethodDescription.class);
+            add(PlannedMethodDescription.class);
+            
+            add(MethodIDs.class.getPackage().getName());
             
             add(MethodDescription.class);
             add(IProblem.class.getPackage().getName());
@@ -106,6 +111,8 @@ public class ComputingOntology extends BeanOntology {
             add(DatasetMF.class);
             add(ObjectRating.class.getPackage().getName());
             add(IItemContent.class.getPackage().getName());
+
+            add(DatasetEVCharging.class);
             
             add(IDatasetDescription.class.getPackage().getName());
             

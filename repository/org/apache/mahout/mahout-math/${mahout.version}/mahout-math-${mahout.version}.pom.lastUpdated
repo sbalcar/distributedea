@@ -1,0 +1,6 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Mon Oct 15 14:24:04 CEST 2018
+default-http\://jade.tilab.com/.lastUpdated=1539606244129
+default-http\://repo.maven.apache.org/maven2/.lastUpdated=1539606244133
+http\://jade.tilab.com/.error=Could not transfer artifact org.apache.mahout\:mahout-math\:pom\:${mahout.version} from/to tilab (http\://jade.tilab.com/)\: Illegal character in path at index 53\: http\://jade.tilab.com/org/apache/mahout/mahout-math/${mahout.version}/mahout-math-${mahout.version}.pom
+http\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.apache.mahout\:mahout-math\:pom\:${mahout.version} from/to central (http\://repo.maven.apache.org/maven2)\: Illegal character in path at index 67\: http\://repo.maven.apache.org/maven2/org/apache/mahout/mahout-math/${mahout.version}/mahout-math-${mahout.version}.pom

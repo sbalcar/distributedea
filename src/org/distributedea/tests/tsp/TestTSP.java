@@ -12,8 +12,8 @@ import org.distributedea.ontology.individuals.IndividualPermutation;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problemtools.IProblemTool;
-import org.distributedea.problemtools.tsp.point.permutation.ProblemToolBruteForceTSPPoint;
+import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.tsp.point.permutation.ProblemToolBruteForceTSPPoint;
 
 public class TestTSP {
 

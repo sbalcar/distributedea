@@ -23,7 +23,7 @@ import org.distributedea.agents.systemagents.Agent_ManagerAgent;
 import org.distributedea.logging.AgentLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ManagementOntology;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
@@ -32,6 +32,7 @@ import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 
 /**
  * Wrapper for all services which provides {@link Agent_ManagerAgent}
@@ -155,7 +156,7 @@ public class ManagerAgentService {
 	 * @return
 	 */
 	public static AgentConfiguration sendCreateAgent(Agent_DistributedEA agentSender,
-			AID agentReciever, InputAgentConfiguration agentConfiguration,
+			AID agentReciever, InputAgentConfiguration inputAgentConf, MethodIDs methodIDs,
 			IAgentLogger logger) {
 		
 		if (agentSender == null) {
@@ -166,9 +167,9 @@ public class ManagerAgentService {
 			throw new IllegalArgumentException("Argument " +
 					AID.class.getSimpleName() + " can't be null");
 		}
-		if (agentConfiguration == null || ! agentConfiguration.valid(logger)) {
+		if (inputAgentConf == null || ! inputAgentConf.valid(logger)) {
 			throw new IllegalArgumentException("Argument " +
-					AgentConfiguration.class.getSimpleName() + " is not valid");
+					InputAgentConfiguration.class.getSimpleName() + " is not valid");
 		}
 		if (logger == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -184,7 +185,7 @@ public class ManagerAgentService {
 		msgCreateA.setLanguage(agentSender.getCodec().getName());
 		msgCreateA.setOntology(ontology.getName());
 
-		CreateAgent createAgent = new CreateAgent(agentConfiguration);
+		CreateAgent createAgent = new CreateAgent(inputAgentConf, methodIDs);
 		
 		Action action = new Action(agentSender.getAID(), createAgent);
 		

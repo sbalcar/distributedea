@@ -13,8 +13,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
-import org.distributedea.problemtools.AProblemTool;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO;
+import org.distributedea.problems.AProblemTool;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolBruteForceCO;
 
 public class Test {
 
@@ -23,7 +23,7 @@ public class Test {
 		IInputBatch iBatchCOf2 = new BatchSingleMethodsCOf2();
 		Batch batchCOf2 = iBatchCOf2.batch();
 		
-		AProblemTool tool = new ProblemToolBruteForceCO();
+		AProblemTool tool = new ProblemToolBruteForceCO(0.005);
 		
 		IDatasetDescription datasetDescr = batchCOf2.getJobs().get(0).getDatasetDescription();
 		Dataset dataset = tool.readDataset(datasetDescr, null, new TrashLogger());

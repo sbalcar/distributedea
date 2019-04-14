@@ -23,7 +23,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolHillClimbingTSPGPS2opt</problemToolClass>
+            <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolHillClimbingTSPGPS2opt</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -42,7 +42,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <planner class="plannerInitialisationRunEachMethodOnce">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

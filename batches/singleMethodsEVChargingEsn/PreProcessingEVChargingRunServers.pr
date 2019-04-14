@@ -1,0 +1,5 @@
+<org.distributedea.input.preprocessing.evcharging.PreProcessingEVChargingRunServers>
+  <port>8080</port>
+  <serverCount>16</serverCount>
+  <datasetFile>inputs/evcharging/config_esn.json</datasetFile>
+</org.distributedea.input.preprocessing.evcharging.PreProcessingEVChargingRunServers>

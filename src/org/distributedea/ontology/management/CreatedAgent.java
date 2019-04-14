@@ -1,7 +1,7 @@
 package org.distributedea.ontology.management;
 
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 
 import jade.content.Concept;
 

@@ -1,14 +1,15 @@
 package org.distributedea.agents.computingagents.universal;
 
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 import org.distributedea.services.CentralLogerService;
 
 /**
@@ -22,17 +23,20 @@ public class ComputingThread extends Thread {
 
 	private Agent_ComputingAgent agent;
 
-	private IslandModelConfiguration configuration;
+	private IslandModelConfiguration islandModelConf;
 	
 	private ProblemWrapper problemWrp;
 	
 	private AgentConfiguration requiredAgentConf;
 	
+	private  MethodIDs methodIDs;
+	
 	private Dataset dataset;
 	
 	
 	public ComputingThread(Agent_ComputingAgent agent, ProblemWrapper problemWrp,
-			IslandModelConfiguration islandModelConf, AgentConfiguration requiredAgentConf) {
+			IslandModelConfiguration islandModelConf, AgentConfiguration requiredAgentConf,
+			MethodIDs methodIDs) {
 		
 		if (agent == null) {
 			throw new IllegalArgumentException("Argument " +
@@ -50,9 +54,12 @@ public class ComputingThread extends Thread {
 					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
 		if (requiredAgentConf == null || ! requiredAgentConf.valid(logger)) {
-			requiredAgentConf.valid(logger);
 			throw new IllegalArgumentException("Argument " +
 					AgentConfiguration.class.getSimpleName() + " is not valid");
+		}
+		if (methodIDs == null || ! methodIDs.valid(logger)) {
+			throw new IllegalArgumentException("Argument " +
+					MethodIDs.class.getSimpleName() + " is not valid");
 		}
 				
 		
@@ -60,10 +67,11 @@ public class ComputingThread extends Thread {
 		
 		this.problemWrp = problemWrp;
 		
-		this.configuration = islandModelConf;
+		this.islandModelConf = islandModelConf;
 		
 		this.requiredAgentConf = requiredAgentConf;
 
+		this.methodIDs = methodIDs;
 		
 		ProblemToolDefinition problemToolDef = problemWrp.getProblemToolDefinition();
 		IProblemTool problemTool = problemToolDef.exportProblemTool(logger);
@@ -90,15 +98,15 @@ public class ComputingThread extends Thread {
 	}
 
 	public void isIndividualDistribution() {
-		configuration.isIndividualDistribution();
+		islandModelConf.isIndividualDistribution();
 	}
 	
 	@Override
 	public void run() {
-
+		
 		try {
 			agent.startComputing(problemWrp.deepClone(),
-					configuration.deepClone(), requiredAgentConf);
+					islandModelConf.deepClone(), requiredAgentConf, methodIDs.deepClone());
 			
 		} catch (Exception e) {
 			System.out.println("Error by computing");

@@ -10,8 +10,8 @@ import java.util.Random;
 import org.distributedea.agents.systemagents.initiator.XmlConfigurationProvider;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.AgentConfigurations;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfigurations;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
 
 

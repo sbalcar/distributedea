@@ -7,8 +7,8 @@ import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.IProblemToolEvolution;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation;
+import org.distributedea.problems.IProblemToolEvolution;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation;
 
 public class Test {
 
@@ -33,7 +33,7 @@ public class Test {
 		System.out.println("Generated individual:");
 		System.out.println("Fitness: " + indivEvalGenerated.getFitness());
 		
-		IndividualEvaluated indivEvalImproved = problemTool.improveIndividualEval(
+		IndividualEvaluated indivEvalImproved = problemTool.mutationOfIndividualEval(
 				indivEvalGenerated, problem, datasetMF, null, new TrashLogger());
 		
 		

@@ -1,18 +1,18 @@
 package org.distributedea.agents.computingagents;
 
-import java.util.Arrays;
-import java.util.Random;
 import java.util.Vector;
 
 import org.distributedea.agents.FitnessTool;
+import org.distributedea.agents.computingagents.specific.differentialevolution.DifferentialModel;
+import org.distributedea.agents.computingagents.specific.differentialevolution.DifferentialQuaternion;
 import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.universal.CompAgentState;
 import org.distributedea.agents.computingagents.universal.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.IndividualArguments;
@@ -25,9 +25,11 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.ProblemEVCharging;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
@@ -35,9 +37,8 @@ import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problemtools.IProblemTool;
-import org.distributedea.problemtools.IProblemToolDifferentialEvolution;
-import org.distributedea.structures.comparators.CmpIndividualEvaluated;
+import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.IProblemToolDifferentialEvolution;
 
 /**
  * Agent represents Differential Evolution Algorithm Method
@@ -50,6 +51,10 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 
 	private String POP_SIZE = "popSize";
 	private int popSize = 10;
+	
+	private String CROSS_RATE = "crossRate";
+	private double crossRate = 0;
+	
 	
 	@Override
 	protected boolean isAbleToSolve(ProblemWrapper problemWrp) {
@@ -94,6 +99,10 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			if (representation == IndividualLatentFactors.class) {
 				isAble = true;
 			}			
+		} else if (problem instanceof ProblemEVCharging) {
+			if (representation == IndividualPoint.class) {
+				isAble = true;
+			}			
 		}
 
 		
@@ -117,17 +126,21 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		// set population size
 		Argument popSizeArg = arguments.exportArgument(POP_SIZE);
 		this.popSize = popSizeArg.exportValueAsInteger();
+
+		// set cross rate
+		Argument crossRateArg = arguments.exportArgument(CROSS_RATE);
+		this.crossRate = crossRateArg.exportValueAsDouble();
 	}
 	
 	@Override
 	protected void startComputing(ProblemWrapper problemWrp,
-			IslandModelConfiguration configuration, AgentConfiguration agentConf) throws Exception {
+			IslandModelConfiguration islandModelConf, AgentConfiguration agentConf, MethodIDs methodIDs) throws Exception {
 		
   		if (problemWrp == null || ! problemWrp.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +
 					ProblemWrapper.class.getSimpleName() + " is not valid");
 		}
-		if (configuration == null || ! configuration.valid(getCALogger())) {
+		if (islandModelConf == null || ! islandModelConf.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +
 					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
@@ -141,8 +154,8 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		JobID jobID = problemWrp.getJobID();
 		ProblemToolDefinition problemToolDef = problemWrp.getProblemToolDefinition();
 		IProblem problem = problemWrp.getProblem();
-		boolean individualDistribution = configuration.isIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemToolDef);
+		boolean individualDistribution = islandModelConf.isIndividualDistribution();
+		MethodDescription methodDescription = new MethodDescription(agentConf, methodIDs, problem, problemToolDef);
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemWrp.getPedigreeDefinition(), methodDescription);
 		
@@ -155,7 +168,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		this.localSaver = new LocalSaver(this, jobID);
 		
 		
-		problemTool.initialization(problem, dataset, agentConf, getLogger());
+		problemTool.initialization(problem, dataset, agentConf, methodIDs, getLogger());
 		this.state = CompAgentState.COMPUTING;
 		
 		long generationNumberI = -1;
@@ -200,9 +213,15 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 									
 			IndividualEvaluated individualNew = problemTool.
-					createNewIndividualEval(individual1, individual2,
+					differentialOfIndividualsEval(individual1, individual2,
 					individual3, problem, dataset, pedigreeParams, getCALogger());
-
+			
+			if (Math.random() < crossRate) {
+				individualNew = problemTool.cross(individualNew, individualCandidateI,
+						problem, dataset, pedigreeParams, getCALogger());
+			}
+			
+			
 			IndividualEvaluated betterFromCandidateAndNewIndiv = individualCandidateI;
 			if (FitnessTool.isFirstIndividualEBetterThanSecond(
 							individualNew, individualCandidateI, problem)) {
@@ -214,7 +233,7 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualNew, generationNumberI,
-					problem, jobID, localSaver);
+					jobID, problem, methodDescription, localSaver);
 			
 			// send new Individual to distributed neighbors
 			IndividualEvaluated theBestOfPopulation = model.getBestIndividual(problem);
@@ -242,112 +261,4 @@ public class Agent_DifferentialEvolution extends Agent_ComputingAgent {
 		this.localSaver.closeFiles();
 	}
 
-}
-
-
-class DifferentialModel {
-	
-	private IndividualEvaluated[] population;
-	
-	private Random random = new Random();
-	
-	public DifferentialModel(Vector<IndividualEvaluated> population0, int popSize) {
-		if (population0 == null || population0.size() != popSize) {
-			throw new IllegalArgumentException();
-		}
-		
-		this.population = new IndividualEvaluated[popSize];
-		
-		for (int i = 0; i < popSize; i++) {
-			
-			IndividualEvaluated indivI = population0.get(i);
-			this.population[i] = indivI;
-		}
-	}
-
-	public DifferentialQuaternion getQuaternion() {
-	
-		int popSize = population.length;
-		
-		//pick random point from population
-		int candidateIndex = random.nextInt(popSize);
-		
-		int index1;
-		do {
-			index1 = random.nextInt(popSize);
-		} while (index1 == candidateIndex);
-
-		int index2;
-		do {
-			index2 = random.nextInt(popSize);
-		} while (index2 == candidateIndex || index2 == index1);
-		
-		int index3;
-		do {
-			index3 = random.nextInt(popSize);
-		} while (index3 == candidateIndex || index3 == index1 || index3 == index2);
-
-		
-		DifferentialQuaternion quaternion = new DifferentialQuaternion();
-		quaternion.individualCandidateI = population[candidateIndex];
-		
-		quaternion.individual1 = population[index1];
-		quaternion.individual2 = population[index2];
-		quaternion.individual3 = population[index3];
-		
-		return quaternion;
-	}
-
-	public void replaceIndividual(IndividualEvaluated indivToDel,
-			IndividualEvaluated indivToAdd) {
-		
-		int index = indexOf(indivToDel);
-/*		
-		if (index == -1) {
-			System.out.println(indivToDel);
-			System.out.println("----------------");
-			
-			for (int i = 0; i < population.length; i++) {
-				IndividualEvaluated a = population[i];
-				if (a.getFitness() == indivToDel.getFitness()) {
-					int todo = 5;
-					todo++;
-					a.getIndividual().equals(indivToDel.getIndividual());
-					System.out.println(a);
-				}
-			}
-
-		}
-*/		
-		population[index] = indivToAdd;
-	}
-	
-	private int indexOf(IndividualEvaluated indiv) {
-		if (indiv == null) {
-			new IllegalArgumentException("Argument is not valid");
-		}
-		
-		for (int i = 0; i < population.length; i++) {
-			if (indiv.equals(population[i])) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	public IndividualEvaluated getBestIndividual(IProblem problem) {
-
-		Arrays.sort(population, new CmpIndividualEvaluated(problem));
-		return population[0];
-	}
-}
-
-class DifferentialQuaternion {
-	
-	IndividualEvaluated individualCandidateI;
-	
-	IndividualEvaluated individual1;
-	IndividualEvaluated individual2;
-	IndividualEvaluated individual3;
-	
 }

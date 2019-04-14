@@ -9,7 +9,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.AProblem;
-import org.distributedea.problemtools.IProblemToolEvolution;
+import org.distributedea.problems.IProblemToolEvolution;
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.GeneticOperator;
@@ -114,7 +114,7 @@ public class EAMutationWrapper implements GeneticOperator {
 		// call the mutation
 		IndividualEvaluated individualNew;
 		try {
-			individualNew = problemTool.improveIndividualEval(
+			individualNew = problemTool.mutationOfIndividualEval(
 					new IndividualEvaluated(individual, fitness, null),
 					problem, dataset, null, logger);
 		} catch (Exception e1) {

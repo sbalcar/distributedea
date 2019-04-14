@@ -13,8 +13,8 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
-import org.distributedea.problemtools.AProblemTool;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolBruteForceBP;
+import org.distributedea.problems.AProblemTool;
+import org.distributedea.problems.binpacking.permutation.ProblemToolBruteForceBP;
 
 public class Test {
 

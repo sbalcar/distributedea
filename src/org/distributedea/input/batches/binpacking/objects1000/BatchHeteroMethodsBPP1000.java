@@ -33,8 +33,8 @@ import org.distributedea.input.postprocessing.general.matlab.PostProcCountsOfAll
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigree.PedigreeCounter;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 
@@ -132,7 +132,7 @@ public class BatchHeteroMethodsBPP1000 implements IInputBatch {
 		InputMethodDescription methodTabuSearch = jobI.deepClone().getMethods()
 				.exportFirstInputMethodDescription(Agent_TabuSearch.class);
 
-		Methods methodss = new Methods();
+		InputMethodDescriptions methodss = new InputMethodDescriptions();
 		methodss.addInputMethodDescriptions(methodHillClimbing, 15);
 		methodss.addInputMethodDescriptions(methodTabuSearch, 1);
 

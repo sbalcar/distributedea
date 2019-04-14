@@ -11,9 +11,9 @@ import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.monitor.MethodStatistic;
@@ -281,14 +281,14 @@ public class History {
 	}
 	
 	/**
-	 * Exports {@link Methods} from {@link JobRun} which
+	 * Exports {@link InputMethodDescriptions} from {@link JobRun} which
 	 * have never run
 	 * @param jobRun
 	 * @return
 	 */
-	public Methods exportsMethodsWhichHaveNeverRun(JobRun jobRun) {
+	public InputMethodDescriptions exportsMethodsWhichHaveNeverRun(JobRun jobRun) {
 		
-		Methods agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				jobRun.getMethods().exportInputMethodDescriptions();
 		
 		return getMethodHistories().exportsMethodsWhichHaveNeverRun(

@@ -13,16 +13,16 @@ import org.distributedea.agents.systemagents.centralmanager.structures.methodsst
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.agentconfiguration.AgentConfigurations;
 import org.distributedea.ontology.agentinfo.AgentInfosWrapper;
-import org.distributedea.ontology.configuration.AgentConfigurations;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.monitor.MethodStatistic;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
@@ -78,7 +78,7 @@ public class PlannerAgentInfo implements IPlanner {
 		InputAgentConfigurations agentConfigurations =
 				exploitationAgentConfigurations.exportInputAgentConfigurations();
 		
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescrCartesianProduct(agentConfigurations, problemTools);
 		JobRun exploitationJobRun = jobRun.deepClone();		
 		exploitationJobRun.setMethods(methods);
@@ -135,13 +135,13 @@ public class PlannerAgentInfo implements IPlanner {
 				exploitationAgentConfigurations.exportInputAgentConfigurations();
 
 	
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescrCartesianProduct(exploitationInAgentConfs, problemTools);
 		JobRun exploitationJobRun = jobRun.deepClone();
 		exploitationJobRun.setMethods(methods);
 				
 		
-		Methods exploitationMethodsWhichHaveNeverRun =
+		InputMethodDescriptions exploitationMethodsWhichHaveNeverRun =
 				history.exportsMethodsWhichHaveNeverRun(exploitationJobRun);
 		
 		if (! exploitationMethodsWhichHaveNeverRun.isEmpty()) {

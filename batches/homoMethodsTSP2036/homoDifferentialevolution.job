@@ -19,11 +19,15 @@
                   <name>popSize</name>
                   <value>50</value>
                 </argument>
+                <argument>
+                  <name>crossRate</name>
+                  <value>0.0</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolDifferentialEvolutionTSPGPS</problemToolClass>
+            <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolDifferentialEvolutionTSPGPS</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -42,7 +46,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <planner class="plannerInitialisationOneMethodPerCore">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

@@ -3,14 +3,14 @@ package org.distributedea.ontology.individualwrapper;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
 

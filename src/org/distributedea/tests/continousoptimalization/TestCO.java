@@ -9,9 +9,9 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.distributedea.agents.computingagents.Agent_EvolutionJGAP;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
@@ -19,15 +19,16 @@ import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individuals.IndividualPoint;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.IProblemTool;
-import org.distributedea.problemtools.continuousoptimization.bbobv1502.BbobException;
-import org.distributedea.problemtools.continuousoptimization.bbobv1502.BbobTools;
-import org.distributedea.problemtools.continuousoptimization.bbobv1502.IJNIfgeneric;
-import org.distributedea.problemtools.continuousoptimization.bbobv1502.JNIfgeneric;
-import org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO;
+import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.continuousoptimization.bbobv1502.BbobException;
+import org.distributedea.problems.continuousoptimization.bbobv1502.BbobTools;
+import org.distributedea.problems.continuousoptimization.bbobv1502.IJNIfgeneric;
+import org.distributedea.problems.continuousoptimization.bbobv1502.JNIfgeneric;
+import org.distributedea.problems.continuousoptimization.point.ProblemToolBruteForceCO;
 
 
 public class TestCO {
@@ -40,10 +41,10 @@ public class TestCO {
 				new DatasetDescription(new File(inputFileName));
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
-		IProblemTool tool = new ProblemToolBruteForceCO();
+		IProblemTool tool = new ProblemToolBruteForceCO(0.005);
 		
 		Dataset dataset = tool.readDataset(datasetDescr, problem, null);
-		tool.initialization(problem, dataset, null, null);
+		tool.initialization(problem, dataset, null, null, null);
 		
 		IndividualEvaluated individual = tool.generateIndividualEval(problem, dataset, null, null);
 		
@@ -60,21 +61,21 @@ public class TestCO {
 		IDatasetDescription datasetDescr =
 				new DatasetDescription(new File(inputFileName));
 		
-		IProblemTool tool1 = new ProblemToolBruteForceCO();
+		IProblemTool tool1 = new ProblemToolBruteForceCO(0.005);
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		Dataset dataset1 = tool1.readDataset(datasetDescr, problem, null);
-		tool1.initialization(problem, dataset1, null, null);
+		tool1.initialization(problem, dataset1, null, null, null);
 
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 		}
 		
-		IProblemTool tool2 = new ProblemToolBruteForceCO();
+		IProblemTool tool2 = new ProblemToolBruteForceCO(0.005);
 		
 		Dataset dataset2 = tool2.readDataset(datasetDescr, problem, null);
-		tool2.initialization(problem, dataset2, null, null);
+		tool2.initialization(problem, dataset2, null, null, null);
 		
 		
 		for (int i = 0; i < 10; i++) {
@@ -107,9 +108,9 @@ public class TestCO {
 	    
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 		
-	    IProblemTool tool = new ProblemToolBruteForceCO();
+	    IProblemTool tool = new ProblemToolBruteForceCO(0.005);
 	    Dataset dataset = tool.readDataset(datasetDescr, problem, null);
-		tool.initialization(problem, dataset, null, null);
+		tool.initialization(problem, dataset, null, null, null);
 		
 		IndividualEvaluated individualEval1 = tool.generateIndividualEval(problem, dataset, null, null);
 		Individual individual1 = individualEval1.getIndividual();
@@ -174,7 +175,7 @@ public class TestCO {
 		
 		IProblem problem = new ProblemContinuousOpt("f01", 2, false);
 
-		IProblemTool problemTool = new ProblemToolBruteForceCO();
+		IProblemTool problemTool = new ProblemToolBruteForceCO(0.005);
 		Dataset dataset = problemTool.readDataset(datasetDescr, problem, null);
 		
 		
@@ -182,7 +183,7 @@ public class TestCO {
 				File.separator + "Agent_Evolution_14.rslt";
 		File fileOfSolution = new File(solutionFileName);
 		
-		IProblemTool tool = new ProblemToolBruteForceCO();
+		IProblemTool tool = new ProblemToolBruteForceCO(0.005);
 		
 		Individual individual = tool.readSolution(fileOfSolution, dataset, null);
 	}
@@ -197,16 +198,16 @@ public class TestCO {
 		AgentConfiguration ac1 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		ProblemToolDefinition probToolDef1 =
-				new ProblemToolDefinition(new ProblemToolBruteForceCO());
+				new ProblemToolDefinition(new ProblemToolBruteForceCO(0.005));
 		MethodDescription a1 =
-				new MethodDescription(ac1, problem, probToolDef1);
+				new MethodDescription(ac1, new MethodIDs(1), problem, probToolDef1);
 		
 		AgentConfiguration ac2 = new AgentConfiguration("Agent_Evolution-17",
 				Agent_EvolutionJGAP.class, new Arguments(new ArrayList<Argument>()));
 		ProblemToolDefinition probToolDef2 =
-				new ProblemToolDefinition(new ProblemToolBruteForceCO());
+				new ProblemToolDefinition(new ProblemToolBruteForceCO(0.005));
 		MethodDescription a2 =
-				new MethodDescription(ac2, problem, probToolDef2);
+				new MethodDescription(ac2, new MethodIDs(2), problem, probToolDef2);
 		
 		map.put(a1, 1);
 		map.put(a2, 2);

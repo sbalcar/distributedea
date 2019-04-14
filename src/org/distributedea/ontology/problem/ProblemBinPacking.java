@@ -71,12 +71,6 @@ public class ProblemBinPacking extends AProblem {
 	}
 
 	@Override
-	public ProblemBinPacking deepClone() {
-		
-		return new ProblemBinPacking(this);
-	}
-
-	@Override
 	public boolean equals(Object other) {
 		
 	    if (!(other instanceof ProblemBinPacking)) {
@@ -88,4 +82,15 @@ public class ProblemBinPacking extends AProblem {
 	    return getSizeOfBin() == otherBP.getSizeOfBin();
 	}
 
+	@Override
+	public String toLogString() {
+		return this.getClass().getSimpleName() + " " +
+				"sizeOfBin: " + sizeOfBin;
+	}
+
+	@Override
+	public ProblemBinPacking deepClone() {
+		
+		return new ProblemBinPacking(this);
+	}
 }

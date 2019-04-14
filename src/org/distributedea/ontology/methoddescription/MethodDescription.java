@@ -9,15 +9,16 @@ import java.util.Scanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.methodtype.MethodType;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -36,6 +37,11 @@ public class MethodDescription implements Concept {
 	 * Agent specification including class, name and parameters
 	 */
 	private AgentConfiguration agentConfiguration;
+	
+	/**
+	 * Method identificators
+	 */
+	private MethodIDs methodIDs;
 	
 	/**
 	 * Problem to solve definition
@@ -58,14 +64,10 @@ public class MethodDescription implements Concept {
 	 * @param problemToolClass
 	 */
 	public MethodDescription(AgentConfiguration agentConfiguration,
-			IProblem problem, ProblemToolDefinition problemToolDefinition) {
-		if (agentConfiguration == null ||
-				! agentConfiguration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					AgentConfiguration.class.getSimpleName() + " is not valid");
-		}
-	
+			MethodIDs methodIDs, IProblem problem, ProblemToolDefinition problemToolDefinition) {
+		
 		setAgentConfiguration(agentConfiguration);
+		setMethodIDs(methodIDs);
 		setProblem(problem);
 		setProblemToolDefinition(problemToolDefinition);
 	}
@@ -83,12 +85,15 @@ public class MethodDescription implements Concept {
 
 		AgentConfiguration agentConfigurationClone =
 				methodDescription.getAgentConfiguration().deepClone();
+		MethodIDs methodIDsClone =
+				methodDescription.getMethodIDs().deepClone();
 		IProblem problemClone =
 				methodDescription.getProblem().deepClone();
 		ProblemToolDefinition problemToolClone =
 				methodDescription.getProblemToolDefinition().deepClone();
 		
 		setAgentConfiguration(agentConfigurationClone);
+		setMethodIDs(methodIDsClone);
 		setProblem(problemClone);
 		setProblemToolDefinition(problemToolClone);
 	}
@@ -99,10 +104,25 @@ public class MethodDescription implements Concept {
 	@Deprecated
 	public void setAgentConfiguration(AgentConfiguration agentConfiguration) {
 		if (agentConfiguration == null || ! agentConfiguration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					AgentConfiguration.class.getSimpleName() + " is not valid");
 		}
 		this.agentConfiguration = agentConfiguration;
 	}
+	
+	
+	public MethodIDs getMethodIDs() {
+		return methodIDs;
+	}
+	@Deprecated
+	public void setMethodIDs(MethodIDs methodIDs) {
+		if (methodIDs == null || ! methodIDs.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					MethodIDs.class.getSimpleName() + " is not valid");
+		}
+		this.methodIDs = methodIDs;
+	}
+
 	
 	public IProblem getProblem() {
 		return problem;
@@ -231,10 +251,14 @@ public class MethodDescription implements Concept {
 	    
 	    boolean areAgentagentConfigurationsEqual =
 	    		this.getAgentConfiguration().equals(adOuther.getAgentConfiguration());
+
+	    boolean areMethodIDsEqual =
+	    		this.getMethodIDs().equals(adOuther.getMethodIDs());
+	    
 	    boolean areProblemToolClassesEqual =
 	    		this.getProblemToolDefinition().equals(adOuther.getProblemToolDefinition());
 	    
-	    return areAgentagentConfigurationsEqual && 
+	    return areAgentagentConfigurationsEqual && areMethodIDsEqual &&
 	    		areProblemToolClassesEqual;
 	}
 	
@@ -251,12 +275,17 @@ public class MethodDescription implements Concept {
 			agentConfigurationStr = getAgentConfiguration().toString();
 		}
 
+		String methodIDsStr = "null";
+		if (getMethodIDs() != null) {
+			methodIDsStr = getMethodIDs().toString();
+		}
+		
 		String problemToolDefStr = "null";
 		if (getProblemToolDefinition() != null) {
 			problemToolDefStr = getProblemToolDefinition().toString();
 		}
 		
-		return agentConfigurationStr + "-" + problemToolDefStr;
+		return agentConfigurationStr + "-" + methodIDsStr + "-" + problemToolDefStr;
 	}
 	
 	/**

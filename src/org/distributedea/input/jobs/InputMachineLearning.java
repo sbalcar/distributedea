@@ -28,18 +28,18 @@ import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolBruteForceML;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolDifferentialEvolutionML;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolEvolutionML;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolHillClimbingMLMoveABit;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolRandomSearchML;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolSimulatedAnnealingMLMoveABit;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolTabuSearchMLMoveABit;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolBruteForceML;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolDifferentialEvolutionML;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolEvolutionML;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolHillClimbingMLMoveABit;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolRandomSearchML;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolSimulatedAnnealingMLMoveABit;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolTabuSearchMLMoveABit;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 
@@ -83,11 +83,11 @@ public class InputMachineLearning {
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
-				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"))),
+				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"), new Argument("crossRate", "0.0"))),
 				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionML())
 				);
 
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescr(methodHillClimbing);
 		methods.addInputMethodDescr(methodRandomSearch);
 		methods.addInputMethodDescr(methodEvolution);

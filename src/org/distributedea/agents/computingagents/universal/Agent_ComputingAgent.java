@@ -31,20 +31,21 @@ import org.distributedea.agents.computingagents.universal.queuesofindividuals.re
 import org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel;
 import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.IReadyToSendIndividualsInserter;
 import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.IReceivedIndividualSelector;
+import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ComputingOntology;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
 import org.distributedea.ontology.ResultOntology;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentName;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.agentinfo.AgentInfoWrapper;
 import org.distributedea.ontology.agentinfo.GetAgentInfo;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.computing.AccessesResult;
 import org.distributedea.ontology.computing.StartComputing;
-import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.AgentName;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.helpmate.StatisticOfHelpmates;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
@@ -60,8 +61,10 @@ import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbe
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problemtools.AProblemTool;
+import org.distributedea.problems.AProblemTool;
 import org.distributedea.services.ManagerAgentService;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
+
 
 /**
  * Abstract class of Agent which is inherited by all Computing Agents
@@ -78,6 +81,9 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	
 	// configuration of this agent
 	protected AgentConfiguration agentConf = null;
+	
+	// method IDs
+	protected MethodIDs methodIDs = null;
 	
 	// logger for Computing Agent
 	private IAgentLogger logger = null;
@@ -117,13 +123,14 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	/**
 	 * Starts computing a given {@link Problem} by using given {@link AProblemTool}
 	 * @param problemWrp
-	 * @param configuration
-	 * @param requiredAgentConfiguration
+	 * @param islandModelConf
+	 * @param agentConf
 	 * @throws Exception
 	 */
 	protected abstract void startComputing(ProblemWrapper problemWrp,
-			IslandModelConfiguration configuration,
-			AgentConfiguration requiredAgentConfiguration) throws Exception;
+			IslandModelConfiguration islandModelConf,
+			AgentConfiguration agentConf,
+			MethodIDs methodIDs) throws Exception;
 	
 	/**
 	 * Returns basic method description
@@ -183,16 +190,23 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 	
 	
-	private AgentConfiguration processAgentArguments(Object[] jadeArguments) {
+	private Pair<AgentConfiguration, MethodIDs> processAgentArguments(Object[] jadeArguments) {
 		
 		Object argumentObj0 = jadeArguments[0];
-		AgentName agentName = AgentName.importXML((String) argumentObj0);
+		Object argumentObj1 = jadeArguments[1];
 		
-		Object[] argumentsObj = new Object[jadeArguments.length -1];
-		System.arraycopy(jadeArguments, 1, argumentsObj, 0, jadeArguments.length -1);
+		AgentName agentName = AgentName.importXML((String) argumentObj0);
+		MethodIDs methodIDs = new MethodIDs((int)argumentObj1);
+		
+		
+		Object[] argumentsObj = new Object[jadeArguments.length -2];
+		System.arraycopy(jadeArguments, 2, argumentsObj, 0, jadeArguments.length -2);
 		Arguments arguments = Arguments.importArguments(argumentsObj);
 		
-		return new AgentConfiguration(agentName, this.getClass(), arguments);
+		AgentConfiguration agentConfiguration =
+				new AgentConfiguration(agentName, this.getClass(), arguments);
+				
+		return new Pair<AgentConfiguration, MethodIDs>(agentConfiguration, methodIDs);
 	}
 	
 	
@@ -201,7 +215,13 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	protected void setup() {
 		
 		// process Jade arguments
-		this.agentConf = processAgentArguments(getArguments());
+		Pair<AgentConfiguration, MethodIDs> pair = processAgentArguments(getArguments());
+		this.agentConf = pair.first;
+		this.methodIDs = pair.second;
+		
+		getLogger().log(Level.INFO, "AgentConf: " + agentConf.toLogString());
+		getLogger().log(Level.INFO, "MethodIDs: " + methodIDs.toLogString());
+		
 		try {
 			processArguments(this.agentConf.getArguments());
 		} catch (Exception e1) {
@@ -254,6 +274,8 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 
 				} catch (OntologyException e) {
 					getLogger().logThrowable("Problem extracting content", e);
+					e.printStackTrace();
+					
 				} catch (CodecException e) {
 					getLogger().logThrowable("Codec problem", e);
 				}
@@ -426,6 +448,10 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return reply;
 		}
 		
+		getLogger().log(Level.INFO, "StartComputing ontology received");
+		getLogger().log(Level.INFO, "ProblemWrapper: " + startComputing.getProblemWrapper().toLogString());
+		getLogger().log(Level.INFO, "IslandModelConfiguration: " +  startComputing.getIslandModelConfiguration().toLogString());
+		
 		if (state != CompAgentState.INITIALIZED) {
 			
 			getLogger().log(Level.INFO, "Agent " + this.getLocalName() +
@@ -455,8 +481,12 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 			return reply;
 		}
 		
+		if (methodIDs == null) {
+			System.out.println("methodIDs are null");
+		}
+		
 		try {
-			startComputation(problemWrapper, islandModelConf);
+			startComputation(problemWrapper, islandModelConf, methodIDs);
 		} catch (Exception e) {
 			ACLMessage reply = request.createReply();
 			reply.setPerformative(ACLMessage.REFUSE);
@@ -547,7 +577,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	private void startComputation(final ProblemWrapper problemWrp,
-			final IslandModelConfiguration islandModel) throws Exception {
+			final IslandModelConfiguration islandModel, MethodIDs methodIDs) throws Exception {
 		
 		if (this.state != CompAgentState.INITIALIZED) {
 			throw new Exception("Agent is not initialized");
@@ -569,7 +599,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		IProblem problem = problemWrp.getProblem();
 		ProblemToolDefinition problemToolDef = problemWrp.getProblemToolDefinition();
-		MethodDescription methodDescr = new MethodDescription(agentConf, problem, problemToolDef);
+		MethodDescription methodDescr = new MethodDescription(agentConf, methodIDs, problem, problemToolDef);
 		
 		// adding cyclic behavior for sending Individual to distribution
 		CompAgentIndivDistributionBehavior indivDistributionBehavior = 
@@ -581,7 +611,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		
 		
 		// starts thread where is running computation
-		this.computingThread = new ComputingThread(this, problemWrp, islandModel, agentConf);	
+		this.computingThread = new ComputingThread(this, problemWrp, islandModel, agentConf, methodIDs);	
 		this.computingThread.start();
 
 	}
@@ -605,7 +635,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		try {
-			return new MethodDescription(agentConf, problem, problemToolDef);
+			return new MethodDescription(agentConf, methodIDs, problem, problemToolDef);
 		} catch (Exception e) {
 			return null;
 		}
@@ -625,9 +655,7 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 		}
 		
 		// log in local file
-		String resultLog = "Generation " +
-				generationNumber + ": " +
-				individualEval.getFitness();
+		String resultLog = "Generation " + generationNumber + ": " + individualEval.getFitness();
 		getLogger().log(Level.INFO, resultLog);
 				
 		MethodDescription methodDescript = getMethodDescription();
@@ -650,14 +678,16 @@ public abstract class Agent_ComputingAgent extends Agent_DistributedEA {
 	}
 
 	protected void processComputedIndividual(IndividualEvaluated individualEval ,
-			long generationNumber, IProblem problem, JobID jobID,
-			LocalSaver localSaver) {
+			long generationNumber, JobID jobID, IProblem problem,
+			MethodDescription methodDescript, LocalSaver localSaver) {
 		
 		if (generationNumber == -1) {
 			throw new IllegalStateException();
 		}
-		
-		MethodDescription methodDescript = getMethodDescription();
+
+		// log in local file
+		String resultLog = "Generation " + generationNumber + ": " + individualEval.getFitness();
+		getLogger().log(Level.INFO, resultLog);
 		
 		IndividualWrapper computedIndividualWrp =
 				new IndividualWrapper(jobID, methodDescript, individualEval);

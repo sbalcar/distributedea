@@ -18,8 +18,8 @@ import org.distributedea.agents.computingagents.universal.queuesofindividualssel
 import org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector;
 import org.distributedea.agents.systemagents.centralmanager.plannerinfrastructure.endcondition.PlannerEndCondIterationCountRestriction;
 import org.distributedea.agents.systemagents.centralmanager.planners.PlannerTheBestHelper;
-import org.distributedea.agents.systemagents.centralmanager.planners.dumy.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationOneMethodPerCore;
+import org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodOnce;
 import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.ontology.arguments.Argument;
@@ -27,18 +27,18 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolBruteForceTSPGPS;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolDifferentialEvolutionTSPGPS;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolEvolutionTSPGPSTwoPointCross2optMutation;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolHillClimbingTSPGPS2opt;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolRandomSearchTSPGPS;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolSimulatedAnnealingTSPGPS2opt;
-import org.distributedea.problemtools.tsp.gps.permutation.ProblemToolTabuSearchTSPGPS2opt;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolBruteForceTSPGPS;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolDifferentialEvolutionTSPGPS;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolEvolutionTSPGPSTwoPointCross2optMutation;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolHillClimbingTSPGPS2opt;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolRandomSearchTSPGPS;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolSimulatedAnnealingTSPGPS2opt;
+import org.distributedea.problems.tsp.gps.permutation.ProblemToolTabuSearchTSPGPS2opt;
 
 /**
  * Defines a set of TSP {@link Job}
@@ -80,11 +80,11 @@ public class InputTSP {
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
-				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"))),
+				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"), new Argument("crossRate", "0.0"))),
 				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionTSPGPS())
 				);
 
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescr(methodHillClimbing);
 		methods.addInputMethodDescr(methodRandomSearch);
 		methods.addInputMethodDescr(methodEvolution);
@@ -125,7 +125,7 @@ public class InputTSP {
 	
 	public static Job test02() throws IOException {
 		
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 		
 		IslandModelConfiguration islandModelConf =
 				test01().getIslandModelConfiguration().deepClone();
@@ -149,7 +149,7 @@ public class InputTSP {
 	
 	public static Job test04() throws IOException {
 
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 		
 		IslandModelConfiguration islandModelConf =
 				test01().getIslandModelConfiguration().deepClone();		
@@ -172,7 +172,7 @@ public class InputTSP {
 
 	public static Job test05() throws IOException {
 
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 		
 		IslandModelConfiguration islandModelConf =
 				test01().getIslandModelConfiguration().deepClone();
@@ -196,7 +196,7 @@ public class InputTSP {
 
 	public static Job test06() throws IOException {
 
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 		
 		IslandModelConfiguration islandModelConf =
 				test01().getIslandModelConfiguration().deepClone();
@@ -220,7 +220,7 @@ public class InputTSP {
 
 	public static Job test07() throws IOException {
 
-		Methods methods = test01().getMethods();
+		InputMethodDescriptions methods = test01().getMethods();
 		
 		IslandModelConfiguration islandModelConf =
 				test01().getIslandModelConfiguration().deepClone();

@@ -157,6 +157,12 @@ public class ProblemWrapper implements Concept {
 		return true;
 	}
 
+	public String toLogString() {
+		return "jobID=" + jobID.toString() + " " +
+				"problem=" + problem.toLogString() + " " +
+				"problemTool=" + problemToolDefinition.toLogString();
+	}
+	
 	/**
 	 * Returns clone
 	 * @return

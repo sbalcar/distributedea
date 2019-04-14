@@ -30,9 +30,9 @@ import org.distributedea.logging.ConsoleLogger;
 import org.distributedea.logging.FileLogger;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.ManagementOntology;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentName;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configuration.AgentConfiguration;
-import org.distributedea.ontology.configuration.AgentName;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.management.CreateAgent;
 import org.distributedea.ontology.management.CreatedAgent;
@@ -40,6 +40,7 @@ import org.distributedea.ontology.management.KillAgent;
 import org.distributedea.ontology.management.KillContainer;
 import org.distributedea.ontology.management.computingnode.DescribeNode;
 import org.distributedea.ontology.management.computingnode.NodeInfo;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.services.ComputingAgentService;
 
 /**
@@ -146,6 +147,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		@SuppressWarnings("unused")
 		DescribeNode describeNode = (DescribeNode) action.getAction();
 		
+		getLogger().log(Level.CONFIG, describeNode.getClass().getSimpleName() + " received");
+		
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 		reply.setLanguage(codec.getName());
@@ -153,6 +156,8 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		
 		double coresDouble = Configuration.COUNT_OF_METHODS_ON_CORE * (double) Runtime.getRuntime().availableProcessors();
 		int cores = (int) coresDouble;
+		
+		getLogger().log(Level.CONFIG, "CPU cores: " + cores);
 		
 		AID [] localComputingAgentAIDs =
 				searchLocalContainerDF(Agent_ComputingAgent.class.getName());
@@ -190,16 +195,17 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	protected ACLMessage respondToCreateAgent(ACLMessage request, Action action) {
 
 		CreateAgent createAgent = (CreateAgent) action.getAction();
-		InputAgentConfiguration configuration = createAgent.getConfiguration();
-
-		Class<?> agentType = configuration.exportAgentClass();
-		String agentName = configuration.getAgentName();
+		InputAgentConfiguration inputAgentConf = createAgent.getConfiguration();
+		MethodIDs methodIDs = createAgent.getMethodIDs();
+		
+		Class<?> agentType = inputAgentConf.exportAgentClass();
+		String agentName = inputAgentConf.getAgentName();
 		
 		String s = "Creating agentName " + agentName + " agentType " + agentType.getSimpleName();
 		getLogger().log(Level.INFO, s);
 		
 		AgentConfiguration createdAgentConfiguration =
-				createAgent(this, configuration, getLogger());
+				createAgent(this, inputAgentConf, methodIDs, getLogger());
 				
 		ACLMessage reply = request.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
@@ -336,7 +342,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return - confirms creation
 	 */
 	public static AgentConfiguration createAgent(Agent_DistributedEA agent,
-			InputAgentConfiguration configuration, IAgentLogger logger) {
+			InputAgentConfiguration inputAgentConf, MethodIDs methodIDs, IAgentLogger logger) {
 	
 		// starts another agents
 		String containerID;
@@ -346,24 +352,24 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 			return null;
 		}
 
-		AgentName agentName = new AgentName(configuration.getAgentName());
+		AgentName agentName = new AgentName(inputAgentConf.getAgentName());
 		agentName.setContainerID(containerID);
 		agentName.setNumberOfAgent(0);
 		agentName.setNumberOfContainer(0);
 		
-		AgentConfiguration configurationI = new AgentConfiguration(configuration);
-		configurationI.setAgentName(agentName);
+		AgentConfiguration agentConfI = new AgentConfiguration(inputAgentConf);
+		agentConfI.setAgentName(agentName);
 		
-		AgentConfiguration controller = tryCreateAgent(agent, configurationI, logger);
+		AgentConfiguration controller = tryCreateAgent(agent, agentConfI, methodIDs, logger);
 		while (controller == null) {
 			
 			if (agent instanceof Agent_Initiator) {
-				configurationI.incrementNumberOfContainer();
+				agentConfI.incrementNumberOfContainer();
 			} else if (agent instanceof Agent_ManagerAgent){
-				configurationI.incrementNumberOfAgent();
+				agentConfI.incrementNumberOfAgent();
 			}
 			
-			controller = tryCreateAgent(agent, configurationI, logger);
+			controller = tryCreateAgent(agent, agentConfI, methodIDs, logger);
 		}
 		
 		return controller;
@@ -377,10 +383,10 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	 * @return
 	 */
 	private static AgentConfiguration tryCreateAgent(Agent_DistributedEA agent,
-			AgentConfiguration configuration, IAgentLogger logger) {
+			AgentConfiguration agentConf, MethodIDs methodIDs, IAgentLogger logger) {
 		
 		try {
-			return createAndStartAgent(agent, configuration);
+			return createAndStartAgent(agent, agentConf, methodIDs);
 			
 		} catch (ControllerException e) {
 			return null;
@@ -390,22 +396,18 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 	
 	/**
 	 * Creates and starts Agent
-	 * 
 	 * @param agent
-	 * @param agentName
-	 * @param numberOfContainer
-	 * @param type
-	 * @param argumentList
+	 * @param agentConf
 	 * @return
 	 * @throws ControllerException
 	 */
 	private static AgentConfiguration createAndStartAgent(Agent_DistributedEA agent,
-			AgentConfiguration configuration) throws ControllerException {
+			AgentConfiguration agentConf, MethodIDs methodIDs) throws ControllerException {
 		
-		Class<?> agentClass = configuration.exportAgentClass();
-		AgentName agentName = configuration.getAgentName();
-		String agentNameString = configuration.exportAgentname();
-		Arguments arguments = configuration.getArguments();
+		Class<?> agentClass = agentConf.exportAgentClass();
+		AgentName agentName = agentConf.getAgentName();
+		String agentNameString = agentConf.exportAgentname();
+		Arguments arguments = agentConf.getArguments();
 		
 		Object[] jadeArgs = null;
 		if (agentClass == Sniffer.class) {
@@ -414,11 +416,12 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		} else {
 			
 			Object agentNameArg0 = agentName.exportXML();
-			Object[] argumentsArgs = configuration.getArguments().exportAgrumentsForJade();
+			Object[] argumentsArgs = agentConf.getArguments().exportAgrumentsForJade();
 			
-			Object[] jadeArguments = new Object[argumentsArgs.length + 1];
+			Object[] jadeArguments = new Object[argumentsArgs.length + 2];
 			jadeArguments[0] = agentNameArg0;
-			System.arraycopy(argumentsArgs, 0, jadeArguments, 1, argumentsArgs.length);
+			jadeArguments[1] = methodIDs.getMethodGlobalID();
+			System.arraycopy(argumentsArgs, 0, jadeArguments, 2, argumentsArgs.length);
 			
 			
 			jadeArgs = jadeArguments;
@@ -435,7 +438,7 @@ public class Agent_ManagerAgent extends Agent_DistributedEA {
 		// provide agent time to register with DF etc.
 		agent.doWait(300);
 		
-		return configuration;
+		return agentConf;
 	}
 	
 	

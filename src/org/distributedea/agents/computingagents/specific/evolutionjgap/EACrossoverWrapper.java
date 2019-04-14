@@ -8,7 +8,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.IProblemToolEvolution;
+import org.distributedea.problems.IProblemToolEvolution;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.GeneticOperator;
@@ -138,7 +138,7 @@ public class EACrossoverWrapper implements GeneticOperator {
 		
 		IndividualEvaluated[] newIndividuals = null;
 		try {
-			newIndividuals = problemTool.createNewIndividual(
+			newIndividuals = problemTool.crossIndividualEval(
 						new IndividualEvaluated(individualPerm1, fitness1, null),
 						new IndividualEvaluated(individualPerm2, fitness2, null),
 						problem, dataset, null, logger);

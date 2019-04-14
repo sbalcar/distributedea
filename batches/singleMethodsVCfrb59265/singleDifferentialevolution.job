@@ -19,11 +19,15 @@
                   <name>popSize</name>
                   <value>50</value>
                 </argument>
+                <argument>
+                  <name>crossRate</name>
+                  <value>0.0</value>
+                </argument>
               </arguments>
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.vertexcover.set.ProblemToolDifferentialEvolutionVC</problemToolClass>
+            <problemToolClass>org.distributedea.problems.vertexcover.set.ProblemToolDifferentialEvolutionVC</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -42,7 +46,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <planner class="plannerInitialisationRunEachMethodOnce">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

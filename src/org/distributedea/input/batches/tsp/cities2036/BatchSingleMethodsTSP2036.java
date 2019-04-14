@@ -19,8 +19,8 @@ import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJob;
 import org.distributedea.input.postprocessing.general.latex.PostProcTableOfJobRunResults;
 import org.distributedea.input.postprocessing.general.matlab.PostProcBoxplot;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 
 public class BatchSingleMethodsTSP2036 implements IInputBatch {
 
@@ -41,7 +41,7 @@ public class BatchSingleMethodsTSP2036 implements IInputBatch {
 		Job job0 = jobI.deepClone();
 		job0.setJobID("singleHillclimbing");
 		job0.setDescription("Single-HillClimbing");
-		job0.setMethods(new Methods(methodHillClimbing));
+		job0.setMethods(new InputMethodDescriptions(methodHillClimbing));
 
 		
 		InputMethodDescription methodRandomSearch = jobI.deepClone().getMethods()
@@ -50,7 +50,7 @@ public class BatchSingleMethodsTSP2036 implements IInputBatch {
 		Job job1 = jobI.deepClone();
 		job1.setJobID("singleRandomsearch");
 		job1.setDescription("Single-RandomSearch");
-		job1.setMethods(new Methods(methodRandomSearch));
+		job1.setMethods(new InputMethodDescriptions(methodRandomSearch));
 
 		
 		InputMethodDescription methodEvolution = jobI.deepClone().getMethods()
@@ -59,7 +59,7 @@ public class BatchSingleMethodsTSP2036 implements IInputBatch {
 		Job job2 = jobI.deepClone();
 		job2.setJobID("singleEvolution");
 		job2.setDescription("Single-Evolution");
-		job2.setMethods(new Methods(methodEvolution));
+		job2.setMethods(new InputMethodDescriptions(methodEvolution));
 
 		
 		InputMethodDescription methodBruteForce = jobI.deepClone().getMethods()
@@ -68,7 +68,7 @@ public class BatchSingleMethodsTSP2036 implements IInputBatch {
 		Job job3 = jobI.deepClone();
 		job3.setJobID("singleBruteforce");
 		job3.setDescription("Single-BruteForce");
-		job3.setMethods(new Methods(methodBruteForce));
+		job3.setMethods(new InputMethodDescriptions(methodBruteForce));
 		
 
 		InputMethodDescription methodTabuSearch = jobI.deepClone().getMethods()
@@ -77,7 +77,7 @@ public class BatchSingleMethodsTSP2036 implements IInputBatch {
 		Job job4 = jobI.deepClone();
 		job4.setJobID("singleTabusearch");
 		job4.setDescription("Single-TabuSearch");
-		job4.setMethods(new Methods(methodTabuSearch));
+		job4.setMethods(new InputMethodDescriptions(methodTabuSearch));
 
 		
 		InputMethodDescription methodSimulatedAnnealing = jobI.deepClone().getMethods()
@@ -86,7 +86,7 @@ public class BatchSingleMethodsTSP2036 implements IInputBatch {
 		Job job5 = jobI.deepClone();
 		job5.setJobID("singleSimulatedannealing");
 		job5.setDescription("Single-SimulatedAnnealing");
-		job5.setMethods(new Methods(methodSimulatedAnnealing));
+		job5.setMethods(new InputMethodDescriptions(methodSimulatedAnnealing));
 
 		
 		InputMethodDescription methodDifferentialEvolution = jobI.deepClone().getMethods()
@@ -95,7 +95,7 @@ public class BatchSingleMethodsTSP2036 implements IInputBatch {
 		Job job6 = jobI.deepClone();
 		job6.setJobID("singleDifferentialevolution");
 		job6.setDescription("Single-DifferentialEvolution");
-		job6.setMethods(new Methods(methodDifferentialEvolution));
+		job6.setMethods(new InputMethodDescriptions(methodDifferentialEvolution));
 		
 		batch.addJob(job0);
 		batch.addJob(job1);

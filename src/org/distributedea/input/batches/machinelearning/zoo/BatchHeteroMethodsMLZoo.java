@@ -31,7 +31,7 @@ import org.distributedea.input.postprocessing.general.matlab.PostProcCountsOfAll
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfInstCountOfMethodTypes;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMedianJobRun;
 import org.distributedea.input.postprocessing.general.matlab.PostProcInvestigationOfMeritsOfMethodTypes;
-import org.distributedea.ontology.method.Methods;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 
 public class BatchHeteroMethodsMLZoo implements IInputBatch {
 
@@ -111,7 +111,7 @@ public class BatchHeteroMethodsMLZoo implements IInputBatch {
 		job12.setPlanner(new PlannerTheGreatestQGoodMaterialImprovementFitness());
 		
 	
-		Methods algorithms = new Methods();
+		InputMethodDescriptions algorithms = new InputMethodDescriptions();
 		algorithms.addInputMethodDescriptions(
 				jobI.getMethods().exportFirstInputMethodDescription(Agent_HillClimbing.class), 15);
 		algorithms.addInputMethodDescriptions(

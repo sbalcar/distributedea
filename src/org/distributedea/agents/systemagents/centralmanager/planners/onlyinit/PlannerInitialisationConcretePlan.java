@@ -16,18 +16,20 @@ import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
+import org.distributedea.ontology.methoddesriptionsplanned.PlannedMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
 public class PlannerInitialisationConcretePlan implements IPlanner {
 	
-	private Methods methods;
+	private InputMethodDescriptions methods;
 	
-	public PlannerInitialisationConcretePlan(Methods methods) {
+	public PlannerInitialisationConcretePlan(InputMethodDescriptions methods) {
 		if (methods == null || ! methods.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					MethodDescriptions.class.getSimpleName() + " is not valid");
@@ -51,12 +53,15 @@ public class PlannerInitialisationConcretePlan implements IPlanner {
 		
 		for (int i = 0; i < methods.size(); i++) {
 
-			InputMethodDescription iAgentDescriptionI =
+			InputMethodDescription inputMethodDescrI =
 					methods.get(i);
 
 			AID aidManagerI = managersAID.get(i % managersAID.size());
 			
-			inputPlan.add(aidManagerI, iAgentDescriptionI);
+			PlannedMethodDescription plannedMethodDescrI =
+					inputMethodDescrI.exportPlannedMethodDescription(new MethodIDs(i));
+			
+			inputPlan.add(aidManagerI, plannedMethodDescrI);
 		}
 		
 		return PlannerTool.createAndRunAgents(centralManager,

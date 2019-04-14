@@ -12,10 +12,10 @@ import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.computingagents.universal.CompAgentState;
 import org.distributedea.agents.computingagents.universal.localsaver.LocalSaver;
 import org.distributedea.agents.systemagents.centralmanager.structures.pedigree.PedigreeParameters;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.agentinfo.AgentInfo;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
@@ -27,16 +27,18 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problem.ProblemContinuousOpt;
+import org.distributedea.ontology.problem.ProblemEVCharging;
 import org.distributedea.ontology.problem.ProblemTSPGPS;
 import org.distributedea.ontology.problem.ProblemTSPPoint;
 import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
 import org.distributedea.ontology.problemwrapper.ProblemWrapper;
-import org.distributedea.problemtools.IProblemTool;
-import org.distributedea.problemtools.IProblemToolEvolution;
+import org.distributedea.problems.IProblemTool;
+import org.distributedea.problems.IProblemToolEvolution;
 import org.jgap.Configuration;
 import org.jgap.Genotype;
 import org.jgap.IChromosome;
@@ -99,6 +101,10 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 			if (representation == IndividualSet.class) {
 				isAble = true;
 			}			
+		} else if (problem instanceof ProblemEVCharging) {
+			if (representation == IndividualPoint.class) {
+				isAble = true;
+			}			
 		}
 
 		
@@ -134,13 +140,13 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 	
 	@Override
 	protected void startComputing(ProblemWrapper problemWrp,
-			IslandModelConfiguration configuration, AgentConfiguration agentConf) throws Exception {
+			IslandModelConfiguration islandModelConf, AgentConfiguration agentConf, MethodIDs methodIDs) throws Exception {
 	
   		if (problemWrp == null || ! problemWrp.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +
 					ProblemWrapper.class.getSimpleName() + " is not valid");
 		}
-		if (configuration == null || ! configuration.valid(getCALogger())) {
+		if (islandModelConf == null || ! islandModelConf.valid(getCALogger())) {
 			throw new IllegalArgumentException("Argument " +
 					IslandModelConfiguration.class.getSimpleName() + " is not valid");
 		}
@@ -154,8 +160,8 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		JobID jobID = problemWrp.getJobID();
 		ProblemToolDefinition problemToolDef = problemWrp.getProblemToolDefinition();
 		IProblem problem = problemWrp.getProblem();
-		boolean individualDistribution = configuration.isIndividualDistribution();
-		MethodDescription methodDescription = new MethodDescription(agentConf, problem, problemToolDef);
+		boolean individualDistribution = islandModelConf.isIndividualDistribution();
+		MethodDescription methodDescription = new MethodDescription(agentConf, methodIDs, problem, problemToolDef);
 		PedigreeParameters pedigreeParams = new PedigreeParameters(
 				problemWrp.getPedigreeDefinition(), methodDescription);
 		
@@ -168,7 +174,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 		this.localSaver = new LocalSaver(this, jobID);
 		
 		
-		problemTool.initialization(problem, dataset, agentConf, getLogger());
+		problemTool.initialization(problem, dataset, agentConf, methodIDs, getLogger());
 		this.state = CompAgentState.COMPUTING;
 		
 		
@@ -255,7 +261,7 @@ public class Agent_EvolutionJGAP extends Agent_ComputingAgent {
 			
 			// save, log and distribute computed Individual
 			processComputedIndividual(individualEvalI_,
-					generationNumberI, problem, jobID, localSaver);
+					generationNumberI, jobID, problem, methodDescription, localSaver);
 			
 			List<IndividualEvaluated> populationOntol =
 					convertPopulationToOntology(pop.getPopulation(), problem, dataset,

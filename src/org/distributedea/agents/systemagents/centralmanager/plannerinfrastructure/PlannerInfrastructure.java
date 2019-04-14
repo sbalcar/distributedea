@@ -103,7 +103,7 @@ public final class PlannerInfrastructure {
 		history.addNewPlan(plan);
 		history.addNewRePlan(new RePlan(endCondition.zeroIteration()));
 		
-		while (endCondition.isContinue(iterationNumI)) {			
+		while (endCondition.isContinue(iterationNumI)) {		
 			
 			// log information about re-planning
 			iterationNumI++;

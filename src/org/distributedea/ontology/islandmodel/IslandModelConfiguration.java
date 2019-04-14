@@ -302,6 +302,18 @@ public class IslandModelConfiguration implements Concept {
 		return true;
 	}
 	
+	public String toLogString() {
+		return "individualDistribution=" + individualDistribution + " " +
+				"neighbourCount=" + neighbourCount + " " +
+				"replanPeriodMS=" + replanPeriodMS + " " +
+				"individualBroadcastPeriodMS=" + individualBroadcastPeriodMS + " " +
+				"readyToSendIndividualsModelClassName=" + readyToSendIndividualsModelClassName + " " +
+				"receivedIndividualsModelClassName=" + receivedIndividualsModelClassName + " " +
+				"readyToSendIndividualInserterClassName=" + readyToSendIndividualInserterClassName + " " +
+				"receivedIndividualSelectorClassName=" + receivedIndividualSelectorClassName;
+	}
+		
+	
 	/**
 	 * Returns Clone
 	 * @return

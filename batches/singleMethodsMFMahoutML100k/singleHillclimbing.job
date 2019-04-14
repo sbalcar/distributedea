@@ -1,0 +1,69 @@
+<job>
+  <jobID>singleHillclimbing</jobID>
+  <numberOfRuns>9</numberOfRuns>
+  <description>Single-HillClimbing</description>
+  <problem class="problemMatrixFactorization">
+    <latFactXDef class="latFactRange"/>
+    <latFactYDef class="latFactRange"/>
+    <latentFactorWidth>10</latentFactorWidth>
+  </problem>
+  <datasetDescription class="datasetDescriptionMF">
+    <datasetTrainingFileName>inputs/ml-100k/u.data</datasetTrainingFileName>
+    <trainingSetDef class="ratingIDsComplement">
+      <ratingIDs class="ratingIDsArithmeticSequence">
+        <a1>5</a1>
+        <d>5</d>
+      </ratingIDs>
+    </trainingSetDef>
+    <datasetTestingFileName>inputs/ml-100k/u.data</datasetTestingFileName>
+    <testingSetDef class="ratingIDsArithmeticSequence">
+      <a1>5</a1>
+      <d>5</d>
+    </testingSetDef>
+    <usersContentFileName>inputs/ml-100k/u.user</usersContentFileName>
+    <itemsContentFileName>inputs/ml-100k/u.item</itemsContentFileName>
+  </datasetDescription>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_HillClimbing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_HillClimbing</agentClassName>
+            <arguments>
+              <arguments>
+                <argument>
+                  <name>numberOfNeighbors</name>
+                  <value>10</value>
+                </argument>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFMahout</problemToolClass>
+            <arguments>
+              <arguments/>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
+    </inputMethodDescriptions>
+  </methods>
+  <islandModelConfiguration>
+    <individualDistribution>false</individualDistribution>
+    <neighbourCount>3</neighbourCount>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>5000</individualBroadcastPeriodMS>
+    <readyToSendIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel</readyToSendIndividualsModelClassName>
+    <receivedIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel</receivedIndividualsModelClassName>
+    <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
+    <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneEach5sSelector</receivedIndividualSelectorClassName>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationRunEachMethodOnce">
+    <globalID>0</globalID>
+  </planner>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>50</countOfReplanning>
+  </plannerEndCondition>
+  <pedigreeDefinition/>
+</job>

@@ -1,10 +1,10 @@
 package org.distributedea.ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.AccessesResult;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.IRatingIDs;
 import org.distributedea.ontology.helpmate.ReportHelpmate;
@@ -18,6 +18,7 @@ import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.methodtype.MethodInstanceDescription;
 import org.distributedea.ontology.monitor.MethodStatisticResult;
 import org.distributedea.ontology.pedigree.Pedigree;
@@ -79,6 +80,7 @@ public class ResultOntology extends BeanOntology {
             add(MethodDescriptionNumbers.class);
             add(MethodDescriptionNumber.class);
             add(MethodDescription.class);
+            add(MethodIDs.class);
             
             add(MethodDescription.class.getPackage().getName());
             add(IProblem.class.getPackage().getName());

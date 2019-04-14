@@ -22,7 +22,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolHillClimbingTSPGPS2opt</problemToolClass>
+          <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolHillClimbingTSPGPS2opt</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -37,7 +37,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolRandomSearchTSPGPS</problemToolClass>
+          <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolRandomSearchTSPGPS</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -69,7 +69,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolEvolutionTSPGPSTwoPointCross2optMutation</problemToolClass>
+          <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolEvolutionTSPGPSTwoPointCross2optMutation</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -84,7 +84,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolBruteForceTSPGPS</problemToolClass>
+          <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolBruteForceTSPGPS</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -108,7 +108,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolTabuSearchTSPGPS2opt</problemToolClass>
+          <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolTabuSearchTSPGPS2opt</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -132,7 +132,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolSimulatedAnnealingTSPGPS2opt</problemToolClass>
+          <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolSimulatedAnnealingTSPGPS2opt</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -148,11 +148,15 @@
                 <name>popSize</name>
                 <value>50</value>
               </argument>
+              <argument>
+                <name>crossRate</name>
+                <value>0.0</value>
+              </argument>
             </arguments>
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.tsp.gps.permutation.ProblemToolDifferentialEvolutionTSPGPS</problemToolClass>
+          <problemToolClass>org.distributedea.problems.tsp.gps.permutation.ProblemToolDifferentialEvolutionTSPGPS</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>

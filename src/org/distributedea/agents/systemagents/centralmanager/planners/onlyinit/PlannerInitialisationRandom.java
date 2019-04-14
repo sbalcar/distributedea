@@ -15,8 +15,9 @@ import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
@@ -28,6 +29,8 @@ public class PlannerInitialisationRandom implements IPlanner {
 	private IAgentLogger logger;
 	private JobRun jobRun;
 	private IslandModelConfiguration configuration;
+	
+	private int globalID = 0;
 	
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -44,14 +47,14 @@ public class PlannerInitialisationRandom implements IPlanner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 		
-		Methods agentDescriptions =
+		InputMethodDescriptions inputMethodDescr =
 				job.getMethods().exportInputMethodDescriptions();
 		
 		InputPlan inputPlan = new InputPlan(iteration);
 		for (AID aidI : managersAID) {
-			InputMethodDescription agentDescriptionI =
-					agentDescriptions.exportRandomMethodDescription();
-			inputPlan.add(aidI, agentDescriptionI);
+			InputMethodDescription methodDescrI =
+					inputMethodDescr.exportRandomMethodDescription();
+			inputPlan.add(aidI, methodDescrI.exportPlannedMethodDescription(new MethodIDs(globalID++)));
 		}
 		
 		return PlannerTool.createAndRunAgents(centralManager,
@@ -67,10 +70,10 @@ public class PlannerInitialisationRandom implements IPlanner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		Methods agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				jobRun.getMethods().exportInputMethodDescriptions();
 
-		Methods methodsWhichHaveNeverRun =  history
+		InputMethodDescriptions methodsWhichHaveNeverRun =  history
 				.getMethodHistories().exportsMethodsWhichHaveNeverRun(agentDescriptions);
 
 		
@@ -79,15 +82,13 @@ public class PlannerInitialisationRandom implements IPlanner {
 		for (int i = 0; i < managersAID.size(); i++) {
 			AID aidI = managersAID.get(i);
 			
+			InputMethodDescription methodI = null;
 			if (i < methodsWhichHaveNeverRun.size()) {
-				InputMethodDescription methodNeverRunI = 
-						methodsWhichHaveNeverRun.get(i);
-				inputPlan.add(aidI, methodNeverRunI);
+				methodI = methodsWhichHaveNeverRun.get(i);
 			} else {
-				InputMethodDescription methodRandomI = agentDescriptions
-						.exportRandomMethodDescription();
-				inputPlan.add(aidI, methodRandomI);
+				methodI = agentDescriptions.exportRandomMethodDescription();
 			}
+			inputPlan.add(aidI, methodI.exportPlannedMethodDescription(new MethodIDs(globalID++)));
 		}
 		
 		Plan plan = PlannerTool.createAndRunAgents(centralManager,

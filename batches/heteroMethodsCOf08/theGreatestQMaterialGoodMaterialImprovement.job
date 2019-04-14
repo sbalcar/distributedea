@@ -26,7 +26,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolHillClimbingCORandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolHillClimbingCORandomMove</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -41,7 +41,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolRandomSearchCO</problemToolClass>
+          <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolRandomSearchCO</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -73,7 +73,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolEvolutionCO</problemToolClass>
+          <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolEvolutionCO</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -88,9 +88,14 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO</problemToolClass>
+          <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolBruteForceCO</problemToolClass>
           <arguments>
-            <arguments/>
+            <arguments>
+              <argument>
+                <name>maxStep</name>
+                <value>0.005</value>
+              </argument>
+            </arguments>
           </arguments>
         </problemToolDefinition>
       </inputMethodDescription>
@@ -112,7 +117,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolTabuSearchCORandomMove</problemToolClass>
+          <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolTabuSearchCORandomMove</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -136,7 +141,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolRandomSearchCO</problemToolClass>
+          <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolRandomSearchCO</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -152,11 +157,15 @@
                 <name>popSize</name>
                 <value>50</value>
               </argument>
+              <argument>
+                <name>crossRate</name>
+                <value>0.0</value>
+              </argument>
             </arguments>
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolDifferentialEvolutionCO</problemToolClass>
+          <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolDifferentialEvolutionCO</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>

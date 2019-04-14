@@ -2,6 +2,7 @@ package org.distributedea.ontology.management;
 
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 
 import jade.content.AgentAction;
 
@@ -14,32 +15,49 @@ public class CreateAgent implements AgentAction {
 
 	private static final long serialVersionUID = 1L;
 	
-	private InputAgentConfiguration configuration;
+	private InputAgentConfiguration inputAgentConf;
 
+	private MethodIDs methodIDs;
+	
+	
 	@Deprecated
 	public CreateAgent() {} // only for Jade
 	
 	/**
 	 * Constructor
-	 * @param configuration
+	 * @param inputAgentConf
 	 */
-	public CreateAgent(InputAgentConfiguration configuration) {
-		if (configuration == null || ! configuration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
-		}
-		this.configuration = configuration;
+	public CreateAgent(InputAgentConfiguration inputAgentConf, MethodIDs methodIDs) {
+
+		setConfiguration(inputAgentConf);
+		setMethodIDs(methodIDs);
 	}
 	
 	
 	public InputAgentConfiguration getConfiguration() {
-		return configuration;
+		return inputAgentConf;
 	}
 	@Deprecated
-	public void setConfiguration(InputAgentConfiguration configuration) {
-		if (configuration == null || ! configuration.valid(new TrashLogger())) {
-			throw new IllegalArgumentException();
+	public void setConfiguration(InputAgentConfiguration inputAgentConf) {
+		if (inputAgentConf == null || ! inputAgentConf.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					InputAgentConfiguration.class.getSimpleName() + " is not valid");
 		}
-		this.configuration = configuration;
+		this.inputAgentConf = inputAgentConf;
 	}
+
+	
+	public MethodIDs getMethodIDs() {
+		return methodIDs;
+	}
+	@Deprecated
+	public void setMethodIDs(MethodIDs methodIDs) {
+		if (methodIDs == null || ! methodIDs.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					MethodIDs.class.getSimpleName() + " is not valid");
+		}
+		this.methodIDs = methodIDs;
+	}
+
 	
 }

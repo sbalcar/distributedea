@@ -65,7 +65,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolHillClimbingMLMoveABit</problemToolClass>
+          <problemToolClass>org.distributedea.problems.machinelearning.arguments.ProblemToolHillClimbingMLMoveABit</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -80,7 +80,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolRandomSearchML</problemToolClass>
+          <problemToolClass>org.distributedea.problems.machinelearning.arguments.ProblemToolRandomSearchML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -112,7 +112,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolEvolutionML</problemToolClass>
+          <problemToolClass>org.distributedea.problems.machinelearning.arguments.ProblemToolEvolutionML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -127,7 +127,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolBruteForceML</problemToolClass>
+          <problemToolClass>org.distributedea.problems.machinelearning.arguments.ProblemToolBruteForceML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -151,7 +151,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolTabuSearchMLMoveABit</problemToolClass>
+          <problemToolClass>org.distributedea.problems.machinelearning.arguments.ProblemToolTabuSearchMLMoveABit</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -175,7 +175,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolSimulatedAnnealingMLMoveABit</problemToolClass>
+          <problemToolClass>org.distributedea.problems.machinelearning.arguments.ProblemToolSimulatedAnnealingMLMoveABit</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -191,11 +191,15 @@
                 <name>popSize</name>
                 <value>50</value>
               </argument>
+              <argument>
+                <name>crossRate</name>
+                <value>0.0</value>
+              </argument>
             </arguments>
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.machinelearning.arguments.ProblemToolDifferentialEvolutionML</problemToolClass>
+          <problemToolClass>org.distributedea.problems.machinelearning.arguments.ProblemToolDifferentialEvolutionML</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -213,7 +217,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <planner class="plannerInitialisationRunEachMethodOnce">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

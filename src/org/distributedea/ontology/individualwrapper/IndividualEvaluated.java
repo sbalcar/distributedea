@@ -16,7 +16,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -99,7 +99,7 @@ public class IndividualEvaluated implements Concept {
 		}
 
 		try {
-			problemTool.initialization(problem, dataset, null, logger);
+			problemTool.initialization(problem, dataset, null, null, logger);
 		} catch (Exception e) {
 			return false;
 		}

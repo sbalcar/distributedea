@@ -5,10 +5,10 @@ import jade.content.Concept;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.iteration.Iteration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 
 
 /**
@@ -23,7 +23,7 @@ public class InputRePlan implements Concept {
 	
 	private Iteration iteration;
 	private MethodDescriptions agentsToKill;
-	private Methods agentsToCreate;
+	private InputMethodDescriptions agentsToCreate;
 	
 	@Deprecated
 	public InputRePlan() { // only for Jade
@@ -40,7 +40,7 @@ public class InputRePlan implements Concept {
 		}
 		iteration = teration;
 		agentsToKill = new MethodDescriptions();
-		agentsToCreate = new Methods();
+		agentsToCreate = new InputMethodDescriptions();
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class InputRePlan implements Concept {
 	 * @param agentsToCreate
 	 */
 	public InputRePlan(Iteration iteration, MethodDescriptions agentsToKill,
-			Methods agentsToCreate) {
+			InputMethodDescriptions agentsToCreate) {
 		if (iteration == null || ! iteration.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
 					Iteration.class.getSimpleName() + " is not valid");
@@ -78,7 +78,7 @@ public class InputRePlan implements Concept {
 		}
 		if (agentsToCreate == null || ! agentsToCreate.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Methods.class.getSimpleName() + " is not valid");
+					InputMethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		
 		this.iteration = iteration;
@@ -163,14 +163,14 @@ public class InputRePlan implements Concept {
 	 * Returns agents to create
 	 * @return
 	 */
-	public Methods getAgentsToCreate() {
+	public InputMethodDescriptions getAgentsToCreate() {
 		return this.agentsToCreate;
 	}
 	@Deprecated
-	public void setAgentsToCreate(Methods agentsToCreate) {
+	public void setAgentsToCreate(InputMethodDescriptions agentsToCreate) {
 		if (agentsToCreate == null) {
 			throw new IllegalArgumentException("Argument " +
-					Methods.class.getSimpleName() + " is not valid");
+					InputMethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.agentsToCreate = agentsToCreate;
 	}
@@ -186,7 +186,7 @@ public class InputRePlan implements Concept {
 		}
 		
 		if (this.agentsToCreate == null) {
-			this.agentsToCreate = new Methods();
+			this.agentsToCreate = new InputMethodDescriptions();
 		}
 		
 		this.agentsToCreate.addInputMethodDescr(agentToCreate);
@@ -199,16 +199,16 @@ public class InputRePlan implements Concept {
 	
 	public InputRePlan exportOptimalizedInpuRePlan() {
 		
-		Methods inputAgentDescriptions =
+		InputMethodDescriptions inputAgentDescriptions =
 				agentsToKill.exportInputMethodDescriptions();
 		
-		Methods intersection =
+		InputMethodDescriptions intersection =
 				inputAgentDescriptions.exportIntersection(agentsToCreate);
 		
 		MethodDescriptions agentsToKillClone = agentsToKill.deepClone();
 		agentsToKillClone.removeAll(intersection);
 		
-		Methods agentsToCreateClone = agentsToCreate.deepClone();
+		InputMethodDescriptions agentsToCreateClone = agentsToCreate.deepClone();
 		agentsToCreateClone.removeAll(intersection);
 		
 		return new InputRePlan(iteration.deepClone(),

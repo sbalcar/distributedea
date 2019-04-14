@@ -22,9 +22,14 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.continuousoptimization.point.ProblemToolBruteForceCO</problemToolClass>
+            <problemToolClass>org.distributedea.problems.continuousoptimization.point.ProblemToolBruteForceCO</problemToolClass>
             <arguments>
-              <arguments/>
+              <arguments>
+                <argument>
+                  <name>maxStep</name>
+                  <value>0.005</value>
+                </argument>
+              </arguments>
             </arguments>
           </problemToolDefinition>
         </inputMethodDescription>
@@ -41,7 +46,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <planner class="plannerInitialisationRunEachMethodOnce">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

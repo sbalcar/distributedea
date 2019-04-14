@@ -11,7 +11,7 @@ import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualsEvaluated;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.IProblemToolEvolution;
+import org.distributedea.problems.IProblemToolEvolution;
 import org.distributedea.structures.comparators.CmpIndividualEvaluated;
 
 /**
@@ -113,7 +113,7 @@ public class EvolutionPopulationModel {
 			IndividualEvaluated newIndividualEvalI = individualEvalI;
 			
 			if (Math.random() < probOfMutation) {
-				newIndividualEvalI = tool.improveIndividualEval(
+				newIndividualEvalI = tool.mutationOfIndividualEval(
 						individualEvalI, problem, dataset, pedigreeParams, logger);
 			}
 			improvedIndividuals[i] = newIndividualEvalI;
@@ -126,14 +126,14 @@ public class EvolutionPopulationModel {
 	 * CrossOver
 	 * @param probOfCross
 	 * @param selector
-	 * @param tool
+	 * @param problemTool
 	 * @param problem
 	 * @param logger
 	 * @return
 	 * @throws ProblemToolException
 	 */
 	public EvolutionPopulationModel processCross(double probOfCross, ISelector selector,
-			IProblemToolEvolution tool, IProblem problem, Dataset dataset,
+			IProblemToolEvolution problemTool, IProblem problem, Dataset dataset,
 			PedigreeParameters pedigreeParams, IAgentLogger logger) throws Exception {
 		
 		IndividualEvaluated[] individualsCopy =
@@ -144,7 +144,7 @@ public class EvolutionPopulationModel {
 			IndividualEvaluated indivEval1 = selector.select(individuals, problem);
 			IndividualEvaluated indivEval2 = selector.select(individuals, problem);
 			
-			IndividualEvaluated[] indivEvalNew = tool.createNewIndividual(
+			IndividualEvaluated[] indivEvalNew = problemTool.crossIndividualEval(
 					indivEval1, indivEval2, problem, dataset, pedigreeParams, logger);
 			
 			individualsCopy[i] = indivEvalNew[0];

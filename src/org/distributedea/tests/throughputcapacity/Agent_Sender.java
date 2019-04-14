@@ -17,8 +17,8 @@ import org.distributedea.agents.Agent_DistributedEA;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.ResultOntology;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.dataset.DatasetMF;
 import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsEmptySet;
@@ -29,13 +29,14 @@ import org.distributedea.ontology.individualwrapper.IndividualWrapper;
 import org.distributedea.ontology.individualwrapper.IndividualsWrappers;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.methoddescription.MethodDescription;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
-import org.distributedea.problemtools.matrixfactorization.latentfactor.tools.ToolReadDatasetMF;
+import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolFitnessRMSEMF;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.ToolGenerateIndividualMF;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.readingdataset.ToolReadDatasetMF;
 
 /**
  * Agent sender to test the throughput capacity of Jade 
@@ -180,13 +181,13 @@ public class Agent_Sender extends Agent_DistributedEA {
 		
 		JobID jobID = new JobID("batchName", "jobName", 0);
 		
-		AgentConfiguration agentConfiguration = new AgentConfiguration(
+		AgentConfiguration agentConf = new AgentConfiguration(
 				"Sender", Agent_Sender.class, new Arguments());
 		
 		ProblemToolDefinition probToolDef =
 				new ProblemToolDefinition(new ProblemToolBruteForceMFSGDist1ByIndex());
 		MethodDescription methodDescription = new MethodDescription(
-				agentConfiguration, problemMF, probToolDef);
+				agentConf, new MethodIDs(1), problemMF, probToolDef);
 		
 		return new IndividualWrapper(jobID, methodDescription, indivE);
 	}

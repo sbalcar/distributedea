@@ -15,6 +15,7 @@ import org.distributedea.agents.systemagents.centralmanager.structures.job.Job;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
 import org.distributedea.agents.systemagents.datamanager.FilesystemInitTool;
 import org.distributedea.input.postprocessing.PostProcessing;
+import org.distributedea.input.preprocessing.PreProcessing;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobRun;
@@ -120,6 +121,9 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 			logger.logThrowable("Can not copy input Batch", e);
 		}
 		
+		List<PreProcessing> preProcs = batch.getPreProcessings();
+		processPreProc(batch, preProcs);
+		
 		// add Behavior for Job Runs
 		for (Job jobI : batch.getJobs()) {
 			
@@ -131,11 +135,22 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 		processPostProc(batchID, postProcs);
 	}
 
+	private void processPreProc(Batch batch, List<PreProcessing> preProcs) {
+	
+		for (PreProcessing ppI : preProcs) {
+			try {
+				ppI.run(batch);
+			} catch (Exception e) {
+				logger.logThrowable("Can not run preprocessing", e);
+			}
+		}
+	}
+	
 	private void processJob(Job job, String batchID) {
 		
 		FilesystemInitTool.createResultSpaceForJob(batchID, job.getJobID(), logger);
 		
-		IslandModelConfiguration configuration = job.getIslandModelConfiguration();
+		IslandModelConfiguration islandModelConf = job.getIslandModelConfiguration();
 		int numberOfRuns = job.getNumberOfRuns();
 
 		IPlannerEndCondition endCondition = job.getPlannerEndCondition();
@@ -147,7 +162,7 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 
 			if (! FilesystemInitTool.existsResultSpaceForJobRun(jobRunI.getJobID())) {
 			
-				processJobRun(jobRunI, numberOfRuns, configuration,
+				processJobRun(jobRunI, numberOfRuns, islandModelConf,
 						endCondition, planner);
 				return; //process only one JobRun
 			}

@@ -4,7 +4,7 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 import org.jgap.Configuration;
 import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;

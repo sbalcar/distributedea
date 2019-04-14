@@ -111,11 +111,6 @@ public class ProblemMatrixFactorization extends AProblem {
 				getLatFactYDef() != null && getLatFactYDef().valid(logger);
 	}
 
-	@Override
-	public AProblem deepClone() {
-		
-		return new ProblemMatrixFactorization(this);
-	}
 
 	@Override
 	public boolean equals(Object other) {
@@ -130,5 +125,16 @@ public class ProblemMatrixFactorization extends AProblem {
 	    		getLatFactYDef().equals(outherMF.getLatFactYDef()) &&
 	    		getLatentFactorWidth() == outherMF.getLatentFactorWidth();
 	}
+
+	@Override
+	public String toLogString() {
+		return this.getClass().getSimpleName() + " " +
+			"latentFactorWidth=" + latentFactorWidth;
+	}
 	
+	@Override
+	public AProblem deepClone() {
+		
+		return new ProblemMatrixFactorization(this);
+	}
 }

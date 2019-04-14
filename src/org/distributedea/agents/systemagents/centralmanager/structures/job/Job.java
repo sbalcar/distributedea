@@ -54,8 +54,8 @@ import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingI
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobID;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.IProblem;
@@ -112,7 +112,7 @@ public class Job implements Concept, Serializable {
 	/**
 	 * Defines the methods
 	 */
-	private Methods methods;
+	private InputMethodDescriptions methods;
 	
 	
 	/**
@@ -148,6 +148,7 @@ public class Job implements Concept, Serializable {
 	 */
 	public Job(Job job) {
 		if (job == null || ! job.valid(new TrashLogger())) {
+			job.valid(new TrashLogger());
 			throw new IllegalArgumentException("Argument " + Job.class.getSimpleName() + " is not valid");
 		}
 		this.jobID = job.getJobID();
@@ -216,13 +217,13 @@ public class Job implements Concept, Serializable {
 	}
 
 
-	public Methods getMethods() {
+	public InputMethodDescriptions getMethods() {
 		return this.methods;
 	}
-	public void setMethods(Methods methods) {
+	public void setMethods(InputMethodDescriptions methods) {
 		if (methods == null || ! methods.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Methods.class.getSimpleName() + " is not valid");
+					InputMethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.methods = methods;
 	}
@@ -415,7 +416,7 @@ public class Job implements Concept, Serializable {
 		xstream.alias("argumentDefDouble", ArgumentDefDouble.class);
 		xstream.alias("argumentDefSwitch", ArgumentDefSwitch.class);
 		
-		xstream.alias("methods", Methods.class);
+		xstream.alias("methods", InputMethodDescriptions.class);
 		xstream.alias("inputMethodDescription", InputMethodDescription.class);
 		
 		xstream.alias("datasetDescription", DatasetDescription.class);

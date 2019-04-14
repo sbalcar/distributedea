@@ -20,10 +20,10 @@ import org.distributedea.ontology.dataset.matrixfactorization.RatingModel;
 import org.distributedea.ontology.dataset.matrixfactorization.objectrating.ObjectRatingList;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
-import org.distributedea.ontology.method.Methods;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.problem.IProblem;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 
 public class VisualisationMFtopK {
 
@@ -35,7 +35,7 @@ public class VisualisationMFtopK {
 		IProblem problem = jobI.getProblem();
 		
 		IDatasetDescription datasetDesr = jobI.getDatasetDescription();
-		Methods methods = jobI.getMethods();
+		InputMethodDescriptions methods = jobI.getMethods();
 		
 		ProblemToolDefinition problemToolDef =
 				methods.exportRandomMethodDescription().getProblemToolDefinition();

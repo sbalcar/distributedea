@@ -11,8 +11,8 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigree.Pedigree;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.IProblem;
@@ -36,7 +36,7 @@ public class JobRun implements Concept {
 	/**
 	 * Methods
 	 */
-	private Methods methods;
+	private InputMethodDescriptions methods;
 	
 	/**
 	 * Inform about type of Problem to solve
@@ -72,7 +72,7 @@ public class JobRun implements Concept {
 		}
 		
 		JobID jobIDClone = jobRun.getJobID().deepClone();
-		Methods methodsClone =
+		InputMethodDescriptions methodsClone =
 				jobRun.getMethods().deepClone();
 		IProblem problemClone =
 				jobRun.getProblem().deepClone();
@@ -102,13 +102,13 @@ public class JobRun implements Concept {
 	}
 	
 	
-	public Methods getMethods() {
+	public InputMethodDescriptions getMethods() {
 		return methods;
 	}
-	public void setMethods(Methods methods) {
+	public void setMethods(InputMethodDescriptions methods) {
 		if (methods == null || ! methods.valid(new TrashLogger())) {
 			throw new IllegalArgumentException("Argument " +
-					Methods.class.getSimpleName() + " is not valid");
+					InputMethodDescriptions.class.getSimpleName() + " is not valid");
 		}
 		this.methods = methods;
 	}
@@ -213,7 +213,7 @@ public class JobRun implements Concept {
 		}
 		
 		if (methods == null || ! methods.valid(logger)) {
-			logger.log(Level.WARNING, Methods.class.getSimpleName() + " are not valid");
+			logger.log(Level.WARNING, InputMethodDescriptions.class.getSimpleName() + " are not valid");
 			return false;
 		}
 		

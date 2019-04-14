@@ -24,7 +24,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -39,7 +39,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolRandomSearchBP</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolRandomSearchBP</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -71,7 +71,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolEvolutionBPTwoPointCrossSimpleShiftMutation</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolEvolutionBPTwoPointCrossSimpleShiftMutation</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -86,7 +86,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolBruteForceBP</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolBruteForceBP</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -110,7 +110,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -134,7 +134,7 @@
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolSimulatedAnnealingBPDisplacementOfPart</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolSimulatedAnnealingBPDisplacementOfPart</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -150,11 +150,15 @@
                 <name>popSize</name>
                 <value>50</value>
               </argument>
+              <argument>
+                <name>crossRate</name>
+                <value>0.0</value>
+              </argument>
             </arguments>
           </arguments>
         </inputAgentConfiguration>
         <problemToolDefinition>
-          <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolDifferentialEvolutionBP</problemToolClass>
+          <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolDifferentialEvolutionBP</problemToolClass>
           <arguments>
             <arguments/>
           </arguments>
@@ -172,7 +176,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice"/>
+  <planner class="org.distributedea.agents.systemagents.centralmanager.planners.onlyinit.PlannerInitialisationRunEachMethodTwice">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

@@ -1,0 +1,68 @@
+<job>
+  <jobID>singleSimulatedannealing</jobID>
+  <numberOfRuns>9</numberOfRuns>
+  <description>Single-SimulatedAnnealing</description>
+  <problem class="org.distributedea.ontology.problem.ProblemEVCharging">
+    <serverIP>127.0.0.1</serverIP>
+    <port>8080</port>
+  </problem>
+  <datasetDescription class="datasetDescription">
+    <datasetFileName>inputs/evcharging/config_advnn.json</datasetFileName>
+  </datasetDescription>
+  <methods>
+    <inputMethodDescriptions class="java.util.Arrays$ArrayList">
+      <a class="inputMethodDescription-array">
+        <inputMethodDescription>
+          <inputAgentConfiguration>
+            <agentName>Agent_SimulatedAnnealing</agentName>
+            <agentClassName>org.distributedea.agents.computingagents.Agent_SimulatedAnnealing</agentClassName>
+            <arguments>
+              <arguments>
+                <argument>
+                  <name>temperature</name>
+                  <value>10000</value>
+                </argument>
+                <argument>
+                  <name>coolingRate</name>
+                  <value>0.002</value>
+                </argument>
+              </arguments>
+            </arguments>
+          </inputAgentConfiguration>
+          <problemToolDefinition>
+            <problemToolClass>org.distributedea.problems.evcharging.point.ProblemToolSimulatedAnnealingEVChargingRandomMove</problemToolClass>
+            <arguments>
+              <arguments>
+                <argument>
+                  <name>normalDistMultiplicator</name>
+                  <value>0.1</value>
+                </argument>
+                <argument>
+                  <name>maxStep</name>
+                  <value>0.2</value>
+                </argument>
+              </arguments>
+            </arguments>
+          </problemToolDefinition>
+        </inputMethodDescription>
+      </a>
+    </inputMethodDescriptions>
+  </methods>
+  <islandModelConfiguration>
+    <individualDistribution>false</individualDistribution>
+    <neighbourCount>2147483647</neighbourCount>
+    <replanPeriodMS>60000</replanPeriodMS>
+    <individualBroadcastPeriodMS>20000</individualBroadcastPeriodMS>
+    <readyToSendIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.readytosendindividuals.ReadyToSendIndivsTwoQueuesModel</readyToSendIndividualsModelClassName>
+    <receivedIndividualsModelClassName>org.distributedea.agents.computingagents.universal.queuesofindividuals.receivedindividuals.ReceivedIndivsOneQueueModel</receivedIndividualsModelClassName>
+    <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
+    <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
+  </islandModelConfiguration>
+  <planner class="plannerInitialisationRunEachMethodOnce">
+    <globalID>0</globalID>
+  </planner>
+  <plannerEndCondition class="plannerTimeRestriction">
+    <countOfReplanning>150</countOfReplanning>
+  </plannerEndCondition>
+  <pedigreeDefinition/>
+</job>

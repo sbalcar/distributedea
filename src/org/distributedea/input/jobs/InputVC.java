@@ -24,18 +24,18 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemVertexCover;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolBruteForceVC;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolDifferentialEvolutionVC;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolEvolutionVCCompleteByTheSeconCrossRemove3Mutation;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolRandomSearchVC;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolSimulatedAnnealingVCRemoveRandomSubgraph;
-import org.distributedea.problemtools.vertexcover.set.ProblemToolTabuSearchVCRemoveRandomSubgraph;
+import org.distributedea.problems.vertexcover.set.ProblemToolBruteForceVC;
+import org.distributedea.problems.vertexcover.set.ProblemToolDifferentialEvolutionVC;
+import org.distributedea.problems.vertexcover.set.ProblemToolEvolutionVCCompleteByTheSeconCrossRemove3Mutation;
+import org.distributedea.problems.vertexcover.set.ProblemToolHillClimbingVCRemoveRandomSubgraph;
+import org.distributedea.problems.vertexcover.set.ProblemToolRandomSearchVC;
+import org.distributedea.problems.vertexcover.set.ProblemToolSimulatedAnnealingVCRemoveRandomSubgraph;
+import org.distributedea.problems.vertexcover.set.ProblemToolTabuSearchVCRemoveRandomSubgraph;
 
 /**
  * Defines a set of Vertex Cover {@link Job}
@@ -78,11 +78,11 @@ public class InputVC {
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
-				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"))),
+				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"), new Argument("crossRate", "0.0"))),
 				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionVC())
 				);
 
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescr(methodHillClimbing);
 		methods.addInputMethodDescr(methodRandomSearch);
 		methods.addInputMethodDescr(methodEvolution);

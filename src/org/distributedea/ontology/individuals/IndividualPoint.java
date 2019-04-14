@@ -16,7 +16,7 @@ public class IndividualPoint extends Individual {
 	private static final long serialVersionUID = 1L;
 	
 	List<Double> coordinates;
-
+	
 	/**
 	 * Constructor
 	 * @param coordinates
@@ -29,7 +29,8 @@ public class IndividualPoint extends Individual {
 	 */
 	public IndividualPoint(List<Double> coordinates) {
 		if (coordinates == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Argument " +
+					List.class.getSimpleName() + " is not valid");
 		}
 		this.coordinates = coordinates;
 	}

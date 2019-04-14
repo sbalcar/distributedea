@@ -1,0 +1,8 @@
+{
+  "max_gen": 250,
+  "pop_size": 16,
+  "sigma": 0.1,
+  "log_prefix": "esn_all",
+  "cpus": 8,
+  "planner": "planners.ESNPlanner(100, 0.1, False)"
+}

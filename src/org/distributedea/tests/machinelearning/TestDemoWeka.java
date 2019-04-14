@@ -6,7 +6,7 @@ import java.util.Vector;
 import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.dataset.DatasetML;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
-import org.distributedea.problemtools.machinelearning.arguments.tools.weka.MLWekaClassification;
+import org.distributedea.problems.machinelearning.arguments.tools.weka.MLWekaClassification;
 
 public class TestDemoWeka {
 	

@@ -18,9 +18,10 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.LogOntology;
 import org.distributedea.ontology.ManagementOntology;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfigurations;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.services.ManagerAgentService;
 
 import jade.content.onto.Ontology;
@@ -136,14 +137,14 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		
 		getLogger().log(Level.INFO, "Reading configuration from: " + agentConfFile.getName());
 
-		InputAgentConfigurations configurations = InputAgentConfigurations.importFromXML(
+		InputAgentConfigurations inputAgentConf = InputAgentConfigurations.importFromXML(
 				agentConfFile);
-		if (configurations == null || ! configurations.valid(logger)) {
+		if (inputAgentConf == null || ! inputAgentConf.valid(logger)) {
 			hardKill();
 		}
 
 		List<InputAgentConfiguration> managerAgentConfigurations =
-				configurations.exportAgentConfigurations(Agent_ManagerAgent.class);
+				inputAgentConf.exportAgentConfigurations(Agent_ManagerAgent.class);
 		if (managerAgentConfigurations.isEmpty()) {
 			getLogger().log(Level.SEVERE, "Error in the config file - isn't any Agent Manager");
 			hardKill();
@@ -154,7 +155,7 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		}
 
 		AgentConfiguration aManagerAgent = Agent_ManagerAgent.createAgent(
-				this, managerAgentConfigurations.get(0), getLogger());
+				this, managerAgentConfigurations.get(0), new MethodIDs(-1), getLogger());
 		
 		if (aManagerAgent == null) {
 			getLogger().log(Level.SEVERE, "Error by creating " + Agent_ManagerAgent.class.getSimpleName());
@@ -164,15 +165,15 @@ public class Agent_Initiator extends Agent_DistributedEA {
 		
 		
 		List<InputAgentConfiguration> noManagerAgentConfigurations =
-				configurations.exportsComplement(managerAgentConfigurations);
+				inputAgentConf.exportsComplement(managerAgentConfigurations);
 
 		AID aManagerAgentAID = aManagerAgent.exportAgentAID();
 		
-		for (InputAgentConfiguration configurationI : noManagerAgentConfigurations) {
+		for (InputAgentConfiguration inputAgentConfI : noManagerAgentConfigurations) {
 
 			AgentConfiguration result =
 					ManagerAgentService.sendCreateAgent(this, aManagerAgentAID,
-					configurationI, getLogger());
+					inputAgentConfI, new MethodIDs(-1), getLogger());
 
 			if (result == null) {
 				getLogger().log(Level.SEVERE, "Error by creating agent");

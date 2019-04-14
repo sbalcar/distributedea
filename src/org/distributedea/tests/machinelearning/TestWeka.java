@@ -12,7 +12,7 @@ import org.distributedea.ontology.argumentsdefinition.ArgumentsDef;
 import org.distributedea.ontology.dataset.DatasetML;
 import org.distributedea.ontology.individuals.IndividualArguments;
 import org.distributedea.ontology.problem.ProblemMachineLearning;
-import org.distributedea.problemtools.machinelearning.arguments.ProblemToolBruteForceML;
+import org.distributedea.problems.machinelearning.arguments.ProblemToolBruteForceML;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 

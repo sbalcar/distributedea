@@ -9,13 +9,14 @@ import org.distributedea.agents.systemagents.centralmanager.planners.IPlanner;
 import org.distributedea.agents.systemagents.centralmanager.structures.history.History;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
@@ -53,13 +54,13 @@ public class PlannerDummy implements IPlanner {
 		
 		InputMethodDescription methodI = jobRun.getMethods().get(COMPUTING_METHOD_INDEX);
 		InputAgentConfiguration inputAgentConfI = methodI.getInputAgentConfiguration();
-	
+		
 		ProblemToolDefinition problemToolI = methodI.getProblemToolDefinition();
 		ProblemWrapper problemStructI = jobRun.exportProblemWrapper(problemToolI);
 
 		
 		AgentConfiguration createdAgent = ManagerAgentService.sendCreateAgent(
-				centralManager, managerAidI, inputAgentConfI, logger);
+				centralManager, managerAidI, inputAgentConfI, new MethodIDs(1), logger);
 		
 			
 		// assumes the existence of only one Computing Agent
@@ -76,7 +77,7 @@ public class PlannerDummy implements IPlanner {
 
 		
 		MethodDescription createdDescription = new MethodDescription(
-				createdAgent, jobRun.getProblem(), problemToolI);
+				createdAgent, new MethodIDs(0), jobRun.getProblem(), problemToolI);
 		return new Plan(iteration, createdDescription);
 	}
 

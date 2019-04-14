@@ -140,4 +140,11 @@ public class ProblemMachineLearning extends AProblem implements IProblem {
 		return new ProblemMachineLearning(this);
 	}
 
+	@Override
+	public String toLogString() {
+		return this.getClass().getSimpleName() + " " +
+			"classifierClassname=" + classifierClassname + " " +
+			"filterClassName=" + filterClassName + " " +
+			"argumentsDef=" + argumentsDef.toString();
+	}
 }

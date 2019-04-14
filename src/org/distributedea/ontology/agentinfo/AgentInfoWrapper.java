@@ -2,7 +2,7 @@ package org.distributedea.ontology.agentinfo;
 
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 
 import jade.content.Concept;
 

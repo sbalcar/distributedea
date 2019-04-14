@@ -1,6 +1,7 @@
 package org.distributedea.ontology.dataset.matrixfactorization;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,9 @@ public class RatingModel {
 	private double minRaiting;
 	private double maxRaiting;
 	
+	private Map<Integer, Integer> userIDMapToUserIndex;
+	private Map<Integer, Integer> itemIDMapToItemIndex;
+	
 	/**
 	 * Constructor
 	 * @param raitings
@@ -66,7 +70,10 @@ public class RatingModel {
 		this.maxRaiting = minMaxRaiting.second;
 		
 		this.userIDMapToRaiting = createUserIDMap(userIDS);
-		this.itemIDMapToRaiting = createItemIDMap(itemIDS);	
+		this.itemIDMapToRaiting = createItemIDMap(itemIDS);
+		
+		this.userIDMapToUserIndex = createMapUserIDToUserIndex(userIDS);
+		this.itemIDMapToItemIndex = createMapItemIDToItemIndex(itemIDS);
 	}
 	
 	private Map<Integer, ObjectRatingList> createUserIDMap(Set<Integer> userIDS) {
@@ -100,6 +107,38 @@ public class RatingModel {
 		return itemIDMap;
 	}
 
+	private Map<Integer, Integer> createMapUserIDToUserIndex(Set<Integer> userIDs) {
+	
+		List<Integer> userIDsList = new ArrayList<>();
+		userIDsList.addAll(userIDs);
+		
+        Collections.sort(userIDsList);
+        
+        Map<Integer, Integer> userIDToUserIndexMap = new HashMap<>();
+        for (int i = 0; i < userIDsList.size(); i++) {
+        	int userIndex = i;
+        	int userIdI = userIDsList.get(i);
+        	userIDToUserIndexMap.put(userIdI, userIndex);
+        }
+        return userIDToUserIndexMap;
+	}
+	
+	private Map<Integer, Integer> createMapItemIDToItemIndex(Set<Integer> itemIDs) {
+	
+		List<Integer> itemIDsList = new ArrayList<>();
+		itemIDsList.addAll(itemIDs);
+		
+        Collections.sort(itemIDsList);
+        
+        Map<Integer, Integer> itemIDToItemIndexMap = new HashMap<>();
+        for (int i = 0; i < itemIDsList.size(); i++) {
+        	int itemIndex = i;
+        	int itemIdI = itemIDsList.get(i);
+        	itemIDToItemIndexMap.put(itemIdI, itemIndex);
+        }
+        return itemIDToItemIndexMap;
+	}
+	
 	public List<ObjectRating> exportRatingsClone() {
 		
 		List<ObjectRating> raitingCloneList = new ArrayList<>();
@@ -237,11 +276,11 @@ public class RatingModel {
 	
 	
 	public int exportIndexOfUser(int userID) {
-		return userID -1;
+		return this.userIDMapToUserIndex.get(userID);
 	}
 	
 	public int exportIndexOfItem(int itemID) {
-		return itemID -1;
+		return this.itemIDMapToItemIndex.get(itemID);
 	}
 
 	public List<Integer> exportIndexOfUsers(List<Integer> userIDs) {

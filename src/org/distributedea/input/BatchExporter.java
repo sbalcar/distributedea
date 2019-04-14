@@ -32,21 +32,34 @@ import org.distributedea.input.batches.co.bbobf17.BatchSingleMethodsCOf17;
 import org.distributedea.input.batches.co.f2.BatchHeteroMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchHomoMethodsCOf2;
 import org.distributedea.input.batches.co.f2.BatchSingleMethodsCOf2;
+import org.distributedea.input.batches.evcharging.advnn.BatchHeteroMethodsEVChargingAdvnn;
+import org.distributedea.input.batches.evcharging.advnn.BatchHomoMethodsEVChargingAdvnn;
+import org.distributedea.input.batches.evcharging.advnn.BatchSingleMethodsEVChargingAdvnn;
+import org.distributedea.input.batches.evcharging.advnnhh.BatchHeteroMethodsEVChargingAdvnnhh;
+import org.distributedea.input.batches.evcharging.advnnhh.BatchHomoMethodsEVChargingAdvnnhh;
+import org.distributedea.input.batches.evcharging.advnnhh.BatchSingleMethodsEVChargingAdvnnhh;
+import org.distributedea.input.batches.evcharging.esn.BatchHeteroMethodsEVChargingEsn;
+import org.distributedea.input.batches.evcharging.esn.BatchHomoMethodsEVChargingEsn;
+import org.distributedea.input.batches.evcharging.esn.BatchSingleMethodsEVChargingEsn;
+import org.distributedea.input.batches.evcharging.esnhh.BatchHeteroMethodsEVChargingEsnhh;
+import org.distributedea.input.batches.evcharging.esnhh.BatchHomoMethodsEVChargingEsnhh;
+import org.distributedea.input.batches.evcharging.esnhh.BatchSingleMethodsEVChargingEsnhh;
 import org.distributedea.input.batches.machinelearning.wilt.BatchHeteroMethodsMLWilt;
 import org.distributedea.input.batches.machinelearning.wilt.BatchHomoMethodsMLWilt;
 import org.distributedea.input.batches.machinelearning.wilt.BatchSingleMethodsMLWilt;
 import org.distributedea.input.batches.machinelearning.zoo.BatchHeteroMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchHomoMethodsMLZoo;
 import org.distributedea.input.batches.machinelearning.zoo.BatchSingleMethodsMLZoo;
-import org.distributedea.input.batches.matrixfactorization.ml100k.BatchHeteroMethodsMFML100k;
-import org.distributedea.input.batches.matrixfactorization.ml100k.BatchHomoMethodsMFML100k;
-import org.distributedea.input.batches.matrixfactorization.ml100k.BatchSingleMethodsMFML100k;
-import org.distributedea.input.batches.matrixfactorization.ml10m100k.BatchHeteroMethodsMFML10M100K;
-import org.distributedea.input.batches.matrixfactorization.ml10m100k.BatchHomoMethodsMFML10M100K;
-import org.distributedea.input.batches.matrixfactorization.ml10m100k.BatchSingleMethodsMFML10M100K;
-import org.distributedea.input.batches.matrixfactorization.ml1m.BatchHeteroMethodsMFML1m;
-import org.distributedea.input.batches.matrixfactorization.ml1m.BatchHomoMethodsMFML1m;
-import org.distributedea.input.batches.matrixfactorization.ml1m.BatchSingleMethodsMFML1m;
+import org.distributedea.input.batches.matrixfactorization.mahout.ml100k.BatchSingleMethodsMFMahoutML100k;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml100k.BatchHeteroMethodsMFML100k;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml100k.BatchHomoMethodsMFML100k;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml100k.BatchSingleMethodsMFML100k;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml10m100k.BatchHeteroMethodsMFML10M100K;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml10m100k.BatchHomoMethodsMFML10M100K;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml10m100k.BatchSingleMethodsMFML10M100K;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml1m.BatchHeteroMethodsMFML1m;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml1m.BatchHomoMethodsMFML1m;
+import org.distributedea.input.batches.matrixfactorization.ownsgd.ml1m.BatchSingleMethodsMFML1m;
 import org.distributedea.input.batches.tsp.cities1083.BatchHeteroMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchHomoMethodsTSP1083;
 import org.distributedea.input.batches.tsp.cities1083.BatchSingleMethodsTSP1083;
@@ -264,6 +277,50 @@ public class BatchExporter {
 		Batch batchHeteroMethodsMFML10M100K = inputBatchHeteroMethodsMFML10M100K.batch();
 		
 		
+		IInputBatch inputBatchHeteroMethodsMFMahoutML100k = new BatchSingleMethodsMFMahoutML100k();
+		Batch batchHeteroMethodsMFMahoutML100k = inputBatchHeteroMethodsMFMahoutML100k.batch();
+				
+
+		IInputBatch inputBatchSingleMethodsEVChargingAdvnn = new BatchSingleMethodsEVChargingAdvnn();
+		Batch batchSingleMethodsEVChargingAdvnn = inputBatchSingleMethodsEVChargingAdvnn.batch();
+		
+		IInputBatch inputBatchHomoMethodsEVChargingAdvnn = new BatchHomoMethodsEVChargingAdvnn();
+		Batch batchHomoMethodsEVChargingAdvnn = inputBatchHomoMethodsEVChargingAdvnn.batch();
+		
+		IInputBatch inputBatchHeteroMethodsEVChargingAdvnn = new BatchHeteroMethodsEVChargingAdvnn();
+		Batch batchHeteroMethodsEVChargingAdvnn = inputBatchHeteroMethodsEVChargingAdvnn.batch();
+
+		
+		IInputBatch inputBatchSingleMethodsEVChargingAdvnnhh = new BatchSingleMethodsEVChargingAdvnnhh();
+		Batch batchSingleMethodsEVChargingAdvnnhh = inputBatchSingleMethodsEVChargingAdvnnhh.batch();
+		
+		IInputBatch inputBatchHomoMethodsEVChargingAdvnnhh = new BatchHomoMethodsEVChargingAdvnnhh();
+		Batch batchHomoMethodsEVChargingAdvnnhh = inputBatchHomoMethodsEVChargingAdvnnhh.batch();
+		
+		IInputBatch inputBatchHeteroMethodsEVChargingAdvnnhh = new BatchHeteroMethodsEVChargingAdvnnhh();
+		Batch batchHeteroMethodsEVChargingAdvnnhh = inputBatchHeteroMethodsEVChargingAdvnnhh.batch();
+
+
+		IInputBatch inputBatchSingleMethodsEVChargingEsn = new BatchSingleMethodsEVChargingEsn();
+		Batch batchSingleMethodsEVChargingEsn = inputBatchSingleMethodsEVChargingEsn.batch();
+		
+		IInputBatch inputBatchHomoMethodsEVChargingEsn = new BatchHomoMethodsEVChargingEsn();
+		Batch batchHomoMethodsEVChargingEsn = inputBatchHomoMethodsEVChargingEsn.batch();
+		
+		IInputBatch inputBatchHeteroMethodsEVChargingEsn = new BatchHeteroMethodsEVChargingEsn();
+		Batch batchHeteroMethodsEVChargingEsn = inputBatchHeteroMethodsEVChargingEsn.batch();
+
+		
+		IInputBatch inputBatchSingleMethodsEVChargingEsnhh = new BatchSingleMethodsEVChargingEsnhh();
+		Batch batchSingleMethodsEVChargingEsnhh = inputBatchSingleMethodsEVChargingEsnhh.batch();
+		
+		IInputBatch inputBatchHomoMethodsEVChargingEsnhh = new BatchHomoMethodsEVChargingEsnhh();
+		Batch batchHomoMethodsEVChargingEsnhh = inputBatchHomoMethodsEVChargingEsnhh.batch();
+		
+		IInputBatch inputBatchHeteroMethodsEVChargingEsnhh = new BatchHeteroMethodsEVChargingEsnhh();
+		Batch batchHeteroMethodsEVChargingEsnhh = inputBatchHeteroMethodsEVChargingEsnhh.batch();
+		
+				
 		List<Batch> batchesList = new ArrayList<>();
 		
 		// TSP
@@ -348,6 +405,27 @@ public class BatchExporter {
 		batchesList.add(batchHomoMethodsMFML10M100K);
 		batchesList.add(batchHeteroMethodsMFML10M100K);
 		
+		
+		batchesList.add(batchHeteroMethodsMFMahoutML100k);
+
+		
+		// EV Charging
+		batchesList.add(batchSingleMethodsEVChargingAdvnn);
+		batchesList.add(batchHomoMethodsEVChargingAdvnn);
+		batchesList.add(batchHeteroMethodsEVChargingAdvnn);
+		
+		batchesList.add(batchSingleMethodsEVChargingAdvnnhh);
+		batchesList.add(batchHomoMethodsEVChargingAdvnnhh);
+		batchesList.add(batchHeteroMethodsEVChargingAdvnnhh);
+
+		batchesList.add(batchSingleMethodsEVChargingEsn);
+		batchesList.add(batchHomoMethodsEVChargingEsn);
+		batchesList.add(batchHeteroMethodsEVChargingEsn);
+
+		batchesList.add(batchSingleMethodsEVChargingEsnhh);
+		batchesList.add(batchHomoMethodsEVChargingEsnhh);
+		batchesList.add(batchHeteroMethodsEVChargingEsnhh);
+
 		
 		// creates directory if doesn't exist
 		File batchesDir = new File(FileNames.getDirectoryOfBatches());

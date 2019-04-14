@@ -44,7 +44,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.matrixfactorization.latentfactor.ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow</problemToolClass>
+            <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -63,7 +63,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneEach5sSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationRunEachMethodOnce"/>
+  <planner class="plannerInitialisationRunEachMethodOnce">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

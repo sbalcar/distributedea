@@ -12,13 +12,15 @@ import org.distributedea.agents.systemagents.centralmanager.structures.plan.Inpu
 import org.distributedea.agents.systemagents.centralmanager.structures.plan.InputRePlan;
 import org.distributedea.javaextension.Pair;
 import org.distributedea.logging.IAgentLogger;
-import org.distributedea.ontology.configuration.AgentConfiguration;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
+import org.distributedea.ontology.methoddesriptionsplanned.PlannedMethodDescription;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.ontology.problem.IProblem;
@@ -57,19 +59,21 @@ public class PlannerTool {
 		//create computing agents
 		for (int cpuIndex = 0; cpuIndex < inputPlan.getSchedule().size(); cpuIndex++) {	
 		
-			Pair<AID,InputMethodDescription> pairI = inputPlan.getSchedule().get(cpuIndex);
+			Pair<AID, PlannedMethodDescription> pairI = inputPlan.getSchedule().get(cpuIndex);
 			
 			AID managerAgentOfEmptyCoreAIDI = pairI.first;
 			
-			InputMethodDescription agentDescriptionI = pairI.second;
-			ProblemToolDefinition problemToolDef = agentDescriptionI.getProblemToolDefinition();
-			InputAgentConfiguration agentConfigurationI = agentDescriptionI.getInputAgentConfiguration();
+			PlannedMethodDescription plannedMethodDescrI = pairI.second;
+			ProblemToolDefinition problemToolDef = plannedMethodDescrI.getProblemToolDefinition();
+			InputAgentConfiguration inputAgentConfI = plannedMethodDescrI.getInputAgentConfiguration();
+			MethodIDs methodIDsI = plannedMethodDescrI.getMethodIDs();
 			
 			AgentConfiguration createdAgentI = ManagerAgentService.sendCreateAgent(centralManager,
-					managerAgentOfEmptyCoreAIDI, agentConfigurationI, logger);
+					managerAgentOfEmptyCoreAIDI, inputAgentConfI, methodIDsI, logger);
+			MethodIDs methodIDs = plannedMethodDescrI.getMethodIDs();
 			
 			MethodDescription createdAgentDescriptionI =
-					new MethodDescription(createdAgentI, problem, problemToolDef);
+					new MethodDescription(createdAgentI, methodIDs, problem, problemToolDef);
 						
 			createdAgents.add(createdAgentDescriptionI);
 		}
@@ -125,9 +129,9 @@ public class PlannerTool {
 		for (int i = 0; i < agentsToKill.size(); i++) {
 			
 			MethodDescription agentToKillI = agentsToKill.get(i);
+			
 			InputMethodDescription agentToCreateI = agentsToCreate.get(i);
 			
-			AID agentTokillAID = agentToKillI.exportAgentAID();
 			InputAgentConfiguration newConfiguration =
 					agentToCreateI.getInputAgentConfiguration();
 			
@@ -138,9 +142,9 @@ public class PlannerTool {
 			
 			
 			AgentConfiguration createdAC = killAndCreateAgent(centralManager,
-					agentTokillAID, newConfiguration, problemWrpI, configuration, logger);
+					agentToKillI, newConfiguration, problemWrpI, configuration, logger);
 			
-			MethodDescription createdAD = new MethodDescription(createdAC,
+			MethodDescription createdAD = new MethodDescription(createdAC, agentToKillI.getMethodIDs(),
 					jobRun.getProblem(), problemToolDefI);
 			
 			agentsCreated.add(createdAD);
@@ -161,10 +165,12 @@ public class PlannerTool {
 	 * @throws PlannerException
 	 */
 	private static AgentConfiguration killAndCreateAgent(Agent_CentralManager centralManager,
-			AID agentTokillAID, InputAgentConfiguration newConfiguration,
+			MethodDescription agentToKillI , InputAgentConfiguration newConfiguration,
 			ProblemWrapper problemStruct, IslandModelConfiguration configuration,
 			IAgentLogger logger) throws Exception {
 
+		AID agentTokillAID = agentToKillI.exportAgentAID();
+		MethodIDs methodIDs = agentToKillI.getMethodIDs();
 		
 		// kill agent
 		ManagerAgentService.sendKillAgent(centralManager, agentTokillAID, logger);
@@ -175,7 +181,7 @@ public class PlannerTool {
 		
 		// create new agent
 		AgentConfiguration newAgent = ManagerAgentService.sendCreateAgent(centralManager,
-				manager, newConfiguration, logger);
+				manager, newConfiguration, methodIDs, logger);
 		
 		logger.log(Level.INFO, "Created: " + newAgent.exportAgentname());
 		

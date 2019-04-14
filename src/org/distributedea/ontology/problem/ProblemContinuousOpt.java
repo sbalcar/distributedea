@@ -101,12 +101,6 @@ public class ProblemContinuousOpt extends AProblem {
 		
 		return true;
 	}
-
-	@Override
-	public ProblemContinuousOpt deepClone() {
-		
-		return new ProblemContinuousOpt(this);
-	}
 	
 	@Override
 	public boolean equals(Object other) {
@@ -118,5 +112,19 @@ public class ProblemContinuousOpt extends AProblem {
 	    IProblem otherProblem = (ProblemContinuousOpt)other;
 	    
 	    return isMaximizationProblem() == otherProblem.exportIsMaximizationProblem();
+	}
+	
+	@Override
+	public String toLogString() {
+		return this.getClass().getSimpleName() + " " +
+			"functionID=" + functionID + " " +
+			"dimension=" + dimension + " " +
+			"isMaximizationProblem=" + isMaximizationProblem;
+	}
+
+	@Override
+	public ProblemContinuousOpt deepClone() {
+		
+		return new ProblemContinuousOpt(this);
 	}
 }

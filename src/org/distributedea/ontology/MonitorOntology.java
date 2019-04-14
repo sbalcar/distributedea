@@ -4,10 +4,10 @@ import jade.content.onto.BeanOntology;
 import jade.content.onto.Ontology;
 
 import org.distributedea.logging.ConsoleLogger;
+import org.distributedea.ontology.agentconfiguration.AgentConfiguration;
 import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.argumentsdefinition.ArgumentDef;
 import org.distributedea.ontology.computing.AccessesResult;
-import org.distributedea.ontology.configuration.AgentConfiguration;
 import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.IRatingIDs;
 import org.distributedea.ontology.individualhash.IndividualHash;
@@ -20,6 +20,8 @@ import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumber;
 import org.distributedea.ontology.methoddescriptionnumber.MethodDescriptionNumbers;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
+import org.distributedea.ontology.methoddesriptionsplanned.PlannedMethodDescription;
 import org.distributedea.ontology.monitor.StartMonitoring;
 import org.distributedea.ontology.monitor.Statistic;
 import org.distributedea.ontology.pedigree.Pedigree;
@@ -49,6 +51,7 @@ public class MonitorOntology extends BeanOntology {
             add(IDatasetDescription.class.getPackage().getName());
             add(IRatingIDs.class.getPackage().getName());
             add(MethodDescriptions.class);
+            add(MethodIDs.class);
             
             add(IndividualWrapper.class);
             add(IndividualEvaluated.class);
@@ -65,6 +68,9 @@ public class MonitorOntology extends BeanOntology {
             add(MethodDescriptionNumbers.class);
             add(MethodDescriptionNumber.class);
             add(MethodDescription.class);
+            add(PlannedMethodDescription.class);
+            
+            add(MethodIDs.class.getPackage().getName());
 
             add(Statistic.class.getPackage().getName());
             

@@ -12,10 +12,10 @@ import org.distributedea.logging.IAgentLogger;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescription.MethodDescription;
 import org.distributedea.ontology.methoddescription.MethodDescriptions;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
@@ -109,12 +109,12 @@ public class PlannerTheGreatestQMaterialGoodMaterialImprovement implements IPlan
 		MethodDescriptions runningMethods =
 				history.exportRunningMethods();
 
-		Methods runningInputMethods =
+		InputMethodDescriptions runningInputMethods =
 				runningMethods.exportInputMethodDescriptions();
 		
-		Methods allMethods =
+		InputMethodDescriptions allMethods =
 				jobRun.getMethods().exportInputMethodDescriptions();
-		Methods deadMethods =
+		InputMethodDescriptions deadMethods =
 				allMethods.exportComplement(runningInputMethods);
 		
 		InputRePlan inputRePlan = new InputRePlan(iteration);

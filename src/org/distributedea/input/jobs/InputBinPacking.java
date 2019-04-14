@@ -24,18 +24,18 @@ import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.configurationinput.InputAgentConfiguration;
 import org.distributedea.ontology.datasetdescription.DatasetDescription;
 import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
 import org.distributedea.ontology.pedigreedefinition.PedigreeDefinition;
 import org.distributedea.ontology.problem.ProblemBinPacking;
 import org.distributedea.ontology.problemtooldefinition.ProblemToolDefinition;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolBruteForceBP;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolDifferentialEvolutionBP;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolEvolutionBPTwoPointCrossSimpleShiftMutation;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolRandomSearchBP;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolSimulatedAnnealingBPDisplacementOfPart;
-import org.distributedea.problemtools.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart;
+import org.distributedea.problems.binpacking.permutation.ProblemToolBruteForceBP;
+import org.distributedea.problems.binpacking.permutation.ProblemToolDifferentialEvolutionBP;
+import org.distributedea.problems.binpacking.permutation.ProblemToolEvolutionBPTwoPointCrossSimpleShiftMutation;
+import org.distributedea.problems.binpacking.permutation.ProblemToolHillClimbingBPDisplacementOfPart;
+import org.distributedea.problems.binpacking.permutation.ProblemToolRandomSearchBP;
+import org.distributedea.problems.binpacking.permutation.ProblemToolSimulatedAnnealingBPDisplacementOfPart;
+import org.distributedea.problems.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart;
 
 /**
  * Defines a set of Bin Packing {@link Job}
@@ -77,11 +77,11 @@ public class InputBinPacking {
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
-				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50")) ),
+				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"), new Argument("crossRate", "0.0")) ),
 				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionBP())
 				);
 
-		Methods methods = new Methods();
+		InputMethodDescriptions methods = new InputMethodDescriptions();
 		methods.addInputMethodDescr(methodHillClimbing);
 		methods.addInputMethodDescr(methodRandomSearch);
 		methods.addInputMethodDescr(methodEvolution);

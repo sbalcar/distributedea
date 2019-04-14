@@ -5,7 +5,7 @@ import jade.content.Concept;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.arguments.Arguments;
-import org.distributedea.problemtools.IProblemTool;
+import org.distributedea.problems.IProblemTool;
 
 /**
  * Ontology represents problem tool with arguments 
@@ -174,6 +174,11 @@ public class ProblemToolDefinition implements Concept {
 	public String toString() {
 		
 		return problemToolClass + arguments.toString();
+	}
+
+	public String toLogString() {
+		
+		return problemToolClass + ": " + arguments.toLogString();
 	}
 
 	/**

@@ -29,7 +29,7 @@
             </arguments>
           </inputAgentConfiguration>
           <problemToolDefinition>
-            <problemToolClass>org.distributedea.problemtools.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart</problemToolClass>
+            <problemToolClass>org.distributedea.problems.binpacking.permutation.ProblemToolTabuSearchBPDisplacementOfPart</problemToolClass>
             <arguments>
               <arguments/>
             </arguments>
@@ -48,7 +48,9 @@
     <readyToSendIndividualInserterClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.readytosendindividual.ReadyToSendIndividualsOnlyOneInserter</readyToSendIndividualInserterClassName>
     <receivedIndividualSelectorClassName>org.distributedea.agents.computingagents.universal.queuesofindividualsselectors.receivedindividual.ReceivedIndivRemoveOneSelector</receivedIndividualSelectorClassName>
   </islandModelConfiguration>
-  <planner class="plannerInitialisationOneMethodPerCore"/>
+  <planner class="plannerInitialisationOneMethodPerCore">
+    <globalID>0</globalID>
+  </planner>
   <plannerEndCondition class="plannerTimeRestriction">
     <countOfReplanning>50</countOfReplanning>
   </plannerEndCondition>

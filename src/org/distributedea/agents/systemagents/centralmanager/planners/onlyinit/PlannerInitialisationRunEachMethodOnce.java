@@ -15,14 +15,17 @@ import org.distributedea.ontology.islandmodel.IslandModelConfiguration;
 import org.distributedea.ontology.iteration.Iteration;
 import org.distributedea.ontology.job.JobRun;
 import org.distributedea.ontology.management.computingnode.NodeInfosWrapper;
-import org.distributedea.ontology.method.Methods;
 import org.distributedea.ontology.methoddescriptioninput.InputMethodDescription;
+import org.distributedea.ontology.methoddescriptioninput.InputMethodDescriptions;
+import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.plan.Plan;
 import org.distributedea.ontology.plan.RePlan;
 import org.distributedea.services.ManagerAgentService;
 
 
 public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
+
+	private int globalID = 0;
 
 	@Override
 	public Plan agentInitialisation(Agent_CentralManager centralManager,
@@ -35,7 +38,7 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		Methods agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				jobRun.getMethods().exportInputMethodDescriptions();
 		
 		
@@ -43,12 +46,12 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 		
 		for (int i = 0; i < agentDescriptions.size(); i++) {
 
-			InputMethodDescription iAgentDescriptionI =
+			InputMethodDescription inputMethodDescrI =
 					agentDescriptions.get(i);
 
 			AID aidManagerI = managersAID.get(i % managersAID.size());
 			
-			inputPlan.add(aidManagerI, iAgentDescriptionI);
+			inputPlan.add(aidManagerI, inputMethodDescrI.exportPlannedMethodDescription(new MethodIDs(globalID++)));
 		}
 		
 		return PlannerTool.createAndRunAgents(centralManager,
@@ -63,7 +66,7 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 		List<AID> managersAID =
 				availableNodes.exportManagerAIDOfEachEmptyCore();
 
-		Methods agentDescriptions =
+		InputMethodDescriptions agentDescriptions =
 				jobRun.getMethods().exportInputMethodDescriptions();
 		
 		
@@ -76,7 +79,7 @@ public class PlannerInitialisationRunEachMethodOnce implements IPlanner {
 
 			AID aidManagerI = managersAID.get(i % managersAID.size());
 			
-			inputPlan.add(aidManagerI, iAgentDescriptionI);
+			inputPlan.add(aidManagerI, iAgentDescriptionI.exportPlannedMethodDescription(new MethodIDs(globalID++)));
 		}
 		
 		return PlannerTool.createAgents(centralManager,

@@ -32,4 +32,8 @@ public class ProblemVertexCover extends AProblem {
 		return new ProblemVertexCover();
 	}
 
+	@Override
+	public String toLogString() {
+		return this.getClass().getSimpleName();
+	}
 }

@@ -6,7 +6,9 @@ import java.util.List;
 import org.distributedea.logging.IAgentLogger;
 import org.distributedea.logging.TrashLogger;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactor;
+import org.distributedea.ontology.individuals.latentfactors.LatentFactorModel;
 import org.distributedea.ontology.individuals.latentfactors.LatentFactorVector;
+import org.distributedea.problems.matrixfactorization.latentfactor.tools.mahout.mahout.ParallelSGDFactorizerWrp;
 
 /**
  * Ontology represents one latent factors based {@link Individual}
@@ -17,10 +19,10 @@ public class IndividualLatentFactors extends Individual {
 
 	private static final long serialVersionUID = 1L;
 
-	/** Latent factor X **/
-	private LatentFactor latentFactorX;
-	/** Latent factor Y **/
-	private LatentFactor latentFactorY;
+	/** Latent factor model **/
+	private LatentFactorModel latentFactorModel;
+	
+	private ParallelSGDFactorizerWrp mahoutModel;
 	
 	
 	@Deprecated
@@ -28,12 +30,20 @@ public class IndividualLatentFactors extends Individual {
 	
 	/**
 	 * Constructor
-	 * @param permutation
+	 * @param latentFaktorModel
 	 */
-	public IndividualLatentFactors(LatentFactor latentFactorX,
-			LatentFactor latentFactorY) {
-		setLatentFactorX(latentFactorX);
-		setLatentFactorY(latentFactorY);
+	public IndividualLatentFactors(
+			LatentFactorModel latentFaktorModel) {
+		setLatentFactorModel(latentFaktorModel);
+	}
+
+	/**
+	 * Constructor
+	 * @param latentFaktorModel
+	 */
+	public IndividualLatentFactors(
+			ParallelSGDFactorizerWrp factorizer) {
+		this.mahoutModel = factorizer;
 	}
 	
 	/**
@@ -46,39 +56,32 @@ public class IndividualLatentFactors extends Individual {
 					IndividualLatentFactors.class.getSimpleName() +
 					" is not valid");
 		}
-		setLatentFactorX(
-				individual.getLatentFactorX().deepClone());
-		setLatentFactorY(
-				individual.getLatentFactorY().deepClone());
+		
+		LatentFactorModel latVectModelClone = null;
+		if (individual.getLatentFactorModel() != null) {
+			latVectModelClone = individual.getLatentFactorModel().deepClone();
+		}
+		//setLatentFactorModel(latVectModelClone);
+		this.latentFactorModel = latVectModelClone;
+		
+		this.mahoutModel = individual.exportMahoutModel();
 	}
 	
+	public LatentFactorModel getLatentFactorModel() {
+		return latentFactorModel;
+	}
+	public void setLatentFactorModel(LatentFactorModel latentFactorModel) {
+		if (latentFactorModel == null || ! latentFactorModel.valid(new TrashLogger())) {
+			throw new IllegalArgumentException("Argument " +
+					LatentFactorModel.class.getSimpleName() + " is not valid");
+		}
+		this.latentFactorModel = latentFactorModel;
+	}
 	
-	public LatentFactor getLatentFactorX() {
-		return latentFactorX;
+	private ParallelSGDFactorizerWrp exportMahoutModel() {
+		return this.mahoutModel;
 	}
-
-	@Deprecated
-	public void setLatentFactorX(LatentFactor latentFactorX) {
-		if (latentFactorX == null || ! latentFactorX.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					LatentFactor.class.getSimpleName() + " is not valid");
-		}
-		this.latentFactorX = latentFactorX;
-	}
-
-	public LatentFactor getLatentFactorY() {
-		return latentFactorY;
-	}
-
-	@Deprecated
-	public void setLatentFactorY(LatentFactor latentFactorY) {
-		if (latentFactorY == null || ! latentFactorY.valid(new TrashLogger())) {
-			throw new IllegalArgumentException("Argument " +
-					LatentFactor.class.getSimpleName() + " is not valid");
-		}
-		this.latentFactorY = latentFactorY;
-	}
-
+	
 	/**
 	 * Export value counted from latent factors
 	 * @param userIDIndex
@@ -86,13 +89,16 @@ public class IndividualLatentFactors extends Individual {
 	 * @return
 	 */
 	public double exportValue(int userIDIndex, int itemIDIndex) {
+
+		if (this.latentFactorModel != null) {
+			return this.latentFactorModel.exportValue(userIDIndex, itemIDIndex);
+		}
+	
+		if (this.mahoutModel != null) {
+			return this.mahoutModel.rating(userIDIndex, itemIDIndex);
+		}
 		
-		LatentFactorVector latFactVectorY =
-				getLatentFactorY().exportLatentFactorVector(userIDIndex);
-		LatentFactorVector latFactVectorX =
-				getLatentFactorX().exportLatentFactorVector(itemIDIndex);
-		
-		return latFactVectorY.exportScalarProduct(latFactVectorX);
+		throw new IllegalStateException();
 	}
 	
 	
@@ -106,29 +112,41 @@ public class IndividualLatentFactors extends Individual {
 		return values;
 	}
 	
+	public void convert() {
+		
+		List<LatentFactorVector> latFactVectorsX = new ArrayList<LatentFactorVector>();
+		for (int i = 0; i < this.mahoutModel.numberOfItems(); i++) {
+			
+			double[] vectI = this.mahoutModel.getItemVector(i);
+			latFactVectorsX.add(new LatentFactorVector(vectI));
+		}
+		
+		List<LatentFactorVector> latFactVectorsY = new ArrayList<LatentFactorVector>();
+		for (int i = 0; i < this.mahoutModel.numberOfUsers(); i++) {
+			
+			double[] vectI = this.mahoutModel.getUserVector(i);
+			latFactVectorsY.add(new LatentFactorVector(vectI));
+		}
+		
+		LatentFactor latFactX = new LatentFactor(latFactVectorsX);
+		
+		LatentFactor latFactY = new LatentFactor(latFactVectorsY);
+		
+		this.latentFactorModel = new LatentFactorModel(latFactX, latFactY);
+
+	}
+	
 	@Override
 	public boolean equals(Object other) {
-	
+
 	    if (!(other instanceof IndividualLatentFactors)) {
 	        return false;
 	    }
 
 	    IndividualLatentFactors that = (IndividualLatentFactors) other;
 	    
-	    if (getLatentFactorX() == null && that.getLatentFactorX() != null) {
-	    	return false;
-	    }
-	    
-	    if (getLatentFactorY() == null && that.getLatentFactorY() != null) {
-		    return false;
-		}
-
-	    if (getLatentFactorX().equals(that.getLatentFactorX()) &&
-	    		getLatentFactorY().equals(that.getLatentFactorY()) ) {
-	    	return true;
-	    }
-	
-	    return false;
+	    return getLatentFactorModel().equals(
+	    		that.getLatentFactorModel());
 	}
 	
     @Override
@@ -138,7 +156,11 @@ public class IndividualLatentFactors extends Individual {
     
 	@Override
 	public String toString() {
-		return latentFactorX.toString() + latentFactorY.toString();
+
+		LatentFactorModel latFaktModel =
+				getLatentFactorModel();
+		
+		return latFaktModel.toString();
 	}
 	
 	
@@ -150,13 +172,6 @@ public class IndividualLatentFactors extends Individual {
 	@Override
 	public boolean valid(IAgentLogger logger) {
 		
-		if (latentFactorX == null || ! latentFactorX.valid(logger)) {
-			return false;
-		}
-
-		if (latentFactorY == null || ! latentFactorY.valid(logger)) {
-			return false;
-		}
 		return true;
 	}
 

@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 import org.distributedea.Configuration;
 import org.distributedea.agents.computingagents.universal.Agent_ComputingAgent;
 import org.distributedea.agents.systemagents.datamanager.FileNames;
-import org.distributedea.ontology.configuration.AgentName;
+import org.distributedea.ontology.agentconfiguration.AgentName;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.individualwrapper.IndividualWrapper;

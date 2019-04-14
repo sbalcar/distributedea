@@ -30,6 +30,15 @@ public class Arguments implements Concept {
 
 	/**
 	 * Constructor
+	 * @param name
+	 * @param value
+	 */
+	public Arguments(String name, String value) {
+		this(Arrays.asList(new Argument(name, value)));
+	}
+	
+	/**
+	 * Constructor
 	 * @param argument
 	 */
 	public Arguments(Argument argument) {
@@ -259,11 +268,25 @@ public class Arguments implements Concept {
 		
 		String value = "";
 		for (Argument argumentI : arguments) {
-			value += argumentI.toString();
+			value += argumentI.toString() + "-";
+		}
+				
+		return value;
+	}
+	
+	public String toLogString() {
+		String value = "";
+		for (Argument argumentI : arguments) {
+			value += argumentI.toLogString() + ", ";
+		}
+		
+		if (value.endsWith(", ")) {
+			value = value.substring(0, value.length() -2);
 		}
 		
 		return value;
 	}
+
 	
 	/**
 	 * Export arguments for Jade
