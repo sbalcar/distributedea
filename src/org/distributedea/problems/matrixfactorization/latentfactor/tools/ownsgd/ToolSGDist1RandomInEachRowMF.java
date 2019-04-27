@@ -9,12 +9,9 @@ import org.distributedea.ontology.individuals.IndividualLatentFactors;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 
 public class ToolSGDist1RandomInEachRowMF {
-
-//	static double STEP_ALPHA = 0.0002;
-	static double STEP_ALPHA = 0.02;
 	
 	public static IndividualLatentFactors improve(
-			IndividualLatentFactors individual,
+			IndividualLatentFactors individual, double stepAlpha,
 			ProblemMatrixFactorization problemMF,
 			DatasetMF datasetMF, IAgentLogger logger) {
 		
@@ -35,7 +32,7 @@ public class ToolSGDist1RandomInEachRowMF {
 			double raitingValue = raitingI.getRaiting();
 			
 			ToolSGDist1RandomMF.improveObjectRaiting(idividualClone,
-					rowIndex, colIndex, raitingValue, STEP_ALPHA, logger);
+					rowIndex, colIndex, raitingValue, stepAlpha, logger);
 		}
 		
 		return idividualClone;

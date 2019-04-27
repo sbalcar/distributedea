@@ -57,7 +57,7 @@ public class InputMatrixFactorization {
 		
 		InputMethodDescription methodHillClimbing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_HillClimbing.class, new Arguments(new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolHillClimbingMFSGDist1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolHillClimbingMFSGDist1RandomInEachRow(0.02))
 				);
 
 		InputMethodDescription methodRandomSearch = new InputMethodDescription(
@@ -67,27 +67,27 @@ public class InputMatrixFactorization {
 
 		InputMethodDescription methodEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_Evolution.class, new Arguments(new Argument("popSize", "10"), new Argument("mutationRate", "0.9"), new Argument("crossRate", "0.1"), new Argument("selector", CompareTwoSelector.class.getName()))),
-				new ProblemToolDefinition(new ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation())
+				new ProblemToolDefinition(new ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation(0.02))
 				);
 
 		InputMethodDescription methodBruteForce = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_BruteForce.class, new Arguments()),
-				new ProblemToolDefinition(new ProblemToolBruteForceMFSGDist1ByIndex())
+				new ProblemToolDefinition(new ProblemToolBruteForceMFSGDist1ByIndex(0.02))
 				);
 
 		InputMethodDescription methodTabuSearch = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_TabuSearch.class, new Arguments(new Argument("tabuModelSize", "50"), new Argument("numberOfNeighbors", "10"))),
-				new ProblemToolDefinition(new ProblemToolTabuSearchMFSGDist1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolTabuSearchMFSGDist1RandomInEachRow(0.02))
 				);
 
 		InputMethodDescription methodSimulatedAnnealing = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_SimulatedAnnealing.class, new Arguments(new Argument("temperature", "10000"), new Argument("coolingRate", "0.002"))),
-				new ProblemToolDefinition(new ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow())
+				new ProblemToolDefinition(new ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow(0.02))
 				);
 
 		InputMethodDescription methodDifferentialEvolution = new InputMethodDescription(
 				new InputAgentConfiguration(Agent_DifferentialEvolution.class, new Arguments(new Argument("popSize", "50"), new Argument("crossRate", "0.0"))),
-				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionMF())
+				new ProblemToolDefinition(new ProblemToolDifferentialEvolutionMF(0.25))
 				);
 
 		InputMethodDescriptions methods = new InputMethodDescriptions();

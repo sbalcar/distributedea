@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.distributedea.agents.computingagents.Agent_HillClimbing;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetMF;
@@ -17,6 +18,21 @@ import org.distributedea.problems.matrixfactorization.latentfactor.tools.ownsgd.
 
 public class ProblemToolHillClimbingMFSGDist1RandomInEachRow extends AProblemToolHillClimbingMF {
 
+	private double stepAlpha;
+
+	@Deprecated
+	public ProblemToolHillClimbingMFSGDist1RandomInEachRow() {
+	}
+
+	/**
+	 * Constructor
+	 * @param stepAlpha
+	 */
+	public ProblemToolHillClimbingMFSGDist1RandomInEachRow(double stepAlpha) {
+		this.stepAlpha = stepAlpha;
+	}
+
+	
 	@Override
 	public List<Class<?>> belongsToAgent() {
 		
@@ -24,16 +40,19 @@ public class ProblemToolHillClimbingMFSGDist1RandomInEachRow extends AProblemToo
 		agents.add(Agent_HillClimbing.class);
 		return agents;
 	}
-
+	
 	@Override
 	public Arguments exportArguments() {
-		return new Arguments();
+		Arguments arguments = new Arguments();
+		arguments.addArgument(new Argument("stepAlpha", stepAlpha));
+		return arguments;
 	}
 
 	@Override
 	public void importArguments(Arguments arguments) {
+		this.stepAlpha = arguments.exportArgument("stepAlpha").exportValueAsDouble();
 	}
-
+	
 	@Override
 	public Individual getNeighbor(Individual individual, IProblem problem,
 			Dataset dataset, long neighborIndex, IAgentLogger logger)
@@ -44,7 +63,7 @@ public class ProblemToolHillClimbingMFSGDist1RandomInEachRow extends AProblemToo
 		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
 		DatasetMF datasetMF = (DatasetMF) dataset;
 		
-		return ToolSGDist1RandomInEachRowMF.improve(individualLF, problemMF,
+		return ToolSGDist1RandomInEachRowMF.improve(individualLF, stepAlpha, problemMF,
 				datasetMF, logger);		
 	}
 }

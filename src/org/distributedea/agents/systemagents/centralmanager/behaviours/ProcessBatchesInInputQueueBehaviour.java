@@ -137,13 +137,9 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 
 	private void processPreProc(Batch batch, List<PreProcessing> preProcs) {
 	
-		for (PreProcessing ppI : preProcs) {
-			try {
-				ppI.run(batch);
-			} catch (Exception e) {
-				logger.logThrowable("Can not run preprocessing", e);
-			}
-		}
+		Behaviour preProcBehaviour = new ComputePreProcessingBehaviour(batch, preProcs, logger);
+		centralManager.computingBehaviours.add(preProcBehaviour);
+		centralManager.addBehaviour(preProcBehaviour);
 	}
 	
 	private void processJob(Job job, String batchID) {
@@ -198,9 +194,9 @@ public class ProcessBatchesInInputQueueBehaviour extends OneShotBehaviour {
 		batch.setPostProcessings(postProcs);
 		
 		// add Behavior for PostProcessings
-		Behaviour behaviourI = new ComputePostProcessingsBehaviour(batch);
-		centralManager.computingBehaviours.add(behaviourI);
-		centralManager.addBehaviour(behaviourI);
+		Behaviour postProcBehaviourI = new ComputePostProcessingsBehaviour(batch);
+		centralManager.computingBehaviours.add(postProcBehaviourI);
+		centralManager.addBehaviour(postProcBehaviourI);
 
 	}
 }

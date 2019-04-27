@@ -46,7 +46,12 @@
           <problemToolDefinition>
             <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolDifferentialEvolutionMF</problemToolClass>
             <arguments>
-              <arguments/>
+              <arguments>
+                <argument>
+                  <name>differentialWeightF</name>
+                  <value>0.25</value>
+                </argument>
+              </arguments>
             </arguments>
           </problemToolDefinition>
         </inputMethodDescription>

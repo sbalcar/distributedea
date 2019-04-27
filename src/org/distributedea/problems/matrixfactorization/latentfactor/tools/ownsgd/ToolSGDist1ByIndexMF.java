@@ -15,7 +15,7 @@ public class ToolSGDist1ByIndexMF {
 	
 	
 	public static IndividualLatentFactors improve(
-			IndividualLatentFactors idividualLF, long neighborIndex,
+			IndividualLatentFactors idividualLF, long neighborIndex, double stepAlpha,
 			ProblemMatrixFactorization problemMF, DatasetMF datasetMF,
 			IAgentLogger logger) {
 	
@@ -34,7 +34,7 @@ public class ToolSGDist1ByIndexMF {
 				(IndividualLatentFactors) idividualLF.deepClone();
 		
 		ToolSGDist1RandomMF.improveObjectRaiting(idividualClone,
-				rowIndex, colIndex, raitingValue, STEP_ALPHA, logger);
+				rowIndex, colIndex, raitingValue, stepAlpha, logger);
 		
 		return idividualClone;
 	}

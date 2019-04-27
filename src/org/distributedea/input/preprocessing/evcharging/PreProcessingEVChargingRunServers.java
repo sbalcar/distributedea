@@ -31,14 +31,8 @@ public class PreProcessingEVChargingRunServers extends PreProcessing {
 	    	newThreadI.start();
 	    	threads.add(newThreadI);
     	}
-
-    	Thread.sleep(2000);
     	
-    	//for (Thread t : threads) {
-    	//     t.stop();
-    	//}
-    	
-    	Thread.sleep(30000);
+    	Thread.sleep(32000);
 	}
 
 }

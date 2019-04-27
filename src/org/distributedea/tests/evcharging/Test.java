@@ -11,17 +11,15 @@ import org.distributedea.ontology.datasetdescription.IDatasetDescription;
 import org.distributedea.ontology.individuals.Individual;
 import org.distributedea.ontology.methoddesriptionsplanned.MethodIDs;
 import org.distributedea.ontology.problem.IProblem;
-import org.distributedea.problems.evcharging.point.ProblemToolBruteForceEVCharging;
 import org.distributedea.problems.evcharging.point.ProblemToolHillClimbingEVChargingRandomMove;
-import org.distributedea.problems.evcharging.point.ProblemToolRandomSearchEVCharging;
 
 public class Test {
 
 	public static void main(String [] args) throws Exception {
 		
-//		start(8080, 16);
+		start(8080, 16);
 		evaluating();
-//		kill(8080, 16);
+		kill(8080, 16);
 	}
 
 	private static void start(int port, int serverCount) throws Exception {
@@ -67,11 +65,11 @@ public class Test {
 		Dataset dataset =
 				pt.readDataset(datasetDescr, problem, new TrashLogger());
 		
-//		Individual indiv0 = pt.generateIndividual(problem, dataset, new TrashLogger());
+		//Individual indiv0 = pt.generateIndividual(problem, dataset, new TrashLogger());
 		for (int i = 0; i < 10; i++) {
 			Individual indivI =
 					pt.generateIndividual(problem, dataset, new TrashLogger());
-//					pt.getNeighbor(indiv0, problem, dataset, i, new TrashLogger());
+					//pt.getNeighbor(indiv0, problem, dataset, i, new TrashLogger());
 			System.out.println("Individual: " + indivI.toLogString());
 			
 			double fitnessVal =

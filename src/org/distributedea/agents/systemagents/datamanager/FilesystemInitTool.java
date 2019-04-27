@@ -222,6 +222,21 @@ public class FilesystemInitTool {
 		
 		FileUtils.moveToDirectory(inputJobFile, resultDirectoryWithCopyOfInputBatch, true);
 	}
+
+	public static void moveInputPreProcToResultDir(Class<?> preProcToMove, String batchID) throws IOException {
+		
+		String resultDirectoryForBatchName = FileNames.getInputBatchDirectory(batchID);
+		File preProcFile = new File(resultDirectoryForBatchName + File.separator +
+				preProcToMove.getSimpleName() + "." + FileNames.PREPROCESSING_SUFIX);
+		
+		String resultDirectoryWithCopyOfInputBatchName =
+				FileNames.getResultDirectoryWithCopyOfInputBatch(batchID);
+		File resultDirectoryWithCopyOfInputBatch =
+				new File(resultDirectoryWithCopyOfInputBatchName);
+		
+		FileUtils.moveToDirectory(preProcFile, resultDirectoryWithCopyOfInputBatch, true);
+	}
+
 	
 	public static void moveInputPostProcToResultDir(Class<?> postProcToMove, String batchID) throws IOException {
 		

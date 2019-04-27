@@ -17,6 +17,21 @@ import org.distributedea.problems.matrixfactorization.latentfactor.tools.ownsgd.
 
 public class ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow extends AProblemToolSimulatedAnnealingMF {
 
+	private double stepAlpha;
+	
+	@Deprecated
+	public ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow(String a) {
+	}
+
+	/**
+	 * Constructor
+	 * @param stepAlpha
+	 */
+	public ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow(double stepAlpha) {
+		this.stepAlpha = stepAlpha;
+	}
+
+	
 	@Override
 	public List<Class<?>> belongsToAgent() {
 		
@@ -44,7 +59,7 @@ public class ProblemToolSimulatedAnnealingMFSGDist1RandomInEachRow extends AProb
 		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
 		DatasetMF datasetMF = (DatasetMF) dataset;
 		
-		return ToolSGDist1RandomInEachRowMF.improve(individualLF, problemMF,
+		return ToolSGDist1RandomInEachRowMF.improve(individualLF, stepAlpha, problemMF,
 				datasetMF, logger);		
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.distributedea.agents.computingagents.Agent_TabuSearch;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetMF;
@@ -17,6 +18,21 @@ import org.distributedea.problems.matrixfactorization.latentfactor.tools.ownsgd.
 
 public class ProblemToolTabuSearchMFSGDist1RandomInEachRow extends AProblemToolTabuSearchMF {
 	
+	private double stepAlpha;
+	
+	@Deprecated
+	public ProblemToolTabuSearchMFSGDist1RandomInEachRow() {
+	}
+
+	/**
+	 * Constructor
+	 * @param stepAlpha
+	 */
+	public ProblemToolTabuSearchMFSGDist1RandomInEachRow(double stepAlpha) {
+		this.stepAlpha = stepAlpha;
+	}
+
+	
 	@Override
 	public List<Class<?>> belongsToAgent() {
 		
@@ -27,11 +43,14 @@ public class ProblemToolTabuSearchMFSGDist1RandomInEachRow extends AProblemToolT
 
 	@Override
 	public Arguments exportArguments() {
-		return new Arguments();
+		Arguments arguments = new Arguments();
+		arguments.addArgument(new Argument("stepAlpha", stepAlpha));
+		return arguments;
 	}
 
 	@Override
 	public void importArguments(Arguments arguments) {
+		this.stepAlpha = arguments.exportArgument("stepAlpha").exportValueAsDouble();
 	}
 
 	@Override
@@ -44,7 +63,7 @@ public class ProblemToolTabuSearchMFSGDist1RandomInEachRow extends AProblemToolT
 		ProblemMatrixFactorization problemMF = (ProblemMatrixFactorization) problem;
 		DatasetMF datasetMF = (DatasetMF) dataset;
 		
-		return ToolSGDist1RandomInEachRowMF.improve(individualLF, problemMF,
+		return ToolSGDist1RandomInEachRowMF.improve(individualLF, stepAlpha, problemMF,
 				datasetMF, logger);		
 	}
 

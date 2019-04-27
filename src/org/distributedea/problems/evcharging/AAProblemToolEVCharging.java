@@ -30,7 +30,7 @@ import org.distributedea.problems.evcharging.point.tools.ToolGenerateIndividualE
 
 public abstract class AAProblemToolEVCharging extends AProblemTool {
 
-	private boolean DEBUG = !false;
+	private boolean DEBUG = false;
 	
 	private XmlRpcClient server;
 	private int domainSize;
@@ -38,8 +38,8 @@ public abstract class AAProblemToolEVCharging extends AProblemTool {
 	private Random random;
 	private double normalDistMultiplicator;
 		
-	private String EVALUATE = "evaluate";
-	private String GET_INDIVIDUAL_SIZE = "get_individual_size";
+	private String RPC_EVALUATE = "evaluate";
+	private String RPC_GET_INDIVIDUAL_SIZE = "get_individual_size";
 
 	@Deprecated
 	public AAProblemToolEVCharging() {
@@ -104,7 +104,7 @@ public abstract class AAProblemToolEVCharging extends AProblemTool {
         this.server.setConfig(config);
         
         Vector<String> params = new Vector<String>();
-        Object[] result = (Object[])this.server.execute(GET_INDIVIDUAL_SIZE, params);
+        Object[] result = (Object[])this.server.execute(RPC_GET_INDIVIDUAL_SIZE, params);
         this.domainSize = (Integer)result[0];        
 	}
 
@@ -118,7 +118,7 @@ public abstract class AAProblemToolEVCharging extends AProblemTool {
 		
 		IndividualPoint individualPoint = (IndividualPoint) individual;
 		if (DEBUG) {
-//			System.out.println("IndividualPoint: " + individualPoint.toLogString());
+			logger.log(Level.CONFIG, "IndividualPoint: " + individualPoint.toLogString());
 		}
 		double[] indArr = individualPoint.exortAsArray();
 		
@@ -127,7 +127,7 @@ public abstract class AAProblemToolEVCharging extends AProblemTool {
 
         Object[] result;
 		try {
-			result = (Object[])this.server.execute(EVALUATE, params);
+			result = (Object[])this.server.execute(RPC_EVALUATE, params);
 		} catch (XmlRpcException e) {
 			logger.logThrowable("Can't contact EVCharging server", e);
 			
@@ -136,7 +136,7 @@ public abstract class AAProblemToolEVCharging extends AProblemTool {
 		
 		double fitnessVal = (Double)result[0];
 		if (DEBUG) {
-			System.out.println("FitnessVal: " + fitnessVal);
+			logger.log(Level.CONFIG, "FitnessVal: " + fitnessVal);
 		}
 		
         return fitnessVal;

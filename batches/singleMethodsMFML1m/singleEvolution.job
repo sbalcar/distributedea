@@ -54,7 +54,12 @@
           <problemToolDefinition>
             <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation</problemToolClass>
             <arguments>
-              <arguments/>
+              <arguments>
+                <argument>
+                  <name>stepAlpha</name>
+                  <value>0.02</value>
+                </argument>
+              </arguments>
             </arguments>
           </problemToolDefinition>
         </inputMethodDescription>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.distributedea.agents.computingagents.Agent_DifferentialEvolution;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetMF;
@@ -18,6 +19,23 @@ import org.distributedea.problems.matrixfactorization.latentfactor.operators.Ope
 
 public class ProblemToolDifferentialEvolutionMF extends AProblemToolDifferentialEvolutionMF {
 
+	private double differentialWeightF;
+	
+	@Deprecated
+	public ProblemToolDifferentialEvolutionMF() {
+		super();
+	}
+	
+	/**
+	 * Constructor
+	 * @param differentialWeightF  // [0,2]
+	 */
+	public ProblemToolDifferentialEvolutionMF(double differentialWeightF) {
+		super();
+		this.differentialWeightF = differentialWeightF;
+	}
+
+	
 	@Override
 	public List<Class<?>> belongsToAgent() {
 		
@@ -28,11 +46,14 @@ public class ProblemToolDifferentialEvolutionMF extends AProblemToolDifferential
 	
 	@Override
 	public Arguments exportArguments() {
-		return new Arguments();
+		Arguments arguments = new Arguments();
+		arguments.addArgument(new Argument("differentialWeightF", differentialWeightF));
+		return arguments;
 	}
 
 	@Override
 	public void importArguments(Arguments arguments) {
+		this.differentialWeightF = arguments.exportArgument("differentialWeightF").exportValueAsDouble();
 	}
 
 
@@ -40,9 +61,6 @@ public class ProblemToolDifferentialEvolutionMF extends AProblemToolDifferential
 	public Individual differentialOfIndividuals(Individual individual1,
 			Individual individual2, Individual individual3, IProblem problem,
 			Dataset dataset, IAgentLogger logger) throws Exception {
-
-		//differential weight [0,2]
-		double differentialWeightF = 0.25;
 		
 		IndividualLatentFactors individualLF1 =
 				(IndividualLatentFactors) individual1;

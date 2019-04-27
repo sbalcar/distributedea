@@ -21,7 +21,6 @@ public class ServerThread extends Thread {
     	
     	String com = "./python/evcharging/runServer.sh " + datasetFile.getAbsolutePath() + " " + portNumber;
         ExecuteShellCommand exeCom = new ExecuteShellCommand();
-        System.out.println(exeCom.executeCommand(com));
-
+        exeCom.executeCommand(com);
     }
 }

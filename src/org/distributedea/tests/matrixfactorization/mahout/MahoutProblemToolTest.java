@@ -9,7 +9,6 @@ import org.distributedea.ontology.datasetdescription.DatasetDescriptionMF;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsArithmeticSequence;
 import org.distributedea.ontology.datasetdescription.matrixfactorization.RatingIDsComplement;
 import org.distributedea.ontology.individuals.IndividualLatentFactors;
-import org.distributedea.ontology.individualwrapper.IndividualEvaluated;
 import org.distributedea.ontology.problem.ProblemMatrixFactorization;
 import org.distributedea.ontology.problem.matrixfactorization.latentfactor.LatFactRange;
 import org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFMahout;
@@ -47,11 +46,11 @@ public class MahoutProblemToolTest {
 				problemMF, datasetMF, new TrashLogger());
 		double rmse = ToolFitnessRMSEMF.evaluateTrainingDataset(
 				individualLF, problemMF, datasetMF, new TrashLogger());
-		IndividualEvaluated individualEval = new IndividualEvaluated(individualLF, rmse, null);
 		System.out.println("rmse : " + rmse);
 		
 		
 		ProblemToolHillClimbingMFMahout tool = new ProblemToolHillClimbingMFMahout();
+		tool.initialization(problemMF, datasetMF, null, null, new TrashLogger());
 		
 		for (int i = 0; i < 100; i++) {
 			IndividualLatentFactors individualI =

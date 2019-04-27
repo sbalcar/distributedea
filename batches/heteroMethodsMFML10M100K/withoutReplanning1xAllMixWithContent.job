@@ -41,7 +41,12 @@
         <problemToolDefinition>
           <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolHillClimbingMFSGDist1RandomInEachRow</problemToolClass>
           <arguments>
-            <arguments/>
+            <arguments>
+              <argument>
+                <name>stepAlpha</name>
+                <value>0.02</value>
+              </argument>
+            </arguments>
           </arguments>
         </problemToolDefinition>
       </inputMethodDescription>
@@ -73,7 +78,12 @@
         <problemToolDefinition>
           <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation</problemToolClass>
           <arguments>
-            <arguments/>
+            <arguments>
+              <argument>
+                <name>stepAlpha</name>
+                <value>0.02</value>
+              </argument>
+            </arguments>
           </arguments>
         </problemToolDefinition>
       </inputMethodDescription>
@@ -88,7 +98,12 @@
         <problemToolDefinition>
           <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolBruteForceMFSGDist1ByIndex</problemToolClass>
           <arguments>
-            <arguments/>
+            <arguments>
+              <argument>
+                <name>stepAlpha</name>
+                <value>0.02</value>
+              </argument>
+            </arguments>
           </arguments>
         </problemToolDefinition>
       </inputMethodDescription>
@@ -112,7 +127,12 @@
         <problemToolDefinition>
           <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolTabuSearchMFSGDist1RandomInEachRow</problemToolClass>
           <arguments>
-            <arguments/>
+            <arguments>
+              <argument>
+                <name>stepAlpha</name>
+                <value>0.02</value>
+              </argument>
+            </arguments>
           </arguments>
         </problemToolDefinition>
       </inputMethodDescription>
@@ -160,7 +180,12 @@
         <problemToolDefinition>
           <problemToolClass>org.distributedea.problems.matrixfactorization.latentfactor.ProblemToolDifferentialEvolutionMF</problemToolClass>
           <arguments>
-            <arguments/>
+            <arguments>
+              <argument>
+                <name>differentialWeightF</name>
+                <value>0.25</value>
+              </argument>
+            </arguments>
           </arguments>
         </problemToolDefinition>
       </inputMethodDescription>

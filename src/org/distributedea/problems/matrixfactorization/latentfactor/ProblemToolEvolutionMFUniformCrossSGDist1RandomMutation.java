@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.distributedea.agents.computingagents.Agent_Evolution;
 import org.distributedea.logging.IAgentLogger;
+import org.distributedea.ontology.arguments.Argument;
 import org.distributedea.ontology.arguments.Arguments;
 import org.distributedea.ontology.dataset.Dataset;
 import org.distributedea.ontology.dataset.DatasetMF;
@@ -18,6 +19,21 @@ import org.distributedea.problems.matrixfactorization.latentfactor.tools.ownsgd.
 
 public class ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation extends AProblemToolEvolutionMF {
 
+	private double stepAlpha;
+	
+	@Deprecated
+	public ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation() {
+	}
+
+	/**
+	 * Constructor
+	 * @param stepAlpha
+	 */
+	public ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation(double stepAlpha) {
+		this.stepAlpha = stepAlpha;
+	}
+
+	
 	@Override
 	public List<Class<?>> belongsToAgent() {
 		
@@ -28,11 +44,14 @@ public class ProblemToolEvolutionMFUniformCrossSGDist1RandomMutation extends APr
 
 	@Override
 	public Arguments exportArguments() {
-		return new Arguments();
+		Arguments arguments = new Arguments();
+		arguments.addArgument(new Argument("stepAlpha", stepAlpha));
+		return arguments;
 	}
 
 	@Override
 	public void importArguments(Arguments arguments) {
+		this.stepAlpha = arguments.exportArgument("stepAlpha").exportValueAsDouble();
 	}
 
 	@Override
